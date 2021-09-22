@@ -1,0 +1,75 @@
+﻿@model DBOperation.UserRole
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>UserRole</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ModifiedOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ModifiedOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Role.RoleName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Role.RoleName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Password)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.Password)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User1.Password)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User1.Password)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User2.Password)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User2.Password)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User3.Password)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User3.Password)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

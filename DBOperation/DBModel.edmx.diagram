@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3b3ea6db01c54b09854c10c3960c35db" Name="Diagram1">
+        <EntityTypeShape EntityType="ClientManagerModel.ClientContact" Width="1.5" PointX="5.25" PointY="33" />
+        <EntityTypeShape EntityType="ClientManagerModel.Client" Width="1.5" PointX="3" PointY="13.625" />
+        <EntityTypeShape EntityType="ClientManagerModel.Contact" Width="1.5" PointX="3" PointY="50.375" />
+        <EntityTypeShape EntityType="ClientManagerModel.Product" Width="1.5" PointX="8" PointY="15.25" />
+        <EntityTypeShape EntityType="ClientManagerModel.ProjectClient" Width="1.5" PointX="5.25" PointY="14" />
+        <EntityTypeShape EntityType="ClientManagerModel.Project" Width="1.5" PointX="6" PointY="25.875" />
+        <EntityTypeShape EntityType="ClientManagerModel.ProjectStatu" Width="1.5" PointX="3.75" PointY="9.75" />
+        <EntityTypeShape EntityType="ClientManagerModel.RepresentativeSaleTarget" Width="1.5" PointX="3" PointY="38.625" />
+        <EntityTypeShape EntityType="ClientManagerModel.Role" Width="1.5" PointX="3" PointY="17.875" />
+        <EntityTypeShape EntityType="ClientManagerModel.SaleActivity" Width="1.5" PointX="3" PointY="22" />
+        <EntityTypeShape EntityType="ClientManagerModel.SaleProduct" Width="1.5" PointX="10.25" PointY="20.5" />
+        <EntityTypeShape EntityType="ClientManagerModel.Sale" Width="1.5" PointX="8" PointY="20" />
+        <EntityTypeShape EntityType="ClientManagerModel.SalesStatu" Width="1.5" PointX="5.75" PointY="17.75" />
+        <EntityTypeShape EntityType="ClientManagerModel.UserContact" Width="1.5" PointX="3" PointY="46.75" />
+        <EntityTypeShape EntityType="ClientManagerModel.UserRole" Width="1.5" PointX="5.25" PointY="21.375" />
+        <EntityTypeShape EntityType="ClientManagerModel.User" Width="1.5" PointX="0.75" PointY="19.875" />
+        <AssociationConnector Association="ClientManagerModel.FK_ClientContacts_Clients" />
+        <AssociationConnector Association="ClientManagerModel.FK_ClientContacts_Contact" />
+        <AssociationConnector Association="ClientManagerModel.FK_ClientContacts_Users" />
+        <AssociationConnector Association="ClientManagerModel.FK_ClientContacts_Users1" />
+        <AssociationConnector Association="ClientManagerModel.FK_Clients_Users" />
+        <AssociationConnector Association="ClientManagerModel.FK_Clients_Users1" />
+        <AssociationConnector Association="ClientManagerModel.FK_ProjectClient_ClientDetails" />
+        <AssociationConnector Association="ClientManagerModel.FK_Contact_Users" />
+        <AssociationConnector Association="ClientManagerModel.FK_Contact_Users1" />
+        <AssociationConnector Association="ClientManagerModel.FK_SaleActivity_Products" />
+        <AssociationConnector Association="ClientManagerModel.FK_SaleProducts_Products" />
+        <AssociationConnector Association="ClientManagerModel.FK_ProjectClient_ProjectDetails" />
+        <AssociationConnector Association="ClientManagerModel.FK_ProjectDetails_ProjectStatus" />
+        <AssociationConnector Association="ClientManagerModel.FK_ProjectDetails_UserDetails" />
+        <AssociationConnector Association="ClientManagerModel.FK_RepresentativeSaleTarget_Users" />
+        <AssociationConnector Association="ClientManagerModel.FK_RepresentativeSaleTarget_Users1" />
+        <AssociationConnector Association="ClientManagerModel.FK_Roles_Users" />
+        <AssociationConnector Association="ClientManagerModel.FK_Roles_Users1" />
+        <AssociationConnector Association="ClientManagerModel.FK_UserRoles_Roles1" />
+        <AssociationConnector Association="ClientManagerModel.FK_SaleActivity_SalesStatus" />
+        <AssociationConnector Association="ClientManagerModel.FK_SaleActivity_Users" />
+        <AssociationConnector Association="ClientManagerModel.FK_SaleActivity_Users1" />
+        <AssociationConnector Association="ClientManagerModel.FK_SaleActivity_Users2" />
+        <AssociationConnector Association="ClientManagerModel.FK_SaleProducts_Sales" />
+        <AssociationConnector Association="ClientManagerModel.FK_SaleDetails_SalesStatus" />
+        <AssociationConnector Association="ClientManagerModel.FK_SaleDetails_UserDetails" />
+        <AssociationConnector Association="ClientManagerModel.FK_Sales_Users" />
+        <AssociationConnector Association="ClientManagerModel.FK_UserContacts_ContactDetails" />
+        <AssociationConnector Association="ClientManagerModel.FK_UserContacts_UserDetails" />
+        <AssociationConnector Association="ClientManagerModel.FK_UserContacts_Users" />
+        <AssociationConnector Association="ClientManagerModel.FK_UserRoles_Roles" />
+        <AssociationConnector Association="ClientManagerModel.FK_UserRoles_Users" />
+        <AssociationConnector Association="ClientManagerModel.FK_UserRoles_Users1" />
+        <AssociationConnector Association="ClientManagerModel.FK_UserRoles_Users2" />
+        <AssociationConnector Association="ClientManagerModel.FK_Users_Users" />
+        <AssociationConnector Association="ClientManagerModel.FK_Users_Users1" />
+        <AssociationConnector Association="ClientManagerModel.FK_Users_Users2" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
