@@ -62,6 +62,8 @@ namespace DBOperation
         public string State { get; set; }
         public string City { get; set; }
         public string Pincode { get; set; }
+        public Nullable<System.DateTime> DateOfJoining { get; set; }
+        public Nullable<int> SaleTarget { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ClientContact> ClientContacts { get; set; }

@@ -35,6 +35,8 @@ namespace ClientManager.Controllers
             return View(product);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         // GET: Products/Create
         public ActionResult Create()
         {
@@ -61,16 +63,12 @@ namespace ClientManager.Controllers
         // GET: Products/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (!id.HasValue)
+                return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
             Product product = db.Products.Find(id);
-            if (product == null)
-            {
-                return HttpNotFound();
-            }
-            return View(product);
+            
+            return product == null ? (ActionResult)this.HttpNotFound() : (ActionResult)this.View((object)product);
         }
 
         // POST: Products/Edit/5
@@ -80,47 +78,39 @@ namespace ClientManager.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,ProductName,ProductCode,ProductImage,Description,UnitPrice,PurchasedDate,ExpiredOn,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy")] Product product)
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(product).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(product);
+
+            if (!this.ModelState.IsValid)
+                return (ActionResult)this.View((object)product);
+            this.db.Entry<Product>(product).State = EntityState.Modified;
+            this.db.SaveChanges();
+            return (ActionResult)this.RedirectToAction("Index");
         }
 
         // GET: Products/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (!id.HasValue)
+                return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             Product product = db.Products.Find(id);
-            if (product == null)
-            {
-                return HttpNotFound();
-            }
-            return View(product);
+            return product == null ? (ActionResult)this.HttpNotFound() : (ActionResult)this.View((object)product);
         }
 
-        // POST: Products/Delete/5
-        [HttpPost, ActionName("Delete")]
+      
+
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Product product = db.Products.Find(id);
-            db.Products.Remove(product);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            this.db.Products.Remove(this.db.Products.Find(id));
+            this.db.SaveChanges();
+            return (ActionResult)this.RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
-                db.Dispose();
-            }
+                this.db.Dispose();
             base.Dispose(disposing);
         }
     }

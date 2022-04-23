@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Web;
-using System.Web.Mvc;
+﻿using ClientManager.Models;
 using DBOperation;
-using ClientManager.Models;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Web.Mvc;
 
 namespace ClientManager.Controllers
 {
@@ -13,123 +11,159 @@ namespace ClientManager.Controllers
     {
         private ClientManagerEntities db = new ClientManagerEntities();
 
-        // GET: Account
-        public ActionResult Index()
-        {
-            return RedirectToAction("Login");
-        }
+        public ActionResult Index() => (ActionResult)this.RedirectToAction("Login");
 
-        // GET: Account
-        public ActionResult Login()
-        {
-            return View();
-        }
+        public ActionResult Login() => (ActionResult)this.View();
+
         public ActionResult Logout()
         {
-            Session["UserDetails"] = null;
-            Session.Abandon();
-            return RedirectToAction("Login");
+            this.Session["UserDetails"] = (object)null;
+            this.Session.Abandon();
+            return (ActionResult)this.RedirectToAction("Login");
         }
-        public ActionResult ForgotPassword()
-        {
-            return View();
-        }
+
+        public ActionResult ForgotPassword() => (ActionResult)this.View();
 
         [HttpPost]
-        public ActionResult SignIn(Login userLogin)
+        public ActionResult SignIn(ClientManager.Models.Login userLogin)
         {
-            JsonReponse jsonRes = null;
-
+            JsonReponse data = (JsonReponse)null;
             try
             {
                 if (string.IsNullOrEmpty(userLogin.Email) || string.IsNullOrEmpty(userLogin.Password))
-                {
-                    jsonRes = new JsonReponse { message = "User name and Password is required.", status = "Failed", redirectURL = "" };
-                }
-                else if (!string.IsNullOrEmpty(userLogin.Email) && !string.IsNullOrEmpty(userLogin.Password))
-                {
-                    User userData = db.Users.FirstOrDefault(wh => wh.Email == userLogin.Email & wh.Password == userLogin.Password);
-
-                    if (userData == null)
+                    data = new JsonReponse()
                     {
-                        jsonRes = new JsonReponse { message = "Invalid Credential", status = "Failed", redirectURL = "" };
-                    }
-                    else
+                        message = "User name and Password is required.",
+                        status = "Failed",
+                        redirectURL = ""
+                    };
+                else if (!string.IsNullOrEmpty(userLogin.Email))
+                {
+                    if (!string.IsNullOrEmpty(userLogin.Password))
                     {
-                        UserDetails userDetails = new UserDetails
+                        User userData = this.db.Users.FirstOrDefault<User>((Expression<Func<User, bool>>)(wh => wh.Email == userLogin.Email & wh.Password == userLogin.Password & wh.IsActive == (bool?)true));
+                        if (userData == null)
                         {
-                            Id = userData.Id,
-                            Email = userData.Email,
-                            FullName = userData.FullName,
-                            IsActive = userData.IsActive,
-                            CreatedBy = userData.CreatedBy,
-                            CreatedOn = userData.CreatedOn,
-                            ModifiedOn = userData.ModifiedOn,
-                            ModifiedBy = userData.ModifiedBy,
-                            ReportingManager = userData.ReportingManager,
-                            UserRoles = userData.UserRoles1.Where(wh => wh.UserId == userData.Id).Select(sel => new ClientManager.Models.UserRole { Id = sel.Id, RoleId = sel.RoleId, RoleName = sel.Role.RoleName }).ToList(),
-                            ReportingToMe = db.Users.Where(wh => wh.ReportingManager == userData.Id).Select(sel=> sel.Id).ToList()
-                        };
-
-                        Session["UserDetails"] = userDetails;
-
-                        jsonRes = new JsonReponse { message = "Valid Credentials", status = "Success", redirectURL = "/Home/MyDashboard" };
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                jsonRes = new JsonReponse { message = ex.Message, status = "Error", redirectURL = "" };
-            }
-
-            return Json(jsonRes, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult Register()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult UserRegister(Register userRegister)
-        {
-            //var currentUser = (UserDetails)Session["UserDetails"];
-            JsonReponse jsonRes = null;
-
-            try
-            {
-                if (string.IsNullOrEmpty(userRegister.Email) || string.IsNullOrEmpty(userRegister.FullName) || string.IsNullOrEmpty(userRegister.Password))
-                {
-                    jsonRes = new JsonReponse { message = "User name and Password is required.", status = "Failed", redirectURL = "" };
-                }
-                else if (!string.IsNullOrEmpty(userRegister.Email) && !string.IsNullOrEmpty(userRegister.FullName) && !string.IsNullOrEmpty(userRegister.Password))
-                {
-                    if (db.Users.Any(wh => wh.Email == userRegister.Email))
-                    {
-                        jsonRes = new JsonReponse { message = "This Email Id already already registered.", status = "Failed", redirectURL = "" };
-                    }
-                    else
-                    {
-                        db.Users.Add(new User { FullName = userRegister.FullName, Email = userRegister.Email, Password = userRegister.Password, IsActive = true, CreatedBy = 1, CreatedOn = DateTime.Now });
-
-                        if (db.SaveChanges() > 0)
-                        {
-                            jsonRes = new JsonReponse { message = "User registration completed successfully!", status = "Success", redirectURL = "/Account/Login" };
+                            data = new JsonReponse()
+                            {
+                                message = "Invalid Credential",
+                                status = "Failed",
+                                redirectURL = ""
+                            };
                         }
                         else
                         {
-                            jsonRes = new JsonReponse { message = "User registration not completed, try again after sometime.", status = "Failed", redirectURL = "" };
+                            UserDetails userDetails1 = new UserDetails();
+                            userDetails1.Id = userData.Id;
+                            userDetails1.Email = userData.Email;
+                            userDetails1.FullName = userData.FullName;
+                            userDetails1.IsActive = userData.IsActive;
+                            userDetails1.CreatedBy = userData.CreatedBy;
+                            userDetails1.CreatedOn = userData.CreatedOn;
+                            userDetails1.ModifiedOn = userData.ModifiedOn;
+                            userDetails1.ModifiedBy = userData.ModifiedBy;
+                            userDetails1.ReportingManager = userData.ReportingManager;
+                            userDetails1.UserRoles = userData.UserRoles1.Where<DBOperation.UserRole>((Func<DBOperation.UserRole, bool>)(wh => wh.UserId == userData.Id)).Select<DBOperation.UserRole, ClientManager.Models.UserRole>((Func<DBOperation.UserRole, ClientManager.Models.UserRole>)(sel => new ClientManager.Models.UserRole()
+                            {
+                                Id = sel.Id,
+                                RoleId = sel.RoleId,
+                                RoleName = sel.Role.RoleName
+                            })).ToList<ClientManager.Models.UserRole>();
+                            userDetails1.ReportingToMe = this.db.Users.Where<User>((Expression<Func<User, bool>>)(wh => wh.ReportingManager == (int?)userData.Id)).Select<User, int>((Expression<Func<User, int>>)(sel => sel.Id)).ToList<int>();
+                            UserDetails userDetails2 = userDetails1;
+                            this.Session["UserDetails"] = (object)userDetails2;
+                            data = new JsonReponse()
+                            {
+                                message = "Valid Credentials",
+                                status = "Success",
+                                redirectURL = "/Home/" + (userDetails2.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "admin")) ? "MyDashboard" : (userDetails2.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "manager")) ? "MyDashboard" : "MyDashboard"))
+                            };
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                jsonRes = new JsonReponse { message = ex.Message, status = "Error", redirectURL = "" };
+                data = new JsonReponse()
+                {
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
             }
+            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+        }
 
-            return Json(jsonRes, JsonRequestBehavior.AllowGet);
+        public ActionResult Register() => (ActionResult)this.View();
+
+        [HttpPost]
+        public ActionResult UserRegister(ClientManager.Models.Register userRegister)
+        {
+            JsonReponse data = (JsonReponse)null;
+            try
+            {
+                if (string.IsNullOrEmpty(userRegister.Email) || string.IsNullOrEmpty(userRegister.FullName) || string.IsNullOrEmpty(userRegister.Password))
+                    data = new JsonReponse()
+                    {
+                        message = "User name and Password is required.",
+                        status = "Failed",
+                        redirectURL = ""
+                    };
+                else if (!string.IsNullOrEmpty(userRegister.Email))
+                {
+                    if (!string.IsNullOrEmpty(userRegister.FullName))
+                    {
+                        if (!string.IsNullOrEmpty(userRegister.Password))
+                        {
+                            if (this.db.Users.Any<User>((Expression<Func<User, bool>>)(wh => wh.Email == userRegister.Email)))
+                            {
+                                data = new JsonReponse()
+                                {
+                                    message = "This Email Id already already registered.",
+                                    status = "Failed",
+                                    redirectURL = ""
+                                };
+                            }
+                            else
+                            {
+                                this.db.Users.Add(new User()
+                                {
+                                    FullName = userRegister.FullName,
+                                    Email = userRegister.Email,
+                                    Password = userRegister.Password,
+                                    IsActive = new bool?(true),
+                                    CreatedBy = new int?(1),
+                                    CreatedOn = new DateTime?(DateTime.Now)
+                                });
+                                if (this.db.SaveChanges() > 0)
+                                    data = new JsonReponse()
+                                    {
+                                        message = "User registration completed successfully!",
+                                        status = "Success",
+                                        redirectURL = "/Account/Login"
+                                    };
+                                else
+                                    data = new JsonReponse()
+                                    {
+                                        message = "User registration not completed, try again after sometime.",
+                                        status = "Failed",
+                                        redirectURL = ""
+                                    };
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new JsonReponse()
+                {
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
+            }
+            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
     }
-
 }

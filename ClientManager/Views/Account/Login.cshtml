@@ -115,6 +115,9 @@
                         if (data.status == "Success") {
                             window.location.href = data.redirectURL;
                         }
+                        else {
+                            alert("Error occured!!  " + data.message)
+                        }
                     },
                     error: function () {
                         alert("Error occured!!  " + data.message)

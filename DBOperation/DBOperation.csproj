@@ -74,6 +74,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DBModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Employee.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="GetMonthlySalesReport_Result.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>

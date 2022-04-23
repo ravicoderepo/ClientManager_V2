@@ -1,0 +1,296 @@
+﻿@model DBOperation.User
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    textarea {
+        width: 100% !important;
+        border: 1px solid #ced4da !important;
+        border-radius: .25rem !important;
+        padding: .375rem .75rem !important;
+    }
+</style>
+<div class="content-wrapper">
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>User</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Admin</a></li>
+                        <li class="breadcrumb-item"><a href="#">User</a></li>
+                        <li class="breadcrumb-item active">Edit</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- jquery validation -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">User Details</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form id="quickForm">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="status">Status</label>
+                                            @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "Id" } })
+                                            @Html.HiddenFor(model => model.IsActive, new { htmlAttributes = new { @id = "hdnUserStatus" } })
+                                            @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="FullName">Full Name</label>
+                                            @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control", @id = "txtFullName", @name = "FullName" } })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="status">User/Email Id</label>
+                                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @id = "txtEmail", @name = "Email" } })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="status">Password</label>
+                                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @id = "txtPassword", @name = "Password", @type = "Password" } })                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="status">Employee Id</label>
+                                            @Html.EditorFor(model => model.EmployeeId, new { htmlAttributes = new { @class = "form-control", @id = "txtEmployeeId", @name = "EmployeeId" } })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="status">Date of Birth</label>
+                                            <div class="input-group date" data-target-input="nearest">
+                                                @Html.EditorFor(model => model.DateOfBirth, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtDOB", @name = "DOB" } })
+                                                <div class="input-group-append" data-target="#txtDOB" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="status">Date of Joining</label>
+                                            <div class="input-group date" data-target-input="nearest">
+                                                @Html.EditorFor(model => model.DateOfBirth, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtDOJ", @name = "DOJ" } })
+                                                <div class="input-group-append" data-target="#txtDOJ" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="status">Address Line 1</label>
+                                            @Html.EditorFor(model => model.AddressLine1, new { htmlAttributes = new { @class = "form-control", @id = "txtAddressLine1", @name = "AddressLine1" } })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="status">Address Line 2</label>
+                                            @Html.EditorFor(model => model.AddressLine2, new { htmlAttributes = new { @class = "form-control", @id = "txtAddressLine2", @name = "AddressLine2" } })
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="status">State</label>
+                                            @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control", @id = "txtState", @name = "State" } })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="status">City</label>
+                                            @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", @id = "txtCity", @name = "City" } })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="status">Pin Code</label>
+                                            @Html.EditorFor(model => model.Pincode, new { htmlAttributes = new { @class = "form-control", @id = "txtPincode", @name = "Pincode" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="ReportingManager">Reporting Manager</label>
+                                            @Html.DropDownList("ReportingManager", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlReportingManager", @name = "ReportingManager" })
+                                        </div>
+                                    </div>                                 
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="NoOfFollowUps">Sale Target</label>
+                                            @Html.EditorFor(model => model.SaleTarget, new { htmlAttributes = new { @class = "form-control", @id = "txtSaleTarget", @type="numeric" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='../List'" id="btnBack">Back to List</button>
+                            </div>
+
+                        </form>
+                    </div>
+                    <!-- /.card -->
+                </div>
+
+                <!--/.col (left) -->
+                <!-- right column -->
+                <div class="col-md-6">
+
+                </div>
+                <!--/.col (right) -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+<script>
+    $(window).on('load', function () {
+
+        if ('@ViewBag.AccessLevel' == "View") {
+            $('#quickForm :input').each(function () {
+                debugger;
+                if ($(this).attr('Id') != 'btnBack') {
+                    debugger;
+                    $(this).prop('disabled', true);
+                }
+            });
+        }
+    });
+
+
+    $(function () {
+        //debugger;
+        $.validator.setDefaults({
+            submitHandler: function () {
+                debugger;
+                // alert("Form successful submitted!");
+                fnSubmitUserDetails();
+            }
+        });
+        $('#quickForm').validate({
+
+            rules: {
+                saleDate: {
+                    required: true,
+                },
+                clientName: {
+                    required: true,
+                },
+            },
+            messages: {
+                saleDate: {
+                    required: "Please enter a email address",
+                },
+                clientName: {
+                    required: "Please provide a password",
+                },
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+    });
+
+    //Date picker
+    $('#txtDOB').datetimepicker({
+        format: 'L'
+    });
+    $('#txtDOJ').datetimepicker({
+        format: 'L'
+    });
+
+
+    function fnStatusChange() {
+        $("input[name=IsActive]").val(($('#ddlStatus').val()=='1' ? true: false));
+    }
+
+    function fnSubmitUserDetails() {
+        debugger;
+        var UserData = {
+            Id: $('#Id').val(),
+            IsActive: ($("input[name=IsActive]").val().toLowerCase() == 'true') ? true : false,
+            FullName: $('#txtFullName').val(),
+            UserId: $('#txtEmail').val(),
+            Password: $('#txtPassword').val(),
+            EmpId: $('#txtEmployeeId').val(),
+            DateOfBirth: $('#txtDOB').val(),
+            DateofJoining: $('#txtDOJ').val(),
+            ReportingManager: $('#ddlReportingManager').val(),
+            AddressLine1: $('#txtAddressLine1').val(),
+            AddressLine2: $('#txtAddressLine2').val(),
+            State: $('#txtState').val(),
+            City: $('#txtCity').val(),
+            PinCode: $('#txtPincode').val(),
+            SaleTarget: $('#txtSaleTarget').val(),
+        };
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: "/Admin/User/Edit",
+            data: JSON.stringify(UserData),
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data.status == "Success") {
+                    alert(data.message);
+                    window.location.href = data.redirectURL;
+                }
+                else {
+                    alert(data.message);
+                }
+            },
+            error: function () {
+                alert("Error occured!!  " + data.message)
+            }
+        });
+    }
+
+</script>
+
+

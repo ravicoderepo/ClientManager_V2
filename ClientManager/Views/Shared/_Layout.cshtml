@@ -2,6 +2,7 @@
     Layout = null;
     ViewBag.Title = "Dashboard";
     var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+
 }
 
 <!DOCTYPE html>
@@ -83,9 +84,8 @@
     <script src="~/Content/plugins/datatables-buttons/js/buttons.print.min.js"></script>
     <script src="~/Content/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <style>
-        .card-footer
-        {
-            text-align:right !important;
+        .card-footer {
+            text-align: right !important;
         }
     </style>
 </head>
@@ -105,7 +105,7 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" onclick="javascript:location.href='@Url.Action("MyDashboard", "Home")'" class="nav-link">Home</a>
+                    <a href="~/home/MyDashboard" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="~/Contact/Index" class="nav-link">Contact</a>
@@ -240,7 +240,7 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
+            <a href="~/Home/MyDashboard" class="brand-link">
                 <img src="~/Content/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">ClientManager</span>
             </a>
@@ -273,7 +273,7 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
-                        with font-awesome or any other icon font library -->
+    with font-awesome or any other icon font library -->
                         <li class="nav-item menu-open">
                             <a href="#" class="nav-link active">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -282,26 +282,53 @@
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
+
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="~/Home/MyDashboard" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>My Dashboard</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="~/Home/ManagerDashboard" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Manager Dashboard</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="~/Home/AdminDashboard" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Admin Dashboard</p>
-                                    </a>
-                                </li>
+                                @{
+                                    if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "admin"))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="~/Home/MyDashboard" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>My Dashboard</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="~/Home/AdminDashboard" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Admin Dashboard</p>
+                                            </a>
+                                        </li>
+                                    }
+                                    else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "salesrep"))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="~/Home/MyDashboard" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>My Dashboard</p>
+                                            </a>
+                                        </li>
+                                    }
+                                    else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "manager"))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="~/Home/MyDashboard" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>My Dashboard</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="~/Home/ManagerDashboard" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Manager Dashboard</p>
+                                            </a>
+                                        </li>
+                                    }
+                                }
+
                             </ul>
+
+
                         </li>
                         <li class="nav-header">ACTIVITY</li>
 
@@ -328,7 +355,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item menu-is-opening menu-open">
+                        <li class="nav-item menu-is-opening menu-open" style="display: none;">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-sticky-note"></i>
                                 <p>
@@ -351,8 +378,8 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-header">BILLING</li>
-                        <li class="nav-item menu-is-opening menu-open">
+                        @*<li class="nav-header">BILLING</li>*@
+                        <li class="nav-item menu-is-opening menu-open" style="display: block;">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-file-invoice"></i>
                                 <p>
@@ -377,7 +404,7 @@
                         </li>
                         <li class="nav-header">ADMIN</li>
                         <li class="nav-item">
-                            <a href="~/Admin/UserList" class="nav-link">
+                            <a href="~/Admin/User/List" class="nav-link">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>
                                     User Management
@@ -385,7 +412,15 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="~/Admin/Roles/List" class="nav-link">
+                                <i class="nav-icon fas fa-user-tie"></i>
+                                <p>
+                                    Roles
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="~/Admin/UserRoles/Create" class="nav-link">
                                 <i class="nav-icon fas fa-user-graduate"></i>
                                 <p>
                                     Role Mapping
@@ -397,7 +432,7 @@
                             <a href="~/Admin/UserList" class="nav-link">
                                 <i class="nav-icon fas fa-user-shield"></i>
                                 <p>
-                                    User Roles
+                                    Clients
                                 </p>
                             </a>
                         </li>
@@ -425,14 +460,14 @@
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-anchor"></i>
-                                <p>
-                                    Client Management
-                                </p>
-                            </a>
-                        </li>
+                        @*<li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-anchor"></i>
+                <p>
+                    Client Management
+                </p>
+            </a>
+        </li>*@
                         <li class="nav-header">REPORTS</li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -452,12 +487,12 @@
                         </li>
 
                         <li class="nav-header">MISCELLANEOUS</li>
-                        <li class="nav-item">
-                            <a href="iframe.html" class="nav-link">
-                                <i class="nav-icon fas fa-ellipsis-h"></i>
-                                <p>Tabbed IFrame Plugin</p>
-                            </a>
-                        </li>
+                        @*<li class="nav-item">
+            <a href="iframe.html" class="nav-link">
+                <i class="nav-icon fas fa-ellipsis-h"></i>
+                <p>Tabbed IFrame Plugin</p>
+            </a>
+        </li>*@
                         <li class="nav-item">
                             <a href="https://adminlte.io/docs/3.1/" class="nav-link">
                                 <i class="nav-icon fas fa-book-open"></i>
@@ -465,24 +500,24 @@
                             </a>
                         </li>
                         @*<li class="nav-header">LABELS</li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon far fa-circle text-danger"></i>
-                                    <p class="text">Important</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon far fa-circle text-warning"></i>
-                                    <p>Warning</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon far fa-circle text-info"></i>
-                                    <p>Informational</p>
-                                </a>
-                            </li>*@
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="nav-icon far fa-circle text-danger"></i>
+                <p class="text">Important</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="nav-icon far fa-circle text-warning"></i>
+                <p>Warning</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="nav-icon far fa-circle text-info"></i>
+                <p>Informational</p>
+            </a>
+        </li>*@
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -490,7 +525,7 @@
             <!-- /.sidebar -->
         </aside>
 
-        <!-- Content Wrapper. Contains page content -->
+        <!-- Content Wrapper.Contains page content -->
         @RenderBody()
         <!-- /.content-wrapper -->
         <footer class="main-footer">
@@ -509,17 +544,20 @@
     </div>
     <!-- ./wrapper -->
     <!-- jquery-validation -->
-    <script src="~/Content/plugins/jquery-validation/jquery.validate.min.js"></script>
-    <script src="~/Content/plugins/jquery-validation/additional-methods.min.js"></script>
+    <script src="~/Content/plugins/jquery-validation/jquery.validate.min.js">
+</ script >
+                            < script src="~/Content/plugins/jquery-validation/additional-methods.min.js"></script>
     @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
-    <script src="~/Scripts/jquery.validate.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
-    <script src="~/Scripts/jquery.validate.js"></script>
-    <script src="~/Content/dist/js/demo.js"></script>
+    <script src="~/Scripts/jquery.validate.js">
+</ script >
+                            < script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/jquery.validate.js">
+</ script >
+                            < script src="~/Content/dist/js/demo.js"></script>
     @*<script src="~/Content/plugins/sweetalert2/sweetalert2.min.js"></script>*@
     <!-- Toastr -->
     @*<script src="~/Content/plugins/toastr/toastr.min.js"></script>*@
-   
+
 </body>
 
 </html>

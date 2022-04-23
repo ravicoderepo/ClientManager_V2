@@ -17,7 +17,7 @@ namespace ClientManager.Controllers
     {
         private ClientManagerEntities db = new ClientManagerEntities();
 
-        [CustomAuthorize("Admin", "Manager", "SalesRep")]
+        [CustomAuthorize(new string[] { "Admin", "Manager", "SalesRep" })]
         // GET: SaleActivities
         public ActionResult ListView(string callDateFrom ="", string callDateTo="", int status=0, string productName = "", string phoneNo = "")
         {
@@ -59,7 +59,7 @@ namespace ClientManager.Controllers
             return PartialView(saleActivities.ToList());
         }
 
-        [CustomAuthorize("Admin", "Manager", "SalesRep")]
+        [CustomAuthorize(new string[] { "Admin", "Manager", "SalesRep" })]
         // GET: SaleActivities
         public ActionResult List()
         {
@@ -284,8 +284,7 @@ namespace ClientManager.Controllers
 
         private int UpdateData(SaleData saleData, SaleActivity saleActivity, UserDetails currentUser)
         {
-            db.Entry(saleActivity).State = EntityState.Modified;
-
+            this.db.Entry<SaleActivity>(saleActivity).State = EntityState.Modified;
             saleActivity.SaleDate = saleData.SaleDate;
             saleActivity.Status = saleData.Status;
             saleActivity.ClientPhoneNo = saleData.ClientPhoneNo;
@@ -295,19 +294,29 @@ namespace ClientManager.Controllers
             saleActivity.RecentCallDate = saleData.RecentCallDate;
             saleActivity.Capacity = saleData.Capacity;
             saleActivity.Unit = saleData.Unit;
-            saleActivity.Remarks = saleActivity.Remarks + ((!string.IsNullOrEmpty(saleData.Remarks)) ? "<br/>" + saleData.Remarks : "");
+            saleActivity.Remarks += !string.IsNullOrEmpty(saleData.Remarks) ? "<br/>" + saleData.Remarks + "-" + Convert.ToDateTime(saleData.RecentCallDate).ToShortDateString() : "";
             saleActivity.AnticipatedClosingDate = saleData.AnticipatedClosingDate;
             saleActivity.SalesRepresentativeId = saleData.SalesRepresentativeId;
-            saleActivity.NoOfFollowUps = (!string.IsNullOrEmpty(saleData.Remarks)) ? saleActivity.NoOfFollowUps + 1 : saleActivity.NoOfFollowUps;
-            saleActivity.InvoiceAmount = saleData.InvoiceAmount;
+            SaleActivity saleActivity1 = saleActivity;
+            int? nullable;
+            if (string.IsNullOrEmpty(saleData.Remarks))
+            {
+                nullable = saleActivity.NoOfFollowUps;
+            }
+            else
+            {
+                int? noOfFollowUps = saleActivity.NoOfFollowUps;
+                nullable = noOfFollowUps.HasValue ? new int?(noOfFollowUps.GetValueOrDefault() + 1) : new int?();
+            }
+            saleActivity1.NoOfFollowUps = nullable;
+            saleActivity.InvoiceAmount = new Decimal?(saleData.InvoiceAmount);
             saleActivity.InvoiceNo = saleData.InvoiceNo;
             saleActivity.DateOfClosing = saleData.DateOfClosing;
-            saleActivity.ModifiedOn = DateTime.Now;
-            saleActivity.ModifiedBy = currentUser.Id;
-
-            var lastSavedId = db.SaveChanges();
-            return lastSavedId;
+            saleActivity.ModifiedOn = new DateTime?(DateTime.Now);
+            saleActivity.ModifiedBy = new int?(currentUser.Id);
+            return this.db.SaveChanges();
         }
+
 
         // GET: SaleActivities/Delete/5
         [CustomAuthorize("Admin", "Manager", "SalesRep")]
@@ -370,9 +379,7 @@ namespace ClientManager.Controllers
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
-                db.Dispose();
-            }
+                this.db.Dispose();
             base.Dispose(disposing);
         }
     }

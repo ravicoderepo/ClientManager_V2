@@ -1,12 +1,15 @@
-﻿using System;
+﻿using DBOperation;
+using Microsoft.CSharp.RuntimeBinder;
+using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
-using System.Web;
+using System.Runtime.CompilerServices;
 using System.Web.Mvc;
-using DBOperation;
+
 
 namespace ClientManager.Controllers
 {
@@ -24,19 +27,15 @@ namespace ClientManager.Controllers
         // GET: Roles/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (!id.HasValue)
+                return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             Role role = db.Roles.Find(id);
-            if (role == null)
-            {
-                return HttpNotFound();
-            }
-            return View(role);
+            return role == null ? (ActionResult)this.HttpNotFound() : (ActionResult)this.View((object)role);            
         }
 
         // GET: Roles/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create()
         {
             ViewBag.CreatedBy = new SelectList(db.Users, "Id", "Password");
@@ -55,7 +54,7 @@ namespace ClientManager.Controllers
             {
                 db.Roles.Add(role);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return (ActionResult)this.RedirectToAction("Index");
             }
 
             ViewBag.CreatedBy = new SelectList(db.Users, "Id", "Password", role.CreatedBy);
@@ -101,35 +100,26 @@ namespace ClientManager.Controllers
         // GET: Roles/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (!id.HasValue)
+                return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             Role role = db.Roles.Find(id);
-            if (role == null)
-            {
-                return HttpNotFound();
-            }
-            return View(role);
-        }
+            return role == null ? (ActionResult)this.HttpNotFound() : (ActionResult)this.View((object)role);
+        }     
 
-        // POST: Roles/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Role role = db.Roles.Find(id);
-            db.Roles.Remove(role);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            this.db.Roles.Remove(this.db.Roles.Find(id));
+            this.db.SaveChanges();
+            return (ActionResult)this.RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
-                db.Dispose();
-            }
+                this.db.Dispose();
             base.Dispose(disposing);
         }
     }

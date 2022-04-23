@@ -53,13 +53,13 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="Status">Status</label>
-                                            @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus",  @onChange= "fnToggleInvoiceFields()" })
+                                            @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnToggleInvoiceFields()" })
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="Representative">Representative</label>
-                                            @Html.DropDownList("Representative", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlRepresentative", @disabled= "disabled" })
+                                            @Html.DropDownList("Representative", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlRepresentative", @disabled = "disabled" })
                                         </div>
                                     </div>
                                 </div>
@@ -101,7 +101,7 @@
                                         <div class="form-group">
                                             <label for="Unit">Unit</label>
                                             @*@Html.EditorFor(model => model.Unit, new { htmlAttributes = new { @class = "form-control", @id = "txtUnit" } })*@
-                                            @Html.DropDownList("Unit", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlUnit"})
+                                            @Html.DropDownList("Unit", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlUnit" })
                                         </div>
                                     </div>
                                 </div>
@@ -136,7 +136,7 @@
                                     </div>
 
                                 </div>
-                                <div class="row" id="pnlInvoice">                                   
+                                <div class="row" id="pnlInvoice">
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="InvoiceNo">Invoice No.</label>
@@ -149,7 +149,7 @@
                                             @Html.EditorFor(model => model.InvoiceAmount, new { htmlAttributes = new { @class = "form-control", @id = "txtInvoiceAmount" } })
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="DateOfClosing">Closing Date</label>
@@ -172,12 +172,12 @@
 
                                         </div>
                                     </div>
-                                </div>
-                                <!-- /.card-body -->
-                                <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Submit</button> <button type="button" onclick="" class="btn btn-danger">Cancel</button>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='List'">Back to List</button>
-                                </div>
+                                </div>  
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Submit</button> <button type="button" onclick="" class="btn btn-danger">Cancel</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='List'">Back to List</button>
                             </div>
                         </form>
                     </div>

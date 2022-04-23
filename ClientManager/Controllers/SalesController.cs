@@ -24,16 +24,10 @@ namespace ClientManager.Views.Sales
         // GET: Sales/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (!id.HasValue)
+                return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             Sale sale = db.Sales.Find(id);
-            if (sale == null)
-            {
-                return HttpNotFound();
-            }
-            return View(sale);
+            return sale == null ? (ActionResult)this.HttpNotFound() : (ActionResult)this.View((object)sale);
         }
 
         // GET: Sales/Create
@@ -113,23 +107,20 @@ namespace ClientManager.Views.Sales
             return View(sale);
         }
 
-        // POST: Sales/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Sale sale = db.Sales.Find(id);
-            db.Sales.Remove(sale);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            this.db.Sales.Remove(this.db.Sales.Find(id));
+            this.db.SaveChanges();
+            return (ActionResult)this.RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
-                db.Dispose();
-            }
+                this.db.Dispose();
             base.Dispose(disposing);
         }
     }

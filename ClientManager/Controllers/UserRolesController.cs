@@ -24,16 +24,10 @@ namespace ClientManager.Controllers
         // GET: UserRoles/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (!id.HasValue)
+                return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             UserRole userRole = db.UserRoles.Find(id);
-            if (userRole == null)
-            {
-                return HttpNotFound();
-            }
-            return View(userRole);
+            return userRole == null ? (ActionResult)this.HttpNotFound() : (ActionResult)this.View((object)userRole);
         }
 
         // GET: UserRoles/Create
@@ -113,16 +107,10 @@ namespace ClientManager.Controllers
         // GET: UserRoles/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            UserRole userRole = db.UserRoles.Find(id);
-            if (userRole == null)
-            {
-                return HttpNotFound();
-            }
-            return View(userRole);
+            if (!id.HasValue)
+                return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            UserRole model = this.db.UserRoles.Find(id);
+            return model == null ? (ActionResult)this.HttpNotFound() : (ActionResult)this.View((object)model);
         }
 
         // POST: UserRoles/Delete/5
@@ -130,18 +118,15 @@ namespace ClientManager.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            UserRole userRole = db.UserRoles.Find(id);
-            db.UserRoles.Remove(userRole);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            this.db.UserRoles.Remove(this.db.UserRoles.Find(id));
+            this.db.SaveChanges();
+            return (ActionResult)this.RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
-                db.Dispose();
-            }
+                this.db.Dispose();
             base.Dispose(disposing);
         }
     }

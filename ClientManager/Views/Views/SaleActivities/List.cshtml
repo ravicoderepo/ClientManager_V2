@@ -1,0 +1,223 @@
+﻿@model IEnumerable<DBOperation.SaleActivity>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Sales</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Sales</a></li>
+                        <li class="breadcrumb-item active">List</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-4 col-sm-8">
+                                    <h3 class="card-title">List of Sales Details</h3>
+                                </div>
+                                <div class="col-4 col-sm-2">
+                                    <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Adv. Search</button>
+                                </div>
+                                <div class="col-4 col-sm-2">
+                                    <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:location.href='@Url.Action("Create", "SaleActivities")'"><i class="fa fa-plus"></i> New</button>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div id="pnlAdvSearch">
+                                <div class="card-body" style="background-color:whitesmoke">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="callDateFrom">Call Date From</label>
+                                                <div class="input-group date" data-target-input="nearest">
+                                                    <input type="text" class="form-control datetimepicker-input" data-target="#txtCallDateFrom" name="callDateFrom" id="txtCallDateFrom">
+                                                    <div class="input-group-append" data-target="#txtCallDateFrom" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="callDateTo">Call Date To</label>
+                                                <div class="input-group date" data-target-input="nearest">
+                                                    <input type="text" class="form-control datetimepicker-input" data-target="#txtCallDateTo" name="callDateTo" id="txtCallDateTo">
+                                                    <div class="input-group-append" data-target="#txtCallDateTo" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Status">Status</label>
+                                                @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="ProductName">Product Name</label>
+                                                <input type="text" class="form-control" id="txtProductName" name="ProductName">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="PhoneNo">Phone No.</label>
+                                                <input type="text" class="form-control" id="txtPhoneNo" name="PhoneNo">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-footer">
+                                        <button type="submit" class="btn btn-primary btn-sm" onclick="javascript:fnSearch()"> <i class="fa fa-search"></i> Search</button>
+                                        <button type="button" onclick="javascript:fnClearSearch()" class="btn btn-danger btn-sm">Clear</button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="javascript:fnToggleAdvSearch('0')">Hide</button>
+                                    </div>
+                                </div>
+                                <br />
+                            </div>
+                            <div id="gridView">
+                                @Html.Partial("ListView", Model)
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+<script>
+    $('#pnlAdvSearch').hide();
+    function fnSearch() {
+        debugger;
+        var actionUrl = "/SaleActivities/ListView?" + "callDateFrom=" + $('#txtCallDateFrom').val().replace(/\//g, '-') + "&callDateTo=" + $('#txtCallDateTo').val().replace(/\//g, '-') + "&status=" + $('#ddlStatus').val() + "&productName=" + $('#txtProductName').val() + "&phoneNo=" + $('#txtPhoneNo').val();
+        $('#gridView').html('');
+        $.ajax({
+            url: actionUrl,
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            success: function (result) {
+                $('#gridView').html(result);
+            },
+            error: function (xhr, status) {
+                alert(status);
+            }
+        })
+    }
+
+    function fnToggleAdvSearch(action) {
+
+        if (action == '1') {
+            $('#pnlAdvSearch').show();
+        }
+        else {
+            $('#pnlAdvSearch').hide();
+        }
+    }
+
+    $('#txtCallDateTo').datetimepicker({
+        format: 'L'
+    });
+    $('#txtCallDateFrom').datetimepicker({
+        format: 'L'
+    });
+
+    function fnClearSearch() {
+        debugger;
+        $('#txtCallDateTo').val('');
+        $('#txtCallDateFrom').val('');
+        $('#txtProductName').val('');
+        $('#txtPhoneNo').val('');
+        $('#ddlStatus').val(0);
+
+
+    }
+
+    $(window).on('load', function () {
+        const params = new URLSearchParams(window.location.search)
+        debugger;
+        var searchQuery = "status="
+
+        if (params.has('status')) {
+            searchQuery += params.get('status');
+        }
+
+        var actionUrl = "/SaleActivities/ListView?" + searchQuery;
+
+        $('#gridView').html('');
+
+        $.ajax({
+            url: actionUrl,
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            success: function (result) {
+                $('#gridView').html(result);
+            },
+            error: function (xhr, status) {
+                alert(status);
+            }
+        })
+    });
+
+    //$(window).load(function () {
+    //    const params = new URLSearchParams(window.location.search)
+    //    debugger;
+    //    var searchQuery = "status="
+
+    //    if (params.has('status')) {
+    //        searchQuery += params.get('status');
+    //    }
+
+    //    var actionUrl = "/SaleActivities/ListView?" + searchQuery;
+
+    //    $('#gridView').html('');
+
+    //    $.ajax({
+    //        url: actionUrl,
+    //        contentType: 'application/html; charset=utf-8',
+    //        type: 'GET',
+    //        dataType: 'html',
+    //        success: function (result) {
+    //            $('#gridView').html(result);
+    //        },
+    //        error: function (xhr, status) {
+    //            alert(status);
+    //        }
+    //    })
+
+    //});
+
+</script>

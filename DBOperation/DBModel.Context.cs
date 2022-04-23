@@ -43,10 +43,23 @@ namespace DBOperation
         public virtual DbSet<UserContact> UserContacts { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
     
-        public virtual ObjectResult<GetMonthlySalesReport_Result> GetMonthlySalesReport()
+        public virtual ObjectResult<GetMonthlySalesReport_Result> GetMonthlySalesReport(string userType, Nullable<int> currentUserId, Nullable<int> userManagerId)
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetMonthlySalesReport_Result>("GetMonthlySalesReport");
+            var userTypeParameter = userType != null ?
+                new ObjectParameter("UserType", userType) :
+                new ObjectParameter("UserType", typeof(string));
+    
+            var currentUserIdParameter = currentUserId.HasValue ?
+                new ObjectParameter("CurrentUserId", currentUserId) :
+                new ObjectParameter("CurrentUserId", typeof(int));
+    
+            var userManagerIdParameter = userManagerId.HasValue ?
+                new ObjectParameter("UserManagerId", userManagerId) :
+                new ObjectParameter("UserManagerId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetMonthlySalesReport_Result>("GetMonthlySalesReport", userTypeParameter, currentUserIdParameter, userManagerIdParameter);
         }
     }
 }

@@ -58,6 +58,7 @@
         <AssociationConnector Association="ClientManagerModel.FK_Users_Users" />
         <AssociationConnector Association="ClientManagerModel.FK_Users_Users1" />
         <AssociationConnector Association="ClientManagerModel.FK_Users_Users2" />
+        <EntityTypeShape EntityType="ClientManagerModel.Employee" Width="1.5" PointX="0.75" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
