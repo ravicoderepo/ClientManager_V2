@@ -49,7 +49,7 @@
                         <form id="quickForm">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="status">Status</label>
                                             @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "Id" } })
@@ -57,33 +57,30 @@
                                             @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="FullName">Full Name</label>
                                             @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control", @id = "txtFullName", @name = "FullName" } })
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="status">User/Email Id</label>
                                             @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @id = "txtEmail", @name = "Email" } })
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="status">Password</label>
-                                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @id = "txtPassword", @name = "Password", @type = "Password" } })                                            
+                                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @id = "txtPassword", @name = "Password", @type = "Password" } })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="status">Employee Id</label>
-                                            @Html.EditorFor(model => model.EmployeeId, new { htmlAttributes = new { @class = "form-control", @id = "txtEmployeeId", @name = "EmployeeId" } })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
+
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="status">Date of Birth</label>
                                             <div class="input-group date" data-target-input="nearest">
@@ -94,7 +91,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="status">Date of Joining</label>
                                             <div class="input-group date" data-target-input="nearest">
@@ -105,7 +102,30 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="status">Employee Id</label>
+                                            @Html.EditorFor(model => model.EmployeeId, new { htmlAttributes = new { @class = "form-control", @id = "txtEmployeeId", @name = "EmployeeId" } })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="ReportingManager">Reporting Manager</label>
+                                                    @Html.DropDownList("ReportingManager", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlReportingManager", @name = "ReportingManager" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="NoOfFollowUps">Sale Target</label>
+                                                    @Html.EditorFor(model => model.SaleTarget, new { htmlAttributes = new { @class = "form-control", @id = "txtSaleTarget", @type = "numeric" } })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
@@ -123,36 +143,26 @@
 
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="status">State</label>
                                             @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control", @id = "txtState", @name = "State" } })
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="status">City</label>
-                                            @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", @id = "txtCity", @name = "City" } })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="status">Pin Code</label>
-                                            @Html.EditorFor(model => model.Pincode, new { htmlAttributes = new { @class = "form-control", @id = "txtPincode", @name = "Pincode" } })
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="ReportingManager">Reporting Manager</label>
-                                            @Html.DropDownList("ReportingManager", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlReportingManager", @name = "ReportingManager" })
-                                        </div>
-                                    </div>                                 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="NoOfFollowUps">Sale Target</label>
-                                            @Html.EditorFor(model => model.SaleTarget, new { htmlAttributes = new { @class = "form-control", @id = "txtSaleTarget", @type="numeric" } })
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="status">City</label>
+                                                    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", @id = "txtCity", @name = "City" } })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="status">Pin Code</label>
+                                                    @Html.EditorFor(model => model.Pincode, new { htmlAttributes = new { @class = "form-control", @id = "txtPincode", @name = "Pincode" } })
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

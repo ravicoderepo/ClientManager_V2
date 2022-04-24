@@ -172,7 +172,7 @@
 
                                         </div>
                                     </div>
-                                </div>  
+                                </div>
                             </div>
                             <!-- /.card-body -->
                             <div class="card-footer">
@@ -265,7 +265,7 @@
     $('#txtAnticipatedClosingDate').datetimepicker({
         format: 'L'
     });
-    
+
     //$('#txtClosingDate').datetimepicker({
     //    format: 'L', useCurrent: true
     //});
@@ -278,20 +278,20 @@
         $datetimepicker.datetimepicker('clear');
     });
 
-    function fnToggleInvoiceFields()
-    {
+    function fnToggleInvoiceFields() {
         debugger;
         //6-Closed
         if ($('#ddlStatus').val() == "6") {
             $('#pnlInvoice').show();
         }
-        else
-        {
+        else {
             $('#pnlInvoice').hide();
         }
     }
 
     function fnSubmitSaleDetails() {
+
+
         var SaleData = {
             SaleDate: $('#txtSaleDate').val(),
             SalesRepresentativeId: $('#ddlRepresentative').val(),
@@ -305,12 +305,15 @@
             RecentCallDate: $('#txtRecentCallDate').val(),
             AnticipatedClosingDate: $('#txtAnticipatedClosingDate').val(),
             NoOfFollowUps: $('#txtNoOfFollowUps').val(),
-            //InvoiceNo: $('#txtInvoiceNo').val(),
-            //InvoiceAmount: $('#txtInvoiceNo').val(),
-            //DateOfClosing: $('#txtClosingDate').val(),
+            InvoiceNo: $('#txtInvoiceNo').val(),
+            InvoiceAmount: $('#txtInvoiceAmount').val(),
+            DateOfClosing: $('#txtClosingDate').val(),
             Remarks: $('#txtRemarks').val()
         };
-        debugger;
+
+        var data = JSON.stringify(SaleData);
+        console.log('testdata:- ' + data);
+
         $.ajax({
             type: "POST",
             url: "/SaleActivities/Create",

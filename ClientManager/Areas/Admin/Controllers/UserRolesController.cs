@@ -32,7 +32,7 @@ namespace ClientManager.Areas.Admin.Controllers
       return model == null ? (ActionResult) this.HttpNotFound() : (ActionResult) this.View((object) model);
     }
 
-    [CustomAuthorize(new string[] {"Admin"})]
+    [CustomAuthorize("Admin")]
     public ActionResult Create(int userId = 1)
     {
       var list = this.db.UserRoles.Where<DBOperation.UserRole>((Expression<Func<DBOperation.UserRole, bool>>) (wh => wh.UserId == userId)).Select(sel => new
@@ -52,7 +52,7 @@ namespace ClientManager.Areas.Admin.Controllers
     }
 
     [HttpPost]
-    [CustomAuthorize(new string[] {"Admin"})]
+    [CustomAuthorize("Admin")]
     public ActionResult Create(UserRoleData userRoleData)
     {
       JsonReponse jsonReponse = (JsonReponse) null;

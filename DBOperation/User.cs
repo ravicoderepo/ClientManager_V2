@@ -23,6 +23,12 @@ namespace DBOperation
             this.Clients1 = new HashSet<Client>();
             this.Contacts = new HashSet<Contact>();
             this.Contacts1 = new HashSet<Contact>();
+            this.DocumentManagements = new HashSet<DocumentManagement>();
+            this.DocumentManagements1 = new HashSet<DocumentManagement>();
+            this.ExpenceCategories = new HashSet<ExpenceCategory>();
+            this.ExpenceCategories1 = new HashSet<ExpenceCategory>();
+            this.PettyCashes = new HashSet<PettyCash>();
+            this.PettyCashes1 = new HashSet<PettyCash>();
             this.Projects = new HashSet<Project>();
             this.RepresentativeSaleTargets = new HashSet<RepresentativeSaleTarget>();
             this.RepresentativeSaleTargets1 = new HashSet<RepresentativeSaleTarget>();
@@ -50,20 +56,20 @@ namespace DBOperation
         public string FullName { get; set; }
         public string Email { get; set; }
         public Nullable<bool> IsActive { get; set; }
-        public Nullable<int> ReportingManager { get; set; }
-        public Nullable<System.DateTime> CreatedOn { get; set; }
-        public Nullable<int> CreatedBy { get; set; }
-        public Nullable<System.DateTime> ModifiedOn { get; set; }
-        public Nullable<int> ModifiedBy { get; set; }
         public Nullable<System.DateTime> DateOfBirth { get; set; }
+        public Nullable<System.DateTime> DateOfJoining { get; set; }
         public string EmployeeId { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public string State { get; set; }
         public string City { get; set; }
         public string Pincode { get; set; }
-        public Nullable<System.DateTime> DateOfJoining { get; set; }
+        public Nullable<int> ReportingManager { get; set; }
         public Nullable<int> SaleTarget { get; set; }
+        public Nullable<System.DateTime> CreatedOn { get; set; }
+        public Nullable<int> CreatedBy { get; set; }
+        public Nullable<System.DateTime> ModifiedOn { get; set; }
+        public Nullable<int> ModifiedBy { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ClientContact> ClientContacts { get; set; }
@@ -77,6 +83,18 @@ namespace DBOperation
         public virtual ICollection<Contact> Contacts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Contact> Contacts1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocumentManagement> DocumentManagements { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocumentManagement> DocumentManagements1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ExpenceCategory> ExpenceCategories { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ExpenceCategory> ExpenceCategories1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PettyCash> PettyCashes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PettyCash> PettyCashes1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Project> Projects { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

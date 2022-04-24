@@ -30,6 +30,11 @@ namespace DBOperation
         public virtual DbSet<ClientContact> ClientContacts { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
+        public virtual DbSet<DocumentManagement> DocumentManagements { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<ExpenceCategory> ExpenceCategories { get; set; }
+        public virtual DbSet<ExpenceTracker> ExpenceTrackers { get; set; }
+        public virtual DbSet<PettyCash> PettyCashes { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProjectClient> ProjectClients { get; set; }
         public virtual DbSet<Project> Projects { get; set; }
@@ -43,7 +48,6 @@ namespace DBOperation
         public virtual DbSet<UserContact> UserContacts { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Employee> Employees { get; set; }
     
         public virtual ObjectResult<GetMonthlySalesReport_Result> GetMonthlySalesReport(string userType, Nullable<int> currentUserId, Nullable<int> userManagerId)
         {

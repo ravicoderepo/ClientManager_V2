@@ -54,6 +54,25 @@
           <Property Name="ModifiedOn" Type="datetime" />
           <Property Name="ModifiedBy" Type="int" />
         </EntityType>
+        <EntityType Name="DocumentManagement">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DocumentSource" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ReferenceRecId" Type="int" />
+          <Property Name="DocumentName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="FileExtension" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="FileData" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="URL" Type="nvarchar" MaxLength="500" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" />
+          <Property Name="ModifiedOn" Type="datetime" />
+        </EntityType>
         <EntityType Name="Employee">
           <Key>
             <PropertyRef Name="Id" />
@@ -76,6 +95,51 @@
           <Property Name="CreatedBy" Type="int" />
           <Property Name="ModifiedOn" Type="datetime" />
           <Property Name="ModifiedBy" Type="int" />
+        </EntityType>
+        <EntityType Name="ExpenceCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CategoryName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="ModifiedOn" Type="datetime" />
+          <Property Name="ModifiedBy" Type="int" />
+        </EntityType>
+        <EntityType Name="ExpenceTracker">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ExpenceAmount" Type="money" Nullable="false" />
+          <Property Name="ExpenceDate" Type="datetime" Nullable="false" />
+          <Property Name="ExpenceCategoryId" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="AmountPaid" Type="money" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreatedDate" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" />
+          <Property Name="ModifiedOn" Type="datetime" />
+        </EntityType>
+        <EntityType Name="PettyCash">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="AmountReceived" Type="money" Nullable="false" />
+          <Property Name="AmountRecivedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModeOfPayment" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" />
+          <Property Name="ModifiedOn" Type="datetime" />
         </EntityType>
         <EntityType Name="Products">
           <Key>
@@ -376,6 +440,90 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Contact">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocumentManagement_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="DocumentManagement" Type="Self.DocumentManagement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DocumentManagement">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocumentManagement_Users1">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="DocumentManagement" Type="Self.DocumentManagement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DocumentManagement">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExpenceCategory_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="ExpenceCategory" Type="Self.ExpenceCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExpenceCategory">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExpenceCategory_Users1">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="ExpenceCategory" Type="Self.ExpenceCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExpenceCategory">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExpenceTracker_ExpenceCategory">
+          <End Role="ExpenceCategory" Type="Self.ExpenceCategory" Multiplicity="1" />
+          <End Role="ExpenceTracker" Type="Self.ExpenceTracker" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ExpenceCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExpenceTracker">
+              <PropertyRef Name="ExpenceCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PettyCash_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="PettyCash" Type="Self.PettyCash" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PettyCash">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PettyCash_Users1">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="PettyCash" Type="Self.PettyCash" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PettyCash">
               <PropertyRef Name="ModifiedBy" />
             </Dependent>
           </ReferentialConstraint>
@@ -737,7 +885,11 @@
           <EntitySet Name="ClientContacts" EntityType="Self.ClientContacts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Clients" EntityType="Self.Clients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Contact" EntityType="Self.Contact" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocumentManagement" EntityType="Self.DocumentManagement" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExpenceCategory" EntityType="Self.ExpenceCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExpenceTracker" EntityType="Self.ExpenceTracker" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PettyCash" EntityType="Self.PettyCash" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectClient" EntityType="Self.ProjectClient" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Projects" EntityType="Self.Projects" Schema="dbo" store:Type="Tables" />
@@ -782,6 +934,34 @@
           <AssociationSet Name="FK_Contact_Users1" Association="Self.FK_Contact_Users1">
             <End Role="Users" EntitySet="Users" />
             <End Role="Contact" EntitySet="Contact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocumentManagement_Users" Association="Self.FK_DocumentManagement_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="DocumentManagement" EntitySet="DocumentManagement" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocumentManagement_Users1" Association="Self.FK_DocumentManagement_Users1">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="DocumentManagement" EntitySet="DocumentManagement" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExpenceCategory_Users" Association="Self.FK_ExpenceCategory_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="ExpenceCategory" EntitySet="ExpenceCategory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExpenceCategory_Users1" Association="Self.FK_ExpenceCategory_Users1">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="ExpenceCategory" EntitySet="ExpenceCategory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExpenceTracker_ExpenceCategory" Association="Self.FK_ExpenceTracker_ExpenceCategory">
+            <End Role="ExpenceCategory" EntitySet="ExpenceCategory" />
+            <End Role="ExpenceTracker" EntitySet="ExpenceTracker" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PettyCash_Users" Association="Self.FK_PettyCash_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="PettyCash" EntitySet="PettyCash" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PettyCash_Users1" Association="Self.FK_PettyCash_Users1">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="PettyCash" EntitySet="PettyCash" />
           </AssociationSet>
           <AssociationSet Name="FK_ProjectClient_ClientDetails" Association="Self.FK_ProjectClient_ClientDetails">
             <End Role="Clients" EntitySet="Clients" />
@@ -905,9 +1085,19 @@
     <edmx:ConceptualModels>
       <Schema Namespace="ClientManagerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="ClientManagerEntities" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="GetMonthlySalesReport" ReturnType="Collection(ClientManagerModel.GetMonthlySalesReport_Result)" >
+            <Parameter Name="UserType" Mode="In" Type="String" />
+            <Parameter Name="CurrentUserId" Mode="In" Type="Int32" />
+            <Parameter Name="UserManagerId" Mode="In" Type="Int32" />
+          </FunctionImport>
           <EntitySet Name="ClientContacts" EntityType="ClientManagerModel.ClientContact" />
           <EntitySet Name="Clients" EntityType="ClientManagerModel.Client" />
           <EntitySet Name="Contacts" EntityType="ClientManagerModel.Contact" />
+          <EntitySet Name="DocumentManagements" EntityType="ClientManagerModel.DocumentManagement" />
+          <EntitySet Name="Employees" EntityType="ClientManagerModel.Employee" />
+          <EntitySet Name="ExpenceCategories" EntityType="ClientManagerModel.ExpenceCategory" />
+          <EntitySet Name="ExpenceTrackers" EntityType="ClientManagerModel.ExpenceTracker" />
+          <EntitySet Name="PettyCashes" EntityType="ClientManagerModel.PettyCash" />
           <EntitySet Name="Products" EntityType="ClientManagerModel.Product" />
           <EntitySet Name="ProjectClients" EntityType="ClientManagerModel.ProjectClient" />
           <EntitySet Name="Projects" EntityType="ClientManagerModel.Project" />
@@ -956,6 +1146,34 @@
           <AssociationSet Name="FK_Contact_Users1" Association="ClientManagerModel.FK_Contact_Users1">
             <End Role="User" EntitySet="Users" />
             <End Role="Contact" EntitySet="Contacts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocumentManagement_Users" Association="ClientManagerModel.FK_DocumentManagement_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="DocumentManagement" EntitySet="DocumentManagements" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocumentManagement_Users1" Association="ClientManagerModel.FK_DocumentManagement_Users1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="DocumentManagement" EntitySet="DocumentManagements" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExpenceCategory_Users" Association="ClientManagerModel.FK_ExpenceCategory_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ExpenceCategory" EntitySet="ExpenceCategories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExpenceCategory_Users1" Association="ClientManagerModel.FK_ExpenceCategory_Users1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ExpenceCategory" EntitySet="ExpenceCategories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExpenceTracker_ExpenceCategory" Association="ClientManagerModel.FK_ExpenceTracker_ExpenceCategory">
+            <End Role="ExpenceCategory" EntitySet="ExpenceCategories" />
+            <End Role="ExpenceTracker" EntitySet="ExpenceTrackers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PettyCash_Users" Association="ClientManagerModel.FK_PettyCash_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="PettyCash" EntitySet="PettyCashes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PettyCash_Users1" Association="ClientManagerModel.FK_PettyCash_Users1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="PettyCash" EntitySet="PettyCashes" />
           </AssociationSet>
           <AssociationSet Name="FK_SaleActivity_Products" Association="ClientManagerModel.FK_SaleActivity_Products">
             <End Role="Product" EntitySet="Products" />
@@ -1069,13 +1287,13 @@
             <End Role="User" EntitySet="Users" />
             <End Role="User1" EntitySet="Users" />
           </AssociationSet>
-          <FunctionImport Name="GetMonthlySalesReport" ReturnType="Collection(ClientManagerModel.GetMonthlySalesReport_Result)" >
-            <Parameter Name="UserType" Mode="In" Type="String" />
-            <Parameter Name="CurrentUserId" Mode="In" Type="Int32" />
-            <Parameter Name="UserManagerId" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <EntitySet Name="Employees" EntityType="ClientManagerModel.Employee" />
-        </EntityContainer>
+          </EntityContainer>
+        <ComplexType Name="GetMonthlySalesReport_Result" >
+          <Property Type="Int32" Name="mname" Nullable="true" />
+          <Property Type="Int32" Name="calls" Nullable="true" />
+          <Property Type="Int32" Name="orders" Nullable="true" />
+          <Property Type="Int32" Name="cancels" Nullable="true" />
+        </ComplexType>
         <EntityType Name="ClientContact">
           <Key>
             <PropertyRef Name="Id" />
@@ -1135,6 +1353,101 @@
           <NavigationProperty Name="ClientContacts" Relationship="ClientManagerModel.FK_ClientContacts_Contact" FromRole="Contact" ToRole="ClientContact" />
           <NavigationProperty Name="User" Relationship="ClientManagerModel.FK_Contact_Users" FromRole="Contact" ToRole="User" />
           <NavigationProperty Name="User1" Relationship="ClientManagerModel.FK_Contact_Users1" FromRole="Contact" ToRole="User" />
+        </EntityType>
+        <EntityType Name="DocumentManagement">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DocumentSource" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ReferenceRecId" Type="Int32" />
+          <Property Name="DocumentName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FileExtension" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="FileData" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="URL" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="User" Relationship="ClientManagerModel.FK_DocumentManagement_Users" FromRole="DocumentManagement" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="ClientManagerModel.FK_DocumentManagement_Users1" FromRole="DocumentManagement" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="DateOfBirth" Type="DateTime" Precision="3" />
+          <Property Name="DateOfJoining" Type="DateTime" Precision="3" />
+          <Property Name="EmployeeId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AddressLine1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="AddressLine2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Pincode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ReportingManager" Type="Int32" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int32" />
+        </EntityType>
+        <EntityType Name="ExpenceCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="ClientManagerModel.FK_ExpenceCategory_Users" FromRole="ExpenceCategory" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="ClientManagerModel.FK_ExpenceCategory_Users1" FromRole="ExpenceCategory" ToRole="User" />
+          <NavigationProperty Name="ExpenceTrackers" Relationship="ClientManagerModel.FK_ExpenceTracker_ExpenceCategory" FromRole="ExpenceCategory" ToRole="ExpenceTracker" />
+        </EntityType>
+        <EntityType Name="ExpenceTracker">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExpenceAmount" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="ExpenceDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ExpenceCategoryId" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="AmountPaid" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="ExpenceCategory" Relationship="ClientManagerModel.FK_ExpenceTracker_ExpenceCategory" FromRole="ExpenceTracker" ToRole="ExpenceCategory" />
+        </EntityType>
+        <EntityType Name="PettyCash">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="AmountReceived" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="AmountRecivedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModeOfPayment" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="User" Relationship="ClientManagerModel.FK_PettyCash_Users" FromRole="PettyCash" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="ClientManagerModel.FK_PettyCash_Users1" FromRole="PettyCash" ToRole="User" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -1362,7 +1675,16 @@
           <Property Name="FullName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" />
+          <Property Name="DateOfBirth" Type="DateTime" Precision="3" />
+          <Property Name="DateOfJoining" Type="DateTime" Precision="3" />
+          <Property Name="EmployeeId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AddressLine1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="AddressLine2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Pincode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ReportingManager" Type="Int32" />
+          <Property Name="SaleTarget" Type="Int32" />
           <Property Name="CreatedOn" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="Int32" />
           <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
@@ -1373,6 +1695,12 @@
           <NavigationProperty Name="Clients1" Relationship="ClientManagerModel.FK_Clients_Users1" FromRole="User" ToRole="Client" />
           <NavigationProperty Name="Contacts" Relationship="ClientManagerModel.FK_Contact_Users" FromRole="User" ToRole="Contact" />
           <NavigationProperty Name="Contacts1" Relationship="ClientManagerModel.FK_Contact_Users1" FromRole="User" ToRole="Contact" />
+          <NavigationProperty Name="DocumentManagements" Relationship="ClientManagerModel.FK_DocumentManagement_Users" FromRole="User" ToRole="DocumentManagement" />
+          <NavigationProperty Name="DocumentManagements1" Relationship="ClientManagerModel.FK_DocumentManagement_Users1" FromRole="User" ToRole="DocumentManagement" />
+          <NavigationProperty Name="ExpenceCategories" Relationship="ClientManagerModel.FK_ExpenceCategory_Users" FromRole="User" ToRole="ExpenceCategory" />
+          <NavigationProperty Name="ExpenceCategories1" Relationship="ClientManagerModel.FK_ExpenceCategory_Users1" FromRole="User" ToRole="ExpenceCategory" />
+          <NavigationProperty Name="PettyCashes" Relationship="ClientManagerModel.FK_PettyCash_Users" FromRole="User" ToRole="PettyCash" />
+          <NavigationProperty Name="PettyCashes1" Relationship="ClientManagerModel.FK_PettyCash_Users1" FromRole="User" ToRole="PettyCash" />
           <NavigationProperty Name="Projects" Relationship="ClientManagerModel.FK_ProjectDetails_UserDetails" FromRole="User" ToRole="Project" />
           <NavigationProperty Name="RepresentativeSaleTargets" Relationship="ClientManagerModel.FK_RepresentativeSaleTarget_Users" FromRole="User" ToRole="RepresentativeSaleTarget" />
           <NavigationProperty Name="RepresentativeSaleTargets1" Relationship="ClientManagerModel.FK_RepresentativeSaleTarget_Users1" FromRole="User" ToRole="RepresentativeSaleTarget" />
@@ -1396,15 +1724,6 @@
           <NavigationProperty Name="User2" Relationship="ClientManagerModel.FK_Users_Users1" FromRole="User1" ToRole="User" />
           <NavigationProperty Name="Users12" Relationship="ClientManagerModel.FK_Users_Users2" FromRole="User" ToRole="User1" />
           <NavigationProperty Name="User3" Relationship="ClientManagerModel.FK_Users_Users2" FromRole="User1" ToRole="User" />
-          <Property Name="DateOfBirth" Type="DateTime" Precision="3" />
-          <Property Name="EmployeeId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="AddressLine1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="AddressLine2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Pincode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="DateOfJoining" Type="DateTime" Precision="3" />
-          <Property Name="SaleTarget" Type="Int32" />
         </EntityType>
         <Association Name="FK_ClientContacts_Clients">
           <End Type="ClientManagerModel.Client" Role="Client" Multiplicity="1" />
@@ -1510,6 +1829,90 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Contact">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocumentManagement_Users">
+          <End Type="ClientManagerModel.User" Role="User" Multiplicity="1" />
+          <End Type="ClientManagerModel.DocumentManagement" Role="DocumentManagement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DocumentManagement">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocumentManagement_Users1">
+          <End Type="ClientManagerModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="ClientManagerModel.DocumentManagement" Role="DocumentManagement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DocumentManagement">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExpenceCategory_Users">
+          <End Type="ClientManagerModel.User" Role="User" Multiplicity="1" />
+          <End Type="ClientManagerModel.ExpenceCategory" Role="ExpenceCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExpenceCategory">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExpenceCategory_Users1">
+          <End Type="ClientManagerModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="ClientManagerModel.ExpenceCategory" Role="ExpenceCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExpenceCategory">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExpenceTracker_ExpenceCategory">
+          <End Type="ClientManagerModel.ExpenceCategory" Role="ExpenceCategory" Multiplicity="1" />
+          <End Type="ClientManagerModel.ExpenceTracker" Role="ExpenceTracker" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ExpenceCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExpenceTracker">
+              <PropertyRef Name="ExpenceCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PettyCash_Users">
+          <End Type="ClientManagerModel.User" Role="User" Multiplicity="1" />
+          <End Type="ClientManagerModel.PettyCash" Role="PettyCash" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PettyCash">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PettyCash_Users1">
+          <End Type="ClientManagerModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="ClientManagerModel.PettyCash" Role="PettyCash" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PettyCash">
               <PropertyRef Name="ModifiedBy" />
             </Dependent>
           </ReferentialConstraint>
@@ -1850,41 +2253,22 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="GetMonthlySalesReport_Result" >
-          <Property Type="Int32" Name="mname" Nullable="true" />
-          <Property Type="Int32" Name="calls" Nullable="true" />
-          <Property Type="Int32" Name="orders" Nullable="true" />
-          <Property Type="Int32" Name="cancels" Nullable="true" />
-        </ComplexType>
-        <EntityType Name="Employee">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="IsActive" Type="Boolean" />
-          <Property Name="DateOfBirth" Type="DateTime" Precision="3" />
-          <Property Name="DateOfJoining" Type="DateTime" Precision="3" />
-          <Property Name="EmployeeId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="AddressLine1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="AddressLine2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Pincode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ReportingManager" Type="Int32" />
-          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedBy" Type="Int32" />
-        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="ClientManagerModelStoreContainer" CdmEntityContainer="ClientManagerEntities">
+          <FunctionImportMapping FunctionImportName="GetMonthlySalesReport" FunctionName="ClientManagerModel.Store.GetMonthlySalesReport" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ClientManagerModel.GetMonthlySalesReport_Result">
+                <ScalarProperty Name="mname" ColumnName="mname" />
+                <ScalarProperty Name="calls" ColumnName="calls" />
+                <ScalarProperty Name="orders" ColumnName="orders" />
+                <ScalarProperty Name="cancels" ColumnName="cancels" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <EntitySetMapping Name="ClientContacts">
             <EntityTypeMapping TypeName="ClientManagerModel.ClientContact">
               <MappingFragment StoreEntitySet="ClientContacts">
@@ -1933,6 +2317,98 @@
                 <ScalarProperty Name="Designation" ColumnName="Designation" />
                 <ScalarProperty Name="ContactPersonName" ColumnName="ContactPersonName" />
                 <ScalarProperty Name="ContactType" ColumnName="ContactType" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DocumentManagements">
+            <EntityTypeMapping TypeName="ClientManagerModel.DocumentManagement">
+              <MappingFragment StoreEntitySet="DocumentManagement">
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="URL" ColumnName="URL" />
+                <ScalarProperty Name="FileData" ColumnName="FileData" />
+                <ScalarProperty Name="FileExtension" ColumnName="FileExtension" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DocumentName" ColumnName="DocumentName" />
+                <ScalarProperty Name="ReferenceRecId" ColumnName="ReferenceRecId" />
+                <ScalarProperty Name="DocumentSource" ColumnName="DocumentSource" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employees">
+            <EntityTypeMapping TypeName="ClientManagerModel.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="ReportingManager" ColumnName="ReportingManager" />
+                <ScalarProperty Name="Pincode" ColumnName="Pincode" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
+                <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="DateOfJoining" ColumnName="DateOfJoining" />
+                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExpenceCategories">
+            <EntityTypeMapping TypeName="ClientManagerModel.ExpenceCategory">
+              <MappingFragment StoreEntitySet="ExpenceCategory">
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExpenceTrackers">
+            <EntityTypeMapping TypeName="ClientManagerModel.ExpenceTracker">
+              <MappingFragment StoreEntitySet="ExpenceTracker">
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="AmountPaid" ColumnName="AmountPaid" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ExpenceCategoryId" ColumnName="ExpenceCategoryId" />
+                <ScalarProperty Name="ExpenceDate" ColumnName="ExpenceDate" />
+                <ScalarProperty Name="ExpenceAmount" ColumnName="ExpenceAmount" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PettyCashes">
+            <EntityTypeMapping TypeName="ClientManagerModel.PettyCash">
+              <MappingFragment StoreEntitySet="PettyCash">
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ModeOfPayment" ColumnName="ModeOfPayment" />
+                <ScalarProperty Name="AmountRecivedDate" ColumnName="AmountRecivedDate" />
+                <ScalarProperty Name="AmountReceived" ColumnName="AmountReceived" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2135,20 +2611,20 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="ClientManagerModel.User">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
                 <ScalarProperty Name="SaleTarget" ColumnName="SaleTarget" />
-                <ScalarProperty Name="DateOfJoining" ColumnName="DateOfJoining" />
+                <ScalarProperty Name="ReportingManager" ColumnName="ReportingManager" />
                 <ScalarProperty Name="Pincode" ColumnName="Pincode" />
                 <ScalarProperty Name="City" ColumnName="City" />
                 <ScalarProperty Name="State" ColumnName="State" />
                 <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
                 <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
                 <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="DateOfJoining" ColumnName="DateOfJoining" />
                 <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
-                <ScalarProperty Name="ReportingManager" ColumnName="ReportingManager" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="FullName" ColumnName="FullName" />
@@ -2157,41 +2633,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetMonthlySalesReport" FunctionName="ClientManagerModel.Store.GetMonthlySalesReport" >
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="ClientManagerModel.GetMonthlySalesReport_Result">
-                <ScalarProperty Name="mname" ColumnName="mname" />
-                <ScalarProperty Name="calls" ColumnName="calls" />
-                <ScalarProperty Name="orders" ColumnName="orders" />
-                <ScalarProperty Name="cancels" ColumnName="cancels" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <EntitySetMapping Name="Employees">
-            <EntityTypeMapping TypeName="ClientManagerModel.Employee">
-              <MappingFragment StoreEntitySet="Employee">
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
-                <ScalarProperty Name="ReportingManager" ColumnName="ReportingManager" />
-                <ScalarProperty Name="Pincode" ColumnName="Pincode" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="State" ColumnName="State" />
-                <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
-                <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
-                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
-                <ScalarProperty Name="DateOfJoining" ColumnName="DateOfJoining" />
-                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-        </EntityContainerMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

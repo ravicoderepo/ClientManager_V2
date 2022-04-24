@@ -134,19 +134,6 @@ namespace ClientManager.Areas.Admin.Controllers
         public ActionResult Create(UserData userData)
         {
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
-            // ISSUE: reference to a compiler-generated field
-            //if (UserController.\u003C\u003Eo__5.\u003C\u003Ep__0 == null)
-            //{
-            //  // ISSUE: reference to a compiler-generated field
-            //  UserController.\u003C\u003Eo__5.\u003C\u003Ep__0 = CallSite<Func<CallSite, object, SelectList, object>>.Create(Binder.SetMember(CSharpBinderFlags.None, "ReportingManager", typeof (UserController), (IEnumerable<CSharpArgumentInfo>) new CSharpArgumentInfo[2]
-            //  {
-            //    CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, (string) null),
-            //    CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.UseCompileTimeType, (string) null)
-            //  }));
-            //}
-            // ISSUE: reference to a compiler-generated field
-            // ISSUE: reference to a compiler-generated field
-            // object obj1 = UserController.\u003C\u003Eo__5.\u003C\u003Ep__0.Target((CallSite) UserController.\u003C\u003Eo__5.\u003C\u003Ep__0, this.ViewBag, new SelectList((IEnumerable) this.db.Users, "Id", "FullName"));
             System.Collections.Generic.List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
             items.Insert(0, new SelectListItem()
             {
@@ -159,19 +146,7 @@ namespace ClientManager.Areas.Admin.Controllers
                 Value = "1"
             });
             JsonReponse jsonReponse = (JsonReponse)null;
-            // ISSUE: reference to a compiler-generated field
-            //if (UserController.\u003C\u003Eo__5.\u003C\u003Ep__1 == null)
-            //{
-            //  // ISSUE: reference to a compiler-generated field
-            //  UserController.\u003C\u003Eo__5.\u003C\u003Ep__1 = CallSite<Func<CallSite, object, System.Collections.Generic.List<SelectListItem>, object>>.Create(Binder.SetMember(CSharpBinderFlags.None, "Status", typeof (UserController), (IEnumerable<CSharpArgumentInfo>) new CSharpArgumentInfo[2]
-            //  {
-            //    CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, (string) null),
-            //    CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.UseCompileTimeType, (string) null)
-            //  }));
-            //}
-            // ISSUE: reference to a compiler-generated field
-            // ISSUE: reference to a compiler-generated field
-            //object obj2 = UserController.\u003C\u003Eo__5.\u003C\u003Ep__1.Target((CallSite) UserController.\u003C\u003Eo__5.\u003C\u003Ep__1, this.ViewBag, new SelectList((IEnumerable) items, "Value", "Text", (object) 1).ToList<SelectListItem>());
+            
             JsonReponse data;
             try
             {
@@ -200,10 +175,10 @@ namespace ClientManager.Areas.Admin.Controllers
                         Pincode = userData.PinCode,
                         IsActive = new bool?(userData.IsActive),
                         DateOfBirth = userData.DateOfBirth,
-                        //DateOfJoining = userData.DateofJoining,
+                        DateOfJoining = userData.DateofJoining,
                         EmployeeId = userData.EmpId,
                         ReportingManager = userData.ReportingManager,
-                        //SaleTarget = userData.SaleTarget,
+                        SaleTarget = userData.SaleTarget,
                         CreatedBy = new int?(userDetails.Id),
                         CreatedOn = new DateTime?(DateTime.Now)
                     });
@@ -239,21 +214,20 @@ namespace ClientManager.Areas.Admin.Controllers
         [CustomAuthorize(new string[] { "Admin", "Manager" })]
         public ActionResult Edit(int? id)
         {
-            UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
-            //// ISSUE: reference to a compiler-generated field
-            //if (UserController.\u003C\u003Eo__6.\u003C\u003Ep__0 == null)
-            //{
-            //  // ISSUE: reference to a compiler-generated field
-            //  UserController.\u003C\u003Eo__6.\u003C\u003Ep__0 = CallSite<Func<CallSite, object, SelectList, object>>.Create(Binder.SetMember(CSharpBinderFlags.None, "ReportingManager", typeof (UserController), (IEnumerable<CSharpArgumentInfo>) new CSharpArgumentInfo[2]
-            //  {
-            //    CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, (string) null),
-            //    CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.UseCompileTimeType, (string) null)
-            //  }));
-            //}
-            //// ISSUE: reference to a compiler-generated field
-            //// ISSUE: reference to a compiler-generated field
-            //object obj1 = UserController.\u003C\u003Eo__6.\u003C\u003Ep__0.Target((CallSite) UserController.\u003C\u003Eo__6.\u003C\u003Ep__0, this.ViewBag, new SelectList((IEnumerable) this.db.Users, "Id", "FullName"));
-            System.Collections.Generic.List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            User user = db.Users.Find(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.ModifiedBy = new SelectList(db.Users, "Id", "FullName", user.ModifiedBy);
+            ViewBag.ReportingManager = new SelectList(db.Users, "Id", "FullName", user.ReportingManager);
+            ViewBag.CreatedBy = new SelectList(db.Users, "Id", "FullName", user.CreatedBy);
+
+            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
             items.Insert(0, new SelectListItem()
             {
                 Text = "Active",
@@ -264,26 +238,8 @@ namespace ClientManager.Areas.Admin.Controllers
                 Text = "De-Active",
                 Value = "0"
             });
-            if (!id.HasValue)
-                return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            User model = this.db.Users.Find(new object[1]
-            {
-        (object) id
-            });
-            //// ISSUE: reference to a compiler-generated field
-            //if (UserController.\u003C\u003Eo__6.\u003C\u003Ep__1 == null)
-            //{
-            //  // ISSUE: reference to a compiler-generated field
-            //  UserController.\u003C\u003Eo__6.\u003C\u003Ep__1 = CallSite<Func<CallSite, object, System.Collections.Generic.List<SelectListItem>, object>>.Create(Binder.SetMember(CSharpBinderFlags.None, "Status", typeof (UserController), (IEnumerable<CSharpArgumentInfo>) new CSharpArgumentInfo[2]
-            //  {
-            //    CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, (string) null),
-            //    CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.UseCompileTimeType, (string) null)
-            //  }));
-            //}
-            //// ISSUE: reference to a compiler-generated field
-            //// ISSUE: reference to a compiler-generated field
-            //object obj2 = UserController.\u003C\u003Eo__6.\u003C\u003Ep__1.Target((CallSite) UserController.\u003C\u003Eo__6.\u003C\u003Ep__1, this.ViewBag, new SelectList((IEnumerable) items, "Value", "Text", (object) Convert.ToInt16((object) model.IsActive)).ToList<SelectListItem>());
-            return model == null ? (ActionResult)this.HttpNotFound() : (ActionResult)this.View((object)model);
+            ViewBag.Status = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
+            return View(user);
         }
 
         [HttpPost]
@@ -328,7 +284,8 @@ namespace ClientManager.Areas.Admin.Controllers
                         entity.Pincode = userData.PinCode;
                         entity.IsActive = new bool?(userData.IsActive);
                         entity.DateOfBirth = userData.DateOfBirth;
-                        //entity.DateOfJoining = userData.DateofJoining;
+                        entity.DateOfJoining = userData.DateofJoining;
+                        entity.SaleTarget = userData.SaleTarget;
                         entity.ReportingManager = userData.ReportingManager;
                         str = "User Updated";
                     }
@@ -336,7 +293,7 @@ namespace ClientManager.Areas.Admin.Controllers
                         str = "User Sale Target";
                     entity.ModifiedBy = new int?(userDetails.Id);
                     entity.ModifiedOn = new DateTime?(DateTime.Now);
-                    //entity.SaleTarget = userData.SaleTarget;
+
                     if (this.db.SaveChanges() > 0)
                         data = new JsonReponse()
                         {
