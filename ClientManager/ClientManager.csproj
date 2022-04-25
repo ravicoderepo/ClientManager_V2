@@ -145,6 +145,7 @@
     <Compile Include="Areas\Admin\Controllers\UserRolesController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
+    <Compile Include="Controllers\ExpenceCategoriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
@@ -166,6 +167,7 @@
     <Compile Include="Models\MonthlySummaryReport.cs" />
     <Compile Include="Models\Register.cs" />
     <Compile Include="Models\SaleData.cs" />
+    <Compile Include="Models\ExpenceCategoryData.cs" />
     <Compile Include="Models\UserData.cs" />
     <Compile Include="Models\UserDetails.cs" />
     <Compile Include="Models\UserRole.cs" />
@@ -2584,9 +2586,13 @@
     <Content Include="Views\Products\Details.cshtml" />
     <Content Include="Views\Products\Edit.cshtml" />
     <Content Include="Views\Products\Index.cshtml" />
+    <Content Include="Views\ExpenceCategories\Create.cshtml" />
+    <Content Include="Views\ExpenceCategories\Edit.cshtml" />
+    <Content Include="Views\ExpenceCategories\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Master\" />
     <Folder Include="Views\Order\" />
     <Folder Include="Views\Project\" />
     <Folder Include="Views\Quote\" />

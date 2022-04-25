@@ -1,4 +1,4 @@
-﻿@model DBOperation.Role
+﻿@model DBOperation.ExpenceCategory
 
 @{
     ViewBag.Title = "Edit";
@@ -20,12 +20,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Roles</h1>
+                    <h1>Expence Category</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Admin</a></li>
-                        <li class="breadcrumb-item"><a href="#">Roles</a></li>
+                        <li class="breadcrumb-item"><a href="#">Master</a></li>
+                        <li class="breadcrumb-item"><a href="#">Expence Category</a></li>
                         <li class="breadcrumb-item active">Edit</li>
                     </ol>
                 </div>
@@ -42,14 +42,14 @@
                     <!-- jquery validation -->
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Role Details</h3>
+                            <h3 class="card-title">Expence Category</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
                         <form id="quickForm">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="status">Status</label>
                                             @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "Id" } })
@@ -57,10 +57,21 @@
                                             @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="FullName">Role Name</label>
-                                            @Html.EditorFor(model => model.RoleName, new { htmlAttributes = new { @class = "form-control", @id = "txtRoleName", @name = "RoleName" } })
+                                            <label for="FullName">Category Name</label>
+                                            @Html.EditorFor(model => model.CategoryName, new { htmlAttributes = new { @class = "form-control", @id = "txtCategoryName", @name = "CategoryName" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="status">Description</label>
+                                            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @id = "txtDescription", @name = "Description" } })
                                         </div>
                                     </div>
                                 </div>
@@ -110,7 +121,7 @@
             submitHandler: function () {
                 debugger;
                 // alert("Form successful submitted!");
-                fnSubmitRoleDetails();
+                fnSubmitExpenceCategoryDetails();
             }
         });
         $('#quickForm').validate({
@@ -145,23 +156,23 @@
         });
     });
 
-
     function fnStatusChange() {
         $("input[name=IsActive]").val(($('#ddlStatus').val()=='1' ? true: false));
     }
 
-    function fnSubmitRoleDetails() {
+        function fnSubmitExpenceCategoryDetails() {
         debugger;
-        var RoleData = {
+        var ExpenceCategoryData = {
             Id: $('#Id').val(),
             IsActive: ($("input[name=IsActive]").val().toLowerCase() == 'true') ? true : false,
-            RoleName: $('#txtRoleName').val()          
+            CategoryName: $('#txtCategoryName').val(),
+            Description: $('#txtDescription').val()
         };
         debugger;
         $.ajax({
             type: "POST",
-            url: "/Admin/Roles/Edit",
-            data: JSON.stringify(RoleData),
+            url: "/ExpenceCategories/Edit",
+            data: JSON.stringify(ExpenceCategoryData),
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {

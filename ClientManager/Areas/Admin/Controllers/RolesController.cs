@@ -24,6 +24,7 @@ namespace ClientManager.Areas.Admin.Controllers
         }
 
         // GET: Admin/Roles/Details/5
+        [CustomAuthorize(new string[] { "Admin" })]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -39,10 +40,24 @@ namespace ClientManager.Areas.Admin.Controllers
         }
 
         // GET: Admin/Roles/Create
+        [CustomAuthorize(new string[] { "Admin" })]
         public ActionResult Create()
         {
-            ViewBag.CreatedBy = new SelectList(db.Users, "Id", "Password");
-            ViewBag.ModifiedBy = new SelectList(db.Users, "Id", "Password");
+            ViewBag.ModifiedBy = new SelectList(db.Users, "Id", "FullName");
+            ViewBag.ReportingManager = new SelectList(db.Users, "Id", "FullName");
+            ViewBag.CreatedBy = new SelectList(db.Users, "Id", "FullName");
+            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
+            items.Insert(0, new SelectListItem()
+            {
+                Text = "Active",
+                Value = "1"
+            });
+            items.Insert(1, new SelectListItem()
+            {
+                Text = "De-Active",
+                Value = "0"
+            });
+            ViewBag.Status = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
             return View();
         }
 
@@ -50,22 +65,66 @@ namespace ClientManager.Areas.Admin.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,RoleName,IsActive,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy")] Role role)
+        [CustomAuthorize(new string[] { "Admin" })]
+        public ActionResult Create(Role RoleData)
         {
-            if (ModelState.IsValid)
-            {
-                db.Roles.Add(role);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+            UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
+          
+            JsonReponse jsonReponse = (JsonReponse)null;
 
-            ViewBag.CreatedBy = new SelectList(db.Users, "Id", "Password", role.CreatedBy);
-            ViewBag.ModifiedBy = new SelectList(db.Users, "Id", "Password", role.ModifiedBy);
-            return View(role);
+            JsonReponse data;
+            try
+            {
+                int num = 0;
+                if (string.IsNullOrEmpty(RoleData.RoleName))
+                {
+                    jsonReponse = new JsonReponse()
+                    {
+                        message = "Enter all required fields.",
+                        status = "Failed",
+                        redirectURL = ""
+                    };
+                }
+                else
+                {
+                    this.db.Roles.Add(new Role()
+                    {
+                        RoleName = RoleData.RoleName,
+                        IsActive = RoleData.IsActive,
+                        CreatedBy = userDetails.Id,
+                        CreatedOn = DateTime.Now
+                    });
+                    num = this.db.SaveChanges();
+                }
+                if (num > 0)
+                    data = new JsonReponse()
+                    {
+                        message = "Role created successfully!",
+                        status = "Success",
+                        redirectURL = "/Admin/Roles/List"
+                    };
+                else
+                    data = new JsonReponse()
+                    {
+                        message = "User creation not completed, try again after sometime.",
+                        status = "Failed",
+                        redirectURL = ""
+                    };
+            }
+            catch (Exception ex)
+            {
+                data = new JsonReponse()
+                {
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
+            }
+            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Admin/Roles/Edit/5
+        [CustomAuthorize(new string[] { "Admin" })]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -77,8 +136,19 @@ namespace ClientManager.Areas.Admin.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.CreatedBy = new SelectList(db.Users, "Id", "Password", role.CreatedBy);
-            ViewBag.ModifiedBy = new SelectList(db.Users, "Id", "Password", role.ModifiedBy);
+
+            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
+            items.Insert(0, new SelectListItem()
+            {
+                Text = "Active",
+                Value = "1"
+            });
+            items.Insert(1, new SelectListItem()
+            {
+                Text = "De-Active",
+                Value = "0"
+            });
+            ViewBag.Status = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
             return View(role);
         }
 
@@ -86,21 +156,71 @@ namespace ClientManager.Areas.Admin.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,RoleName,IsActive,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy")] Role role)
+        [CustomAuthorize(new string[] { "Admin" })]
+        public ActionResult Edit(Role RoleData)
         {
-            if (ModelState.IsValid)
+            JsonReponse data;
+            try
             {
-                db.Entry(role).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
+                Role entity = this.db.Roles.FirstOrDefault(wh => wh.Id == RoleData.Id);
+                if (entity == null)
+                    data = new JsonReponse()
+                    {
+                        message = "There is no record for given Id",
+                        status = "Failed",
+                        redirectURL = ""
+                    };
+                else if (string.IsNullOrEmpty(RoleData.RoleName))
+                {
+                    data = new JsonReponse()
+                    {
+                        message = "Enter all required fields.",
+                        status = "Failed",
+                        redirectURL = ""
+                    };
+                }
+                else
+                {
+                    this.db.Entry<Role>(entity).State = EntityState.Modified;
+                    string str;
+
+                    entity.RoleName = RoleData.RoleName;
+                    entity.IsActive = RoleData.IsActive;    
+                    entity.ModifiedBy = new int?(userDetails.Id);
+                    entity.ModifiedOn = new DateTime?(DateTime.Now);
+                    str = "Role Updated";
+
+                    if (this.db.SaveChanges() > 0)
+                        data = new JsonReponse()
+                        {
+                            message = str + " successfully!",
+                            status = "Success",
+                            redirectURL = "/Admin/Roles/List"
+                        };
+                    else
+                        data = new JsonReponse()
+                        {
+                            message = str + " Not completed, try again after sometime.",
+                            status = "Failed",
+                            redirectURL = ""
+                        };
+                }
             }
-            ViewBag.CreatedBy = new SelectList(db.Users, "Id", "Password", role.CreatedBy);
-            ViewBag.ModifiedBy = new SelectList(db.Users, "Id", "Password", role.ModifiedBy);
-            return View(role);
+            catch (Exception ex)
+            {
+                data = new JsonReponse()
+                {
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
+            }
+            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Admin/Roles/Delete/5
+        [CustomAuthorize(new string[] { "Admin" })]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -115,17 +235,6 @@ namespace ClientManager.Areas.Admin.Controllers
             return View(role);
         }
 
-        // POST: Admin/Roles/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Role role = db.Roles.Find(id);
-            db.Roles.Remove(role);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
         [CustomAuthorize(new string[] { "Admin" })]
         public ActionResult Activate(int? id)
         {
@@ -135,22 +244,19 @@ namespace ClientManager.Areas.Admin.Controllers
             {
                 if (!id.HasValue)
                     return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                User entity = this.db.Users.Find(new object[1]
-                {
-          (object) id
-                });
+                Role entity = this.db.Roles.Find(id);
                 if (entity == null)
                     return (ActionResult)this.HttpNotFound();
                 entity.IsActive = new bool?(true);
                 entity.ModifiedBy = new int?(userDetails.Id);
                 entity.ModifiedOn = new DateTime?(DateTime.Now);
-                this.db.Entry<User>(entity).State = EntityState.Modified;
+                this.db.Entry<Role>(entity).State = EntityState.Modified;
                 this.db.SaveChanges();
                 data = new JsonReponse()
                 {
                     message = "User Activated successfully!",
                     status = "Success",
-                    redirectURL = "/Admin/User/List?" + DateTime.Now.Ticks.ToString()
+                    redirectURL = "/Admin/Roles/List?" + DateTime.Now.Ticks.ToString()
                 };
             }
             catch (Exception ex)
@@ -174,22 +280,19 @@ namespace ClientManager.Areas.Admin.Controllers
             {
                 if (!id.HasValue)
                     return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                User entity = this.db.Users.Find(new object[1]
-                {
-          (object) id
-                });
+                Role entity = this.db.Roles.Find(id);
                 if (entity == null)
                     return (ActionResult)this.HttpNotFound();
                 entity.IsActive = new bool?(false);
                 entity.ModifiedBy = new int?(userDetails.Id);
                 entity.ModifiedOn = new DateTime?(DateTime.Now);
-                this.db.Entry<User>(entity).State = EntityState.Modified;
+                this.db.Entry<Role>(entity).State = EntityState.Modified;
                 this.db.SaveChanges();
                 data = new JsonReponse()
                 {
                     message = "User De-Activated successfully!",
                     status = "Success",
-                    redirectURL = "/Admin/User/List?" + DateTime.Now.Ticks.ToString()
+                    redirectURL = "/Admin/Roles/List?" + DateTime.Now.Ticks.ToString()
                 };
             }
             catch (Exception ex)
