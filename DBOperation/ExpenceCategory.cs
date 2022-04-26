@@ -17,7 +17,7 @@ namespace DBOperation
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ExpenceCategory()
         {
-            this.ExpenceTrackers = new HashSet<ExpenceTracker>();
+            this.ExpenseTrackers = new HashSet<ExpenseTracker>();
         }
     
         public int Id { get; set; }
@@ -32,6 +32,6 @@ namespace DBOperation
         public virtual User User { get; set; }
         public virtual User User1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ExpenceTracker> ExpenceTrackers { get; set; }
+        public virtual ICollection<ExpenseTracker> ExpenseTrackers { get; set; }
     }
 }

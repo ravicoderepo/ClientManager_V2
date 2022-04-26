@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -125,7 +126,7 @@ namespace ClientManager.Controllers
             var lastSavedId = 0;
             try
             {
-                var saleDetails = new SaleActivity { SaleDate = saleData.SaleDate, Status = saleData.Status, ClientPhoneNo = saleData.ClientPhoneNo, ClientEmail = saleData.ClientEmail, ClientName = saleData.ClientName, ProductName = saleData.ProductName, RecentCallDate = saleData.RecentCallDate, Capacity = saleData.Capacity, Unit = saleData.Unit, Remarks = saleData.Remarks, CreatedBy = currentUser.Id, CreatedOn = DateTime.Now, AnticipatedClosingDate = saleData.AnticipatedClosingDate, SalesRepresentativeId = saleData.SalesRepresentativeId, NoOfFollowUps = saleData.NoOfFollowUps, InvoiceAmount = saleData.InvoiceAmount, InvoiceNo = saleData.InvoiceNo };
+                var saleDetails = new SaleActivity { SaleDate = DateTime.ParseExact(saleData.SaleDate, "MM/dd/yyyy", CultureInfo.InvariantCulture), Status = saleData.Status, ClientPhoneNo = saleData.ClientPhoneNo, ClientEmail = saleData.ClientEmail, ClientName = saleData.ClientName, ProductName = saleData.ProductName, RecentCallDate = DateTime.ParseExact(saleData.RecentCallDate, "MM/dd/yyyy", CultureInfo.InvariantCulture), Capacity = saleData.Capacity, Unit = saleData.Unit, Remarks = saleData.Remarks, CreatedBy = currentUser.Id, CreatedOn = DateTime.Now, AnticipatedClosingDate = DateTime.ParseExact(saleData.AnticipatedClosingDate, "MM/dd/yyyy", CultureInfo.InvariantCulture), SalesRepresentativeId = saleData.SalesRepresentativeId, NoOfFollowUps = saleData.NoOfFollowUps, InvoiceAmount = saleData.InvoiceAmount, InvoiceNo = saleData.InvoiceNo };
 
                 if (saleData.Status == 6)
                 {
@@ -232,7 +233,7 @@ namespace ClientManager.Controllers
                     {
                         if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientEmail) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName) || saleData.RecentCallDate == null || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit) || string.IsNullOrEmpty(saleData.InvoiceNo) || saleData.InvoiceAmount < 0 || string.IsNullOrEmpty(saleData.Remarks))
                         {
-                            saleData.DateOfClosing = DateTime.Now;
+                            saleData.DateOfClosing = DateTime.ParseExact(DateTime.Now.ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture).ToString();
                             jsonRes = new JsonReponse { message = "Enter all required fields.", status = "Failed", redirectURL = "" };
                             isMandatoryError = true;
                         }
@@ -285,17 +286,17 @@ namespace ClientManager.Controllers
         private int UpdateData(SaleData saleData, SaleActivity saleActivity, UserDetails currentUser)
         {
             this.db.Entry<SaleActivity>(saleActivity).State = EntityState.Modified;
-            saleActivity.SaleDate = saleData.SaleDate;
+            saleActivity.SaleDate = DateTime.ParseExact(saleData.SaleDate, "MM/dd/yyyy", CultureInfo.InvariantCulture);
             saleActivity.Status = saleData.Status;
             saleActivity.ClientPhoneNo = saleData.ClientPhoneNo;
             saleActivity.ClientEmail = saleData.ClientEmail;
             saleActivity.ClientName = saleData.ClientName;
             saleActivity.ProductName = saleData.ProductName;
-            saleActivity.RecentCallDate = saleData.RecentCallDate;
+            saleActivity.RecentCallDate = DateTime.ParseExact(saleData.RecentCallDate, "MM/dd/yyyy", CultureInfo.InvariantCulture);
             saleActivity.Capacity = saleData.Capacity;
             saleActivity.Unit = saleData.Unit;
-            saleActivity.Remarks += !string.IsNullOrEmpty(saleData.Remarks) ? "<br/>" + saleData.Remarks + "-" + Convert.ToDateTime(saleData.RecentCallDate).ToShortDateString() : "";
-            saleActivity.AnticipatedClosingDate = saleData.AnticipatedClosingDate;
+            saleActivity.Remarks += !string.IsNullOrEmpty(saleData.Remarks) ? "<br/>" + saleData.Remarks + "-" + DateTime.ParseExact(saleData.RecentCallDate, "MM/dd/yyyy", CultureInfo.InvariantCulture).ToString() : "";
+            saleActivity.AnticipatedClosingDate = DateTime.ParseExact(saleData.AnticipatedClosingDate, "MM/dd/yyyy", CultureInfo.InvariantCulture);
             saleActivity.SalesRepresentativeId = saleData.SalesRepresentativeId;
             SaleActivity saleActivity1 = saleActivity;
             int? nullable;
@@ -311,7 +312,7 @@ namespace ClientManager.Controllers
             saleActivity1.NoOfFollowUps = nullable;
             saleActivity.InvoiceAmount = new Decimal?(saleData.InvoiceAmount);
             saleActivity.InvoiceNo = saleData.InvoiceNo;
-            saleActivity.DateOfClosing = saleData.DateOfClosing;
+            saleActivity.DateOfClosing = DateTime.ParseExact(saleData.RecentCallDate, "MM/dd/yyyy", CultureInfo.InvariantCulture);
             saleActivity.ModifiedOn = new DateTime?(DateTime.Now);
             saleActivity.ModifiedBy = new int?(currentUser.Id);
             return this.db.SaveChanges();

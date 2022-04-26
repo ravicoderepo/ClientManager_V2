@@ -49,6 +49,8 @@ namespace DBOperation
             this.Users1 = new HashSet<User>();
             this.Users11 = new HashSet<User>();
             this.Users12 = new HashSet<User>();
+            this.ExpenseTrackers = new HashSet<ExpenseTracker>();
+            this.ExpenseTrackers1 = new HashSet<ExpenseTracker>();
         }
     
         public int Id { get; set; }
@@ -138,5 +140,9 @@ namespace DBOperation
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<User> Users12 { get; set; }
         public virtual User User3 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ExpenseTracker> ExpenseTrackers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ExpenseTracker> ExpenseTrackers1 { get; set; }
     }
 }

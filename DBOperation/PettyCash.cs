@@ -18,8 +18,8 @@ namespace DBOperation
         public decimal AmountReceived { get; set; }
         public System.DateTime AmountRecivedDate { get; set; }
         public string ModeOfPayment { get; set; }
+        public string Status { get; set; }
         public string Description { get; set; }
-        public System.DateTime CreatedDate { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedOn { get; set; }
         public Nullable<int> ModifiedBy { get; set; }

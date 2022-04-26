@@ -12,21 +12,21 @@ namespace DBOperation
     using System;
     using System.Collections.Generic;
     
-    public partial class ExpenceTracker
+    public partial class ExpenseTracker
     {
         public int Id { get; set; }
-        public decimal ExpenceAmount { get; set; }
-        public System.DateTime ExpenceDate { get; set; }
-        public int ExpenceCategoryId { get; set; }
+        public decimal ExpenseAmount { get; set; }
+        public System.DateTime ExpenseDate { get; set; }
+        public int ExpenseCategoryId { get; set; }
         public string Description { get; set; }
-        public decimal AmountPaid { get; set; }
         public string Status { get; set; }
-        public string CreatedDate { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedOn { get; set; }
         public Nullable<int> ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedOn { get; set; }
     
         public virtual ExpenceCategory ExpenceCategory { get; set; }
+        public virtual User User { get; set; }
+        public virtual User User1 { get; set; }
     }
 }

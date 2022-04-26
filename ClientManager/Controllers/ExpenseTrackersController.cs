@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -12,68 +13,61 @@ using DBOperation;
 
 namespace ClientManager.Controllers
 {
-    public class ExpenceCategoriesController : Controller
+    public class ExpenseTrackersController : Controller
     {
         private ClientManagerEntities db = new ClientManagerEntities();
 
-        // GET: ExpenceCategories
+        // GET: PettyCashes
         [CustomAuthorize(new string[] { "Admin" })]
         public ActionResult List()
         {
-            var expenceCategories = db.ExpenceCategories.Include(e => e.User).Include(e => e.User1);
-            return View(expenceCategories.ToList());
+            var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
+            return View(expenceTracker.ToList());
         }
 
-        // GET: ExpenceCategories/Create
+
+
+        // GET: PettyCashes/Create
         [CustomAuthorize(new string[] { "Admin" })]
         public ActionResult Create()
         {
-            ViewBag.ModifiedBy = new SelectList(db.Users, "Id", "FullName");
-            ViewBag.ReportingManager = new SelectList(db.Users, "Id", "FullName");
-            ViewBag.CreatedBy = new SelectList(db.Users, "Id", "FullName");
             List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
             items.Insert(0, new SelectListItem()
             {
-                Text = "Active",
-                Value = "1"
+                Text = "Approved",
+                Value = "Approved"
             });
             items.Insert(1, new SelectListItem()
             {
-                Text = "De-Active",
-                Value = "0"
+                Text = "Pending",
+                Value = "Pending"
             });
-            ViewBag.Status = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
+            items.Insert(2, new SelectListItem()
+            {
+                Text = "Verified",
+                Value = "Verified"
+            });
+            ViewBag.Status = new SelectList(items, "Value", "Text", "Pending").ToList<SelectListItem>();
+            ViewBag.ExpenseCategory = new SelectList(db.ExpenceCategories, "Id", "CategoryName", 1);
             return View();
-
         }
+
 
         // POST: ExpenceCategories/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [CustomAuthorize(new string[] { "Admin" })]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(Models.ExpenceCategoryData expenceCategoryData)
+        public ActionResult Create(Models.ExpenceTrackerData expenceTrackerData)
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
-            System.Collections.Generic.List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
-            items.Insert(0, new SelectListItem()
-            {
-                Text = "De-Active",
-                Value = "0"
-            });
-            items.Insert(1, new SelectListItem()
-            {
-                Text = "Active",
-                Value = "1"
-            });
             JsonReponse jsonReponse = (JsonReponse)null;
 
             JsonReponse data;
             try
             {
                 int num = 0;
-                if (string.IsNullOrEmpty(expenceCategoryData.CategoryName) || string.IsNullOrEmpty(expenceCategoryData.Description))
+                if (expenceTrackerData.ExpenseDate == null || expenceTrackerData.ExpenseAmount <= 0 || string.IsNullOrEmpty(expenceTrackerData.Description))
                 {
                     jsonReponse = new JsonReponse()
                     {
@@ -84,27 +78,29 @@ namespace ClientManager.Controllers
                 }
                 else
                 {
-                    this.db.ExpenceCategories.Add(new DBOperation.ExpenceCategory()
+                    this.db.ExpenseTrackers.Add(new DBOperation.ExpenseTracker()
                     {
-                        CategoryName = expenceCategoryData.CategoryName,
-                        Description = expenceCategoryData.Description,
-                        IsActive = expenceCategoryData.IsActive,
+                        ExpenseDate = DateTime.ParseExact(expenceTrackerData.ExpenseDate, "MM/dd/yyyy", CultureInfo.InvariantCulture),
+                        ExpenseCategoryId = expenceTrackerData.ExpenseCategoryId,
+                        ExpenseAmount = expenceTrackerData.ExpenseAmount,
+                        Description = expenceTrackerData.Description,
+                        Status = expenceTrackerData.Status,
                         CreatedBy = userData.Id,
                         CreatedOn = DateTime.Now
-                    });
+                    }); ;
                     num = this.db.SaveChanges();
                 }
                 if (num > 0)
                     data = new JsonReponse()
                     {
-                        message = "Expence category created successfully!",
+                        message = "Expence entry created successfully!",
                         status = "Success",
-                        redirectURL = "/ExpenceCategories/List"
+                        redirectURL = "/ExpenseTrackers/List"
                     };
                 else
                     data = new JsonReponse()
                     {
-                        message = "Expence category creation not completed, try again after sometime.",
+                        message = "Expence entry not completed, try again after sometime.",
                         status = "Failed",
                         redirectURL = ""
                     };
@@ -129,8 +125,8 @@ namespace ClientManager.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DBOperation.ExpenceCategory expenceCategory = db.ExpenceCategories.Find(id);
-            if (expenceCategory == null)
+            DBOperation.ExpenseTracker expenceTracker = db.ExpenseTrackers.Find(id);
+            if (expenceTracker == null)
             {
                 return HttpNotFound();
             }
@@ -138,28 +134,34 @@ namespace ClientManager.Controllers
             List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
             items.Insert(0, new SelectListItem()
             {
-                Text = "Active",
-                Value = "1"
+                Text = "Approved",
+                Value = "Approved"
             });
             items.Insert(1, new SelectListItem()
             {
-                Text = "De-Active",
-                Value = "0"
+                Text = "Pending",
+                Value = "Pending"
+            });
+            items.Insert(2, new SelectListItem()
+            {
+                Text = "Verified",
+                Value = "Verified"
             });
             ViewBag.Status = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
-            return View(expenceCategory);
+            ViewBag.ExpenseCategory = new SelectList(db.ExpenceCategories, "Id", "CategoryName", expenceTracker.ExpenseCategoryId);
+            return View(expenceTracker);
         }
 
         // POST: ExpenceCategories/Edit/5
         [HttpPost]
         [CustomAuthorize(new string[] { "Admin" })]
-        public ActionResult Edit(Models.ExpenceCategoryData ExpenceCategoryData)
+        public ActionResult Edit(Models.ExpenceTrackerData expenceTrackerData)
         {
             JsonReponse data;
             try
             {
                 UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
-                DBOperation.ExpenceCategory entity = this.db.ExpenceCategories.FirstOrDefault(wh => wh.Id == ExpenceCategoryData.Id);
+                DBOperation.ExpenseTracker entity = this.db.ExpenseTrackers.FirstOrDefault(wh => wh.Id == expenceTrackerData.Id);
                 if (entity == null)
                     data = new JsonReponse()
                     {
@@ -167,7 +169,7 @@ namespace ClientManager.Controllers
                         status = "Failed",
                         redirectURL = ""
                     };
-                else if (string.IsNullOrEmpty(ExpenceCategoryData.CategoryName) || string.IsNullOrEmpty(ExpenceCategoryData.Description))
+                if (expenceTrackerData.ExpenseDate == null || expenceTrackerData.ExpenseAmount <= 0 || string.IsNullOrEmpty(expenceTrackerData.Description))
                 {
                     data = new JsonReponse()
                     {
@@ -178,31 +180,27 @@ namespace ClientManager.Controllers
                 }
                 else
                 {
-                    this.db.Entry<DBOperation.ExpenceCategory>(entity).State = EntityState.Modified;
-                    string str;
-                    if (userDetails.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "admin")))
-                    {
-                        entity.CategoryName = ExpenceCategoryData.CategoryName;
-                        entity.Description = ExpenceCategoryData.Description;
-                        entity.IsActive = ExpenceCategoryData.IsActive;                       
-                        str = "Expence Category Updated";
-                    }
-                    else
-                        str = "User Sale Target";
+                    this.db.Entry<DBOperation.ExpenseTracker>(entity).State = EntityState.Modified;
+
+                    entity.ExpenseAmount = expenceTrackerData.ExpenseAmount;
+                    entity.ExpenseDate = DateTime.ParseExact(expenceTrackerData.ExpenseDate, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                    entity.ExpenseCategoryId = expenceTrackerData.ExpenseCategoryId;
+                    entity.Description = expenceTrackerData.Description;
+                    entity.Status = expenceTrackerData.Status;
                     entity.ModifiedBy = new int?(userDetails.Id);
                     entity.ModifiedOn = new DateTime?(DateTime.Now);
 
                     if (this.db.SaveChanges() > 0)
                         data = new JsonReponse()
                         {
-                            message = str + " successfully!",
+                            message = "Expense updated successfully!",
                             status = "Success",
-                            redirectURL = "/ExpenceCategories/List"
+                            redirectURL = "/ExpenseTrackers/List"
                         };
                     else
                         data = new JsonReponse()
                         {
-                            message = str + " Not completed, try again after sometime.",
+                            message = "Expense update not completed, try again after sometime.",
                             status = "Failed",
                             redirectURL = ""
                         };

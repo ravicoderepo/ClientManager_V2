@@ -12,68 +12,65 @@ using DBOperation;
 
 namespace ClientManager.Controllers
 {
-    public class ExpenceCategoriesController : Controller
+    public class PettyCashesController : Controller
     {
         private ClientManagerEntities db = new ClientManagerEntities();
 
-        // GET: ExpenceCategories
+        // GET: PettyCashes
         [CustomAuthorize(new string[] { "Admin" })]
         public ActionResult List()
         {
-            var expenceCategories = db.ExpenceCategories.Include(e => e.User).Include(e => e.User1);
-            return View(expenceCategories.ToList());
+            var pettyCashes = db.PettyCashes.Include(p => p.User).Include(p => p.User1);
+            return View(pettyCashes.ToList());
         }
 
-        // GET: ExpenceCategories/Create
+
+
+        // GET: PettyCashes/Create
         [CustomAuthorize(new string[] { "Admin" })]
         public ActionResult Create()
         {
-            ViewBag.ModifiedBy = new SelectList(db.Users, "Id", "FullName");
-            ViewBag.ReportingManager = new SelectList(db.Users, "Id", "FullName");
-            ViewBag.CreatedBy = new SelectList(db.Users, "Id", "FullName");
             List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
             items.Insert(0, new SelectListItem()
             {
-                Text = "Active",
-                Value = "1"
+                Text = "ATM",
+                Value = "ATM"
             });
             items.Insert(1, new SelectListItem()
             {
-                Text = "De-Active",
-                Value = "0"
+                Text = "Account Transfer",
+                Value = "Account Transfer"
             });
-            ViewBag.Status = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
+            items.Insert(2, new SelectListItem()
+            {
+                Text = "Cash",
+                Value = "Cash"
+            });
+            items.Insert(3, new SelectListItem()
+            {
+                Text = "Other Receivables",
+                Value = "Other Receivables"
+            });
+            ViewBag.ModeOfPayment = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
             return View();
-
         }
+
 
         // POST: ExpenceCategories/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [CustomAuthorize(new string[] { "Admin" })]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(Models.ExpenceCategoryData expenceCategoryData)
+        public ActionResult Create(Models.PettyCashData PettyCashData)
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
-            System.Collections.Generic.List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
-            items.Insert(0, new SelectListItem()
-            {
-                Text = "De-Active",
-                Value = "0"
-            });
-            items.Insert(1, new SelectListItem()
-            {
-                Text = "Active",
-                Value = "1"
-            });
             JsonReponse jsonReponse = (JsonReponse)null;
 
             JsonReponse data;
             try
             {
                 int num = 0;
-                if (string.IsNullOrEmpty(expenceCategoryData.CategoryName) || string.IsNullOrEmpty(expenceCategoryData.Description))
+                if (PettyCashData.AmountReceived <= 0 || PettyCashData.AmountRecivedDate == null || string.IsNullOrEmpty(PettyCashData.Description))
                 {
                     jsonReponse = new JsonReponse()
                     {
@@ -84,11 +81,12 @@ namespace ClientManager.Controllers
                 }
                 else
                 {
-                    this.db.ExpenceCategories.Add(new DBOperation.ExpenceCategory()
+                    this.db.PettyCashes.Add(new DBOperation.PettyCash()
                     {
-                        CategoryName = expenceCategoryData.CategoryName,
-                        Description = expenceCategoryData.Description,
-                        IsActive = expenceCategoryData.IsActive,
+                        AmountReceived = PettyCashData.AmountReceived,
+                        AmountRecivedDate = PettyCashData.AmountRecivedDate,
+                        ModeOfPayment = PettyCashData.ModeOfPayment,
+                        Description = PettyCashData.Description,
                         CreatedBy = userData.Id,
                         CreatedOn = DateTime.Now
                     });
@@ -97,14 +95,14 @@ namespace ClientManager.Controllers
                 if (num > 0)
                     data = new JsonReponse()
                     {
-                        message = "Expence category created successfully!",
+                        message = "Petty Cash entry created successfully!",
                         status = "Success",
-                        redirectURL = "/ExpenceCategories/List"
+                        redirectURL = "/PettyCashes/List"
                     };
                 else
                     data = new JsonReponse()
                     {
-                        message = "Expence category creation not completed, try again after sometime.",
+                        message = "Petty Cash entry not completed, try again after sometime.",
                         status = "Failed",
                         redirectURL = ""
                     };
@@ -129,8 +127,8 @@ namespace ClientManager.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DBOperation.ExpenceCategory expenceCategory = db.ExpenceCategories.Find(id);
-            if (expenceCategory == null)
+            DBOperation.PettyCash pettyCash = db.PettyCashes.Find(id);
+            if (pettyCash == null)
             {
                 return HttpNotFound();
             }
@@ -138,28 +136,38 @@ namespace ClientManager.Controllers
             List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
             items.Insert(0, new SelectListItem()
             {
-                Text = "Active",
-                Value = "1"
+                Text = "ATM",
+                Value = "ATM"
             });
             items.Insert(1, new SelectListItem()
             {
-                Text = "De-Active",
-                Value = "0"
+                Text = "Account Transfer",
+                Value = "Account Transfer"
             });
-            ViewBag.Status = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
-            return View(expenceCategory);
+            items.Insert(2, new SelectListItem()
+            {
+                Text = "Cash",
+                Value = "Cash"
+            });
+            items.Insert(3, new SelectListItem()
+            {
+                Text = "Other Receivables",
+                Value = "Other Receivables"
+            });
+            ViewBag.ModeOfPayment = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
+            return View(pettyCash);
         }
 
         // POST: ExpenceCategories/Edit/5
         [HttpPost]
         [CustomAuthorize(new string[] { "Admin" })]
-        public ActionResult Edit(Models.ExpenceCategoryData ExpenceCategoryData)
+        public ActionResult Edit(Models.PettyCashData PettyCashData)
         {
             JsonReponse data;
             try
             {
                 UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
-                DBOperation.ExpenceCategory entity = this.db.ExpenceCategories.FirstOrDefault(wh => wh.Id == ExpenceCategoryData.Id);
+                DBOperation.PettyCash entity = this.db.PettyCashes.FirstOrDefault(wh => wh.Id == PettyCashData.Id);
                 if (entity == null)
                     data = new JsonReponse()
                     {
@@ -167,7 +175,7 @@ namespace ClientManager.Controllers
                         status = "Failed",
                         redirectURL = ""
                     };
-                else if (string.IsNullOrEmpty(ExpenceCategoryData.CategoryName) || string.IsNullOrEmpty(ExpenceCategoryData.Description))
+                else if (PettyCashData.AmountReceived <= 0 || PettyCashData.AmountRecivedDate == null || string.IsNullOrEmpty(PettyCashData.Description))
                 {
                     data = new JsonReponse()
                     {
@@ -178,31 +186,25 @@ namespace ClientManager.Controllers
                 }
                 else
                 {
-                    this.db.Entry<DBOperation.ExpenceCategory>(entity).State = EntityState.Modified;
-                    string str;
-                    if (userDetails.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "admin")))
-                    {
-                        entity.CategoryName = ExpenceCategoryData.CategoryName;
-                        entity.Description = ExpenceCategoryData.Description;
-                        entity.IsActive = ExpenceCategoryData.IsActive;                       
-                        str = "Expence Category Updated";
-                    }
-                    else
-                        str = "User Sale Target";
+                    this.db.Entry<DBOperation.PettyCash>(entity).State = EntityState.Modified;
+
+                    entity.AmountReceived = PettyCashData.AmountReceived;
+                    entity.AmountRecivedDate = PettyCashData.AmountRecivedDate;
+                    entity.ModeOfPayment = PettyCashData.ModeOfPayment;
                     entity.ModifiedBy = new int?(userDetails.Id);
                     entity.ModifiedOn = new DateTime?(DateTime.Now);
 
                     if (this.db.SaveChanges() > 0)
                         data = new JsonReponse()
                         {
-                            message = str + " successfully!",
+                            message = "Petty Cash updated successfully!",
                             status = "Success",
                             redirectURL = "/ExpenceCategories/List"
                         };
                     else
                         data = new JsonReponse()
                         {
-                            message = str + " Not completed, try again after sometime.",
+                            message = "Petty Cash update not completed, try again after sometime.",
                             status = "Failed",
                             redirectURL = ""
                         };

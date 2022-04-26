@@ -83,7 +83,7 @@
     <Compile Include="ExpenceCategory.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="ExpenceTracker.cs">
+    <Compile Include="ExpenseTracker.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="GetMonthlySalesReport_Result.cs">

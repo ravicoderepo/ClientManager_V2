@@ -6,7 +6,7 @@ namespace ClientManager.Models
   {
     public int Id { get; set; }
 
-    public DateTime SaleDate { get; set; }
+    public string SaleDate { get; set; }
 
     public int Status { get; set; }
 
@@ -24,15 +24,15 @@ namespace ClientManager.Models
 
     public string Unit { get; set; }
 
-    public DateTime RecentCallDate { get; set; }
+    public string RecentCallDate { get; set; }
 
-    public DateTime AnticipatedClosingDate { get; set; }
+    public string AnticipatedClosingDate { get; set; }
 
     public string InvoiceNo { get; set; }
 
     public Decimal InvoiceAmount { get; set; }
 
-    public DateTime? DateOfClosing { get; set; }
+    public string DateOfClosing { get; set; }
 
     public int NoOfFollowUps { get; set; }
 

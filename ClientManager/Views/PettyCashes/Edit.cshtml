@@ -1,9 +1,10 @@
-﻿@model DBOperation.ExpenceCategory
+﻿@model DBOperation.PettyCash
 
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 
 <style>
     textarea {
@@ -20,12 +21,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Expence Category</h1>
+                    <h1>Petty Cash</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Master</a></li>
-                        <li class="breadcrumb-item"><a href="#">Expence Category</a></li>
+                        <li class="breadcrumb-item"><a href="#">Accounts</a></li>
+                        <li class="breadcrumb-item"><a href="#">Petty Cash</a></li>
                         <li class="breadcrumb-item active">Edit</li>
                     </ol>
                 </div>
@@ -42,19 +43,27 @@
                     <!-- jquery validation -->
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Expence Category</h3>
+                            <h3 class="card-title">Petty Cash</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
                         <form id="quickForm">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="status">Status</label>
-                                            @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "Id" } })
-                                            @Html.HiddenFor(model => model.IsActive, new { htmlAttributes = new { @id = "hdnUserStatus" } })
-                                            @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
+                                            <label for="AmountReceived">Amount Received</label>
+                                            @Html.EditorFor(model => model.AmountReceived, new { htmlAttributes = new { @class = "form-control", @id = "txtAmountReceived", @name = "AmountReceived" } })
+                                        </div>
+                                    </div><div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="AmountRecivedDate">Amount Recived Date</label>
+                                            <div class="input-group date" data-target-input="nearest">
+                                                @Html.EditorFor(model => model.AmountRecivedDate, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtAmountRecivedDate", @name = "AmountRecivedDate" } })
+                                                <div class="input-group-append" data-target="#txtAmountRecivedDate" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -62,15 +71,18 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="FullName">Category Name</label>
-                                            @Html.EditorFor(model => model.CategoryName, new { htmlAttributes = new { @class = "form-control", @id = "txtCategoryName", @name = "CategoryName" } })
+                                            <label for="status">Mode of Payment</label>
+                                            @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "Id" } })
+                                            @Html.HiddenFor(model => model.ModeOfPayment, new { htmlAttributes = new { @id = "hdnModeOfPayment" } })
+                                            @Html.DropDownList("ModeOfPayment", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlModeOfPayment", @onChange = "fnModeOfPaymentChange()" })
                                         </div>
                                     </div>
+
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="status">Description</label>
+                                            <label for="Description">Description</label>
                                             @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @id = "txtDescription", @name = "Description" } })
                                         </div>
                                     </div>
@@ -114,13 +126,18 @@
         }
     });
 
+    //Date picker
+    $('#txtAmountRecivedDate').datetimepicker({
+        format: 'L'
+    });
+
     $(function () {
         //debugger;
         $.validator.setDefaults({
             submitHandler: function () {
                 debugger;
                 // alert("Form successful submitted!");
-                fnSubmitExpenceCategoryDetails();
+                fnSubmitPettyCashDetails();
             }
         });
         $('#quickForm').validate({
@@ -155,23 +172,25 @@
         });
     });
 
-    function fnStatusChange() {
-        $("input[name=IsActive]").val(($('#ddlStatus').val()=='1' ? true: false));
+    function fnModeOfPaymentChange() {
+        debugger;
+        $("input[name=ModeOfPayment]").val($('#ddlModeOfPayment').val());
     }
 
-        function fnSubmitExpenceCategoryDetails() {
+    function fnSubmitPettyCashDetails() {
         debugger;
-        var ExpenceCategoryData = {
+        var PettyCashData = {
             Id: $('#Id').val(),
-            IsActive: ($("input[name=IsActive]").val().toLowerCase() == 'true') ? true : false,
-            CategoryName: $('#txtCategoryName').val(),
+            ModeOfPayment: $("input[name=ModeOfPayment]").val(),
+            AmountReceived: $('#txtAmountReceived').val(),
+            AmountRecivedDate: $('#txtAmountRecivedDate').val(),
             Description: $('#txtDescription').val()
         };
         debugger;
         $.ajax({
             type: "POST",
-            url: "/ExpenceCategories/Edit",
-            data: JSON.stringify(ExpenceCategoryData),
+            url: "/PettyCashes/Edit",
+            data: JSON.stringify(PettyCashData),
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {

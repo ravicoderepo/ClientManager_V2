@@ -2,7 +2,7 @@
 
 namespace ClientManager.Models
 {
-    public class ExpenceCategory
+    public class ExpenceCategoryData
     {
         public int Id { get; set; }
         public string CategoryName { get; set; }

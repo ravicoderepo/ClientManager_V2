@@ -145,9 +145,12 @@
     <Compile Include="Areas\Admin\Controllers\UserRolesController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
+    <Compile Include="Controllers\DocumentManagementsController.cs" />
     <Compile Include="Controllers\ExpenceCategoriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\ExpenseTrackersController.cs" />
+    <Compile Include="Controllers\PettyCashesController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\QuoteController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
@@ -161,6 +164,8 @@
     <Compile Include="Infrastructure\CustomAuthorizeAttribute.cs" />
     <Compile Include="Infrastructure\CustomAuthenticationFilter.cs" />
     <Compile Include="Models\Dashboard.cs" />
+    <Compile Include="Models\ExpenceTrackerData.cs" />
+    <Compile Include="Models\PettyCashData.cs" />
     <Compile Include="Models\JsonResponse.cs" />
     <Compile Include="Models\Login.cs" />
     <Compile Include="Models\MonthlySalesReport.cs" />
@@ -2500,15 +2505,10 @@
     <Content Include="Areas\Admin\Views\UserRoles\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\UserRoles\Index.cshtml" />
     <Content Include="Areas\Admin\Views\User\Create.cshtml" />
-    <Content Include="Areas\Admin\Views\User\Delete.cshtml" />
-    <Content Include="Areas\Admin\Views\User\Details.cshtml" />
     <Content Include="Areas\Admin\Views\User\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\User\Index.cshtml" />
     <Content Include="Areas\Admin\Views\User\List.cshtml" />
     <Content Include="Areas\Admin\Views\web.config" />
     <Content Include="Areas\Admin\Views\Roles\Create.cshtml" />
-    <Content Include="Areas\Admin\Views\Roles\Delete.cshtml" />
-    <Content Include="Areas\Admin\Views\Roles\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Roles\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Roles\List.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
@@ -2589,6 +2589,17 @@
     <Content Include="Views\ExpenceCategories\Create.cshtml" />
     <Content Include="Views\ExpenceCategories\Edit.cshtml" />
     <Content Include="Views\ExpenceCategories\List.cshtml" />
+    <Content Include="Views\PettyCashes\Create.cshtml" />
+    <Content Include="Views\PettyCashes\Edit.cshtml" />
+    <Content Include="Views\PettyCashes\List.cshtml" />
+    <Content Include="Views\DocumentManagements\Create.cshtml" />
+    <Content Include="Views\DocumentManagements\Delete.cshtml" />
+    <Content Include="Views\DocumentManagements\Details.cshtml" />
+    <Content Include="Views\DocumentManagements\Edit.cshtml" />
+    <Content Include="Views\DocumentManagements\Index.cshtml" />
+    <Content Include="Views\ExpenseTrackers\List.cshtml" />
+    <Content Include="Views\ExpenseTrackers\Edit.cshtml" />
+    <Content Include="Views\ExpenseTrackers\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

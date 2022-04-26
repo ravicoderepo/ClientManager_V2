@@ -1,9 +1,10 @@
-﻿@model DBOperation.ExpenceCategory
-
+﻿@model DBOperation.ExpenseTracker
+@using System.Globalization;
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 
 <style>
     textarea {
@@ -20,12 +21,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Expence Category</h1>
+                    <h1>Petty Cash</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Master</a></li>
-                        <li class="breadcrumb-item"><a href="#">Expence Category</a></li>
+                        <li class="breadcrumb-item"><a href="#">Accounts</a></li>
+                        <li class="breadcrumb-item"><a href="#">Expense Tracker</a></li>
                         <li class="breadcrumb-item active">Edit</li>
                     </ol>
                 </div>
@@ -42,39 +43,57 @@
                     <!-- jquery validation -->
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Expence Category</h3>
+                            <h3 class="card-title">Expense Tracker</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
                         <form id="quickForm">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="status">Status</label>
+                                            <label for="ExpenseAmount">Expense Amount</label>
                                             @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "Id" } })
-                                            @Html.HiddenFor(model => model.IsActive, new { htmlAttributes = new { @id = "hdnUserStatus" } })
+                                            @Html.EditorFor(model => model.ExpenseAmount, new { htmlAttributes = new { @class = "form-control", @id = "txtExpenseAmount", @name = "ExpenseAmount" } })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="ExpenseDate">Expense Date</label>
+                                            <div class="input-group date" data-target-input="nearest">
+                                                @Html.EditorFor(model => model.ExpenseDate, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtExpenseDate", @name = "ExpenseDate" } })
+                                                <div class="input-group-append" data-target="#txtExpenseDate" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="ExpenseCategory">Expense Category</label>
+                                            @Html.HiddenFor(model => model.ExpenseCategoryId, new { htmlAttributes = new { @id = "hdnExpenseCategoryId" } })
+                                            @Html.DropDownList("ExpenseCategory", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlExpenseCategory", @onChange = "fnExpenseCategoryChange()" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Status">Status</label>
+                                            @Html.HiddenFor(model => model.Status, new { htmlAttributes = new { @id = "hdnStatus" } })
                                             @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="FullName">Category Name</label>
-                                            @Html.EditorFor(model => model.CategoryName, new { htmlAttributes = new { @class = "form-control", @id = "txtCategoryName", @name = "CategoryName" } })
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="status">Description</label>
+                                            <label for="Description">Description</label>
                                             @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @id = "txtDescription", @name = "Description" } })
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                             <!-- /.card-body -->
                             <div class="card-footer">
@@ -114,13 +133,18 @@
         }
     });
 
+    //Date picker
+    $('#txtExpenseDate').datetimepicker({
+        format: 'L'
+    });
+
     $(function () {
         //debugger;
         $.validator.setDefaults({
             submitHandler: function () {
                 debugger;
                 // alert("Form successful submitted!");
-                fnSubmitExpenceCategoryDetails();
+                fnSubmitExpenseTrakerDetails();
             }
         });
         $('#quickForm').validate({
@@ -154,24 +178,31 @@
             }
         });
     });
-
     function fnStatusChange() {
-        $("input[name=IsActive]").val(($('#ddlStatus').val()=='1' ? true: false));
+        debugger;
+        $("input[name=Status]").val($('#ddlStatus').val());
     }
 
-        function fnSubmitExpenceCategoryDetails() {
+    function fnExpenseCategoryChange() {
         debugger;
-        var ExpenceCategoryData = {
+        $("input[name=ExpenseCategory]").val($('#ddlExpenseCategory').val());
+    }
+
+    function fnSubmitExpenseTrakerDetails() {
+        debugger;
+        var ExpenseTrakerData = {
             Id: $('#Id').val(),
-            IsActive: ($("input[name=IsActive]").val().toLowerCase() == 'true') ? true : false,
-            CategoryName: $('#txtCategoryName').val(),
+            ExpenseAmount: $('#txtExpenseAmount').val(),
+            ExpenseDate: $('#txtExpenseDate').val(),
+            ExpenseCategoryId: $('#ddlExpenseCategory').val(),
+            Status: $("input[name=Status]").val(),
             Description: $('#txtDescription').val()
         };
         debugger;
         $.ajax({
             type: "POST",
-            url: "/ExpenceCategories/Edit",
-            data: JSON.stringify(ExpenceCategoryData),
+            url: "/ExpenseTrackers/Edit",
+            data: JSON.stringify(ExpenseTrakerData),
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
