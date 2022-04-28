@@ -17,7 +17,7 @@ namespace ClientManager.Controllers
         private ClientManagerEntities db = new ClientManagerEntities();
 
         // GET: PettyCashes
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Admin", "Finance" })]
         public ActionResult List()
         {
             var pettyCashes = db.PettyCashes.Include(p => p.User).Include(p => p.User1);
@@ -27,31 +27,10 @@ namespace ClientManager.Controllers
 
 
         // GET: PettyCashes/Create
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Admin", "Finance" })]
         public ActionResult Create()
         {
-            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
-            items.Insert(0, new SelectListItem()
-            {
-                Text = "ATM",
-                Value = "ATM"
-            });
-            items.Insert(1, new SelectListItem()
-            {
-                Text = "Account Transfer",
-                Value = "Account Transfer"
-            });
-            items.Insert(2, new SelectListItem()
-            {
-                Text = "Cash",
-                Value = "Cash"
-            });
-            items.Insert(3, new SelectListItem()
-            {
-                Text = "Other Receivables",
-                Value = "Other Receivables"
-            });
-            ViewBag.ModeOfPayment = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
+            ViewBag.ModeOfPayment = new SelectList(Utility.DefaultList.GetPaymentModeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             return View();
         }
 
@@ -60,7 +39,7 @@ namespace ClientManager.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Admin", "Finance" })]
         public ActionResult Create(Models.PettyCashData PettyCashData)
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
@@ -120,7 +99,7 @@ namespace ClientManager.Controllers
         }
 
         // GET: ExpenceCategories/Edit/5
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Admin", "Finance" })]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -132,35 +111,14 @@ namespace ClientManager.Controllers
             {
                 return HttpNotFound();
             }
-
-            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
-            items.Insert(0, new SelectListItem()
-            {
-                Text = "ATM",
-                Value = "ATM"
-            });
-            items.Insert(1, new SelectListItem()
-            {
-                Text = "Account Transfer",
-                Value = "Account Transfer"
-            });
-            items.Insert(2, new SelectListItem()
-            {
-                Text = "Cash",
-                Value = "Cash"
-            });
-            items.Insert(3, new SelectListItem()
-            {
-                Text = "Other Receivables",
-                Value = "Other Receivables"
-            });
-            ViewBag.ModeOfPayment = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
+            
+            ViewBag.ModeOfPayment = new SelectList(Utility.DefaultList.GetPaymentModeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             return View(pettyCash);
         }
 
         // POST: ExpenceCategories/Edit/5
         [HttpPost]
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Admin", "Finance" })]
         public ActionResult Edit(Models.PettyCashData PettyCashData)
         {
             JsonReponse data;

@@ -275,7 +275,7 @@
                         <!-- Add icons to the links using the .nav-icon class
     with font-awesome or any other icon font library -->
                         <li class="nav-item menu-open">
-                            <a href="#" class="nav-link active">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Dashboards
@@ -287,14 +287,14 @@
                                 @{
                                     if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "admin"))
                                     {
-                                        <li class="nav-item">
-                                            <a href="~/Home/MyDashboard" class="nav-link">
+                                        <li class="nav-item ">
+                                            <a href="~/Home/MyDashboard" class="nav-link" id="mnuDashboard">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>My Dashboard</p>
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="~/Home/AdminDashboard" class="nav-link">
+                                            <a href="~/Home/AdminDashboard" class="nav-link" id="mnuAdminDashboard">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>Admin Dashboard</p>
                                             </a>
@@ -303,7 +303,7 @@
                                     else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "salesrep"))
                                     {
                                         <li class="nav-item">
-                                            <a href="~/Home/MyDashboard" class="nav-link">
+                                            <a href="~/Home/MyDashboard" class="nav-link" id="mnuDashboard">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>My Dashboard</p>
                                             </a>
@@ -312,13 +312,13 @@
                                     else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "manager"))
                                     {
                                         <li class="nav-item">
-                                            <a href="~/Home/MyDashboard" class="nav-link">
+                                            <a href="~/Home/MyDashboard" class="nav-link" id="mnuDashboard">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>My Dashboard</p>
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="~/Home/ManagerDashboard" class="nav-link">
+                                            <a href="~/Home/ManagerDashboard" class="nav-link" id="mnuManagerDashboard">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>Manager Dashboard</p>
                                             </a>
@@ -341,7 +341,7 @@
                             </a>
                             <ul class="nav nav-treeview" style="display: block;">
                                 <li class="nav-item">
-                                    <a href="~/PettyCashes/List" class="nav-link">
+                                    <a href="~/PettyCashes/List" class="nav-link" id="mnuPettyCash">
                                         <i class="far fas fa-cash-register nav-icon"></i>
                                         <p>Petty Cash</p>
                                     </a>
@@ -349,7 +349,7 @@
                             </ul>
                             <ul class="nav nav-treeview" style="display: block;">
                                 <li class="nav-item">
-                                    <a href="~/ExpenseTrackers/List" class="nav-link">
+                                    <a href="~/ExpenseTrackers/List" class="nav-link" id="mnuExpenceTracker">
                                         <i class="far fas fa-cash-register nav-icon"></i>
                                         <p>Expense Tracker</p>
                                     </a>
@@ -360,19 +360,19 @@
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-shopping-cart"></i>
                                 <p>
-                                    Sale
+                                    Sales
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview" style="display: block;">
                                 <li class="nav-item">
-                                    <a href="~/SaleActivities/List" class="nav-link">
+                                    <a href="~/SaleActivities/List" class="nav-link" id="mnuSalesList">
                                         <i class="far fas fa-list nav-icon"></i>
                                         <p>List</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="~/SaleActivities/Create" class="nav-link">
+                                    <a href="~/SaleActivities/Create" class="nav-link" id="mnuSalesAdd">
                                         <i class="far fas fa-plus-circle nav-icon"></i>
                                         <p>New</p>
                                     </a>
@@ -413,13 +413,13 @@
                             </a>
                             <ul class="nav nav-treeview" style="display: block;">
                                 <li class="nav-item">
-                                    <a href="~/SaleActivities/List" class="nav-link">
+                                    <a href="~/SaleActivities/List" class="nav-link" id="mnuInvoiceList">
                                         <i class="far fas fa-list nav-icon"></i>
                                         <p>List</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="~/SaleActivities/Create" class="nav-link">
+                                    <a href="~/SaleActivities/Create" class="nav-link" id="mnuInvoiceNew">
                                         <i class="far fas fa-plus-circle nav-icon"></i>
                                         <p>New</p>
                                     </a>
@@ -428,15 +428,15 @@
                         </li>
                         <li class="nav-header">ADMIN</li>
                         <li class="nav-item">
-                            <a href="~/Admin/User/List" class="nav-link">
+                            <a href="~/Admin/User/List" class="nav-link" id="mnuUsers">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>
-                                    User Management
+                                    Users
                                 </p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="~/Admin/Roles/List" class="nav-link">
+                            <a href="~/Admin/Roles/List" class="nav-link" id="mnuRoles">
                                 <i class="nav-icon fas fa-user-tie"></i>
                                 <p>
                                     Roles
@@ -444,7 +444,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="~/Admin/UserRoles/Create" class="nav-link">
+                            <a href="~/Admin/UserRoles/Create" class="nav-link" id="mnuRoleMapping">
                                 <i class="nav-icon fas fa-user-graduate"></i>
                                 <p>
                                     Role Mapping
@@ -453,7 +453,7 @@
                         </li>
                         <li class="nav-header">MASTERS</li>
                         <li class="nav-item">
-                            <a href="~/Admin/UserList" class="nav-link">
+                            <a href="~/Admin/UserList" class="nav-link" id="mnuClients">
                                 <i class="nav-icon fas fa-user-shield"></i>
                                 <p>
                                     Clients
@@ -461,37 +461,30 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="~/Admin/UserList" class="nav-link">
+                            <a href="~/Contact/Index" class="nav-link" id="mnuContacts">
+                                <i class="nav-icon fas fa-address-book"></i>
+                                <p>
+                                    Contacts
+                                </p>
+                            </a>
+                        </li>
+                        @*<li class="nav-item">
+                            <a href="~/Admin/UserList" class="nav-link" id="mnuProducts">
                                 <i class="nav-icon fas fa-file-invoice"></i>
                                 <p>
                                     Products
                                 </p>
                             </a>
-                        </li>
+                        </li>*@
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-mask"></i>
-                                <p>
-                                    Sale Status
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="~/ExpenceCategories/List" class="nav-link">
+                            <a href="~/ExpenceCategories/List" class="nav-link" id="mnuExpenceCategory">
                                 <i class="nav-icon fas fa-sort-amount-up"></i>
                                 <p>
                                     Expence Categories
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="~/Contact/Index" class="nav-link">
-                                <i class="nav-icon fas fa-address-book"></i>
-                                <p>
-                                    Contact Management
-                                </p>
-                            </a>
-                        </li>
+
                         @*<li class="nav-item">
             <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-anchor"></i>
@@ -502,7 +495,7 @@
         </li>*@
                         <li class="nav-header">REPORTS</li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="#" class="nav-link" id="mnuReport1">
                                 <i class="nav-icon fas fa-circle"></i>
                                 <p>
                                     Report 1
@@ -510,7 +503,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="#" class="nav-link" id="mnuReport2">
                                 <i class="nav-icon fas fa-circle"></i>
                                 <p>
                                     Report 2

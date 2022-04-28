@@ -112,19 +112,8 @@ namespace ClientManager.Areas.Admin.Controllers
         {
             ViewBag.ModifiedBy = new SelectList(db.Users, "Id", "FullName");
             ViewBag.ReportingManager = new SelectList(db.Users, "Id", "FullName");
-            ViewBag.CreatedBy = new SelectList(db.Users, "Id", "FullName");
-            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
-            items.Insert(0, new SelectListItem()
-            {
-                Text = "Active",
-                Value = "1"
-            });
-            items.Insert(1, new SelectListItem()
-            {
-                Text = "De-Active",
-                Value = "0"
-            });
-            ViewBag.Status = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
+            ViewBag.CreatedBy = new SelectList(db.Users, "Id", "FullName");            
+            ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", 1).ToList<SelectListItem>();
             return View();
 
         }
@@ -134,17 +123,7 @@ namespace ClientManager.Areas.Admin.Controllers
         public ActionResult Create(UserData userData)
         {
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
-            System.Collections.Generic.List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
-            items.Insert(0, new SelectListItem()
-            {
-                Text = "De-Active",
-                Value = "0"
-            });
-            items.Insert(1, new SelectListItem()
-            {
-                Text = "Active",
-                Value = "1"
-            });
+            
             JsonReponse jsonReponse = (JsonReponse)null;
             
             JsonReponse data;
@@ -226,18 +205,8 @@ namespace ClientManager.Areas.Admin.Controllers
             ViewBag.ReportingManager = new SelectList(db.Users, "Id", "FullName", user.ReportingManager);
             ViewBag.CreatedBy = new SelectList(db.Users, "Id", "FullName", user.CreatedBy);
 
-            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
-            items.Insert(0, new SelectListItem()
-            {
-                Text = "Active",
-                Value = "1"
-            });
-            items.Insert(1, new SelectListItem()
-            {
-                Text = "De-Active",
-                Value = "0"
-            });
-            ViewBag.Status = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
+            
+            ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             return View(user);
         }
 

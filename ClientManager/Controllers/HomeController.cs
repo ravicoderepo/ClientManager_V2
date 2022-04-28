@@ -57,7 +57,7 @@ namespace ClientManager.Controllers
             return (ActionResult)this.View(dashboard);
         }
 
-        [CustomAuthorize(new string[] { "Admin", "Manager", "SalesRep" })]
+        [CustomAuthorize(new string[] { "Admin", "Manager", "SalesRep","Finance" })]
         public ActionResult MyDashboard()
         {
             UserDetails currentUser = (UserDetails)this.Session["UserDetails"];
@@ -101,7 +101,7 @@ namespace ClientManager.Controllers
             return (ActionResult)this.View((object)model);
         }
 
-        [CustomAuthorize(new string[] { "Admin", "Manager" })]
+        [CustomAuthorize(new string[] { "Admin", "Manager"})]
         public ActionResult ManagerDashboard()
         {
             UserDetails currentUser = (UserDetails)this.Session["UserDetails"];
@@ -155,13 +155,13 @@ namespace ClientManager.Controllers
             return (ActionResult)this.View((object)model);
         }
 
-        [CustomAuthorize(new string[] { "Admin", "Manager", "SalesRep" })]
+        [CustomAuthorize(new string[] { "Admin", "Manager", "SalesRep", "Finance" })]
         public ActionResult About() => (ActionResult)this.View();
 
-        [CustomAuthorize(new string[] { "Admin", "Manager", "SalesRep" })]
+        [CustomAuthorize(new string[] { "Admin", "Manager", "SalesRep", "Finance" })]
         public ActionResult Contact() => (ActionResult)this.View();
 
-        [CustomAuthorize("Admin", "Manager", "SalesRep")]
+        [CustomAuthorize("Admin", "Manager", "SalesRep", "Finance")]
         public ActionResult UnAuthorized()
         {
             ViewBag.Message = "Un Authorized Page!";
@@ -169,19 +169,19 @@ namespace ClientManager.Controllers
             return View();
         }
 
-        [CustomAuthorize("Admin", "Manager", "SalesRep")]
+        [CustomAuthorize("Admin", "Manager", "SalesRep","Finance")]
         public ActionResult PageNotFound()
         {
             return View();
         }
 
-        [CustomAuthorize("Admin", "Manager", "SalesRep")]
+        [CustomAuthorize("Admin", "Manager", "SalesRep","Finance")]
         public ActionResult InternalServerError()
         {
             return View();
         }
 
-        [CustomAuthorize("Admin", "Manager", "SalesRep")]
+        [CustomAuthorize("Admin", "Manager", "SalesRep","Finance")]
         public ActionResult NotAuthorized()
         {
             return View();

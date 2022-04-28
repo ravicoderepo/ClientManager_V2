@@ -18,7 +18,7 @@ namespace ClientManager.Controllers
         private ClientManagerEntities db = new ClientManagerEntities();
 
         // GET: PettyCashes
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Admin", "Finance" })]
         public ActionResult List()
         {
             var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
@@ -28,26 +28,10 @@ namespace ClientManager.Controllers
 
 
         // GET: PettyCashes/Create
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Admin", "Finance" })]
         public ActionResult Create()
         {
-            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
-            items.Insert(0, new SelectListItem()
-            {
-                Text = "Approved",
-                Value = "Approved"
-            });
-            items.Insert(1, new SelectListItem()
-            {
-                Text = "Pending",
-                Value = "Pending"
-            });
-            items.Insert(2, new SelectListItem()
-            {
-                Text = "Verified",
-                Value = "Verified"
-            });
-            ViewBag.Status = new SelectList(items, "Value", "Text", "Pending").ToList<SelectListItem>();
+            ViewBag.Status = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", "Pending").ToList<SelectListItem>();
             ViewBag.ExpenseCategory = new SelectList(db.ExpenceCategories, "Id", "CategoryName", 1);
             return View();
         }
@@ -57,7 +41,7 @@ namespace ClientManager.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Admin", "Finance" })]
         public ActionResult Create(Models.ExpenceTrackerData expenceTrackerData)
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
@@ -89,6 +73,8 @@ namespace ClientManager.Controllers
                         CreatedOn = DateTime.Now
                     }); ;
                     num = this.db.SaveChanges();
+
+                    Utility.Emails.SendEmail(Utility.c.ReadSetting("FinanceEmailId"), "Petty Cash Added", Utility.Emails.GetEmailTemplate("PettyCashAdded"));
                 }
                 if (num > 0)
                     data = new JsonReponse()
@@ -118,7 +104,7 @@ namespace ClientManager.Controllers
         }
 
         // GET: ExpenceCategories/Edit/5
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Admin", "Finance" })]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -131,30 +117,15 @@ namespace ClientManager.Controllers
                 return HttpNotFound();
             }
 
-            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
-            items.Insert(0, new SelectListItem()
-            {
-                Text = "Approved",
-                Value = "Approved"
-            });
-            items.Insert(1, new SelectListItem()
-            {
-                Text = "Pending",
-                Value = "Pending"
-            });
-            items.Insert(2, new SelectListItem()
-            {
-                Text = "Verified",
-                Value = "Verified"
-            });
-            ViewBag.Status = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
+            
+            ViewBag.Status = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             ViewBag.ExpenseCategory = new SelectList(db.ExpenceCategories, "Id", "CategoryName", expenceTracker.ExpenseCategoryId);
             return View(expenceTracker);
         }
 
         // POST: ExpenceCategories/Edit/5
         [HttpPost]
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Admin", "Finance" })]
         public ActionResult Edit(Models.ExpenceTrackerData expenceTrackerData)
         {
             JsonReponse data;

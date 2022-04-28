@@ -17,7 +17,7 @@ namespace ClientManager.Controllers
         private ClientManagerEntities db = new ClientManagerEntities();
 
         // GET: ExpenceCategories
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Admin","Finance" })]
         public ActionResult List()
         {
             var expenceCategories = db.ExpenceCategories.Include(e => e.User).Include(e => e.User1);
@@ -25,24 +25,14 @@ namespace ClientManager.Controllers
         }
 
         // GET: ExpenceCategories/Create
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Admin", "Finance" })]
         public ActionResult Create()
         {
             ViewBag.ModifiedBy = new SelectList(db.Users, "Id", "FullName");
             ViewBag.ReportingManager = new SelectList(db.Users, "Id", "FullName");
             ViewBag.CreatedBy = new SelectList(db.Users, "Id", "FullName");
-            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
-            items.Insert(0, new SelectListItem()
-            {
-                Text = "Active",
-                Value = "1"
-            });
-            items.Insert(1, new SelectListItem()
-            {
-                Text = "De-Active",
-                Value = "0"
-            });
-            ViewBag.Status = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
+           
+            ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", 1).ToList<SelectListItem>();
             return View();
 
         }
@@ -51,22 +41,12 @@ namespace ClientManager.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Admin", "Finance" })]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Models.ExpenceCategoryData expenceCategoryData)
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
-            System.Collections.Generic.List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
-            items.Insert(0, new SelectListItem()
-            {
-                Text = "De-Active",
-                Value = "0"
-            });
-            items.Insert(1, new SelectListItem()
-            {
-                Text = "Active",
-                Value = "1"
-            });
+            
             JsonReponse jsonReponse = (JsonReponse)null;
 
             JsonReponse data;
@@ -122,7 +102,7 @@ namespace ClientManager.Controllers
         }
 
         // GET: ExpenceCategories/Edit/5
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Admin", "Finance" })]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -135,24 +115,14 @@ namespace ClientManager.Controllers
                 return HttpNotFound();
             }
 
-            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
-            items.Insert(0, new SelectListItem()
-            {
-                Text = "Active",
-                Value = "1"
-            });
-            items.Insert(1, new SelectListItem()
-            {
-                Text = "De-Active",
-                Value = "0"
-            });
-            ViewBag.Status = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
+           
+            ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             return View(expenceCategory);
         }
 
         // POST: ExpenceCategories/Edit/5
         [HttpPost]
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Admin", "Finance" })]
         public ActionResult Edit(Models.ExpenceCategoryData ExpenceCategoryData)
         {
             JsonReponse data;

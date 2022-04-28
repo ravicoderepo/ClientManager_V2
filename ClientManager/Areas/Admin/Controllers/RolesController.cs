@@ -17,6 +17,7 @@ namespace ClientManager.Areas.Admin.Controllers
         private ClientManagerEntities db = new ClientManagerEntities();
 
         // GET: Admin/Roles
+        [CustomAuthorize(new string[] { "Admin" })]
         public ActionResult List()
         {
             var roles = db.Roles.Include(r => r.User).Include(r => r.User1);
@@ -46,18 +47,7 @@ namespace ClientManager.Areas.Admin.Controllers
             ViewBag.ModifiedBy = new SelectList(db.Users, "Id", "FullName");
             ViewBag.ReportingManager = new SelectList(db.Users, "Id", "FullName");
             ViewBag.CreatedBy = new SelectList(db.Users, "Id", "FullName");
-            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
-            items.Insert(0, new SelectListItem()
-            {
-                Text = "Active",
-                Value = "1"
-            });
-            items.Insert(1, new SelectListItem()
-            {
-                Text = "De-Active",
-                Value = "0"
-            });
-            ViewBag.Status = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
+            ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             return View();
         }
 
@@ -136,19 +126,8 @@ namespace ClientManager.Areas.Admin.Controllers
             {
                 return HttpNotFound();
             }
-
-            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
-            items.Insert(0, new SelectListItem()
-            {
-                Text = "Active",
-                Value = "1"
-            });
-            items.Insert(1, new SelectListItem()
-            {
-                Text = "De-Active",
-                Value = "0"
-            });
-            ViewBag.Status = new SelectList(items, "Value", "Text", (object)1).ToList<SelectListItem>();
+            
+            ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             return View(role);
         }
 

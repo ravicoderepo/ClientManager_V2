@@ -35,7 +35,7 @@ namespace ClientManager.Areas.Admin.Controllers
     [CustomAuthorize("Admin")]
     public ActionResult Create(int userId = 1)
     {
-      var list = this.db.UserRoles.Where<DBOperation.UserRole>((Expression<Func<DBOperation.UserRole, bool>>) (wh => wh.UserId == userId)).Select(sel => new
+      var list = this.db.UserRoles.Where(wh => wh.UserId == userId).Select(sel => new
       {
         RoleId = sel.RoleId,
         RoleName = sel.Role.RoleName
@@ -43,9 +43,9 @@ namespace ClientManager.Areas.Admin.Controllers
 
       IEnumerable<string> assignedRoleNames = list.Select(sel => sel.RoleName);
      
-      ViewBag.AvailableRoles = new SelectList((IEnumerable) list, "RoleId", "RoleName");
+      ViewBag.AvailableRoles = new SelectList(this.db.Roles.Where(wh => !assignedRoleNames.Contains(wh.RoleName)), "Id", "RoleName");
      
-      ViewBag.AssignedRoles = new SelectList(this.db.Roles.Where<Role>((Expression<Func<Role, bool>>) (wh => !assignedRoleNames.Contains<string>(wh.RoleName))), "Id", "RoleName");
+      ViewBag.AssignedRoles = new SelectList(list, "RoleId", "RoleName");
      
       ViewBag.Users = new SelectList(this.db.Users, "Id", "FullName", (object) userId);
       return (ActionResult) this.View();

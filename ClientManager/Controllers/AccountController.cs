@@ -76,7 +76,7 @@ namespace ClientManager.Controllers
                             {
                                 message = "Valid Credentials",
                                 status = "Success",
-                                redirectURL = "/Home/" + (userDetails2.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "admin")) ? "MyDashboard" : (userDetails2.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "manager")) ? "MyDashboard" : "MyDashboard"))
+                                redirectURL = "/Home/MyDashboard"
                             };
                         }
                     }
