@@ -213,44 +213,44 @@ namespace Utility
             }
         }
     }
-}
-public static class ConfigSettings
-{
-    public static string ReadSetting(string key)
+
+    public static class ConfigSettings
     {
-        try
+        public static string ReadSetting(string key)
         {
-            var appSettings = ConfigurationManager.AppSettings;
-            string result = appSettings[key] ?? "Not Found";
-            return result;
+            try
+            {
+                var appSettings = ConfigurationManager.AppSettings;
+                string result = appSettings[key] ?? "Not Found";
+                return result;
+            }
+            catch (ConfigurationErrorsException)
+            {
+                return "";
+            }
         }
-        catch (ConfigurationErrorsException)
+
+        public static void AddUpdateAppSettings(string key, string value)
         {
-            return "";
+            try
+            {
+                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                var settings = configFile.AppSettings.Settings;
+                if (settings[key] == null)
+                {
+                    settings.Add(key, value);
+                }
+                else
+                {
+                    settings[key].Value = value;
+                }
+                configFile.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
+            }
+            catch (ConfigurationErrorsException)
+            {
+
+            }
         }
     }
-
-    public static void AddUpdateAppSettings(string key, string value)
-    {
-        try
-        {
-            var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            var settings = configFile.AppSettings.Settings;
-            if (settings[key] == null)
-            {
-                settings.Add(key, value);
-            }
-            else
-            {
-                settings[key].Value = value;
-            }
-            configFile.Save(ConfigurationSaveMode.Modified);
-            ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
-        }
-        catch (ConfigurationErrorsException)
-        {
-
-        }
-    }
-}
 }
