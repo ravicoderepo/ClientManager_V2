@@ -166,12 +166,13 @@ namespace Utility
                     //    string fileName = Path.GetFileName(postedFile.FileName);
                     //    mm.Attachments.Add(new Attachment(postedFile.InputStream, fileName));
                     //}
-                    mm.IsBodyHtml = false;
+                    mm.IsBodyHtml = true;
                     SmtpClient smtp = new SmtpClient();
                     smtp.Host = emailHost;
                     smtp.EnableSsl = true;
+                    smtp.UseDefaultCredentials = false;
                     NetworkCredential NetworkCred = new NetworkCredential(from, password);
-                    smtp.UseDefaultCredentials = true;
+                    smtp.EnableSsl = true;
                     smtp.Credentials = NetworkCred;
                     smtp.Port = 587;
                     smtp.Send(mm);
@@ -179,7 +180,7 @@ namespace Utility
 
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 return false;
@@ -195,7 +196,7 @@ namespace Utility
                             <html>
                                 <body style='font-size:12px'>
                                     <p>Dear Accounts Team, </p>
-                                    <p>The amount of  <b>Rs.{PettyCashValue}</b> has been sent/added as PettyCash.<p>
+                                    <p>The amount of  <b>Rs.{PettyCashValue}</b> has been sent/added as PettyCash by <b>{PaymentMode}}</b>.<p>
                                     <p>The Overall due PettyCash <b>Rs.{PendingPettyCash}</b>.</p>
 
                                     Regards,

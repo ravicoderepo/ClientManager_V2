@@ -73,8 +73,7 @@ namespace ClientManager.Controllers
                         CreatedOn = DateTime.Now
                     }); ;
                     num = this.db.SaveChanges();
-                    string EmailBody = Utility.Emails.GetEmailTemplate("PettyCashAdded").Replace("{PettyCashValue}", expenceTrackerData.ExpenseAmount.ToString());
-                    Utility.Emails.SendEmail(Utility.ConfigSettings.ReadSetting("FinanceEmailId"), "Petty Cash Added", Utility.Emails.GetEmailTemplate("PettyCashAdded"));
+                    
                 }
                 if (num > 0)
                     data = new JsonReponse()
