@@ -196,10 +196,10 @@ namespace Utility
                             <html>
                                 <body style='font-size:12px'>
                                     <p>Dear Accounts Team, </p>
-                                    <p>The amount of  <b>Rs.{PettyCashValue}</b> has been sent/added as PettyCash by <b>{PaymentMode}}</b>.<p>
-                                    <p>The Overall due PettyCash <b>Rs.{PendingPettyCash}</b>.</p>
-
-                                    Regards,
+                                    <p>The amount of  <b>Rs.{PettyCashValue}</b> has been sent/added as PettyCash by <b>{PaymentMode} </b> on <b>{AmountReceivedDate}</b>.<p>
+                                    <p>The Overall due PettyCash <b>Rs.{PendingPettyCash}</b> as on <b>" + DateTime.Now.ToShortDateString() + @"</b>.</p>
+                                    <p>Description : <b> {Description} </b> </p>
+                                    Regards,</br>
                                     Admin Team
                                     <p>
                                     <hr>
@@ -228,6 +228,30 @@ namespace Utility
             catch (ConfigurationErrorsException)
             {
                 return "";
+            }
+        }
+
+        public static void ReadAllSettings()
+        {
+            try
+            {
+                var appSettings = ConfigurationManager.AppSettings;
+
+                if (appSettings.Count == 0)
+                {
+                    Console.WriteLine("AppSettings is empty.");
+                }
+                else
+                {
+                    foreach (var key in appSettings.AllKeys)
+                    {
+                        //Console.WriteLine("Key: {0} Value: {1}", key, appSettings[key]);
+                    }
+                }
+            }
+            catch (ConfigurationErrorsException)
+            {
+                //Console.WriteLine("Error reading app settings");
             }
         }
 

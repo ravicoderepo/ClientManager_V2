@@ -71,8 +71,8 @@ namespace ClientManager.Controllers
                     });
                     num = this.db.SaveChanges();
 
-                    string EmailBody = Utility.Emails.GetEmailTemplate("PettyCashAdded").Replace("{PettyCashValue}", PettyCashData.AmountReceived.ToString()).Replace("{PaymentMode}", PettyCashData.ModeOfPayment);
-                    Utility.Emails.SendEmail(Utility.ConfigSettings.ReadSetting("FinanceEmailId"), "Petty Cash Added", Utility.Emails.GetEmailTemplate("PettyCashAdded"));
+                    string EmailBody = Utility.Emails.GetEmailTemplate("PettyCashAdded").Replace("{PettyCashValue}", PettyCashData.AmountReceived.ToString()).Replace("{PaymentMode}", PettyCashData.ModeOfPayment).Replace("{AmountReceivedDate}",PettyCashData.AmountRecivedDate.ToShortDateString()).Replace("{Description}", (!string.IsNullOrEmpty(PettyCashData.Description) ? PettyCashData.Description : "N/A"));
+                    Utility.Emails.SendEmail(Utility.ConfigSettings.ReadSetting("FinanceEmailId"), "Petty Cash Added", EmailBody);
                 }
                 if (num > 0)
                     data = new JsonReponse()
