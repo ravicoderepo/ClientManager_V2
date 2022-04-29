@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ClientManager.Models.UserDetails userData = (ClientManager.Models.UserDetails)this.Session["UserDetails"];
 }
 
 <style>
@@ -71,6 +72,9 @@
                                             Description
                                         </th>
                                         <th>
+                                            Status
+                                        </th>
+                                        <th>
                                             Created On
                                         </th>
                                         <th>
@@ -87,51 +91,53 @@
                                 <tbody>
                                     @foreach (var item in Model)
                                     {
-                                    <tr>
-                                        <td>
+                                        <tr>
+                                            <td>
+                                                @if (item.Status == "Pending")
+                                                {
+                                                    <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/PettyCashes/Edit/@item.Id'"><i class="far fa-edit"></i></button>
+                                                }
+                                                @*<button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/Admin/User/Details/@item.Id'"><i class="fas fa-eye"></i></button>*@
 
-                                            <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/PettyCashes/Edit/@item.Id'"><i class="far fa-edit"></i></button>
-                                            @*<button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/Admin/User/Details/@item.Id'"><i class="fas fa-eye"></i></button>*@
+                                                @if (userData.UserRoles.Any(wh => wh.RoleName == "Admin") && item.Status == "Pending")
+                                                {
+                                                <button type="button" class="btn btn-outline-success btn-xs" title="Approve" onclick="fnApprove(@item.Id,'Approved')"><i class="far fa-arrow-alt-circle-right"></i></button>
+                                                @*<button type="button" class="btn btn-outline-secondary btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-up"></i></button>*@
+                                                }
 
-
-                                            @*@if (item.Status == "Approved")
-                                            {
-
-                                                <button type="button" class="btn btn-danger btn-xs" title="De-ctivate" onclick="fnDeActivateUser(@item.Id)"><i class="far fa-trash-alt"></i></button>
-
-                                            }
-                                            else
-                                            {
-                                                <button type="button" class="btn btn-danger btn-xs" title="Activate" onclick="fnActivateUser(@item.Id)"><i class="far fa-trash-alt"></i></button>
-
-                                            }*@
-
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.AmountReceived)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.AmountRecivedDate)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.ModeOfPayment)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Description)
-                                        </td>                                     
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.CreatedOn)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.User.FullName)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.ModifiedOn)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.User1.FullName)
-                                        </td>
-                                    </tr>
+                                                @if (userData.UserRoles.Any(wh => wh.RoleName == "Finance") && item.Status == "Approved")
+                                                {
+                                                <button type="button" class="btn btn-outline-success btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-left"></i></button>
+                                                }
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.AmountReceived)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.AmountRecivedDate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ModeOfPayment)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Description)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Status)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CreatedOn)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.User.FullName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ModifiedOn)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.User1.FullName)
+                                            </td>
+                                        </tr>
                                     }
                                 </tbody>
                             </table>
@@ -191,10 +197,32 @@
         });
     }
 
-    function fnDeActivateUser(id) {
+    function fnApprove(id, status) {
         $.ajax({
             type: "GET",
-            url: "/Admin/User/DeActivate/" + id,
+            url: "/PettyCashes/PettyCashApprove?id=" + id + "&status=" + status,
+            //data: JSON.stringify(Register),
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data.status == "Success") {
+                    alert(data.message);
+                    window.location.href = data.redirectURL;
+                }
+                //else {
+                //    alert(data.message);
+                //}
+
+            },
+            error: function () {
+                alert("Error occured!!  " + data.message)
+            }
+        });
+    }
+    function fnVerify(id, status) {
+        $.ajax({
+            type: "GET",
+            url: "/PettyCashes/PettyCashVerify?id=" + id + "&status=" + status,
             //data: JSON.stringify(Register),
             dataType: "json",
             contentType: 'application/json; charset=utf-8',

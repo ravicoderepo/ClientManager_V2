@@ -21,6 +21,8 @@ namespace ClientManager.Controllers
         public ActionResult List()
         {
             var pettyCashes = db.PettyCashes.Include(p => p.User).Include(p => p.User1);
+            UserDetails userData = (UserDetails)this.Session["UserDetails"];
+            // ViewBag.UserRoles = userData.UserRoles.Select(sel => sel.RoleName);
             return View(pettyCashes.ToList());
         }
 
@@ -65,13 +67,14 @@ namespace ClientManager.Controllers
                         AmountReceived = PettyCashData.AmountReceived,
                         AmountRecivedDate = PettyCashData.AmountRecivedDate,
                         ModeOfPayment = PettyCashData.ModeOfPayment,
+                        Status = "Pending",
                         Description = PettyCashData.Description,
                         CreatedBy = userData.Id,
                         CreatedOn = DateTime.Now
                     });
                     num = this.db.SaveChanges();
 
-                    string EmailBody = Utility.Emails.GetEmailTemplate("PettyCashAdded").Replace("{PettyCashValue}", PettyCashData.AmountReceived.ToString()).Replace("{PaymentMode}", PettyCashData.ModeOfPayment).Replace("{AmountReceivedDate}",PettyCashData.AmountRecivedDate.ToShortDateString()).Replace("{Description}", (!string.IsNullOrEmpty(PettyCashData.Description) ? PettyCashData.Description : "N/A"));
+                    string EmailBody = Utility.Emails.GetEmailTemplate("PettyCashAdded").Replace("{PettyCashValue}", PettyCashData.AmountReceived.ToString()).Replace("{PaymentMode}", PettyCashData.ModeOfPayment).Replace("{AmountReceivedDate}", PettyCashData.AmountRecivedDate.ToShortDateString()).Replace("{Description}", (!string.IsNullOrEmpty(PettyCashData.Description) ? PettyCashData.Description : "N/A"));
                     Utility.Emails.SendEmail(Utility.ConfigSettings.ReadSetting("FinanceEmailId"), "Petty Cash Added", EmailBody);
                 }
                 if (num > 0)
@@ -114,7 +117,7 @@ namespace ClientManager.Controllers
             {
                 return HttpNotFound();
             }
-            
+
             ViewBag.ModeOfPayment = new SelectList(Utility.DefaultList.GetPaymentModeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             return View(pettyCash);
         }
@@ -152,6 +155,7 @@ namespace ClientManager.Controllers
                     entity.AmountReceived = PettyCashData.AmountReceived;
                     entity.AmountRecivedDate = PettyCashData.AmountRecivedDate;
                     entity.ModeOfPayment = PettyCashData.ModeOfPayment;
+                    entity.Status = "Pending";
                     entity.ModifiedBy = new int?(userDetails.Id);
                     entity.ModifiedOn = new DateTime?(DateTime.Now);
 
@@ -183,6 +187,88 @@ namespace ClientManager.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        [CustomAuthorize(new string[] { "Admin" })]
+        public ActionResult PettyCashApprove(int id, string status)
+        {
+            UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
+            JsonReponse data;
+            try
+            {
+                if (id <= 0)
+                    return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+                PettyCash entity = this.db.PettyCashes.Find(id);
+
+                if (entity == null)
+                    return (ActionResult)this.HttpNotFound();
+
+                entity.Status = status;
+                entity.ModifiedBy = new int?(userDetails.Id);
+                entity.ModifiedOn = new DateTime?(DateTime.Now);
+                this.db.Entry<PettyCash>(entity).State = EntityState.Modified;
+                this.db.SaveChanges();
+
+                data = new JsonReponse()
+                {
+                    message = "PettyCash Approved.",
+                    status = "Success",
+                    redirectURL = "/PettyCashes/List?" + DateTime.Now.Ticks.ToString()
+                };
+            }
+            catch (Exception ex)
+            {
+                data = new JsonReponse()
+                {
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
+            }
+            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        [CustomAuthorize(new string[] { "Finance" })]
+        public ActionResult PettyCashVerify(int id, string status)
+        {
+            UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
+
+            JsonReponse data;
+            try
+            {
+                if (id <= 0)
+                    return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+                PettyCash entity = this.db.PettyCashes.Find(id);
+
+                if (entity == null)
+                    return (ActionResult)this.HttpNotFound();
+
+                entity.Status = status;
+                entity.ModifiedBy = new int?(userDetails.Id);
+                entity.ModifiedOn = new DateTime?(DateTime.Now);
+                this.db.Entry<PettyCash>(entity).State = EntityState.Modified;
+                this.db.SaveChanges();
+
+                data = new JsonReponse()
+                {
+                    message = "PettyCash Verified.",
+                    status = "Success",
+                    redirectURL = "/PettyCashes/List?" + DateTime.Now.Ticks.ToString()
+                };
+            }
+            catch (Exception ex)
+            {
+                data = new JsonReponse()
+                {
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
+            }
+            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
