@@ -23,10 +23,12 @@ namespace DBOperation
             this.Clients1 = new HashSet<Client>();
             this.Contacts = new HashSet<Contact>();
             this.Contacts1 = new HashSet<Contact>();
-            this.DocumentManagements = new HashSet<DocumentManagement>();
-            this.DocumentManagements1 = new HashSet<DocumentManagement>();
+            this.Documents = new HashSet<Document>();
+            this.Documents1 = new HashSet<Document>();
             this.ExpenceCategories = new HashSet<ExpenceCategory>();
             this.ExpenceCategories1 = new HashSet<ExpenceCategory>();
+            this.ExpenseTrackers = new HashSet<ExpenseTracker>();
+            this.ExpenseTrackers1 = new HashSet<ExpenseTracker>();
             this.PettyCashes = new HashSet<PettyCash>();
             this.PettyCashes1 = new HashSet<PettyCash>();
             this.Projects = new HashSet<Project>();
@@ -49,8 +51,6 @@ namespace DBOperation
             this.Users1 = new HashSet<User>();
             this.Users11 = new HashSet<User>();
             this.Users12 = new HashSet<User>();
-            this.ExpenseTrackers = new HashSet<ExpenseTracker>();
-            this.ExpenseTrackers1 = new HashSet<ExpenseTracker>();
         }
     
         public int Id { get; set; }
@@ -86,13 +86,17 @@ namespace DBOperation
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Contact> Contacts1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocumentManagement> DocumentManagements { get; set; }
+        public virtual ICollection<Document> Documents { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocumentManagement> DocumentManagements1 { get; set; }
+        public virtual ICollection<Document> Documents1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ExpenceCategory> ExpenceCategories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ExpenceCategory> ExpenceCategories1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ExpenseTracker> ExpenseTrackers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ExpenseTracker> ExpenseTrackers1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PettyCash> PettyCashes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -140,9 +144,5 @@ namespace DBOperation
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<User> Users12 { get; set; }
         public virtual User User3 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ExpenseTracker> ExpenseTrackers { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ExpenseTracker> ExpenseTrackers1 { get; set; }
     }
 }

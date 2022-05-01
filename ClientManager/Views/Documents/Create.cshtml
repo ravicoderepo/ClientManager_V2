@@ -1,0 +1,216 @@
+﻿@model DBOperation.Document
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    textarea {
+        width: 100% !important;
+        border: 1px solid #ced4da !important;
+        border-radius: .25rem !important;
+        padding: .375rem .75rem !important;
+    }
+</style>
+<div class="content-wrapper">
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Document</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Document Management</a></li>
+                        <li class="breadcrumb-item"><a href="#">Documents</a></li>
+                        <li class="breadcrumb-item active">Create</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- jquery validation -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Document Details</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form id="quickForm">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div class="form-group">
+                                            <label for=">">Document Name</label>
+                                            @Html.EditorFor(model => model.FileName, new { htmlAttributes = new { @class = "form-control", @id = "txtFileName", @name = "FileName" } })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="ModeOfPayment">Document Type </label>
+                                            @Html.HiddenFor(model => model.DocumentType, new { htmlAttributes = new { @id = "hdnDocumentType" } })
+                                            @Html.DropDownList("DocumentType", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlDocumentType", @onChange = "fnDocumentTypeChange()" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="ModeOfPayment">Document Source </label>
+                                            @Html.HiddenFor(model => model.DocumentSource, new { htmlAttributes = new { @id = "hdnDocumentSource" } })
+                                            @Html.DropDownList("DocumentSource", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlDocumentSource", @onChange = "fnDocumentSourceChange()" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="ModeOfPayment">Reference Rec Id </label>
+                                            @Html.HiddenFor(model => model.ReferenceRecId, new { htmlAttributes = new { @id = "hdnReferenceRecId" } })
+                                            @Html.DropDownList("ReferenceRecId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlReferenceRecId", @onChange = "fnReferenceRecIdChange()" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="ModeOfPayment">Status </label>
+                                            @Html.HiddenFor(model => model.Status, new { htmlAttributes = new { @id = "hdnStatus" } })
+                                            @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="Description">Description</label>
+                                            @Html.TextAreaFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @id = "txtDescription", @name = "Description" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Upload</button> <button type="button" class="btn btn-danger">Cancel</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='List'" id="btnBack">Back to List</button>
+                            </div>
+                    </div>
+                    <!-- /.card-body -->
+                    </form>
+                </div>
+                <!-- /.card -->
+            </div>
+
+            <!--/.col (left) -->
+            <!-- right column -->
+            <div class="col-md-6">
+
+            </div>
+            <!--/.col (right) -->
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+<script>
+    $(window).on('load', function () {
+
+        if ('@ViewBag.AccessLevel' == "View") {
+            $('#quickForm :input').each(function () {
+                debugger;
+                if ($(this).attr('Id') != 'btnBack') {
+                    debugger;
+                    $(this).prop('disabled', true);
+                }
+            });
+        }
+    });
+
+    $(function () {
+        //debugger;
+        $.validator.setDefaults({
+            submitHandler: function () {
+                debugger;
+                // alert("Form successful submitted!");
+                $("input[name=ModeOfPayment]").val($('#ddlModeOfPayment').val());
+                fnDocumentDetails();
+            }
+        });
+        $('#quickForm').validate({
+
+            rules: {
+                saleDate: {
+                    required: true,
+                },
+                clientName: {
+                    required: true,
+                },
+            },
+            messages: {
+                saleDate: {
+                    required: "Please enter a email address",
+                },
+                clientName: {
+                    required: "Please provide a password",
+                },
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+    });
+
+
+    function fnModeOfPaymentChange() {
+        debugger;
+        $("input[name=ModeOfPayment]").val($('#ddlModeOfPayment').val());
+    }
+
+    function fnDocumentDetails() {
+        debugger;
+        var DocumentData = {
+            DocumentType: $('#txtFileName').val(),
+            AmountRecivedDate: $('#txtAmountRecivedDate').val(),
+            DocumentType: $("input[name=hdnDocumentType]").val(),
+            DocumentSource: $("input[name=hdnDocumentSource]").val(),
+            ReferenceRecId: $("input[name=hdnReferenceRecId]").val(),
+            Status: $("input[name=hdnStatus]").val(),
+            Description: $('#txtDescription').val()
+        };
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: "/Documents/Create",
+            data: JSON.stringify(DocumentData),
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data.status == "Success") {
+                    alert(data.message);
+                    window.location.href = data.redirectURL;
+                }
+                else {
+                    alert(data.message);
+                }
+            },
+            error: function () {
+                alert("Error occured!!  " + data.message)
+            }
+        });
+    }
+    $("#mnuDocumentCreate").addClass("active");
+</script>

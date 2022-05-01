@@ -106,6 +106,60 @@ namespace Utility
             return items;
         }
 
+        public static List<SelectListItem> GetDocumentStatusList()
+        {
+            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
+            items.Insert(0, new SelectListItem()
+            {
+                Text = "Draft",
+                Value = "Draft"
+            });
+            items.Insert(1, new SelectListItem()
+            {
+                Text = "Published",
+                Value = "Published"
+            });
+            items.Insert(2, new SelectListItem()
+            {
+                Text = "Archived",
+                Value = "Archived"
+            });
+
+            return items;
+        }
+
+        public static List<SelectListItem> GetDocumentTypesList()
+        {
+            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
+            items.Insert(0, new SelectListItem()
+            {
+                Text = "Image",
+                Value = "Image"
+            });
+            items.Insert(1, new SelectListItem()
+            {
+                Text = "PDF",
+                Value = "PDF"
+            });
+            items.Insert(2, new SelectListItem()
+            {
+                Text = "Document",
+                Value = "Document"
+            });
+            items.Insert(3, new SelectListItem()
+            {
+                Text = "Zip",
+                Value = "Zip"
+            });
+            items.Insert(4, new SelectListItem()
+            {
+                Text = "Others",
+                Value = "Others"
+            });
+
+            return items;
+        }
+
         public static List<SelectListItem> GetStatusList()
         {
             List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();

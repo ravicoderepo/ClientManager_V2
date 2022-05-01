@@ -12,17 +12,18 @@ namespace DBOperation
     using System;
     using System.Collections.Generic;
     
-    public partial class DocumentManagement
+    public partial class Document
     {
         public int Id { get; set; }
         public string DocumentSource { get; set; }
-        public Nullable<int> ReferenceRecId { get; set; }
-        public string DocumentName { get; set; }
+        public int ReferenceRecId { get; set; }
+        public string DocumentType { get; set; }
         public string Description { get; set; }
         public string FileName { get; set; }
         public string FileExtension { get; set; }
         public string FileData { get; set; }
         public string URL { get; set; }
+        public string Status { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedOn { get; set; }
