@@ -23,19 +23,33 @@ namespace ClientManager.Controllers
             var pettyCashes = db.PettyCashes.Include(p => p.User).Include(p => p.User1);
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
             // ViewBag.UserRoles = userData.UserRoles.Select(sel => sel.RoleName);
-            return View(pettyCashes.ToList());
+            return View(pettyCashes.OrderByDescending(ord=> ord.AmountRecivedDate).ToList());
+        }
+
+        // GET: PettyCashes
+        [CustomAuthorize(new string[] { "Admin", "Finance" })]
+        public ActionResult ListView()
+        {
+            var pettyCashes = db.PettyCashes.Include(p => p.User).Include(p => p.User1);
+            UserDetails userData = (UserDetails)this.Session["UserDetails"];
+            // ViewBag.UserRoles = userData.UserRoles.Select(sel => sel.RoleName);
+            List<SelectListItem> statusList = new SelectList(db.SalesStatus, "Id", "Status").ToList();
+            statusList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
+            ViewBag.Status = statusList;
+
+            return PartialView(pettyCashes.OrderByDescending(ord => ord.AmountRecivedDate).ToList());
         }
 
 
 
-        // GET: PettyCashes/Create
-        [CustomAuthorize(new string[] { "Admin", "Finance" })]
+
+    // GET: PettyCashes/Create
+    [CustomAuthorize(new string[] { "Admin", "Finance" })]
         public ActionResult Create()
         {
             ViewBag.ModeOfPayment = new SelectList(Utility.DefaultList.GetPaymentModeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             return View();
         }
-
 
         // POST: ExpenceCategories/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
@@ -118,7 +132,7 @@ namespace ClientManager.Controllers
                 return HttpNotFound();
             }
 
-            ViewBag.ModeOfPayment = new SelectList(Utility.DefaultList.GetPaymentModeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
+            ViewBag.ModeOfPayment = new SelectList(Utility.DefaultList.GetPaymentModeList(), "Value", "Text", pettyCash.ModeOfPayment).ToList<SelectListItem>();
             return View(pettyCash);
         }
 
@@ -133,17 +147,28 @@ namespace ClientManager.Controllers
                 UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
                 DBOperation.PettyCash entity = this.db.PettyCashes.FirstOrDefault(wh => wh.Id == PettyCashData.Id);
                 if (entity == null)
+                {
                     data = new JsonReponse()
                     {
                         message = "There is no record for given Id",
                         status = "Failed",
                         redirectURL = ""
                     };
+                }
                 else if (PettyCashData.AmountReceived <= 0 || PettyCashData.AmountRecivedDate == null || string.IsNullOrEmpty(PettyCashData.Description))
                 {
                     data = new JsonReponse()
                     {
                         message = "Enter all required fields.",
+                        status = "Failed",
+                        redirectURL = ""
+                    };
+                }
+                else if (PettyCashData.AmountRecivedDate <= PettyCashData.AmountRecivedDate)
+                {
+                    data = new JsonReponse()
+                    {
+                        message = "Amount recived date should be lesser than or equal to today.",
                         status = "Failed",
                         redirectURL = ""
                     };
@@ -158,13 +183,13 @@ namespace ClientManager.Controllers
                     entity.Status = "Pending";
                     entity.ModifiedBy = new int?(userDetails.Id);
                     entity.ModifiedOn = new DateTime?(DateTime.Now);
-
+                    entity.Description = PettyCashData?.Description;
                     if (this.db.SaveChanges() > 0)
                         data = new JsonReponse()
                         {
                             message = "Petty Cash updated successfully!",
                             status = "Success",
-                            redirectURL = "/ExpenceCategories/List"
+                            redirectURL = "/PettyCashes/List"
                         };
                     else
                         data = new JsonReponse()

@@ -110,6 +110,10 @@
 </div>
 
 <script>
+    $(".btn-danger").click(function () {
+        debugger;
+        window.location.href = window.location.href;
+    });
     $(window).on('load', function () {
 
         if ('@ViewBag.AccessLevel' == "View") {

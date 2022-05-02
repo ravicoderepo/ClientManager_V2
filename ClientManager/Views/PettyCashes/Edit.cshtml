@@ -113,6 +113,10 @@
 </div>
 
 <script>
+    $(".btn-danger").click(function () {
+        debugger;
+        window.location.href = window.location.href;
+    });
     $(window).on('load', function () {
 
         if ('@ViewBag.AccessLevel' == "View") {
@@ -178,6 +182,12 @@
     }
 
     function fnSubmitPettyCashDetails() {
+
+        if (Date.parse($('#txtAmountReceived').val()) > Date.parse(Date.now)) {
+            alert("Amount recived date should be lesser than or equal to today.");
+            return false;
+        }
+
         debugger;
         var PettyCashData = {
             Id: $('#Id').val(),

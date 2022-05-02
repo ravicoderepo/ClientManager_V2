@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -27,10 +28,10 @@ namespace ClientManager.Controllers
         // GET: PettyCashes/Create        
         public ActionResult Create()
         {
-            ViewBag.DocumentType = new SelectList(Utility.DefaultList.GetDocumentTypesList(), "Value", "Text", (object)1).ToList<SelectListItem>();
+            ViewBag.DocumentType = new SelectList(Utility.DefaultList.GetDocumentTypeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             ViewBag.Status = new SelectList(Utility.DefaultList.GetDocumentStatusList(), "Value", "Text", (object)1).ToList<SelectListItem>();
-            ViewBag.DocumentSource = new SelectList(Utility.DefaultList.GetDocumentTypesList(), "Value", "Text", (object)1).ToList<SelectListItem>();
-            ViewBag.ReferenceRecId = new SelectList(Utility.DefaultList.GetDocumentTypesList(), "Value", "Text", (object)1).ToList<SelectListItem>();
+            ViewBag.DocumentSource = new SelectList(Utility.DefaultList.GetModuleList(), "Value", "Text", (object)1).ToList<SelectListItem>();           
+            ViewBag.ReferenceRecId = new SelectList(db.ExpenseTrackers.Select(sel => new { Id = sel.Id, Name = sel.ExpenceCategory.CategoryName + "(" + sel.Id + ")" }).ToList(), "Id", "Name", null).ToList();
             return View();
         }
 
@@ -59,16 +60,21 @@ namespace ClientManager.Controllers
                 }
                 else
                 {
+                    FileInfo file = new FileInfo(DocumentData.FileName);
+
                     this.db.Documents.Add(new DBOperation.Document()
                     {
-                        FileName = DocumentData.FileName,
+                        FileName = file.FullName,
                         DocumentType = DocumentData.DocumentType,
                         DocumentSource = DocumentData.DocumentSource,
                         ReferenceRecId = DocumentData.ReferenceRecId,
                         Status = DocumentData.Status,
+                        Description = DocumentData.Description,
+                        FileData = Utility.FileProcess.ImageToBase64(DocumentData.FileName),
+                        FileExtension = file.Extension,
                         CreatedBy = userData.Id,
                         CreatedOn = DateTime.Now
-                    });
+                    }); ;
                     num = this.db.SaveChanges();
                 }
                 if (num > 0)
@@ -110,10 +116,10 @@ namespace ClientManager.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.DocumentType = new SelectList(Utility.DefaultList.GetPaymentModeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
-            ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", (object)1).ToList<SelectListItem>();
-            ViewBag.DocumentSource = new SelectList(Utility.DefaultList.GetPaymentModeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
-            ViewBag.ReferenceRecId = new SelectList(Utility.DefaultList.GetPaymentModeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
+            ViewBag.DocumentType = new SelectList(Utility.DefaultList.GetDocumentTypeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
+            ViewBag.Status = new SelectList(Utility.DefaultList.GetDocumentStatusList(), "Value", "Text", (object)1).ToList<SelectListItem>();
+            ViewBag.DocumentSource = new SelectList(Utility.DefaultList.GetModuleList(), "Value", "Text", (object)1).ToList<SelectListItem>();
+            ViewBag.ReferenceRecId = new SelectList(db.ExpenseTrackers.Select(sel => new { Id = sel.Id, Name = sel.ExpenceCategory.CategoryName + "(" + sel.Id + ")" }).ToList(), "Id", "Name", null).ToList();
             return View(document);
         }
 

@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Configuration;
+using System.IO;
+using System.Drawing;
 
 namespace Utility
 {
@@ -128,7 +130,7 @@ namespace Utility
             return items;
         }
 
-        public static List<SelectListItem> GetDocumentTypesList()
+        public static List<SelectListItem> GetDocumentTypeList()
         {
             List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
             items.Insert(0, new SelectListItem()
@@ -155,6 +157,18 @@ namespace Utility
             {
                 Text = "Others",
                 Value = "Others"
+            });
+
+            return items;
+        }
+
+        public static List<SelectListItem> GetModuleList()
+        {
+            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
+            items.Insert(0, new SelectListItem()
+            {
+                Text = "Expence Tracker",
+                Value = "Expence Tracker"
             });
 
             return items;
@@ -331,5 +345,31 @@ namespace Utility
 
             }
         }
+    }
+
+    public static class FileProcess
+    {
+        static string base64String = null;
+        public static string ImageToBase64(string filePath)
+        {
+            using (System.Drawing.Image image = System.Drawing.Image.FromFile(filePath))
+            {
+                using (MemoryStream m = new MemoryStream())
+                {
+                    image.Save(m, image.RawFormat);
+                    byte[] imageBytes = m.ToArray();
+                    base64String = Convert.ToBase64String(imageBytes);
+                    return base64String;
+                }
+            }
+        }
+        public static System.Drawing.Image Base64ToImage(string base64Text)
+        {
+            byte[] imageBytes = Convert.FromBase64String(base64String);
+            MemoryStream ms = new MemoryStream(imageBytes, 0, imageBytes.Length);
+            ms.Write(imageBytes, 0, imageBytes.Length);
+            System.Drawing.Image image = System.Drawing.Image.FromStream(ms, true);
+            return image;
+        }                      
     }
 }

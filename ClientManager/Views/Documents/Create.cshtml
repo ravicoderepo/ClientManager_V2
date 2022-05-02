@@ -183,12 +183,11 @@
     function fnDocumentDetails() {
         debugger;
         var DocumentData = {
-            DocumentType: $('#txtFileName').val(),
-            AmountRecivedDate: $('#txtAmountRecivedDate').val(),
-            DocumentType: $("input[name=hdnDocumentType]").val(),
-            DocumentSource: $("input[name=hdnDocumentSource]").val(),
-            ReferenceRecId: $("input[name=hdnReferenceRecId]").val(),
-            Status: $("input[name=hdnStatus]").val(),
+            FileName: $('#txtFileName').val(),
+            DocumentType: $('#ddlDocumentType').val(),
+            DocumentSource: $('#ddlDocumentSource').val(),
+            ReferenceRecId: $("#ddlReferenceRecId").val(),
+            Status: $("ddlStatus").val(),
             Description: $('#txtDescription').val()
         };
         debugger;
@@ -213,4 +212,5 @@
         });
     }
     $("#mnuDocumentCreate").addClass("active");
+
 </script>

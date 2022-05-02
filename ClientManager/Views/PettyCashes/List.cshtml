@@ -74,7 +74,7 @@
                                         <th>
                                             Status
                                         </th>
-                                        <th>
+                                        @*<th>
                                             Created On
                                         </th>
                                         <th>
@@ -85,7 +85,7 @@
                                         </th>
                                         <th>
                                             Modified By
-                                        </th>
+                                        </th>*@
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -125,7 +125,7 @@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.Status)
                                             </td>
-                                            <td>
+                                            @*<td>
                                                 @Html.DisplayFor(modelItem => item.CreatedOn)
                                             </td>
                                             <td>
@@ -136,7 +136,7 @@
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.User1.FullName)
-                                            </td>
+                                            </td>*@
                                         </tr>
                                     }
                                 </tbody>
@@ -159,7 +159,7 @@
     $(function () {
         $("#example1").DataTable({
             "responsive": true, "lengthChange": false, "autoWidth": false,
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            "buttons": ["excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         $('#example2').DataTable({
             "paging": true,
