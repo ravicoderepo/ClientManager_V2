@@ -43,10 +43,8 @@
                                     <h3 class="card-title">Petty Cash</h3>
                                 </div>
                                 <div class="col-4 col-sm-2">
+                                    <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Adv. Search</button>
                                 </div>
-                                @*<div class="col-4 col-sm-2">
-                                        <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Adv. Search</button>
-                                    </div>*@
                                 <div class="col-4 col-sm-2">
                                     <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:location.href='/PettyCashes/Create'"><i class="fa fa-plus"></i> New</button>
                                 </div>
@@ -54,93 +52,52 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="example1" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Action</th>
-                                        <th>
-                                            Amount Received
-                                        </th>
-                                        <th>
-                                            Amount Recived Date
-                                        </th>
-                                        <th>
-                                            Mode of Payment
-                                        </th>
-
-                                        <th>
-                                            Description
-                                        </th>
-                                        <th>
-                                            Status
-                                        </th>
-                                        @*<th>
-                                            Created On
-                                        </th>
-                                        <th>
-                                            Created By
-                                        </th>
-                                        <th>
-                                            Modified On
-                                        </th>
-                                        <th>
-                                            Modified By
-                                        </th>*@
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model)
-                                    {
-                                        <tr>
-                                            <td>
-                                                @if (item.Status == "Pending")
-                                                {
-                                                    <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/PettyCashes/Edit/@item.Id'"><i class="far fa-edit"></i></button>
-                                                }
-                                                @*<button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/Admin/User/Details/@item.Id'"><i class="fas fa-eye"></i></button>*@
-
-                                                @if (userData.UserRoles.Any(wh => wh.RoleName == "Admin") && item.Status == "Pending")
-                                                {
-                                                <button type="button" class="btn btn-outline-success btn-xs" title="Approve" onclick="fnApprove(@item.Id,'Approved')"><i class="far fa-arrow-alt-circle-right"></i></button>
-                                                @*<button type="button" class="btn btn-outline-secondary btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-up"></i></button>*@
-                                                }
-
-                                                @if (userData.UserRoles.Any(wh => wh.RoleName == "Finance") && item.Status == "Approved")
-                                                {
-                                                <button type="button" class="btn btn-outline-success btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-left"></i></button>
-                                                }
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.AmountReceived)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.AmountRecivedDate)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.ModeOfPayment)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Description)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Status)
-                                            </td>
-                                            @*<td>
-                                                @Html.DisplayFor(modelItem => item.CreatedOn)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.User.FullName)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.ModifiedOn)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.User1.FullName)
-                                            </td>*@
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
+                            <div class="card-body">
+                                <div id="pnlAdvSearch">
+                                    <div class="card-body" style="background-color:whitesmoke">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="AmountReceivedDateFrom">Amount Recived Date From</label>
+                                                    <div class="input-group date" data-target-input="nearest">
+                                                        <input type="text" class="form-control datetimepicker-input" data-target="#txtAmountReceivedDateFrom" name="AmountReceivedDateFrom" id="txtAmountReceivedDateFrom">
+                                                        <div class="input-group-append" data-target="#txtAmountReceivedDateFrom" data-toggle="datetimepicker">
+                                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="AmountReceivedDateTo">Amount Recived Date To</label>
+                                                    <div class="input-group date" data-target-input="nearest">
+                                                        <input type="text" class="form-control datetimepicker-input" data-target="#txtAmountReceivedDateTo" name="AmountReceivedDateTo" id="txtAmountReceivedDateTo">
+                                                        <div class="input-group-append" data-target="#txtAmountReceivedDateTo" data-toggle="datetimepicker">
+                                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="Status">Status</label>
+                                                    @Html.DropDownList("ModeOfPayment", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlModeOfPayment" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.card-body -->
+                                        <div class="card-footer">
+                                            <button type="submit" class="btn btn-primary btn-sm" onclick="javascript:fnSearch()"> <i class="fa fa-search"></i> Search</button>
+                                            <button type="button" onclick="javascript:fnClearSearch()" class="btn btn-danger btn-sm">Clear</button>
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="javascript:fnToggleAdvSearch('0')">Hide</button>
+                                        </div>
+                                    </div>
+                                    <br />
+                                </div>
+                                <div id="gridView">
+                                    @Html.Partial("ListView", Model)
+                                </div>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -156,24 +113,7 @@
 </div>
 
 <script>
-    $(function () {
-        $("#example1").DataTable({
-            "responsive": true, "lengthChange": false, "autoWidth": false,
-            "buttons": ["excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
-    });
-
-
-
+   
     function fnActivateUser(id) {
         $.ajax({
             type: "GET",
@@ -241,5 +181,75 @@
             }
         });
     }
+
+    $('#pnlAdvSearch').hide();
+    function fnSearch() {
+        debugger;
+        var actionUrl = "/PettyCashes/ListView?" + "AmountReceivedDateFrom=" + $('#txtAmountReceivedDateFrom').val().replace(/\//g, '-') + "&AmountReceivedDateTo=" + $('#txtAmountReceivedDateTo').val().replace(/\//g, '-') + "&ModeOfPayment=" + $('#ddlModeOfPayment').val();
+        $('#gridView').html('');
+        $.ajax({
+            url: actionUrl,
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            success: function (result) {
+                $('#gridView').html(result);
+            },
+            error: function (xhr, status) {
+                alert(status);
+            }
+        })
+    }
+
+    function fnToggleAdvSearch(action) {
+
+        if (action == '1') {
+            $('#pnlAdvSearch').show();
+        }
+        else {
+            $('#pnlAdvSearch').hide();
+        }
+    }
+
+    $('#txtAmountReceivedDateTo').datetimepicker({
+        format: 'L'
+    });
+    $('#txtAmountReceivedDateFrom').datetimepicker({
+        format: 'L'
+    });
+
+    function fnClearSearch() {
+        debugger;
+        $('#txtAmountReceivedDateTo').val('');
+        $('#txtAmountReceivedDateFrom').val('');       
+        $('#ddlModeOfPayment').val('');
+    }
+
+    $(window).on('load', function () {
+        const params = new URLSearchParams(window.location.search)
+        debugger;
+        var searchQuery = "ModeOfPayment="
+
+        if (params.has('ModeOfPayment')) {
+            searchQuery += params.get('ModeOfPayment');
+        }
+
+        var actionUrl = "/PettyCashes/ListView?" + searchQuery;
+
+        $('#gridView').html('');
+
+        $.ajax({
+            url: actionUrl,
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            success: function (result) {
+                $('#gridView').html(result);
+            },
+            error: function (xhr, status) {
+                alert(status);
+            }
+        })
+    });
     $("#mnuPettyCash").addClass("active");
 </script>

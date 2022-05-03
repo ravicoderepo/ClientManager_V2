@@ -23,19 +23,38 @@ namespace ClientManager.Controllers
             var pettyCashes = db.PettyCashes.Include(p => p.User).Include(p => p.User1);
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
             // ViewBag.UserRoles = userData.UserRoles.Select(sel => sel.RoleName);
+                        
+            ViewBag.ModeOfPayment = new SelectList(Utility.DefaultList.GetPaymentModeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             return View(pettyCashes.OrderByDescending(ord=> ord.AmountRecivedDate).ToList());
+
         }
 
         // GET: PettyCashes
         [CustomAuthorize(new string[] { "Admin", "Finance" })]
-        public ActionResult ListView()
+        public ActionResult ListView(string AmountReceivedDateFrom = "", string AmountReceivedDateTo = "", string ModeOfPayment = "")
         {
+            DateTime dtAmountRecivedDateFrom = new DateTime();
+            DateTime dtAmountRecivedDateTo = new DateTime();
+
             var pettyCashes = db.PettyCashes.Include(p => p.User).Include(p => p.User1);
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
+
+            if (!string.IsNullOrEmpty(AmountReceivedDateFrom))
+            {
+                dtAmountRecivedDateFrom = DateTime.Parse(AmountReceivedDateFrom);
+                pettyCashes = pettyCashes.Where(wh => wh.AmountRecivedDate >= dtAmountRecivedDateFrom);
+            }
+
+            if (!string.IsNullOrEmpty(AmountReceivedDateTo))
+            {
+                dtAmountRecivedDateTo = DateTime.Parse(AmountReceivedDateTo);
+                pettyCashes = pettyCashes.Where(wh => wh.AmountRecivedDate <= dtAmountRecivedDateTo);
+            }
+            if (!string.IsNullOrEmpty(ModeOfPayment))
+                pettyCashes = pettyCashes.Where(wh => wh.ModeOfPayment == ModeOfPayment);
+           
             // ViewBag.UserRoles = userData.UserRoles.Select(sel => sel.RoleName);
-            List<SelectListItem> statusList = new SelectList(db.SalesStatus, "Id", "Status").ToList();
-            statusList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
-            ViewBag.Status = statusList;
+            ViewBag.ModeOfPayment = new SelectList(Utility.DefaultList.GetPaymentModeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
 
             return PartialView(pettyCashes.OrderByDescending(ord => ord.AmountRecivedDate).ToList());
         }
@@ -60,8 +79,8 @@ namespace ClientManager.Controllers
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
             JsonReponse jsonReponse = (JsonReponse)null;
-
-            JsonReponse data;
+            string validationMessage =string.Empty;
+                JsonReponse data;
             try
             {
                 int num = 0;
@@ -73,6 +92,16 @@ namespace ClientManager.Controllers
                         status = "Failed",
                         redirectURL = ""
                     };
+                }
+                else if (Convert.ToDateTime(PettyCashData.AmountRecivedDate) > DateTime.Now)
+                {
+                    //data = new JsonReponse()
+                    //{
+                    //    message = "Amount recived date should be lesser than or equal to today.",
+                    //    status = "Failed",
+                    //    redirectURL = ""
+                    //};
+                    validationMessage = "Amount recived date should be lesser than or equal to today.";
                 }
                 else
                 {
@@ -101,7 +130,7 @@ namespace ClientManager.Controllers
                 else
                     data = new JsonReponse()
                     {
-                        message = "Petty Cash entry not completed, try again after sometime.",
+                        message = (string.IsNullOrEmpty(validationMessage)) ? "Petty Cash entry not completed, try again after sometime." : validationMessage,
                         status = "Failed",
                         redirectURL = ""
                     };
@@ -164,7 +193,7 @@ namespace ClientManager.Controllers
                         redirectURL = ""
                     };
                 }
-                else if (PettyCashData.AmountRecivedDate <= PettyCashData.AmountRecivedDate)
+                else if (Convert.ToDateTime(PettyCashData.AmountRecivedDate) > DateTime.Now)
                 {
                     data = new JsonReponse()
                     {
