@@ -90,15 +90,16 @@
         {
             <tr>
                 <td>
-                    <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/SaleActivities/Edit/@item.Id'"><i class="far fa-edit"></i></button>
-                    @*<button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/SaleActivities/Details/@item.Id'"><i class="fas fa-eye"></i></button>*@
-                    @if (item.CreatedBy == currentUser.Id || currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "admin"))
+                    @if (item.CreatedBy == currentUser.Id)
                     {
+                        <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/SaleActivities/Edit/@item.Id'"><i class="far fa-edit"></i></button>
+                        @*<button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/SaleActivities/Details/@item.Id'"><i class="fas fa-eye"></i></button>*@
+
                         <button type="button" class="btn btn-danger btn-xs" title="Delete" onclick="fnSubmitSaleDetails(@item.Id)"><i class="far fa-trash-alt"></i></button>
                     }
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SaleDate)
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.SaleDate))
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ClientName)
@@ -119,10 +120,12 @@
                     @Html.DisplayFor(modelItem => item.Unit)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.RecentCallDate, "{0:MM/dd/yyyy}")
+                    @*@Html.DisplayFor(modelItem => item.RecentCallDate.ToShortDateString())*@
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.RecentCallDate))
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.AnticipatedClosingDate, "{0:MM/dd/yyyy}")
+                    @*@Html.DisplayFor(modelItem => item.AnticipatedClosingDate.Value.ToShortDateString())*@
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.AnticipatedClosingDate))
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.NoOfFollowUps)
@@ -131,13 +134,15 @@
                     @Html.DisplayFor(modelItem => item.Remarks)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CreatedOn)
+                    @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.User2.FullName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ModifiedOn)
+                    @*@Html.DisplayFor(modelItem => item.ModifiedOn.Value.ToShortDateString())*@
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.User2.FullName)
@@ -163,7 +168,7 @@
     $(function () {
         $("#example1").DataTable({
             "responsive": true, "lengthChange": false, "autoWidth": false,
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            "buttons": ["excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         $('#example2').DataTable({
             "paging": true,

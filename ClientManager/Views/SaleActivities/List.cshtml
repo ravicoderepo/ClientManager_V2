@@ -86,8 +86,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="PhoneNo">Phone No.</label>
-                                                <input type="text" class="form-control" id="txtPhoneNo" name="PhoneNo">
+                                                <label for="SalesPerson">Sales Person</label>
+                                                @Html.DropDownList("SalesPerson", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlSalesPerson" })
                                             </div>
                                         </div>
                                     </div>
@@ -121,7 +121,7 @@
     $('#pnlAdvSearch').hide();
     function fnSearch() {
         debugger;
-        var actionUrl = "/SaleActivities/ListView?" + "callDateFrom=" + $('#txtCallDateFrom').val().replace(/\//g, '-') + "&callDateTo=" + $('#txtCallDateTo').val().replace(/\//g, '-') + "&status=" + $('#ddlStatus').val() + "&productName=" + $('#txtProductName').val() + "&phoneNo=" + $('#txtPhoneNo').val();
+        var actionUrl = "/SaleActivities/ListView?" + "callDateFrom=" + $('#txtCallDateFrom').val().replace(/\//g, '-') + "&callDateTo=" + $('#txtCallDateTo').val().replace(/\//g, '-') + "&status=" + $('#ddlStatus').val() + "&productName=" + $('#txtProductName').val() + "&salesPerson=" + $('#ddlSalesPerson').val();
         $('#gridView').html('');
         $.ajax({
             url: actionUrl,
@@ -159,7 +159,7 @@
         $('#txtCallDateTo').val('');
         $('#txtCallDateFrom').val('');
         $('#txtProductName').val('');
-        $('#txtPhoneNo').val('');
+        $('#ddlSalesPerson').val(0);
         $('#ddlStatus').val(0);
 
 

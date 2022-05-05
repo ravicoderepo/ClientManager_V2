@@ -73,7 +73,8 @@
                     @Html.DisplayFor(modelItem => item.AmountReceived)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.AmountRecivedDate, "{0:MM/dd/yyyy}")
+                    @*@Html.DisplayFor(modelItem => item.AmountRecivedDate, "{0:MM/dd/yyyy}")*@
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.AmountRecivedDate))
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ModeOfPayment)

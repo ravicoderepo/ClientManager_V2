@@ -20,7 +20,7 @@ namespace ClientManager.Controllers
 
         [CustomAuthorize(new string[] { "Admin", "Manager", "SalesRep" })]
         // GET: SaleActivities
-        public ActionResult ListView(string callDateFrom ="", string callDateTo="", int status=0, string productName = "", string phoneNo = "")
+        public ActionResult ListView(string callDateFrom ="", string callDateTo="", int status=0, string productName = "", int salesPerson = 0)
         {
             DateTime dtcallDateFrom = new DateTime();
             DateTime dtcallDateTo = new DateTime();
@@ -45,9 +45,9 @@ namespace ClientManager.Controllers
                 saleActivities = saleActivities.Where(wh => wh.ProductName.Contains(productName.Trim()));
             }
 
-            if (!string.IsNullOrEmpty(phoneNo))
+            if (salesPerson > 0)
             {
-                saleActivities = saleActivities.Where(wh => wh.ClientPhoneNo.Contains(phoneNo.Trim()));
+                saleActivities = saleActivities.Where(wh => wh.CreatedBy == salesPerson);
             }
 
             if (status > 0)
@@ -68,8 +68,15 @@ namespace ClientManager.Controllers
             var saleActivities = (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "admin")) ? db.SaleActivities.Include(s => s.SalesStatu) : (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "manager")) ? db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id || currentUser.ReportingToMe.Contains(wh.CreatedBy)) : db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id);
 
             List<SelectListItem> statusList = new SelectList(db.SalesStatus, "Id", "Status").ToList();
+            var salesPersons = db.UserRoles.Where(rl => rl.Role.RoleName.ToLower() == "salesrep").Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName });
+            List<SelectListItem> selesPersonList = new SelectList(salesPersons, "Id", "FullName").ToList();
+            
             statusList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
+            selesPersonList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
+
+            ViewBag.SalesPerson = selesPersonList;
             ViewBag.Status = statusList;
+           
 
             return View(saleActivities);
         }
@@ -126,7 +133,26 @@ namespace ClientManager.Controllers
             var lastSavedId = 0;
             try
             {
-                var saleDetails = new SaleActivity { SaleDate = DateTime.ParseExact(saleData.SaleDate, "MM/dd/yyyy", CultureInfo.InvariantCulture), Status = saleData.Status, ClientPhoneNo = saleData.ClientPhoneNo, ClientEmail = saleData.ClientEmail, ClientName = saleData.ClientName, ProductName = saleData.ProductName, RecentCallDate = DateTime.ParseExact(saleData.RecentCallDate, "MM/dd/yyyy", CultureInfo.InvariantCulture), Capacity = saleData.Capacity, Unit = saleData.Unit, Remarks = saleData.Remarks, CreatedBy = currentUser.Id, CreatedOn = DateTime.Now, AnticipatedClosingDate = DateTime.ParseExact(saleData.AnticipatedClosingDate, "MM/dd/yyyy", CultureInfo.InvariantCulture), SalesRepresentativeId = saleData.SalesRepresentativeId, NoOfFollowUps = saleData.NoOfFollowUps, InvoiceAmount = saleData.InvoiceAmount, InvoiceNo = saleData.InvoiceNo };
+                var saleDetails = new SaleActivity 
+                { 
+                    SaleDate = DateTime.ParseExact(saleData.SaleDate, "MM/dd/yyyy", CultureInfo.InvariantCulture), 
+                    Status = saleData.Status, 
+                    ClientPhoneNo = saleData.ClientPhoneNo, 
+                    ClientEmail = saleData.ClientEmail, 
+                    ClientName = saleData.ClientName, 
+                    ProductName = saleData.ProductName, 
+                    RecentCallDate = DateTime.ParseExact(saleData.RecentCallDate, "MM/dd/yyyy", CultureInfo.InvariantCulture), 
+                    Capacity = saleData.Capacity, 
+                    Unit = saleData.Unit, 
+                    Remarks = saleData.Remarks, 
+                    CreatedBy = currentUser.Id, 
+                    CreatedOn = DateTime.Now, 
+                    AnticipatedClosingDate = DateTime.ParseExact(saleData.AnticipatedClosingDate, "MM/dd/yyyy", CultureInfo.InvariantCulture), 
+                    SalesRepresentativeId = saleData.SalesRepresentativeId, 
+                    NoOfFollowUps = saleData.NoOfFollowUps, 
+                    InvoiceAmount = saleData.InvoiceAmount, 
+                    InvoiceNo = saleData.InvoiceNo 
+                };
 
                 if (saleData.Status == 6)
                 {
@@ -161,7 +187,7 @@ namespace ClientManager.Controllers
 
                     if (lastSavedId > 0)
                     {
-                        jsonRes = new JsonReponse { message = "Sale Activity saved successfully!", status = "Success", redirectURL = "/SaleActivities/Edit/" + saleDetails.Id };
+                        jsonRes = new JsonReponse { message = "Sale Activity saved successfully!", status = "Success", redirectURL = "/SaleActivities/List" };
                     }
                     else
                     {
@@ -256,7 +282,7 @@ namespace ClientManager.Controllers
                     {
                         if (lastSavedId > 0)
                         {
-                            jsonRes = new JsonReponse { message = "Sale Activity updated successfully!", status = "Success", redirectURL = "/SaleActivities/Edit/" + saleActivity.Id };
+                            jsonRes = new JsonReponse { message = "Sale Activity updated successfully!", status = "Success", redirectURL = "/SaleActivities/List" };
                         }
                         else
                         {

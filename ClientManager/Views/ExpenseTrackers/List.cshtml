@@ -108,7 +108,8 @@
                                             @Html.DisplayFor(modelItem => item.ExpenseAmount)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.ExpenseDate)
+                                            @*@Html.DisplayFor(modelItem => item.ExpenseDate)*@
+                                            @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ExpenseDate))
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.ExpenseCategoryId)
@@ -120,13 +121,15 @@
                                             @Html.DisplayFor(modelItem => item.Description)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.CreatedOn)
+                                            @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
+                                            @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.User.FullName)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.ModifiedOn)
+                                            @*@Html.DisplayFor(modelItem => item.ModifiedOn)*@
+                                            @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.User1.FullName)
@@ -153,7 +156,7 @@
     $(function () {
         $("#example1").DataTable({
             "responsive": true, "lengthChange": false, "autoWidth": false,
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            "buttons": ["excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         $('#example2').DataTable({
             "paging": true,
