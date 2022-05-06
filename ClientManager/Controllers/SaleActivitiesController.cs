@@ -18,14 +18,14 @@ namespace ClientManager.Controllers
     {
         private ClientManagerEntities db = new ClientManagerEntities();
 
-        [CustomAuthorize(new string[] { "Admin", "Manager", "SalesRep" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Sales Manager", "Sales Engineer" })]
         // GET: SaleActivities
         public ActionResult ListView(string callDateFrom ="", string callDateTo="", int status=0, string productName = "", int salesPerson = 0)
         {
             DateTime dtcallDateFrom = new DateTime();
             DateTime dtcallDateTo = new DateTime();
             var currentUser = (UserDetails)Session["UserDetails"];
-            var saleActivities = (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "admin")) ? db.SaleActivities.Include(s => s.SalesStatu) : (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "manager")) ? db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id || currentUser.ReportingToMe.Contains(wh.CreatedBy)) : db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id);
+            var saleActivities = (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "Super Admin")) ? db.SaleActivities.Include(s => s.SalesStatu) : (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "Sales Manager")) ? db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id || currentUser.ReportingToMe.Contains(wh.CreatedBy)) : db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id);
 
             if (!string.IsNullOrEmpty(callDateFrom))
             {
@@ -57,20 +57,38 @@ namespace ClientManager.Controllers
             statusList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
             ViewBag.Status = statusList;
 
-            return PartialView(saleActivities.ToList());
+            return PartialView(saleActivities.OrderByDescending(ord=> ord.SaleDate).ToList());
         }
 
-        [CustomAuthorize(new string[] { "Admin", "Manager", "SalesRep" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Sales Manager", "Sales Engineer" })]
         // GET: SaleActivities
         public ActionResult List()
         {
             var currentUser = (UserDetails)Session["UserDetails"];
-            var saleActivities = (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "admin")) ? db.SaleActivities.Include(s => s.SalesStatu) : (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "manager")) ? db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id || currentUser.ReportingToMe.Contains(wh.CreatedBy)) : db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id);
+            var saleActivities = (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "Super Admin")) ? db.SaleActivities.Include(s => s.SalesStatu) : (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "Sales Manager")) ? db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id || currentUser.ReportingToMe.Contains(wh.CreatedBy)) : db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id);
 
             List<SelectListItem> statusList = new SelectList(db.SalesStatus, "Id", "Status").ToList();
-            var salesPersons = db.UserRoles.Where(rl => rl.Role.RoleName.ToLower() == "salesrep").Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName });
-            List<SelectListItem> selesPersonList = new SelectList(salesPersons, "Id", "FullName").ToList();
-            
+            var salesPersons = db.Users.Where(wh=> wh.IsActive == true);
+            List<SelectListItem> selesPersonList = new List<SelectListItem>();
+            if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "Super Admin"))
+            {
+                string[] roleNames = { "Sales Manager", "Sales Engineer" };
+                selesPersonList  = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName)).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName").ToList();               
+            }
+            else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "Sales Manager"))
+            {
+                string[] roleNames = { "Sales Manager", "Sales Engineer" };
+                selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName) && currentUser.ReportingToMe.Contains(rl.UserId) || rl.UserId == currentUser.Id).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName").ToList();
+            }
+            else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "Sales Engineer"))
+            {
+                string[] roleNames = { "Sales Engineer" };
+                selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName) && rl.UserId == currentUser.Id).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName").ToList();
+            }
+
+            //db.UserRoles.Where(rl => rl.Role.RoleName.ToLower() == "Sales Engineer").Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName });            
+
+
             statusList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
             selesPersonList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
 
@@ -78,10 +96,10 @@ namespace ClientManager.Controllers
             ViewBag.Status = statusList;
            
 
-            return View(saleActivities);
+            return View(saleActivities.OrderByDescending(ord => ord.SaleDate).ToList());
         }
 
-        [CustomAuthorize("Admin", "Manager", "SalesRep")]
+        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer")]
         // GET: SaleActivities
         public ActionResult Index()
         {
@@ -89,7 +107,7 @@ namespace ClientManager.Controllers
             return View(saleActivities.ToList());
         }
 
-        [CustomAuthorize("Admin", "Manager", "SalesRep")]
+        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer")]
         // GET: SaleActivities/Details/5
         public ActionResult Details(int? id)
         {
@@ -105,7 +123,7 @@ namespace ClientManager.Controllers
             return View(saleActivity);
         }
 
-        [CustomAuthorize("Admin", "Manager", "SalesRep")]
+        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer")]
         // GET: SaleActivities/Create
         public ActionResult Create()
         {
@@ -122,7 +140,7 @@ namespace ClientManager.Controllers
         //To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [CustomAuthorize("Admin", "Manager", "SalesRep")]
+        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer")]
         //[ValidateAntiForgeryToken]
         //public ActionResult Create([Bind(Include = "Id,SaleDate,Status,ClientName,ClientEmail,ClientPhoneNo,ProductId,Capacity,Unit,RecentCallDate,AnticipatedClosingDate,NoOfFollowUps,Remarks,SalesRepresentativeId,InvoiceNo,InvoiceAmount,DateOfClosing,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy")] SaleActivity saleActivity)
         public ActionResult Create(SaleData saleData)
@@ -208,7 +226,7 @@ namespace ClientManager.Controllers
             //return View(saleActivity);
         }
 
-        [CustomAuthorize("Admin", "Manager", "SalesRep")]
+        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer")]
         // GET: SaleActivities/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -227,7 +245,7 @@ namespace ClientManager.Controllers
             ViewBag.Representative = new SelectList(db.Users, "Id", "FullName", currentUser.Id);
             //ViewBag.ProductName = new SelectList(db.Products, "Id", "ProductName", saleActivity.ProductId);
             ViewBag.Unit = new SelectList(Utility.DefaultList.GetUnitList(), "Text", "Value", saleActivity.Unit);
-            ViewBag.AccessLevel = (saleActivity.CreatedBy == currentUser.Id || currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "admin")) ? "Full" : "View";
+            ViewBag.AccessLevel = (saleActivity.CreatedBy == currentUser.Id || currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "Super Admin")) ? "Full" : "View";
             return View(saleActivity);
         }
 
@@ -235,7 +253,7 @@ namespace ClientManager.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [CustomAuthorize("Admin", "Manager", "SalesRep")]
+        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer")]
         //[ValidateAntiForgeryToken]
         //public ActionResult Edit([Bind(Include = "Id,SaleDate,Status,ClientName,ClientEmail,ClientPhoneNo,ProductId,Capacity,Unit,RecentCallDate,AnticipatedClosingDate,NoOfFollowUps,Remarks,SalesRepresentativeId,InvoiceNo,InvoiceAmount,DateOfClosing,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy")] SaleActivity saleActivity)
         public ActionResult Edit(SaleData saleData)
@@ -257,7 +275,7 @@ namespace ClientManager.Controllers
                 {
                     if (saleData.Status == 6)
                     {
-                        if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientEmail) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName) || saleData.RecentCallDate == null || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit) || string.IsNullOrEmpty(saleData.InvoiceNo) || saleData.InvoiceAmount < 0 || string.IsNullOrEmpty(saleData.Remarks))
+                        if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName) || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit) || string.IsNullOrEmpty(saleData.InvoiceNo) || saleData.InvoiceAmount < 0 || string.IsNullOrEmpty(saleData.Remarks))
                         {
                             saleData.DateOfClosing = DateTime.ParseExact(DateTime.Now.ToString(), "MM/dd/yyyy", CultureInfo.InvariantCulture).ToString();
                             jsonRes = new JsonReponse { message = "Enter all required fields.", status = "Failed", redirectURL = "" };
@@ -268,7 +286,7 @@ namespace ClientManager.Controllers
                             lastSavedId = UpdateData(saleData, saleActivity, currentUser);
                         }
                     }
-                    else if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientEmail) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName) || saleData.RecentCallDate == null || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit) || string.IsNullOrEmpty(saleData.Remarks))
+                    else if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName) || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit) || string.IsNullOrEmpty(saleData.Remarks))
                     {
                         jsonRes = new JsonReponse { message = "Enter all required fields.", status = "Failed", redirectURL = "" };
                         isMandatoryError = true;
@@ -346,7 +364,7 @@ namespace ClientManager.Controllers
 
 
         // GET: SaleActivities/Delete/5
-        [CustomAuthorize("Admin", "Manager", "SalesRep")]
+        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer")]
         public ActionResult Delete(int? id)
         {
             JsonReponse jsonRes = null;
@@ -393,7 +411,7 @@ namespace ClientManager.Controllers
 
         // POST: SaleActivities/Delete/5
         //[HttpPost, ActionName("Delete")]
-        //[CustomAuthorize("Admin", "Manager", "SalesRep")]
+        //[CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer")]
         //[ValidateAntiForgeryToken]
         //public ActionResult DeleteConfirmed(int id)
         //{

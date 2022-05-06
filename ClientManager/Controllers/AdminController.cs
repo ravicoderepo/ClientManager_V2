@@ -14,10 +14,10 @@ namespace ClientManager.Controllers
     {
         private ClientManagerEntities db = new ClientManagerEntities();
 
-        [CustomAuthorize(new string[] { "Admin", "Manager" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
         public ActionResult UserList() => (ActionResult)this.View((object)this.db.Users.ToList<User>());
 
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
         public ActionResult ActivateUser(int? id)
         {
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
@@ -56,7 +56,7 @@ namespace ClientManager.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
         public ActionResult DeActivateUser(int? id)
         {
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
@@ -95,47 +95,7 @@ namespace ClientManager.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
-        [CustomAuthorize(new string[] { "Admin" })]
-        public ActionResult Delete(int? id)
-        {
-            User user = new User();
-            JsonReponse data;
-            try
-            {
-                UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
-                User entity = this.db.Users.FirstOrDefault<User>((Expression<Func<User, bool>>)(wh => (int?)wh.Id == id));
-                if (entity == null)
-                {
-                    data = new JsonReponse()
-                    {
-                        message = "There is no record for given Id",
-                        status = "Failed",
-                        redirectURL = ""
-                    };
-                }
-                else
-                {
-                    this.db.Users.Remove(entity);
-                    this.db.SaveChanges();
-                    data = new JsonReponse()
-                    {
-                        message = "user deleted successfully!",
-                        status = "Success",
-                        redirectURL = "/Admin/User/List/"
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                data = new JsonReponse()
-                {
-                    message = ex.Message,
-                    status = "Error",
-                    redirectURL = ""
-                };
-            }
-            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
-        }
+        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]        
 
         protected override void Dispose(bool disposing)
         {

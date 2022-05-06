@@ -86,20 +86,25 @@ namespace Utility
             List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
             items.Insert(0, new SelectListItem()
             {
+                Text = "",
+                Value = ""
+            });
+            items.Insert(1, new SelectListItem()
+            {
                 Text = "ATM",
                 Value = "ATM"
             });
-            items.Insert(1, new SelectListItem()
+            items.Insert(2, new SelectListItem()
             {
                 Text = "Account Transfer",
                 Value = "Account Transfer"
             });
-            items.Insert(2, new SelectListItem()
+            items.Insert(3, new SelectListItem()
             {
                 Text = "Cash",
                 Value = "Cash"
             });
-            items.Insert(3, new SelectListItem()
+            items.Insert(4, new SelectListItem()
             {
                 Text = "Other Receivables",
                 Value = "Other Receivables"

@@ -5,6 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@{
+    var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+}
 <style>
     table tr td:first-child {
         white-space: nowrap;
@@ -89,52 +92,62 @@
                                 <tbody>
                                     @foreach (var item in Model)
                                     {
-                                    <tr>
-                                        <td>
+                                        <tr>
+                                            <td>
 
-                                            <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/ExpenseTrackers/Edit/@item.Id'"><i class="far fa-edit"></i></button>
-                                            @*<button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/Admin/User/Details/@item.Id'"><i class="fas fa-eye"></i></button>*@
+                                                <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/ExpenseTrackers/Edit/@item.Id'"><i class="far fa-edit"></i></button>
+                                                @*<button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/Admin/User/Details/@item.Id'"><i class="fas fa-eye"></i></button>*@
 
+                                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Approver"))
+                                                {
+                                                    <button type="button" class="btn btn-outline-success btn-xs" title="Approve" onclick="fnApprove(@item.Id,'Approved')"><i class="far fa-arrow-alt-circle-right"></i></button>
+                                                    @*<button type="button" class="btn btn-outline-secondary btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-up"></i></button>*@
+                                                }
 
-                                            @if (item.Status == "Pending")
-                                            {
+                                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Verifier"))
+                                                {
+                                                    <button type="button" class="btn btn-outline-success btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-left"></i></button>
+                                                }
 
-                                                <button type="button" class="btn btn-danger btn-xs" title="De-ctivate" onclick="fnDelete(@item.Id)"><i class="far fa-trash-alt"></i></button>
+                                                @if (item.Status == "Pending")
+                                                {
 
-                                            }
+                                                    <button type="button" class="btn btn-danger btn-xs" title="De-ctivate" onclick="fnDelete(@item.Id)"><i class="far fa-trash-alt"></i></button>
 
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.ExpenseAmount)
-                                        </td>
-                                        <td>
-                                            @*@Html.DisplayFor(modelItem => item.ExpenseDate)*@
-                                            @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ExpenseDate))
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.ExpenseCategoryId)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Status)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Description)
-                                        </td>
-                                        <td>
-                                            @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
-                                            @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.User.FullName)
-                                        </td>
-                                        <td>
-                                            @*@Html.DisplayFor(modelItem => item.ModifiedOn)*@
-                                            @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.User1.FullName)
-                                        </td>
-                                    </tr>
+                                                }
+
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ExpenseAmount)
+                                            </td>
+                                            <td>
+                                                @*@Html.DisplayFor(modelItem => item.ExpenseDate)*@
+                                                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ExpenseDate))
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ExpenseCategoryId)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Status)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Description)
+                                            </td>
+                                            <td>
+                                                @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
+                                                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.User.FullName)
+                                            </td>
+                                            <td>
+                                                @*@Html.DisplayFor(modelItem => item.ModifiedOn)*@
+                                                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.User1.FullName)
+                                            </td>
+                                        </tr>
                                     }
                                 </tbody>
                             </table>
@@ -169,12 +182,29 @@
         });
     });
 
-
-
-    function fnActivateUser(id) {
+    function fnDelete(id) {
         $.ajax({
             type: "GET",
-            url: "/Admin/User/Activate/" + id,
+            url: "/ExpenceTrakers/Delete?id=" + id,
+            //data: JSON.stringify(Register),
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data.status == "Success") {
+                    alert(data.message);
+                    window.location.href = data.redirectURL;
+                }
+            },
+            error: function () {
+                alert("Error occured!!  " + data.message)
+            }
+        });
+    }
+
+    function fnApprove(id, status) {
+        $.ajax({
+            type: "GET",
+            url: "/ExpenceTrakers/ExpenceEntryApproval?id=" + id + "&status=" + status,
             //data: JSON.stringify(Register),
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
@@ -193,11 +223,10 @@
             }
         });
     }
-
-    function fnDeActivateUser(id) {
+    function fnVerify(id, status) {
         $.ajax({
             type: "GET",
-            url: "/Admin/User/DeActivate/" + id,
+            url: "/ExpenceTrakers/ExpenceEntryVerify?id=" + id + "&status=" + status,
             //data: JSON.stringify(Register),
             dataType: "json",
             contentType: 'application/json; charset=utf-8',

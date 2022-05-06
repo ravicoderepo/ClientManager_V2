@@ -53,7 +53,7 @@
                                             <label for="status">Call Date</label>
                                             <div class="input-group date" data-target-input="nearest">
                                                 @Html.HiddenFor(model => model.Id)
-                                                @Html.EditorFor(model => model.SaleDate, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtSaleDate", @name = "saleDate" } })
+                                                @Html.EditorFor(model => model.SaleDate, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtSaleDate", @name = "saleDate"} })
                                                 <div class="input-group-append" data-target="#txtSaleDate" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                 </div>
@@ -307,7 +307,7 @@
     $('#txtRecentCallDate').datetimepicker({
         format: 'L'
     });
-
+    $("#txtSaleDate").attr('readonly', 'readonly');
     function fnToggleInvoiceFields() {
         debugger;
         //6-Closed

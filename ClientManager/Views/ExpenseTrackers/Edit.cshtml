@@ -5,6 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@{
+    var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+}
 
 <style>
     textarea {
@@ -97,7 +100,10 @@
                             </div>
                             <!-- /.card-body -->
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
+                                @if ((currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin") &&  Model.Status == "Pending") || (currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager") && Model.Status == "Approved"))
+                                {
+                                    <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
+                                }
                                 <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='../List'" id="btnBack">Back to List</button>
                             </div>
 

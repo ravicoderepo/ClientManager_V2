@@ -18,18 +18,18 @@ namespace ClientManager.Areas.Admin.Controllers
     {
         private ClientManagerEntities db = new ClientManagerEntities();
 
-        [CustomAuthorize(new string[] { "Admin", "Manager" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Sales Manager" })]
         public ActionResult List()
         {
             UserDetails currentUser = (UserDetails)this.Session["UserDetails"];
             DbSet<User> users = this.db.Users;
-            List<int> restrictedUSers = users.Where(wh => wh.UserRoles.Any(rol => rol.Role.RoleName == "Admin")).Select(sel => sel.Id).ToList();
-            if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "admin"))
+            List<int> restrictedUSers = users.Where(wh => wh.UserRoles.Any(rol => rol.Role.RoleName == "Super Admin")).Select(sel => sel.Id).ToList();
+            if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "super admin"))
                 return (ActionResult)this.View((object)users);
             return (ActionResult)this.View(users.Where(wh => !restrictedUSers.Contains(wh.Id) & wh.ReportingManager == currentUser.Id).ToList());
         }
 
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin" })]
         public ActionResult Activate(int? id)
         {
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
@@ -68,7 +68,7 @@ namespace ClientManager.Areas.Admin.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin" })]
         public ActionResult DeActivate(int? id)
         {
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
@@ -107,7 +107,7 @@ namespace ClientManager.Areas.Admin.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin" })]
         public ActionResult Create()
         {
             ViewBag.ModifiedBy = new SelectList(db.Users, "Id", "FullName");
@@ -119,7 +119,7 @@ namespace ClientManager.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin" })]
         public ActionResult Create(UserData userData)
         {
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
@@ -189,7 +189,7 @@ namespace ClientManager.Areas.Admin.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
-        [CustomAuthorize(new string[] { "Admin", "Manager" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Sales Manager" })]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -211,7 +211,7 @@ namespace ClientManager.Areas.Admin.Controllers
         }
 
             [HttpPost]
-            [CustomAuthorize(new string[] { "Admin", "Manager" })]
+            [CustomAuthorize(new string[] { "Super Admin", "Sales Manager" })]
             public ActionResult Edit(UserData userData)
             {
                 JsonReponse data;
@@ -239,7 +239,7 @@ namespace ClientManager.Areas.Admin.Controllers
                     {
                         this.db.Entry<User>(entity).State = EntityState.Modified;
                         string str;
-                        if (userDetails.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "admin")))
+                        if (userDetails.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "Super Admin")))
                         {
                             entity.FullName = userData.FullName;
                             entity.Email = userData.UserId;
@@ -290,7 +290,7 @@ namespace ClientManager.Areas.Admin.Controllers
                 return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
             }
 
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin" })]
         public ActionResult Delete(int? id)
         {
             User user = new User();

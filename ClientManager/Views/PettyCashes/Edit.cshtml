@@ -5,6 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@{
+    var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+}
 
 <style>
     textarea {
@@ -53,7 +56,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="AmountReceived">Amount Received</label>
-                                            @Html.EditorFor(model => model.AmountReceived, new { htmlAttributes = new { @class = "form-control", @id = "txtAmountReceived", @name = "AmountReceived" } })
+                                            @Html.EditorFor(model => model.AmountReceived, new { htmlAttributes = new { @class = "form-control allow_decimal", @id = "txtAmountReceived", @name = "AmountReceived" } })
                                         </div>
                                     </div><div class="col-md-6">
                                         <div class="form-group">
@@ -90,7 +93,10 @@
                             </div>
                             <!-- /.card-body -->
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
+                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                {
+                                    <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
+                                }
                                 <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='../List'" id="btnBack">Back to List</button>
                             </div>
 
@@ -176,6 +182,28 @@
         });
     });
 
+    $(".allow_numeric").on("input", function (evt) {
+        var self = $(this);
+        self.val(self.val().replace(/\D/g, ""));
+        if ((evt.which < 48 || evt.which > 57)) {
+            evt.preventDefault();
+        }
+    });
+    //$(".allow_decimal").on("input", function (evt) {
+    //    var self = $(this);
+    //    self.val(self.val().replace(/[^0-9\.]/g, ''));
+    //    if ((evt.which != 46 || self.val().indexOf('.') != -1) && (evt.which < 48 || evt.which > 57)) {
+    //        evt.preventDefault();
+    //    }
+    //});
+    $('.allow_decimal').keypress(function (event) {
+        if (((event.which != 46 || (event.which == 46 && $(this).val() == '')) ||
+            $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    }).on('paste', function (event) {
+        event.preventDefault();
+    });
     function fnModeOfPaymentChange() {
         debugger;
         $("input[name=ModeOfPayment]").val($('#ddlModeOfPayment').val());

@@ -17,20 +17,20 @@ namespace ClientManager.Controllers
         private ClientManagerEntities db = new ClientManagerEntities();
 
         // GET: PettyCashes
-        [CustomAuthorize(new string[] { "Admin", "Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
         public ActionResult List()
         {
             var pettyCashes = db.PettyCashes.Include(p => p.User).Include(p => p.User1);
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
             // ViewBag.UserRoles = userData.UserRoles.Select(sel => sel.RoleName);
-                        
+
             ViewBag.ModeOfPayment = new SelectList(Utility.DefaultList.GetPaymentModeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
-            return View(pettyCashes.OrderByDescending(ord=> ord.AmountRecivedDate).ToList());
+            return View(pettyCashes.OrderByDescending(ord => ord.AmountRecivedDate).ToList());
 
         }
 
         // GET: PettyCashes
-        [CustomAuthorize(new string[] { "Admin", "Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
         public ActionResult ListView(string AmountReceivedDateFrom = "", string AmountReceivedDateTo = "", string ModeOfPayment = "")
         {
             DateTime dtAmountRecivedDateFrom = new DateTime();
@@ -52,18 +52,15 @@ namespace ClientManager.Controllers
             }
             if (!string.IsNullOrEmpty(ModeOfPayment))
                 pettyCashes = pettyCashes.Where(wh => wh.ModeOfPayment == ModeOfPayment);
-           
+
             // ViewBag.UserRoles = userData.UserRoles.Select(sel => sel.RoleName);
             ViewBag.ModeOfPayment = new SelectList(Utility.DefaultList.GetPaymentModeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
 
             return PartialView(pettyCashes.OrderByDescending(ord => ord.AmountRecivedDate).ToList());
         }
 
-
-
-
-    // GET: PettyCashes/Create
-    [CustomAuthorize(new string[] { "Admin", "Finance" })]
+        // GET: PettyCashes/Create
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
         public ActionResult Create()
         {
             ViewBag.ModeOfPayment = new SelectList(Utility.DefaultList.GetPaymentModeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
@@ -74,13 +71,13 @@ namespace ClientManager.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [CustomAuthorize(new string[] { "Admin", "Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
         public ActionResult Create(Models.PettyCashData PettyCashData)
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
             JsonReponse jsonReponse = (JsonReponse)null;
-            string validationMessage =string.Empty;
-                JsonReponse data;
+            string validationMessage = string.Empty;
+            JsonReponse data;
             try
             {
                 int num = 0;
@@ -110,7 +107,7 @@ namespace ClientManager.Controllers
                         AmountReceived = PettyCashData.AmountReceived,
                         AmountRecivedDate = PettyCashData.AmountRecivedDate,
                         ModeOfPayment = PettyCashData.ModeOfPayment,
-                        Status = "Pending",
+                        Status = "",
                         Description = PettyCashData.Description,
                         CreatedBy = userData.Id,
                         CreatedOn = DateTime.Now
@@ -148,7 +145,7 @@ namespace ClientManager.Controllers
         }
 
         // GET: ExpenceCategories/Edit/5
-        [CustomAuthorize(new string[] { "Admin", "Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -167,7 +164,7 @@ namespace ClientManager.Controllers
 
         // POST: ExpenceCategories/Edit/5
         [HttpPost]
-        [CustomAuthorize(new string[] { "Admin", "Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
         public ActionResult Edit(Models.PettyCashData PettyCashData)
         {
             JsonReponse data;
@@ -209,7 +206,7 @@ namespace ClientManager.Controllers
                     entity.AmountReceived = PettyCashData.AmountReceived;
                     entity.AmountRecivedDate = PettyCashData.AmountRecivedDate;
                     entity.ModeOfPayment = PettyCashData.ModeOfPayment;
-                    entity.Status = "Pending";
+                    entity.Status = "";
                     entity.ModifiedBy = new int?(userDetails.Id);
                     entity.ModifiedOn = new DateTime?(DateTime.Now);
                     entity.Description = PettyCashData?.Description;
@@ -240,89 +237,7 @@ namespace ClientManager.Controllers
             }
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
-
-        [HttpGet]
-        [CustomAuthorize(new string[] { "Admin" })]
-        public ActionResult PettyCashApprove(int id, string status)
-        {
-            UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
-            JsonReponse data;
-            try
-            {
-                if (id <= 0)
-                    return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
-                PettyCash entity = this.db.PettyCashes.Find(id);
-
-                if (entity == null)
-                    return (ActionResult)this.HttpNotFound();
-
-                entity.Status = status;
-                entity.ModifiedBy = new int?(userDetails.Id);
-                entity.ModifiedOn = new DateTime?(DateTime.Now);
-                this.db.Entry<PettyCash>(entity).State = EntityState.Modified;
-                this.db.SaveChanges();
-
-                data = new JsonReponse()
-                {
-                    message = "PettyCash Approved.",
-                    status = "Success",
-                    redirectURL = "/PettyCashes/List?" + DateTime.Now.Ticks.ToString()
-                };
-            }
-            catch (Exception ex)
-            {
-                data = new JsonReponse()
-                {
-                    message = ex.Message,
-                    status = "Error",
-                    redirectURL = ""
-                };
-            }
-            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
-        [CustomAuthorize(new string[] { "Finance" })]
-        public ActionResult PettyCashVerify(int id, string status)
-        {
-            UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
-
-            JsonReponse data;
-            try
-            {
-                if (id <= 0)
-                    return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
-                PettyCash entity = this.db.PettyCashes.Find(id);
-
-                if (entity == null)
-                    return (ActionResult)this.HttpNotFound();
-
-                entity.Status = status;
-                entity.ModifiedBy = new int?(userDetails.Id);
-                entity.ModifiedOn = new DateTime?(DateTime.Now);
-                this.db.Entry<PettyCash>(entity).State = EntityState.Modified;
-                this.db.SaveChanges();
-
-                data = new JsonReponse()
-                {
-                    message = "PettyCash Verified.",
-                    status = "Success",
-                    redirectURL = "/PettyCashes/List?" + DateTime.Now.Ticks.ToString()
-                };
-            }
-            catch (Exception ex)
-            {
-                data = new JsonReponse()
-                {
-                    message = ex.Message,
-                    status = "Error",
-                    redirectURL = ""
-                };
-            }
-            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
-        }
+                
         protected override void Dispose(bool disposing)
         {
             if (disposing)

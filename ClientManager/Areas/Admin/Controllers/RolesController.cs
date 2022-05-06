@@ -17,7 +17,7 @@ namespace ClientManager.Areas.Admin.Controllers
         private ClientManagerEntities db = new ClientManagerEntities();
 
         // GET: Admin/Roles
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin" })]
         public ActionResult List()
         {
             var roles = db.Roles.Include(r => r.User).Include(r => r.User1);
@@ -25,7 +25,7 @@ namespace ClientManager.Areas.Admin.Controllers
         }
 
         // GET: Admin/Roles/Details/5
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin" })]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -41,7 +41,7 @@ namespace ClientManager.Areas.Admin.Controllers
         }
 
         // GET: Admin/Roles/Create
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin" })]
         public ActionResult Create()
         {
             ViewBag.ModifiedBy = new SelectList(db.Users, "Id", "FullName");
@@ -55,7 +55,7 @@ namespace ClientManager.Areas.Admin.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin" })]
         public ActionResult Create(Role RoleData)
         {
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
@@ -114,7 +114,7 @@ namespace ClientManager.Areas.Admin.Controllers
         }
 
         // GET: Admin/Roles/Edit/5
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin" })]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -135,7 +135,7 @@ namespace ClientManager.Areas.Admin.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin" })]
         public ActionResult Edit(Role RoleData)
         {
             JsonReponse data;
@@ -199,7 +199,7 @@ namespace ClientManager.Areas.Admin.Controllers
         }
 
         // GET: Admin/Roles/Delete/5
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin" })]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -214,7 +214,7 @@ namespace ClientManager.Areas.Admin.Controllers
             return View(role);
         }
 
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin" })]
         public ActionResult Activate(int? id)
         {
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
@@ -250,7 +250,7 @@ namespace ClientManager.Areas.Admin.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
-        [CustomAuthorize(new string[] { "Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin" })]
         public ActionResult DeActivate(int? id)
         {
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];

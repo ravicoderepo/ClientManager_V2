@@ -137,51 +137,6 @@
         });
     }
 
-    function fnApprove(id, status) {
-        $.ajax({
-            type: "GET",
-            url: "/PettyCashes/PettyCashApprove?id=" + id + "&status=" + status,
-            //data: JSON.stringify(Register),
-            dataType: "json",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                if (data.status == "Success") {
-                    alert(data.message);
-                    window.location.href = data.redirectURL;
-                }
-                //else {
-                //    alert(data.message);
-                //}
-
-            },
-            error: function () {
-                alert("Error occured!!  " + data.message)
-            }
-        });
-    }
-    function fnVerify(id, status) {
-        $.ajax({
-            type: "GET",
-            url: "/PettyCashes/PettyCashVerify?id=" + id + "&status=" + status,
-            //data: JSON.stringify(Register),
-            dataType: "json",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                if (data.status == "Success") {
-                    alert(data.message);
-                    window.location.href = data.redirectURL;
-                }
-                //else {
-                //    alert(data.message);
-                //}
-
-            },
-            error: function () {
-                alert("Error occured!!  " + data.message)
-            }
-        });
-    }
-
     $('#pnlAdvSearch').hide();
     function fnSearch() {
         debugger;

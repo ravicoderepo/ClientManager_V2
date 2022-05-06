@@ -19,12 +19,12 @@ namespace ClientManager.Controllers
     {
         private ClientManagerEntities db = new ClientManagerEntities();
 
-        [CustomAuthorize("Admin")]
+        [CustomAuthorize("Super Admin")]
         public ActionResult AdminDashboard()
         {
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
             IQueryable<SaleActivity> source = this.db.SaleActivities.Include<SaleActivity, SalesStatu>((Expression<Func<SaleActivity, SalesStatu>>)(s => s.SalesStatu));
-            List<GetMonthlySalesReport_Result> list = this.db.GetMonthlySalesReport("Admin", new int?(1), new int?(1)).ToList<GetMonthlySalesReport_Result>();
+            List<GetMonthlySalesReport_Result> list = this.db.GetMonthlySalesReport("Super Admin", new int?(1), new int?(1)).ToList<GetMonthlySalesReport_Result>();
             MonthlySalesReport monthlySalesReport = new MonthlySalesReport();
             monthlySalesReport.Mname = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.mname.Value)).ToArray<int>();
             monthlySalesReport.Calls = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.calls.Value)).ToArray<int>();
@@ -57,12 +57,12 @@ namespace ClientManager.Controllers
             return (ActionResult)this.View(dashboard);
         }
 
-        [CustomAuthorize(new string[] { "Admin", "Manager", "SalesRep","Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Sales Manager", "Sales Engineer","Store Admin","Accounts Manager" })]
         public ActionResult MyDashboard()
         {
             UserDetails currentUser = (UserDetails)this.Session["UserDetails"];
             IQueryable<SaleActivity> source = this.db.SaleActivities.Include<SaleActivity, SalesStatu>((Expression<Func<SaleActivity, SalesStatu>>)(s => s.SalesStatu)).Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.CreatedBy == currentUser.Id));
-            List<GetMonthlySalesReport_Result> list = this.db.GetMonthlySalesReport("Admin", new int?(1), new int?(1)).ToList<GetMonthlySalesReport_Result>();
+            List<GetMonthlySalesReport_Result> list = this.db.GetMonthlySalesReport("Super Admin", new int?(1), new int?(1)).ToList<GetMonthlySalesReport_Result>();
             MonthlySalesReport monthlySalesReport = new MonthlySalesReport();
             monthlySalesReport.Mname = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.mname.Value)).ToArray<int>();
             monthlySalesReport.Calls = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.calls.Value)).ToArray<int>();
@@ -101,14 +101,14 @@ namespace ClientManager.Controllers
             return (ActionResult)this.View((object)model);
         }
 
-        [CustomAuthorize(new string[] { "Admin", "Manager"})]
+        [CustomAuthorize(new string[] { "Super Admin", "Sales Manager"})]
         public ActionResult ManagerDashboard()
         {
             UserDetails currentUser = (UserDetails)this.Session["UserDetails"];
             IQueryable<SaleActivity> queryable;
-            if (!currentUser.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "admin")))
+            if (!currentUser.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "Super Admin")))
             {
-                if (!currentUser.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "manager")))
+                if (!currentUser.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "Sales Manager")))
                     queryable = this.db.SaleActivities.Include<SaleActivity, SalesStatu>((Expression<Func<SaleActivity, SalesStatu>>)(s => s.SalesStatu)).Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.CreatedBy == currentUser.Id));
                 else
                     queryable = this.db.SaleActivities.Include<SaleActivity, SalesStatu>((Expression<Func<SaleActivity, SalesStatu>>)(s => s.SalesStatu)).Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.CreatedBy == currentUser.Id || currentUser.ReportingToMe.Contains(wh.CreatedBy)));
@@ -116,7 +116,7 @@ namespace ClientManager.Controllers
             else
                 queryable = this.db.SaleActivities.Include<SaleActivity, SalesStatu>((Expression<Func<SaleActivity, SalesStatu>>)(s => s.SalesStatu));
             IQueryable<SaleActivity> source = queryable;
-            List<GetMonthlySalesReport_Result> list = this.db.GetMonthlySalesReport("Admin", new int?(1), new int?(1)).ToList<GetMonthlySalesReport_Result>();
+            List<GetMonthlySalesReport_Result> list = this.db.GetMonthlySalesReport("Super Admin", new int?(1), new int?(1)).ToList<GetMonthlySalesReport_Result>();
             MonthlySalesReport monthlySalesReport = new MonthlySalesReport();
             monthlySalesReport.Mname = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.mname.Value)).ToArray<int>();
             monthlySalesReport.Calls = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.calls.Value)).ToArray<int>();
@@ -155,13 +155,13 @@ namespace ClientManager.Controllers
             return (ActionResult)this.View((object)model);
         }
 
-        [CustomAuthorize(new string[] { "Admin", "Manager", "SalesRep", "Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Sales Manager", "Sales Engineer", "Store Admin" })]
         public ActionResult About() => (ActionResult)this.View();
 
-        [CustomAuthorize(new string[] { "Admin", "Manager", "SalesRep", "Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Sales Manager", "Sales Engineer", "Store Admin" })]
         public ActionResult Contact() => (ActionResult)this.View();
 
-        [CustomAuthorize("Admin", "Manager", "SalesRep", "Finance")]
+        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer", "Store Admin")]
         public ActionResult UnAuthorized()
         {
             ViewBag.Message = "Un Authorized Page!";
@@ -169,19 +169,19 @@ namespace ClientManager.Controllers
             return View();
         }
 
-        [CustomAuthorize("Admin", "Manager", "SalesRep","Finance")]
+        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer","Store Admin")]
         public ActionResult PageNotFound()
         {
             return View();
         }
 
-        [CustomAuthorize("Admin", "Manager", "SalesRep","Finance")]
+        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer","Store Admin")]
         public ActionResult InternalServerError()
         {
             return View();
         }
 
-        [CustomAuthorize("Admin", "Manager", "SalesRep","Finance")]
+        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer","Store Admin")]
         public ActionResult NotAuthorized()
         {
             return View();

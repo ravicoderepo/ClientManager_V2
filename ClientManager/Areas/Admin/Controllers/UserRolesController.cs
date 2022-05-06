@@ -18,7 +18,7 @@ namespace ClientManager.Areas.Admin.Controllers
   {
     private ClientManagerEntities db = new ClientManagerEntities();
 
-    [CustomAuthorize(new string[] {"Admin"})]
+    [CustomAuthorize(new string[] {"Super Admin"})]
     public ActionResult Index() => (ActionResult) this.View((object) this.db.UserRoles.Include<DBOperation.UserRole, Role>((Expression<Func<DBOperation.UserRole, Role>>) (u => u.Role)).Include<DBOperation.UserRole, User>((Expression<Func<DBOperation.UserRole, User>>) (u => u.User)).Include<DBOperation.UserRole, User>((Expression<Func<DBOperation.UserRole, User>>) (u => u.User1)).Include<DBOperation.UserRole, User>((Expression<Func<DBOperation.UserRole, User>>) (u => u.User2)).Include<DBOperation.UserRole, User>((Expression<Func<DBOperation.UserRole, User>>) (u => u.User3)).ToList<DBOperation.UserRole>());
 
     public ActionResult Details(int? id)
@@ -32,18 +32,18 @@ namespace ClientManager.Areas.Admin.Controllers
       return model == null ? (ActionResult) this.HttpNotFound() : (ActionResult) this.View((object) model);
     }
 
-    [CustomAuthorize("Admin")]
+    [CustomAuthorize("Super Admin")]
     public ActionResult Create(int userId = 1)
     {
       var list = this.db.UserRoles.Where(wh => wh.UserId == userId).Select(sel => new
       {
         RoleId = sel.RoleId,
         RoleName = sel.Role.RoleName
-      }).ToList();
+      }).OrderBy(ord=> ord.RoleName).ToList();
 
-      IEnumerable<string> assignedRoleNames = list.Select(sel => sel.RoleName);
+      IEnumerable<string> assignedRoleNames = list.OrderBy(ord=> ord.RoleName).Select(sel => sel.RoleName);
      
-      ViewBag.AvailableRoles = new SelectList(this.db.Roles.Where(wh => !assignedRoleNames.Contains(wh.RoleName)), "Id", "RoleName");
+      ViewBag.AvailableRoles = new SelectList(this.db.Roles.Where(wh => !assignedRoleNames.Contains(wh.RoleName)).OrderBy(ord=> ord.RoleName), "Id", "RoleName");
      
       ViewBag.AssignedRoles = new SelectList(list, "RoleId", "RoleName");
      
@@ -52,7 +52,7 @@ namespace ClientManager.Areas.Admin.Controllers
     }
 
     [HttpPost]
-    [CustomAuthorize("Admin")]
+    [CustomAuthorize("Super Admin")]
     public ActionResult Create(UserRoleData userRoleData)
     {
       JsonReponse jsonReponse = (JsonReponse) null;
@@ -69,7 +69,7 @@ namespace ClientManager.Areas.Admin.Controllers
             status = "Failed",
             redirectURL = ""
           };
-        else if (userDetails.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>) (wh => wh.RoleName.ToLower() == "admin")))
+        else if (userDetails.UserRoles.Any(wh => wh.RoleName.ToLower() == "super admin"))
         {
           this.db.UserRoles.RemoveRange((IEnumerable<DBOperation.UserRole>) this.db.UserRoles.Where<DBOperation.UserRole>((Expression<Func<DBOperation.UserRole, bool>>) (wh => wh.UserId == userRoleData.UserId)));
           int index = 0;

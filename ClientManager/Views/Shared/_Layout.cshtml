@@ -7,6 +7,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -86,6 +87,10 @@
     <style>
         .card-footer {
             text-align: right !important;
+        }
+
+        body {
+            font-size: 13px !important;
         }
     </style>
 </head>
@@ -285,7 +290,7 @@
 
                             <ul class="nav nav-treeview">
                                 @{
-                                    if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "admin"))
+                                    if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "Super Admin"))
                                     {
                                         <li class="nav-item ">
                                             <a href="~/Home/MyDashboard" class="nav-link" id="mnuDashboard">
@@ -300,7 +305,7 @@
                                             </a>
                                         </li>
                                     }
-                                    else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "salesrep"))
+                                    else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "Sales Engineer"))
                                     {
                                         <li class="nav-item">
                                             <a href="~/Home/MyDashboard" class="nav-link" id="mnuDashboard">
@@ -309,7 +314,7 @@
                                             </a>
                                         </li>
                                     }
-                                    else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "manager"))
+                                    else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "Sales Manager"))
                                     {
                                         <li class="nav-item">
                                             <a href="~/Home/MyDashboard" class="nav-link" id="mnuDashboard">

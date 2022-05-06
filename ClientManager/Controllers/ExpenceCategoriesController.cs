@@ -17,7 +17,7 @@ namespace ClientManager.Controllers
         private ClientManagerEntities db = new ClientManagerEntities();
 
         // GET: ExpenceCategories
-        [CustomAuthorize(new string[] { "Admin","Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin","Store Admin" })]
         public ActionResult List()
         {
             var expenceCategories = db.ExpenceCategories.Include(e => e.User).Include(e => e.User1);
@@ -25,7 +25,7 @@ namespace ClientManager.Controllers
         }
 
         // GET: ExpenceCategories/Create
-        [CustomAuthorize(new string[] { "Admin", "Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
         public ActionResult Create()
         {
             ViewBag.ModifiedBy = new SelectList(db.Users, "Id", "FullName");
@@ -41,7 +41,7 @@ namespace ClientManager.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [CustomAuthorize(new string[] { "Admin", "Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Models.ExpenceCategoryData expenceCategoryData)
         {
@@ -102,7 +102,7 @@ namespace ClientManager.Controllers
         }
 
         // GET: ExpenceCategories/Edit/5
-        [CustomAuthorize(new string[] { "Admin", "Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -122,7 +122,7 @@ namespace ClientManager.Controllers
 
         // POST: ExpenceCategories/Edit/5
         [HttpPost]
-        [CustomAuthorize(new string[] { "Admin", "Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
         public ActionResult Edit(Models.ExpenceCategoryData ExpenceCategoryData)
         {
             JsonReponse data;
@@ -150,7 +150,7 @@ namespace ClientManager.Controllers
                 {
                     this.db.Entry<DBOperation.ExpenceCategory>(entity).State = EntityState.Modified;
                     string str;
-                    if (userDetails.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "admin")))
+                    if (userDetails.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "Super Admin")))
                     {
                         entity.CategoryName = ExpenceCategoryData.CategoryName;
                         entity.Description = ExpenceCategoryData.Description;

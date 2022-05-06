@@ -18,7 +18,7 @@ namespace ClientManager.Controllers
         private ClientManagerEntities db = new ClientManagerEntities();
 
         // GET: PettyCashes
-        [CustomAuthorize(new string[] { "Admin", "Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin", "Accounts Manager" })]
         public ActionResult List()
         {
             var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
@@ -28,7 +28,7 @@ namespace ClientManager.Controllers
 
 
         // GET: PettyCashes/Create
-        [CustomAuthorize(new string[] { "Admin", "Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
         public ActionResult Create()
         {
             ViewBag.Status = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", "Pending").ToList<SelectListItem>();
@@ -41,7 +41,7 @@ namespace ClientManager.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [CustomAuthorize(new string[] { "Admin", "Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
         public ActionResult Create(Models.ExpenceTrackerData expenceTrackerData)
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
@@ -103,9 +103,10 @@ namespace ClientManager.Controllers
         }
 
         // GET: ExpenceCategories/Edit/5
-        [CustomAuthorize(new string[] { "Admin", "Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin", "Accounts Manager" })]
         public ActionResult Edit(int? id)
         {
+            UserDetails currentUser = (UserDetails)this.Session["UserDetails"];
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -116,15 +117,34 @@ namespace ClientManager.Controllers
                 return HttpNotFound();
             }
 
-            
-            ViewBag.Status = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", (object)1).ToList<SelectListItem>();
+            var statusList = Utility.DefaultList.GetPaymentStatusList();
+
+            if(currentUser.UserRoles.Any(a=> a.RoleName == "Accounts Manager"))
+            {
+                statusList = statusList.Where(wh => wh.Value == "Verified").ToList();
+            }
+            else if(currentUser.UserRoles.Any(a => a.RoleName == "Super User"))
+            {
+                statusList = statusList.Where(wh => wh.Value == "Approved").ToList();
+            }
+            else
+            {
+                statusList = statusList.Where(wh => wh.Value == "Pending").ToList();
+            }
+            statusList.Insert(0, new SelectListItem()
+            {
+                Text = "",
+                Value = ""
+            });
+
+            ViewBag.Status = new SelectList(statusList, "Value", "Text", (object)1).ToList<SelectListItem>();
             ViewBag.ExpenseCategory = new SelectList(db.ExpenceCategories, "Id", "CategoryName", expenceTracker.ExpenseCategoryId);
             return View(expenceTracker);
         }
 
         // POST: ExpenceCategories/Edit/5
         [HttpPost]
-        [CustomAuthorize(new string[] { "Admin", "Finance" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
         public ActionResult Edit(Models.ExpenceTrackerData expenceTrackerData)
         {
             JsonReponse data;
@@ -188,6 +208,128 @@ namespace ClientManager.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
+
+        [HttpGet]
+        [CustomAuthorize(new string[] { "Super User" })]
+        public ActionResult ExpenceEntryApproval(int id, string status)
+        {
+            UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
+            JsonReponse data;
+            try
+            {
+                if (id <= 0)
+                    return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+                ExpenseTracker entity = this.db.ExpenseTrackers.Find(id);
+
+                if (entity == null)
+                    return (ActionResult)this.HttpNotFound();
+
+                entity.Status = status;
+                entity.ModifiedBy = new int?(userDetails.Id);
+                entity.ModifiedOn = new DateTime?(DateTime.Now);
+                this.db.Entry<ExpenseTracker>(entity).State = EntityState.Modified;
+                this.db.SaveChanges();
+
+                data = new JsonReponse()
+                {
+                    message = "Expence Entry Approved.",
+                    status = "Success",
+                    redirectURL = "/ExpenceTrakers/List?" + DateTime.Now.Ticks.ToString()
+                };
+            }
+            catch (Exception ex)
+            {
+                data = new JsonReponse()
+                {
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
+            }
+            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        [CustomAuthorize(new string[] { "Accounts Manager" })]
+        public ActionResult ExpenceEntryVerify(int id, string status)
+        {
+            UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
+
+            JsonReponse data;
+            try
+            {
+                if (id <= 0)
+                    return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+                ExpenseTracker entity = this.db.ExpenseTrackers.Find(id);
+
+                if (entity == null)
+                    return (ActionResult)this.HttpNotFound();
+
+                entity.Status = status;
+                entity.ModifiedBy = new int?(userDetails.Id);
+                entity.ModifiedOn = new DateTime?(DateTime.Now);
+                this.db.Entry<ExpenseTracker>(entity).State = EntityState.Modified;
+                this.db.SaveChanges();
+
+                data = new JsonReponse()
+                {
+                    message = "Expence Entry Verified.",
+                    status = "Success",
+                    redirectURL = "/ExpenceTrackers/List?" + DateTime.Now.Ticks.ToString()
+                };
+            }
+            catch (Exception ex)
+            {
+                data = new JsonReponse()
+                {
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
+            }
+            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        [CustomAuthorize(new string[] { "Store Admin" })]
+        public ActionResult Delete(int id)
+        {
+            UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
+
+            JsonReponse data;
+            try
+            {
+                if (id <= 0)
+                    return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+                ExpenseTracker entity = this.db.ExpenseTrackers.Find(id);
+
+                if (entity == null)
+                    return (ActionResult)this.HttpNotFound();
+
+                this.db.ExpenseTrackers.Remove(entity);
+                this.db.SaveChanges();
+
+                data = new JsonReponse()
+                {
+                    message = "Expence Entry Deleted.",
+                    status = "Success",
+                    redirectURL = "/ExpenceTrackers/List?" + DateTime.Now.Ticks.ToString()
+                };
+            }
+            catch (Exception ex)
+            {
+                data = new JsonReponse()
+                {
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
+            }
+            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
