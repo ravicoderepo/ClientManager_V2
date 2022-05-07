@@ -94,7 +94,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="Capacity">Capacity</label>
-                                            @Html.EditorFor(model => model.Capacity, new { htmlAttributes = new { @class = "form-control", @id = "txtCapacity" } })
+                                            @Html.EditorFor(model => model.Capacity, new { htmlAttributes = new { @class = "form-control allow_numeric", @id = "txtCapacity" } })
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -146,7 +146,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="InvoiceAmount">Invoice Amount</label>
-                                            @Html.EditorFor(model => model.InvoiceAmount, new { htmlAttributes = new { @class = "form-control", @id = "txtInvoiceAmount" } })
+                                            @Html.EditorFor(model => model.InvoiceAmount, new { htmlAttributes = new { @class = "form-control allow_decimal", @id = "txtInvoiceAmount" } })
                                         </div>
                                     </div>
 
@@ -198,7 +198,7 @@
 </div>
 
 <script>
-
+  
     $(window).on('load', function () {
         $('#pnlInvoice').hide();
         //debugger;
@@ -335,6 +335,23 @@
             }
         });
     }
+    $('.allow_decimal').keypress(function (event) {
+        if (((event.which != 46 || (event.which == 46 && $(this).val() == '')) ||
+            $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    }).on('paste', function (event) {
+        event.preventDefault();
+    });
+    $(".allow_numeric").on("input", function (evt) {
+        var self = $(this);
+        self.val(self.val().replace(/\D/g, ""));
+        if ((evt.which < 48 || evt.which > 57)) {
+            evt.preventDefault();
+        }
+    }).on('paste', function (event) {
+        event.preventDefault();
+    });
     $("#mnuSalesAdd").addClass("active");
 
 </script>

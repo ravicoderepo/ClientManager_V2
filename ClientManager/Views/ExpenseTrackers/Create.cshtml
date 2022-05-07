@@ -52,7 +52,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="ExpenseAmount">Expense Amount</label>
-                                            @Html.EditorFor(model => model.ExpenseAmount, new { htmlAttributes = new { @class = "form-control", @id = "txtExpenseAmount", @name = "ExpenseAmount" } })
+                                            @Html.EditorFor(model => model.ExpenseAmount, new { htmlAttributes = new { @class = "form-control allow_decimal", @id = "txtExpenseAmount", @name = "ExpenseAmount" } })
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -225,5 +225,13 @@
             }
         });
     }
+    $('.allow_decimal').keypress(function (event) {
+        if (((event.which != 46 || (event.which == 46 && $(this).val() == '')) ||
+            $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    }).on('paste', function (event) {
+        event.preventDefault();
+    });
     $("#mnuExpenceTracker").addClass("active");
 </script>

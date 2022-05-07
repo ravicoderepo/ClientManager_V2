@@ -65,22 +65,23 @@ namespace ClientManager.Controllers
         public ActionResult List()
         {
             var currentUser = (UserDetails)Session["UserDetails"];
-            var saleActivities = (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "Super Admin")) ? db.SaleActivities.Include(s => s.SalesStatu) : (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "Sales Manager")) ? db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id || currentUser.ReportingToMe.Contains(wh.CreatedBy)) : db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id);
+            string[] superroles = { "Super Admin", "Super User" };
+            var saleActivities = (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName))) ? db.SaleActivities.Include(s => s.SalesStatu) : (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "sales manager")) ? db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id || currentUser.ReportingToMe.Contains(wh.CreatedBy)) : db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id);
 
             List<SelectListItem> statusList = new SelectList(db.SalesStatus, "Id", "Status").ToList();
             var salesPersons = db.Users.Where(wh=> wh.IsActive == true);
             List<SelectListItem> selesPersonList = new List<SelectListItem>();
-            if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "Super Admin"))
+            if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "super admin" || wh.RoleName.ToLower() == "super user"))
             {
                 string[] roleNames = { "Sales Manager", "Sales Engineer" };
                 selesPersonList  = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName)).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName").ToList();               
             }
-            else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "Sales Manager"))
+            else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "sales manager"))
             {
                 string[] roleNames = { "Sales Manager", "Sales Engineer" };
                 selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName) && currentUser.ReportingToMe.Contains(rl.UserId) || rl.UserId == currentUser.Id).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName").ToList();
             }
-            else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "Sales Engineer"))
+            else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "sales engineer"))
             {
                 string[] roleNames = { "Sales Engineer" };
                 selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName) && rl.UserId == currentUser.Id).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName").ToList();

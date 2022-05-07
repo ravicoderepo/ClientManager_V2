@@ -112,11 +112,11 @@
         {
             <tr>
                 <td>
+
+                    <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/SaleActivities/Edit/@item.Id'"><i class="far fa-edit"></i></button>
+                    @*<button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/SaleActivities/Details/@item.Id'"><i class="fas fa-eye"></i></button>*@
                     @if (item.CreatedBy == currentUser.Id)
                     {
-                        <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/SaleActivities/Edit/@item.Id'"><i class="far fa-edit"></i></button>
-                        @*<button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/SaleActivities/Details/@item.Id'"><i class="fas fa-eye"></i></button>*@
-
                         <button type="button" class="btn btn-danger btn-xs" title="Delete" onclick="fnSubmitSaleDetails(@item.Id)"><i class="far fa-trash-alt"></i></button>
                     }
                 </td>

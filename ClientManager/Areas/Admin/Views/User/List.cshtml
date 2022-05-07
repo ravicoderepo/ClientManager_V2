@@ -114,12 +114,12 @@
                                                 @if (item.IsActive == true)
                                                 {
 
-                                                    <button type="button" class="btn btn-danger btn-xs" title="De-ctivate" onclick="fnDeActivateUser(@item.Id)"><i class="far fa-trash-alt"></i></button>
+                                                    <button type="button" class="btn btn-danger btn-xs" title="De-ctivate" onclick="fnDeActivateUser(@item.Id)"><i class="far fa-arrow-alt-circle-up"></i></button>
 
                                                 }
                                                 else
                                                 {
-                                                    <button type="button" class="btn btn-danger btn-xs" title="Activate" onclick="fnActivateUser(@item.Id)"><i class="far fa-trash-alt"></i></button>
+                                                    <button type="button" class="btn btn-success btn-xs" title="Activate" onclick="fnActivateUser(@item.Id)"><i class="far fa-arrow-alt-circle-down"></i></button>
 
                                                 }
 
@@ -205,7 +205,7 @@
     $(function () {
         $("#example1").DataTable({
             "responsive": true, "lengthChange": false, "autoWidth": false,
-            "buttons": ["excel", "pdf", "print", "colvis"]
+            //"buttons": ["excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         $('#example2').DataTable({
             "paging": true,
