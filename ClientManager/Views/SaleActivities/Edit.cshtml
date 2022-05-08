@@ -6,6 +6,7 @@
 }
 @{
     var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+    string[] superroles = { "Super User", "Sales Engineer", "Sales Manager" };
 }
 
 <style>
@@ -200,8 +201,11 @@
                                 </div>
                                 <!-- /.card-body -->
                                 <div class="card-footer">
-                                    @if (Model.CreatedBy == currentUser.Id)
+
+                                    @if (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName)))
                                     {
+                                        @*@if (Model.CreatedBy == currentUser.Id)
+                                            {*@
                                         <button type="submit" class="btn btn-primary">Submit</button> <button type="submit" class="btn btn-danger">Cancel</button>
                                     }
                                     <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='../List'" id="btnBack">Back to List</button>

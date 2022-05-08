@@ -2600,6 +2600,7 @@
     <Content Include="Views\Documents\Edit.cshtml" />
     <Content Include="Views\Documents\List.cshtml" />
     <Content Include="Views\PettyCashes\ListView.cshtml" />
+    <Content Include="Views\Home\FinanceDashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

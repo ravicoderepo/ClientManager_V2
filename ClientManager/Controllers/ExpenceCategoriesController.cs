@@ -150,7 +150,7 @@ namespace ClientManager.Controllers
                 {
                     this.db.Entry<DBOperation.ExpenceCategory>(entity).State = EntityState.Modified;
                     string str;
-                    if (userDetails.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "Super Admin")))
+                    if (userDetails.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "super admin")))
                     {
                         entity.CategoryName = ExpenceCategoryData.CategoryName;
                         entity.Description = ExpenceCategoryData.Description;

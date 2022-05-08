@@ -5,6 +5,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@{
+    var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+    string[] superroles = { "Super User", "Sales Engineer","Sales Manager" };
+}
+
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -34,13 +39,23 @@
                                 <div class="col-4 col-sm-8">
                                     <h3 class="card-title">List of Sales Details</h3>
                                 </div>
-                                <div class="col-4 col-sm-2">
-                                    <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Search</button>
-                                </div>
-                                <div class="col-4 col-sm-2">
-                                    <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:location.href='@Url.Action("Create", "SaleActivities")'"><i class="fa fa-plus"></i> New</button>
-                                </div>
-
+                                @if (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName)))
+                                {
+                                    <div class="col-4 col-sm-2">
+                                        <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Search</button>
+                                    </div>
+                                    <div class="col-4 col-sm-2">
+                                        <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:location.href='@Url.Action("Create", "SaleActivities")'"><i class="fa fa-plus"></i> New</button>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-4 col-sm-2">
+                                    </div>
+                                    <div class="col-4 col-sm-2">
+                                        <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Search</button>
+                                    </div>
+                                }
                             </div>
                         </div>
                         <!-- /.card-header -->

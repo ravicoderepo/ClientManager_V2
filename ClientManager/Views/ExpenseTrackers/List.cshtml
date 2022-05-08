@@ -82,7 +82,7 @@
                                         <th>
                                             Description
                                         </th>
-                                        <th>
+                                        @*<th>
                                             Created On
                                         </th>
                                         <th>
@@ -93,7 +93,7 @@
                                         </th>
                                         <th>
                                             Modified By
-                                        </th>
+                                        </th>*@
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -140,20 +140,20 @@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.Description)
                                             </td>
-                                            <td>
+                                            <!--<td>-->
                                                 @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
-                                                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
+                                                <!--@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.User.FullName)
                                             </td>
-                                            <td>
+                                            <td>-->
                                                 @*@Html.DisplayFor(modelItem => item.ModifiedOn)*@
-                                                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
+                                                <!--@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.User1.FullName)
-                                            </td>
+                                            </td>-->
                                         </tr>
                                     }
                                 </tbody>

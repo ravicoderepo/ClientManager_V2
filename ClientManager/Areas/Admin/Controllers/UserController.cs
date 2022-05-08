@@ -18,7 +18,7 @@ namespace ClientManager.Areas.Admin.Controllers
     {
         private ClientManagerEntities db = new ClientManagerEntities();
 
-        [CustomAuthorize(new string[] { "Super Admin", "Sales Manager" })]
+        [CustomAuthorize(new string[] { "Super Admin"})]
         public ActionResult List()
         {
             UserDetails currentUser = (UserDetails)this.Session["UserDetails"];
@@ -189,7 +189,7 @@ namespace ClientManager.Areas.Admin.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
-        [CustomAuthorize(new string[] { "Super Admin", "Sales Manager" })]
+        [CustomAuthorize(new string[] { "Super Admin"})]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -211,7 +211,7 @@ namespace ClientManager.Areas.Admin.Controllers
         }
 
             [HttpPost]
-            [CustomAuthorize(new string[] { "Super Admin", "Sales Manager" })]
+            [CustomAuthorize(new string[] { "Super Admin"})]
             public ActionResult Edit(UserData userData)
             {
                 JsonReponse data;
@@ -239,7 +239,7 @@ namespace ClientManager.Areas.Admin.Controllers
                     {
                         this.db.Entry<User>(entity).State = EntityState.Modified;
                         string str;
-                        if (userDetails.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "Super Admin")))
+                        if (userDetails.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "super admin")))
                         {
                             entity.FullName = userData.FullName;
                             entity.Email = userData.UserId;
