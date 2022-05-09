@@ -60,12 +60,15 @@
         {
             <tr>
                 <td>
-
-                    <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/PettyCashes/Edit/@item.Id'"><i class="far fa-edit"></i></button>
-
-                    @*<button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/Admin/User/Details/@item.Id'"><i class="fas fa-eye"></i></button>*@
-
-                </td>
+                    @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                    {
+                        <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/PettyCashes/Edit/@item.Id'"><i class="far fa-edit"></i></button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary btn-xs" title="View" onclick="javascript:location.href='/PettyCashes/Edit/@item.Id'"><i class="fas fa-eye"></i></button>
+                    }
+                    </td>
                 <td style="text-align:right">
                     @Html.DisplayFor(modelItem => item.AmountReceived)
                 </td>

@@ -57,7 +57,7 @@ namespace ClientManager.Controllers
             return (ActionResult)this.View(dashboard);
         }
 
-        [CustomAuthorize("Super Admin", "Super User")]
+        [CustomAuthorize("Super Admin", "Super User", "Accounts Manager")]
         public ActionResult FinanceDashboard()
         {
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
@@ -95,7 +95,7 @@ namespace ClientManager.Controllers
             return (ActionResult)this.View(dashboard);
         }
 
-        [CustomAuthorize(new string[] { "Super User","Super Admin", "Sales Manager", "Sales Engineer","Store Admin","Accounts Manager" })]
+        //[CustomAuthorize(new string[] { "Super User","Super Admin", "Sales Manager", "Sales Engineer","Store Admin", "Accounts Manager" })]
         public ActionResult MyDashboard()
         {
             UserDetails currentUser = (UserDetails)this.Session["UserDetails"];

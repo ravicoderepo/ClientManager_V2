@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using System.Configuration;
 using System.IO;
 using System.Drawing;
+using System.Globalization;
 
 namespace Utility
 {
@@ -285,6 +286,19 @@ namespace Utility
             {
                 return "";
             }
+        }
+    }
+
+    public static class ConstantData
+    {
+        public static string ToMonthName(this DateTime dateTime)
+        {
+            return CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(dateTime.Month);
+        }
+
+        public static string ToShortMonthName(this DateTime dateTime)
+        {
+            return CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(dateTime.Month);
         }
     }
 

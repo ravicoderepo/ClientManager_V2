@@ -17,7 +17,7 @@ namespace ClientManager.Controllers
         private ClientManagerEntities db = new ClientManagerEntities();
 
         // GET: PettyCashes
-        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User","Store Admin", "Accounts Manager" })]
         public ActionResult List()
         {
             var pettyCashes = db.PettyCashes.Include(p => p.User).Include(p => p.User1);
@@ -30,7 +30,7 @@ namespace ClientManager.Controllers
         }
 
         // GET: PettyCashes
-        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         public ActionResult ListView(string AmountReceivedDateFrom = "", string AmountReceivedDateTo = "", string ModeOfPayment = "")
         {
             DateTime dtAmountRecivedDateFrom = new DateTime();
@@ -145,7 +145,7 @@ namespace ClientManager.Controllers
         }
 
         // GET: ExpenceCategories/Edit/5
-        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         public ActionResult Edit(int? id)
         {
             if (id == null)

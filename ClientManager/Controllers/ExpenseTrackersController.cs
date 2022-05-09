@@ -18,10 +18,25 @@ namespace ClientManager.Controllers
         private ClientManagerEntities db = new ClientManagerEntities();
 
         // GET: PettyCashes
-        [CustomAuthorize(new string[] { "Super Admin", "Store Admin", "Accounts Manager" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         public ActionResult List()
         {
             var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
+            var TotalPettyCashAmount = db.PettyCashes.Where(wh => wh.AmountRecivedDate.Month == DateTime.Now.Month && wh.AmountRecivedDate.Year == DateTime.Now.Year).ToList();
+            var TotalApprovedExpenceAmount = db.ExpenseTrackers.Where(wh => wh.ExpenseDate.Month == DateTime.Now.Month && wh.ExpenseDate.Year == DateTime.Now.Year && wh.Status == "Verified").ToList();
+            var TotalUnApprovedExpenceAmount = db.ExpenseTrackers.Where(wh => wh.ExpenseDate.Month == DateTime.Now.Month && wh.ExpenseDate.Year == DateTime.Now.Year && wh.Status == "Pending").ToList();
+            var TotalUnVerifiedExpenceAmount = db.ExpenseTrackers.Where(wh => wh.ExpenseDate.Month == DateTime.Now.Month && wh.ExpenseDate.Year == DateTime.Now.Year && wh.Status == "Approved").ToList();
+            decimal? TotalPettyCash = (TotalPettyCashAmount != null && TotalPettyCashAmount.Count > 0) ? TotalPettyCashAmount.Sum(S=> S.AmountReceived) : 0;
+            decimal? TotalApprovedExpence = (TotalApprovedExpenceAmount != null && TotalApprovedExpenceAmount.Count > 0) ? TotalApprovedExpenceAmount.Sum(s=> s.ExpenseAmount) : 0;
+            decimal? TotalUnApprovedExpence = (TotalUnApprovedExpenceAmount!=null && TotalUnApprovedExpenceAmount.Count > 0) ? TotalUnApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
+            decimal? TotalUnVerifiedExpence = (TotalUnVerifiedExpenceAmount != null && TotalUnVerifiedExpenceAmount.Count > 0) ? TotalUnVerifiedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
+
+            ViewBag.TotalPettyCash = TotalPettyCash;
+            ViewBag.TotalApprovedExpence = TotalApprovedExpence;
+            ViewBag.TotalUnApprovedExpence = TotalUnApprovedExpence;
+            ViewBag.TotalUnVerifiedExpence = TotalUnVerifiedExpence;
+            ViewBag.AvailablePettyCash = (TotalPettyCash - TotalApprovedExpence);
+            ViewBag.CurrentMonthAndYear = Utility.ConstantData.ToMonthName(DateTime.Now) + "/" + DateTime.Now.Year;
             return View(expenceTracker.ToList());
         }
 
@@ -64,7 +79,7 @@ namespace ClientManager.Controllers
                 {
                     this.db.ExpenseTrackers.Add(new DBOperation.ExpenseTracker()
                     {
-                        ExpenseDate = DateTime.ParseExact(expenceTrackerData.ExpenseDate, "MM/dd/yyyy", CultureInfo.InvariantCulture),
+                        ExpenseDate = DateTime.ParseExact(expenceTrackerData.ExpenseDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
                         ExpenseCategoryId = expenceTrackerData.ExpenseCategoryId,
                         ExpenseAmount = expenceTrackerData.ExpenseAmount,
                         Description = expenceTrackerData.Description,
@@ -73,7 +88,7 @@ namespace ClientManager.Controllers
                         CreatedOn = DateTime.Now
                     }); ;
                     num = this.db.SaveChanges();
-                    
+
                 }
                 if (num > 0)
                     data = new JsonReponse()
@@ -103,7 +118,7 @@ namespace ClientManager.Controllers
         }
 
         // GET: ExpenceCategories/Edit/5
-        [CustomAuthorize(new string[] { "Super Admin", "Store Admin", "Accounts Manager" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         public ActionResult Edit(int? id)
         {
             UserDetails currentUser = (UserDetails)this.Session["UserDetails"];
@@ -119,11 +134,11 @@ namespace ClientManager.Controllers
 
             var statusList = Utility.DefaultList.GetPaymentStatusList();
 
-            if(currentUser.UserRoles.Any(a=> a.RoleName == "Accounts Manager"))
+            if (currentUser.UserRoles.Any(a => a.RoleName == "Accounts Manager"))
             {
                 statusList = statusList.Where(wh => wh.Value == "Verified").ToList();
             }
-            else if(currentUser.UserRoles.Any(a => a.RoleName == "Super User"))
+            else if (currentUser.UserRoles.Any(a => a.RoleName == "Super User"))
             {
                 statusList = statusList.Where(wh => wh.Value == "Approved").ToList();
             }
@@ -137,14 +152,14 @@ namespace ClientManager.Controllers
                 Value = ""
             });
 
-            ViewBag.Status = new SelectList(statusList, "Value", "Text", (object)1).ToList<SelectListItem>();
+            ViewBag.Status = new SelectList(statusList, "Value", "Text", expenceTracker.Status).ToList<SelectListItem>();
             ViewBag.ExpenseCategory = new SelectList(db.ExpenceCategories, "Id", "CategoryName", expenceTracker.ExpenseCategoryId);
             return View(expenceTracker);
         }
 
         // POST: ExpenceCategories/Edit/5
         [HttpPost]
-        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         public ActionResult Edit(Models.ExpenceTrackerData expenceTrackerData)
         {
             JsonReponse data;
@@ -173,7 +188,7 @@ namespace ClientManager.Controllers
                     this.db.Entry<DBOperation.ExpenseTracker>(entity).State = EntityState.Modified;
 
                     entity.ExpenseAmount = expenceTrackerData.ExpenseAmount;
-                    entity.ExpenseDate = DateTime.ParseExact(expenceTrackerData.ExpenseDate, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                    entity.ExpenseDate = DateTime.ParseExact(expenceTrackerData.ExpenseDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     entity.ExpenseCategoryId = expenceTrackerData.ExpenseCategoryId;
                     entity.Description = expenceTrackerData.Description;
                     entity.Status = expenceTrackerData.Status;
@@ -235,7 +250,7 @@ namespace ClientManager.Controllers
                 {
                     message = "Expence Entry Approved.",
                     status = "Success",
-                    redirectURL = "/ExpenceTrakers/List?" + DateTime.Now.Ticks.ToString()
+                    redirectURL = "/ExpenseTrackers/List?" + DateTime.Now.Ticks.ToString()
                 };
             }
             catch (Exception ex)
@@ -277,7 +292,7 @@ namespace ClientManager.Controllers
                 {
                     message = "Expence Entry Verified.",
                     status = "Success",
-                    redirectURL = "/ExpenceTrackers/List?" + DateTime.Now.Ticks.ToString()
+                    redirectURL = "/ExpenseTrackers/List?" + DateTime.Now.Ticks.ToString()
                 };
             }
             catch (Exception ex)
