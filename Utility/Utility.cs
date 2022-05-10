@@ -243,12 +243,13 @@ namespace Utility
                     mm.IsBodyHtml = true;
                     SmtpClient smtp = new SmtpClient();
                     smtp.Host = emailHost;
-                    smtp.EnableSsl = true;
+                    smtp.EnableSsl = false;
                     smtp.UseDefaultCredentials = false;
                     NetworkCredential NetworkCred = new NetworkCredential(from, password);
-                    smtp.EnableSsl = true;
+                 //   smtp.EnableSsl = true;
                     smtp.Credentials = NetworkCred;
-                    smtp.Port = 587;
+                    smtp.Timeout = 100000;
+                    smtp.Port = 25;
                     smtp.Send(mm);
                 }
 

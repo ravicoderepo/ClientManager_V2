@@ -90,7 +90,7 @@ namespace ClientManager.Controllers
                         redirectURL = ""
                     };
                 }
-                else if (Convert.ToDateTime(PettyCashData.AmountRecivedDate) > DateTime.Now)
+                else if (Convert.ToDateTime(PettyCashData.AmountRecivedDate.Date) > DateTime.Now.Date)
                 {
                     //data = new JsonReponse()
                     //{
@@ -190,7 +190,7 @@ namespace ClientManager.Controllers
                         redirectURL = ""
                     };
                 }
-                else if (Convert.ToDateTime(PettyCashData.AmountRecivedDate) > DateTime.Now)
+                else if (Convert.ToDateTime(PettyCashData.AmountRecivedDate.Date) > DateTime.Now.Date)
                 {
                     data = new JsonReponse()
                     {
