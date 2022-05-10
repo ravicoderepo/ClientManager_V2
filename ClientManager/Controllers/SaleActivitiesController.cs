@@ -18,7 +18,7 @@ namespace ClientManager.Controllers
     {
         private ClientManagerEntities db = new ClientManagerEntities();
 
-        [CustomAuthorize(new string[] { "Super Admin", "Sales Manager", "Sales Engineer" })]
+        [CustomAuthorize(new string[] { "Super User", "Super Admin", "Sales Manager", "Sales Engineer" })]
         // GET: SaleActivities
         public ActionResult ListView(string callDateFrom ="", string callDateTo="", int status=0, string productName = "", int salesPerson = 0)
         {
@@ -88,7 +88,7 @@ namespace ClientManager.Controllers
             return PartialView(saleActivities.OrderByDescending(ord=> ord.SaleDate).ToList());
         }
 
-        [CustomAuthorize(new string[] { "Super Admin", "Sales Manager", "Sales Engineer" })]
+        [CustomAuthorize(new string[] { "Super User", "Super Admin", "Sales Manager", "Sales Engineer" })]
         // GET: SaleActivities
         public ActionResult List()
         {
@@ -102,7 +102,7 @@ namespace ClientManager.Controllers
             List<SelectListItem> selesPersonList = new List<SelectListItem>();
             if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "super admin" || wh.RoleName.ToLower() == "super user"))
             {
-                string[] roleNames = { "Sales Manager", "Sales Engineer" };
+                string[] roleNames = { "Super User","Sales Manager", "Sales Engineer" };
                 selesPersonList  = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName)).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName").ToList();               
             }
             else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "sales manager"))
@@ -129,7 +129,7 @@ namespace ClientManager.Controllers
             return View(saleActivities.OrderByDescending(ord => ord.SaleDate).ToList());
         }
 
-        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer")]
+        [CustomAuthorize("Super User", "Super Admin", "Sales Manager", "Sales Engineer")]
         // GET: SaleActivities
         public ActionResult Index()
         {
@@ -153,7 +153,7 @@ namespace ClientManager.Controllers
             return View(saleActivity);
         }
 
-        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer")]
+        [CustomAuthorize("Super User", "Super Admin", "Sales Manager", "Sales Engineer")]
         // GET: SaleActivities/Create
         public ActionResult Create()
         {
@@ -170,7 +170,7 @@ namespace ClientManager.Controllers
         //To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer")]
+        [CustomAuthorize("Super User", "Super Admin", "Sales Manager", "Sales Engineer")]
         //[ValidateAntiForgeryToken]
         //public ActionResult Create([Bind(Include = "Id,SaleDate,Status,ClientName,ClientEmail,ClientPhoneNo,ProductId,Capacity,Unit,RecentCallDate,AnticipatedClosingDate,NoOfFollowUps,Remarks,SalesRepresentativeId,InvoiceNo,InvoiceAmount,DateOfClosing,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy")] SaleActivity saleActivity)
         public ActionResult Create(SaleData saleData)
@@ -256,7 +256,7 @@ namespace ClientManager.Controllers
             //return View(saleActivity);
         }
 
-        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer")]
+        [CustomAuthorize("Super User", "Super User", "Super Admin", "Sales Manager", "Sales Engineer")]
         // GET: SaleActivities/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -283,7 +283,7 @@ namespace ClientManager.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer")]
+        [CustomAuthorize("Super User", "Super Admin", "Sales Manager", "Sales Engineer")]
         //[ValidateAntiForgeryToken]
         //public ActionResult Edit([Bind(Include = "Id,SaleDate,Status,ClientName,ClientEmail,ClientPhoneNo,ProductId,Capacity,Unit,RecentCallDate,AnticipatedClosingDate,NoOfFollowUps,Remarks,SalesRepresentativeId,InvoiceNo,InvoiceAmount,DateOfClosing,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy")] SaleActivity saleActivity)
         public ActionResult Edit(SaleData saleData)
@@ -394,7 +394,7 @@ namespace ClientManager.Controllers
 
 
         // GET: SaleActivities/Delete/5
-        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer")]
+        [CustomAuthorize("Super User", "Super Admin", "Sales Manager", "Sales Engineer")]
         public ActionResult Delete(int? id)
         {
             JsonReponse jsonRes = null;
