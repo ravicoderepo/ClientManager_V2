@@ -73,7 +73,7 @@
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Upload</button> <button type="button" class="btn btn-danger">Cancel</button>
+                                <button type="submit" class="btn btn-success" onclick="fnDocumentDetails()">Upload</button> <button type="button" class="btn btn-danger">Cancel</button>
                                 <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='List'" id="btnBack">Back to List</button>
                             </div>
                     </div>
@@ -116,6 +116,9 @@
                 debugger;
                 // alert("Form successful submitted!");
                 $("input[name=hdnStatus]").val($('#ddlStatus').val());
+                $("input[name=DocumentSource]").val($('#ddlDocumentSource').val());
+                $("input[name=ReferenceRecId]").val($('#ddlReferenceRecId').val());
+                $("input[name=DocumentType]").val($('#ddlDocumentType').val());
                 fnDocumentDetails();
             }
         });
@@ -151,20 +154,35 @@
         });
     });
 
-
+    function fnDocumentSourceChange() {
+        debugger;
+        $("input[name=DocumentSource]").val($('#ddlDocumentSource').val());
+    }
+    function fnReferenceRecIdChange() {
+        debugger;
+        $("input[name=ReferenceRecId]").val($('#ddlReferenceRecId').val());
+    }
+    function fnDocumentTypeChange() {
+        debugger;
+        $("input[name=DocumentType]").val($('#ddlDocumentType').val());
+    }
     function fnStatusChange() {
         debugger;
-        $("input[name=hdnStatus]").val($('#ddlStatus').val());
+        $("input[name=Status]").val($('#ddlhdnStatus').val());
     }
 
     function fnDocumentDetails() {
         debugger;
+        $("input[name=hdnStatus]").val($('#ddlStatus').val());
+        $("input[name=DocumentSource]").val($('#ddlDocumentSource').val());
+        $("input[name=ReferenceRecId]").val($('#ddlReferenceRecId').val());
+        $("input[name=DocumentType]").val($('#ddlDocumentType').val());
         var DocumentData = {
             FileName: $('#txtFileName').val(),
             DocumentType: $('#ddlDocumentType').val(),
             DocumentSource: $('#ddlDocumentSource').val(),
             ReferenceRecId: $("#ddlReferenceRecId").val(),
-            Status: $("ddlStatus").val(),
+            Status: $("#ddlStatus").val(),
             Description: $('#txtDescription').val()
         };
         debugger;
@@ -188,6 +206,7 @@
             }
         });
     }
+ 
     $("#mnuDocumentCreate").addClass("active");
 
 </script>

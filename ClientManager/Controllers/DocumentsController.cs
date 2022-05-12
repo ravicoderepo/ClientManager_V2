@@ -58,7 +58,7 @@ namespace ClientManager.Controllers
             {
                 int num = 0;
 
-                if (DocumentData.FileName != null || DocumentData.DocumentType != null || DocumentData.DocumentSource != null || DocumentData.ReferenceRecId > 0 || DocumentData.Status != null)
+                if (DocumentData.FileName == null || DocumentData.DocumentType == null || DocumentData.DocumentSource == null || DocumentData.ReferenceRecId <= 0 || DocumentData.Status == null)
                 {
                     jsonReponse = new JsonReponse()
                     {
@@ -69,21 +69,45 @@ namespace ClientManager.Controllers
                 }
                 else
                 {
+                    //Use Namespace called :  System.IO  
+                    string FileName = Path.GetFileNameWithoutExtension(DocumentData.FileName);
+
+                    //To Get File Extension  
+                    string FileExtension = Path.GetExtension(DocumentData.FileName);
+
+                    //Add Current Date To Attached File Name  
+                    FileName = DateTime.Now.ToString("yyyyMMdd") + "-" + FileName.Trim() + FileExtension;
+
+                    //Get Upload path from Web.Config file AppSettings.  
+                    //string UploadPath = ConfigurationManager.AppSettings["UserImagePath"].ToString();
+
+                    //Its Create complete path to store in server.  
+                    //ImagePath = UploadPath + FileName;
+
+                    //To copy and save file into server.  
+                    //membervalues.ImageFile.SaveAs(membervalues.ImagePath);
+                    string fileData = string.Empty;
+                    if (DocumentData.DocumentType == "Image")
+                    {
+                        fileData = Utility.FileProcess.ImageToBase64(DocumentData.FileName);
+                    }
+
                     FileInfo file = new FileInfo(DocumentData.FileName);
 
                     this.db.Documents.Add(new DBOperation.Document()
                     {
-                        FileName = file.FullName,
+                        FileName = FileName,
                         DocumentType = DocumentData.DocumentType,
                         DocumentSource = DocumentData.DocumentSource,
                         ReferenceRecId = DocumentData.ReferenceRecId,
                         Status = DocumentData.Status,
                         Description = DocumentData.Description,
-                        FileData = Utility.FileProcess.ImageToBase64(DocumentData.FileName),
-                        FileExtension = file.Extension,
+                        FileData = fileData,
+                        FileExtension = FileExtension,
                         CreatedBy = userData.Id,
                         CreatedOn = DateTime.Now
-                    }); ;
+                    });
+
                     num = this.db.SaveChanges();
                 }
                 if (num > 0)
@@ -125,7 +149,7 @@ namespace ClientManager.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.DocumentType = new SelectList(Utility.DefaultList.GetDocumentTypeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
+            ViewBag.DocumentType = new SelectList(Utility.DefaultList.GetDocumentTypeList().Where(w=> w.Text=="Image").ToList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             ViewBag.Status = new SelectList(Utility.DefaultList.GetDocumentStatusList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             ViewBag.DocumentSource = new SelectList(Utility.DefaultList.GetModuleList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             ViewBag.ReferenceRecId = new SelectList(db.ExpenseTrackers.Select(sel => new { Id = sel.Id, Name = sel.ExpenceCategory.CategoryName + "(" + sel.Id + ")" }).ToList(), "Id", "Name", null).ToList();
@@ -237,6 +261,10 @@ namespace ClientManager.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult ImageViewer()
+        {
+            return PartialView(db.Documents);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

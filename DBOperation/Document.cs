@@ -24,7 +24,6 @@ namespace DBOperation
         public string FileData { get; set; }
         public string URL { get; set; }
         public string Status { get; set; }
-        public System.DateTime CreatedDate { get; set; }
         public int CreatedBy { get; set; }
         public System.DateTime CreatedOn { get; set; }
         public Nullable<int> ModifiedBy { get; set; }

@@ -1460,6 +1460,8 @@
     <Content Include="Content\plugins\fullcalendar\main.min.js" />
     <Content Include="Content\plugins\icheck-bootstrap\icheck-bootstrap.css" />
     <Content Include="Content\plugins\icheck-bootstrap\icheck-bootstrap.min.css" />
+    <Content Include="Content\plugins\image-box\css\style.css" />
+    <Content Include="Content\plugins\image-box\js\jquery.imagebox.js" />
     <Content Include="Content\plugins\inputmask\inputmask.js" />
     <Content Include="Content\plugins\inputmask\inputmask.min.js" />
     <Content Include="Content\plugins\inputmask\jquery.inputmask.js" />
@@ -2604,6 +2606,7 @@
     <Content Include="Views\ExpenseTrackers\ListView.cshtml" />
     <Content Include="Views\Documents\CreatePartial.cshtml" />
     <Content Include="Views\Documents\Edit - Copy.cshtml" />
+    <Content Include="Views\Documents\ImageViewer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
