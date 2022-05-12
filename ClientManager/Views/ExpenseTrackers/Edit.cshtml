@@ -16,6 +16,7 @@
         border-radius: .25rem !important;
         padding: .375rem .75rem !important;
     }
+
     .modal-dialog {
         width: 900px !important;
         margin: 30px auto !important;
@@ -107,6 +108,7 @@
                                 {
                                     <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
                                 }
+                                <button type="button" id="imageViewer" class="btn btn-dark">Document Viewer</button>
                                 <button type="button" id="btnDocument" class="btn btn-success" data-toggle="modal" data-target="#myModal">Document Upload</button>
                                 <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='../List'" id="btnBack">Back to List</button>
                             </div>
@@ -239,7 +241,15 @@
             $('#myModal').find('.modal-title').text("Document Management")
         });
     });
-    
-    
+   /* $('#imageViewer').load('/Documents/ImageViewer');*/
+    $('#imageViewer').on('click', function () {
+        //$('.modal-body').load('/Documents/ImageViewer', function () {
+        //    $('#myModal').modal({ show: true });
+        //    $('#myModal').find('.modal-title').text("Document Viewer")
+        //});
+        var left = ($(window).width() / 2) - (900 / 2),
+            top = ($(window).height() / 2) - (700 / 2),
+            popup = window.open("/Documents/ImageViewer", "Image Viewer", "width=900, height=700, top=" + top + ", left=" + left);
+    });
     $("#mnuExpenceTracker").addClass("active");
 </script>

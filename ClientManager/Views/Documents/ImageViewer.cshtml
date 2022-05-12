@@ -30,14 +30,29 @@
 </head>
 <body class="main">
     <div class="container">
-        <h1>Image Viewer</h1>
+        <!--<section class="content">
+            <div class="container-fluid">
+                <div class="row">-->
+                    <!-- left column -->
+                    <!--<div class="col-md-12">-->
+                        <!-- jquery validation -->
+                        <!--<div class="card card-primary">
+                            <div class="card-header">-->
+                                <h3 class="card-title">Document Details</h3>
+                            @*</div>*@
 
-        @foreach (var doc in Model)
-        {
-            <img class="img img-test" data-url="data:image/@doc.FileExtension.Replace(".","").ToLower();base64,@doc.FileData" src="data:image/@doc.FileExtension.Replace(".","").ToLower();base64,@doc.FileData" alt="@doc.FileName" />
-        }
+                            @foreach (var doc in Model)
+                            {
+                                <img class="img img-test" data-url="data:image/@doc.FileExtension.Replace(".","").ToLower();base64,@doc.FileData" src="data:image/@doc.FileExtension.Replace(".","").ToLower();base64,@doc.FileData" alt="@doc.FileName" style="width:200px; height:200px" />
+                            }
 
-    </div>
+                        @*</div>
+                    </div>
+                </div>
+            </div>
+        </section>*@
+    </div><!-- /.container-fluid -->
+    
     <script type="text/javascript">
         $(".main").imageBox();
     </script>
