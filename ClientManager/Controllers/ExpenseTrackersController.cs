@@ -22,13 +22,73 @@ namespace ClientManager.Controllers
         public ActionResult List()
         {
             var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
-            var TotalPettyCashAmount = db.PettyCashes.Where(wh => wh.AmountRecivedDate.Month == DateTime.Now.Month && wh.AmountRecivedDate.Year == DateTime.Now.Year).ToList();
-            var TotalApprovedExpenceAmount = db.ExpenseTrackers.Where(wh => wh.ExpenseDate.Month == DateTime.Now.Month && wh.ExpenseDate.Year == DateTime.Now.Year && wh.Status == "Verified").ToList();
-            var TotalUnApprovedExpenceAmount = db.ExpenseTrackers.Where(wh => wh.ExpenseDate.Month == DateTime.Now.Month && wh.ExpenseDate.Year == DateTime.Now.Year && wh.Status == "Pending").ToList();
-            var TotalUnVerifiedExpenceAmount = db.ExpenseTrackers.Where(wh => wh.ExpenseDate.Month == DateTime.Now.Month && wh.ExpenseDate.Year == DateTime.Now.Year && wh.Status == "Approved").ToList();
-            decimal? TotalPettyCash = (TotalPettyCashAmount != null && TotalPettyCashAmount.Count > 0) ? TotalPettyCashAmount.Sum(S=> S.AmountReceived) : 0;
-            decimal? TotalApprovedExpence = (TotalApprovedExpenceAmount != null && TotalApprovedExpenceAmount.Count > 0) ? TotalApprovedExpenceAmount.Sum(s=> s.ExpenseAmount) : 0;
-            decimal? TotalUnApprovedExpence = (TotalUnApprovedExpenceAmount!=null && TotalUnApprovedExpenceAmount.Count > 0) ? TotalUnApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
+            //var TotalPettyCashAmount = db.PettyCashes.Where(wh => wh.AmountRecivedDate.Month == DateTime.Now.Month && wh.AmountRecivedDate.Year == DateTime.Now.Year).ToList();
+            //var TotalApprovedExpenceAmount = db.ExpenseTrackers.Where(wh => wh.ExpenseDate.Month == DateTime.Now.Month && wh.ExpenseDate.Year == DateTime.Now.Year && wh.Status == "Verified").ToList();
+            //var TotalUnApprovedExpenceAmount = db.ExpenseTrackers.Where(wh => wh.ExpenseDate.Month == DateTime.Now.Month && wh.ExpenseDate.Year == DateTime.Now.Year && wh.Status == "Pending").ToList();
+            //var TotalUnVerifiedExpenceAmount = db.ExpenseTrackers.Where(wh => wh.ExpenseDate.Month == DateTime.Now.Month && wh.ExpenseDate.Year == DateTime.Now.Year && wh.Status == "Approved").ToList();
+            //decimal? TotalPettyCash = (TotalPettyCashAmount != null && TotalPettyCashAmount.Count > 0) ? TotalPettyCashAmount.Sum(S=> S.AmountReceived) : 0;
+            //decimal? TotalApprovedExpence = (TotalApprovedExpenceAmount != null && TotalApprovedExpenceAmount.Count > 0) ? TotalApprovedExpenceAmount.Sum(s=> s.ExpenseAmount) : 0;
+            //decimal? TotalUnApprovedExpence = (TotalUnApprovedExpenceAmount!=null && TotalUnApprovedExpenceAmount.Count > 0) ? TotalUnApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
+            //decimal? TotalUnVerifiedExpence = (TotalUnVerifiedExpenceAmount != null && TotalUnVerifiedExpenceAmount.Count > 0) ? TotalUnVerifiedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
+
+            //ViewBag.TotalPettyCash = TotalPettyCash;
+            //ViewBag.TotalApprovedExpence = TotalApprovedExpence;
+            //ViewBag.TotalUnApprovedExpence = TotalUnApprovedExpence;
+            //ViewBag.TotalUnVerifiedExpence = TotalUnVerifiedExpence;
+            //ViewBag.AvailablePettyCash = (TotalPettyCash - TotalApprovedExpence);
+            //ViewBag.CurrentMonthAndYear = Utility.ConstantData.ToMonthName(DateTime.Now) + "/" + DateTime.Now.Year;
+            List<SelectListItem> statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", "").ToList();
+            statusList.Insert(0, (new SelectListItem { Text = "", Value = "" }));
+            ViewBag.Status = statusList;
+            ViewBag.Years = new SelectList(Utility.DefaultList.GetYearList(), "Value", "Text", "").ToList();
+            ViewBag.Months = new SelectList(Utility.DefaultList.GetMonthList(), "Value", "Text", "").ToList();
+            List<SelectListItem> expenseCategory = new SelectList(db.ExpenceCategories, "Id", "CategoryName", "").ToList();
+            expenseCategory.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
+            ViewBag.ExpenseCategory = expenseCategory;
+
+            return View(expenceTracker.ToList());
+        }
+
+        public ActionResult ListView(string expenseDateFrom = "", string expenseDateTo = "", string status = "", int month = 0,int year = 0, int expenseCat = 0)
+        {
+            DateTime dtExpenseDateFrom = new DateTime();
+            DateTime dtExpenseDateTo = new DateTime();
+            
+            month = (month == 0) ? DateTime.Now.Month : month;
+            year = (year == 0) ? DateTime.Now.Year : year;
+
+            var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
+            if (!string.IsNullOrEmpty(expenseDateFrom))
+            {
+                dtExpenseDateFrom = DateTime.Parse(expenseDateFrom);
+                expenceTracker = expenceTracker.Where(wh => wh.ExpenseDate >= dtExpenseDateFrom);
+            }
+
+            if (!string.IsNullOrEmpty(expenseDateTo))
+            {
+                dtExpenseDateTo = DateTime.Parse(expenseDateTo);
+                expenceTracker = expenceTracker.Where(wh => wh.ExpenseDate <= dtExpenseDateTo);
+            }
+
+            if (!string.IsNullOrEmpty(status))
+                expenceTracker = expenceTracker.Where(wh => wh.Status == status);
+
+            if (year > 0)
+                expenceTracker = expenceTracker.Where(wh => wh.ExpenseDate.Year == year);          
+
+            if (month > 0)
+                expenceTracker = expenceTracker.Where(wh => wh.ExpenseDate.Month == month);
+
+            if (expenseCat > 0)
+                expenceTracker = expenceTracker.Where(wh => wh.ExpenseCategoryId == expenseCat);
+
+            var TotalPettyCashAmount = db.PettyCashes.Where(wh => wh.AmountRecivedDate.Month == month && wh.AmountRecivedDate.Year == year).ToList();
+            var TotalApprovedExpenceAmount = expenceTracker.Where(wh => wh.ExpenseDate.Month == month && wh.ExpenseDate.Year == year && wh.Status == "Verified").ToList();
+            var TotalUnApprovedExpenceAmount = expenceTracker.Where(wh => wh.ExpenseDate.Month == month && wh.ExpenseDate.Year == year && wh.Status == "Pending").ToList();
+            var TotalUnVerifiedExpenceAmount = expenceTracker.Where(wh => wh.ExpenseDate.Month == month && wh.ExpenseDate.Year == year && wh.Status == "Approved").ToList();
+            decimal? TotalPettyCash = (TotalPettyCashAmount != null && TotalPettyCashAmount.Count > 0) ? TotalPettyCashAmount.Sum(S => S.AmountReceived) : 0;
+            decimal? TotalApprovedExpence = (TotalApprovedExpenceAmount != null && TotalApprovedExpenceAmount.Count > 0) ? TotalApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
+            decimal? TotalUnApprovedExpence = (TotalUnApprovedExpenceAmount != null && TotalUnApprovedExpenceAmount.Count > 0) ? TotalUnApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
             decimal? TotalUnVerifiedExpence = (TotalUnVerifiedExpenceAmount != null && TotalUnVerifiedExpenceAmount.Count > 0) ? TotalUnVerifiedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
 
             ViewBag.TotalPettyCash = TotalPettyCash;
@@ -36,11 +96,18 @@ namespace ClientManager.Controllers
             ViewBag.TotalUnApprovedExpence = TotalUnApprovedExpence;
             ViewBag.TotalUnVerifiedExpence = TotalUnVerifiedExpence;
             ViewBag.AvailablePettyCash = (TotalPettyCash - TotalApprovedExpence);
-            ViewBag.CurrentMonthAndYear = Utility.ConstantData.ToMonthName(DateTime.Now) + "/" + DateTime.Now.Year;
-            return View(expenceTracker.ToList());
+            ViewBag.CurrentMonthAndYear = month + "/" + year;
+
+            //List<SelectListItem> statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", "").ToList();
+            //statusList.Insert(0, (new SelectListItem { Text = "", Value = "" }));
+            //ViewBag.Status = statusList;
+            //ViewBag.Years = new SelectList(Utility.DefaultList.GetYearList(), "Value", "Text", "").ToList();
+            //ViewBag.Months = new SelectList(Utility.DefaultList.GetMonthList(), "Value", "Text", "").ToList();
+            //List<SelectListItem> expenseCategory = new SelectList(db.ExpenceCategories, "Id", "CategoryName", "").ToList();
+            //expenseCategory.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
+            //ViewBag.ExpenseCategory = expenseCategory;
+            return PartialView(expenceTracker.ToList().OrderByDescending(ord => ord.ExpenseDate).ToList());
         }
-
-
 
         // GET: PettyCashes/Create
         [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]

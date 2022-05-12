@@ -217,6 +217,105 @@ namespace Utility
 
             return items;
         }
+
+        public static List<SelectListItem> GetMonthList()
+        {
+            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
+            items.Insert(0, new SelectListItem()
+            {
+                Text = "",
+                Value = ""
+            });
+            items.Insert(1, new SelectListItem()
+            {
+                Text = "Jan",
+                Value = "1"
+            });
+            items.Insert(2, new SelectListItem()
+            {
+                Text = "Feb",
+                Value = "2"
+            });
+            items.Insert(3, new SelectListItem()
+            {
+                Text = "Mar",
+                Value = "3"
+            });
+            items.Insert(4, new SelectListItem()
+            {
+                Text = "Apr",
+                Value = "4"
+            });
+            items.Insert(5, new SelectListItem()
+            {
+                Text = "May",
+                Value = "5"
+            });
+            items.Insert(6, new SelectListItem()
+            {
+                Text = "June",
+                Value = "6"
+            });
+            items.Insert(7, new SelectListItem()
+            {
+                Text = "July",
+                Value = "7"
+            });
+            items.Insert(8, new SelectListItem()
+            {
+                Text = "Aug",
+                Value = "8"
+            });
+            items.Insert(9, new SelectListItem()
+            {
+                Text = "Sep",
+                Value = "9"
+            });
+            items.Insert(10, new SelectListItem()
+            {
+                Text = "Oct",
+                Value = "10"
+            });
+            items.Insert(11, new SelectListItem()
+            {
+                Text = "Nov",
+                Value = "11"
+            });
+            items.Insert(12, new SelectListItem()
+            {
+                Text = "Dec",
+                Value = "12"
+            });
+
+            return items;
+        }
+
+        public static List<SelectListItem> GetYearList()
+        {
+            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
+            items.Insert(0, new SelectListItem()
+            {
+                Text = "",
+                Value = ""
+            });
+            items.Insert(1, new SelectListItem()
+            {
+                Text = "2022",
+                Value = "2022"
+            });
+            items.Insert(2, new SelectListItem()
+            {
+                Text = "2021",
+                Value = "2021"
+            });
+            items.Insert(3, new SelectListItem()
+            {
+                Text = "2020",
+                Value = "2020"
+            });            
+
+            return items;
+        }
     }
 
     public static class Emails

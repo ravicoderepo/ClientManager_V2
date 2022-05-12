@@ -45,14 +45,28 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="row">
-                                <div class="col-4 col-sm-8">
-                                    <h3 class="card-title">Expense Tracker</h3>
-                                </div>
+                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                {
+                                    <div class="col-4 col-sm-6">
+                                        <h3 class="card-title">Expense Tracker</h3>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-4 col-sm-8">
+                                        <h3 class="card-title">Expense Tracker</h3>
+                                    </div>
+                                }
                                 <div class="col-4 col-sm-2">
                                 </div>
                                 @*<div class="col-4 col-sm-2">
-                                        <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Adv. Search</button>
+                                        <button type="button"  <div class="col-4 col-sm-2">
+                                        <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Search</button>
+                                    </div>="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Adv. Search</button>
                                     </div>*@
+                                <div class="col-4 col-sm-2">
+                                    <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Search</button>
+                                </div>
                                 <div class="col-4 col-sm-2">
                                     @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
                                     {
@@ -65,145 +79,68 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-12 col-sm-12"><span style="font-weight:bold; font-size:15px"> PettyCash Summary of @ViewBag.CurrentMonthAndYear </span> </div>
-                                <div class="col-12 col-sm-12">
-                                    <table>
-                                        <tr>
-                                            <td>Total PettyCash  </td>
-                                            <td>:</td>
-                                            <td style="text-align:right; color:blue; font-weight:bold">@ViewBag.TotalPettyCash</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Available PettyCash (Total PettyCash - Total Approved & Verified)  </td>
-                                            <td>:</td>
-                                            <td style="text-align: right; color: green; font-weight: bold">@ViewBag.AvailablePettyCash</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Total Expence (Un Approved)   </td>
-                                            <td>:</td>
-                                            <td style="text-align: right; color: red; font-weight: bold ">@ViewBag.TotalUnApprovedExpence</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Total Expence (Verified)   </td>
-                                            <td>:</td>
-                                            <td style="text-align: right; color: darkred; font-weight: bold">@ViewBag.TotalApprovedExpence</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Total Expence (Un Verified)   </td>
-                                            <td>:</td>
-                                            <td style="text-align: right; color: crimson; font-weight: bold">@ViewBag.TotalUnVerifiedExpence</td>
-                                        </tr>
-                                    </table>
+                            <div id="pnlAdvSearch">
+                                <div class="card-body" style="background-color:whitesmoke">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="expenseDateFrom">Expense Date From</label>
+                                                <div class="input-group date" data-target-input="nearest">
+                                                    <input type="text" class="form-control datetimepicker-input" data-target="#txtexpenseDateFrom" name="expenseDateFrom" id="txtexpenseDateFrom">
+                                                    <div class="input-group-append" data-target="#txtexpenseDateFrom" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="expenseDateTo">Expense Date To</label>
+                                                <div class="input-group date" data-target-input="nearest">
+                                                    <input type="text" class="form-control datetimepicker-input" data-target="#txtexpenseDateTo" name="expenseDateTo" id="txtexpenseDateTo">
+                                                    <div class="input-group-append" data-target="#txtexpenseDateTo" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Status">Status</label>
+                                                @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Status">Expense Category</label>
+                                                @Html.DropDownList("ExpenseCategory", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlExpenseCategory" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Status">Month</label>
+                                                @Html.DropDownList("Months", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlMonths" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Status">Year</label>
+                                                @Html.DropDownList("Years", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlYears" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-footer">
+                                        <button type="submit" class="btn btn-primary btn-sm" onclick="javascript:fnSearch()"> <i class="fa fa-search"></i> Search</button>
+                                        <button type="button" onclick="javascript:fnClearSearch()" class="btn btn-danger btn-sm">Clear</button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="javascript:fnToggleAdvSearch('0')">Hide</button>
+                                    </div>
                                 </div>
-                                @*<div class="col-12 col-sm-12">Total PettyCash                : @ViewBag.TotalPettyCash </div>
-                                    <div class="col-12 col-sm-12">Available PettyCash            : @ViewBag.AvailablePettyCash (Total Approved & Verified - Total PettyCash)</div>
-                                    <div class="col-12 col-sm-12">Total Expence (Verified)       : @ViewBag.TotalApprovedExpence</div>
-                                    <div class="col-12 col-sm-12">Total Expence (Un Approved)    : @ViewBag.TotalUnApprovedExpence</div>
-                                    <div class="col-12 col-sm-12">Total Expence (Un Verified)    : @ViewBag.TotalUnVerifiedExpence</div>*@
+                                <br />
                             </div>
-
-                            <table id="example1" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Action</th>
-                                        <th>
-                                            Expence Amount
-                                        </th>
-                                        <th>
-                                            Expence Date
-                                        </th>
-                                        <th>
-                                            Expence Category
-                                        </th>
-                                        <th>
-                                            Status
-                                        </th>
-                                        <th>
-                                            Description
-                                        </th>
-                                        @*<th>
-                                                Created On
-                                            </th>
-                                            <th>
-                                                Created By
-                                            </th>
-                                            <th>
-                                                Modified On
-                                            </th>
-                                            <th>
-                                                Modified By
-                                            </th>*@                                        
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model)
-                                    {
-                                        <tr>
-                                            <td>
-                                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
-                                                {
-                                                    <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/ExpenseTrackers/Edit/@item.Id'"><i class="far fa-edit"></i></button>
-                                                }
-                                                else
-                                                {
-                                                    <button type="button" class="btn btn-primary btn-xs" title="View" onclick="javascript:location.href='/ExpenseTrackers/Edit/@item.Id'"><i class="fas fa-eye"></i></button>
-                                                }
-
-                                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Approver") && item.Status == "Pending")
-                                                {
-                                                    <button type="button" class="btn btn-success btn-xs" title="Approve" onclick="fnApprove(@item.Id,'Approved')"><i class="far fa-arrow-alt-circle-right"></i></button>
-                                                    @*<button type="button" class="btn btn-outline-secondary btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-up"></i></button>*@
-                                                @*<button type="button" class="btn btn-outline-secondary btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-up"></i></button>*@
-                                                }
-
-                                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Verifier") && item.Status == "Approved")
-                                                {
-                                                    <button type="button" class="btn btn-success btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-right"></i></button>
-                                                }
-
-                                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin") && item.Status == "Pending")
-                                                {
-
-                                                    <button type="button" class="btn btn-danger btn-xs" title="Delete" onclick="fnDelete(@item.Id)"><i class="far fa-trash-alt"></i></button>
-
-                                                }
-
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.ExpenseAmount)
-                                            </td>
-                                            <td>
-                                                @*@Html.DisplayFor(modelItem => item.ExpenseDate)*@
-                                                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ExpenseDate))
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.ExpenceCategory.CategoryName)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Status)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Description)
-                                            </td>
-                                            <!--<td>-->
-                                            @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
-                                            <!--@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.User.FullName)
-                                            </td>
-                                            <td>-->
-                                            @*@Html.DisplayFor(modelItem => item.ModifiedOn)*@
-                                            <!--@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.User1.FullName)
-                                            </td>-->
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
+                            @Html.Partial("ListView", Model)
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -217,88 +154,53 @@
     </section>
     <!-- /.content -->
 </div>
-
 <script>
-    $(function () {
-        $("#example1").DataTable({
-            "responsive": true, "lengthChange": false, "autoWidth": false,
-            //"buttons": ["excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
+    $('#pnlAdvSearch').hide();
+    fnSearch();
+    function fnSearch() {
+        debugger;
+        var actionUrl = "/ExpenseTrackers/ListView?" + "expenseDateFrom=" + $('#txtexpenseDateFrom').val().replace(/\//g, '-') + "&expenseDateTo=" + $('#txtexpenseDateTo').val().replace(/\//g, '-') + "&status=" + $('#ddlStatus').val() + "&year=" + $('#ddlYears').val() + "&month=" + $('#ddlMonths').val() + "&expenseCat=" + $('#ddlExpenseCategory').val();
+        $('#gridView').html('');
+        $.ajax({
+            url: actionUrl,
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            success: function (result) {
+                $('#gridView').html(result);
+                $('#pettyCashSummary').css("display", "none");
+            },
+            error: function (xhr, status) {
+                alert(status);
+            }
+        })
+    }
+
+    function fnToggleAdvSearch(action) {
+
+        if (action == '1') {
+            $('#pnlAdvSearch').show();
+        }
+        else {
+            $('#pnlAdvSearch').hide();
+        }
+    }
+    $('#txtexpenseDateFrom').datetimepicker({
+        format: 'DD/MM/YYYY'
+    });
+    $('#txtexpenseDateTo').datetimepicker({
+        format: 'DD/MM/YYYY'
     });
 
-    function fnDelete(id) {
-        $.ajax({
-            type: "GET",
-            url: "/ExpenceTrakers/Delete?id=" + id,
-            //data: JSON.stringify(Register),
-            dataType: "json",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                if (data.status == "Success") {
-                    alert(data.message);
-                    window.location.href = data.redirectURL;
-                }
-            },
-            error: function () {
-                alert("Error occured!!  " + data.message)
-            }
-        });
-    }
-
-    function fnApprove(id, status) {
+    function fnClearSearch() {
         debugger;
-        $.ajax({
-            type: "GET",
-            url: "/ExpenseTrackers/ExpenceEntryApproval?id=" + id + "&status=" + status,
-            //data: JSON.stringify(Register),
-            dataType: "json",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                if (data.status == "Success") {
-                    alert(data.message);
-                    window.location.href = data.redirectURL;
-                }
-                //else {
-                //    alert(data.message);
-                //}
+        $('#txtexpenseDateTo').val('');
+        $('#txtexpenseDateFrom').val('');
+        $('#ddlStatus').val(0);
+        $('#ddlExpenseCategory').val(0);
+        $('#ddlMonths').val(0);
+        $('#ddlYears').val(0);
 
-            },
-            error: function () {
-                alert("Error occured!!  " + data.message)
-            }
-        });
-    }
-    function fnVerify(id, status) {
-        debugger;
-        $.ajax({
-            type: "GET",
-            url: "/ExpenseTrackers/ExpenceEntryVerify?id=" + id + "&status=" + status,
-            //data: JSON.stringify(Register),
-            dataType: "json",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                if (data.status == "Success") {
-                    alert(data.message);
-                    window.location.href = data.redirectURL;
-                }
-                //else {
-                //    alert(data.message);
-                //}
 
-            },
-            error: function () {
-                alert("Error occured!!  " + data.message)
-            }
-        });
     }
-    $("#mnuExpenceTracker").addClass("active");
 </script>

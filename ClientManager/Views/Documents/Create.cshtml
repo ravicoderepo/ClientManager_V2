@@ -32,89 +32,88 @@
             </div>
         </div><!-- /.container-fluid -->
     </section>
-
+    @Html.Partial("CreatePartial", Model)
     <!-- Main content -->
-    <section class="content">
+    <!--<section class="content">
         <div class="container-fluid">
-            <div class="row">
-                <!-- left column -->
-                <div class="col-md-12">
-                    <!-- jquery validation -->
-                    <div class="card card-primary">
-                        <div class="card-header">
-                            <h3 class="card-title">Document Details</h3>
+            <div class="row">-->
+    <!-- left column -->
+    <!--<div class="col-md-12">-->
+    <!-- jquery validation -->
+    <!--<div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Document Details</h3>
+        </div>-->
+    <!-- /.card-header -->
+    <!-- form start -->
+    <!--<form id="quickForm">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="form-group">
+                            <label for=">">Document Name</label>
+                            @Html.EditorFor(model => model.FileName, new { htmlAttributes = new { @class = "form-control", @id = "txtFileName", @name = "FileName" } })
                         </div>
-                        <!-- /.card-header -->
-                        <!-- form start -->
-                        <form id="quickForm">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-9">
-                                        <div class="form-group">
-                                            <label for=">">Document Name</label>
-                                            @Html.EditorFor(model => model.FileName, new { htmlAttributes = new { @class = "form-control", @id = "txtFileName", @name = "FileName" } })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="ModeOfPayment">Document Type </label>
-                                            @Html.HiddenFor(model => model.DocumentType, new { htmlAttributes = new { @id = "hdnDocumentType" } })
-                                            @Html.DropDownList("DocumentType", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlDocumentType", @onChange = "fnDocumentTypeChange()" })
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="ModeOfPayment">Document Source </label>
-                                            @Html.HiddenFor(model => model.DocumentSource, new { htmlAttributes = new { @id = "hdnDocumentSource" } })
-                                            @Html.DropDownList("DocumentSource", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlDocumentSource", @onChange = "fnDocumentSourceChange()" })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="ModeOfPayment">Reference Rec Id </label>
-                                            @Html.HiddenFor(model => model.ReferenceRecId, new { htmlAttributes = new { @id = "hdnReferenceRecId" } })
-                                            @Html.DropDownList("ReferenceRecId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlReferenceRecId", @onChange = "fnReferenceRecIdChange()" })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="ModeOfPayment">Status </label>
-                                            @Html.HiddenFor(model => model.Status, new { htmlAttributes = new { @id = "hdnStatus" } })
-                                            @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="Description">Description</label>
-                                            @Html.TextAreaFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @id = "txtDescription", @name = "Description" } })
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Upload</button> <button type="button" class="btn btn-danger">Cancel</button>
-                                <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='List'" id="btnBack">Back to List</button>
-                            </div>
                     </div>
-                    <!-- /.card-body -->
-                    </form>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="ModeOfPayment">Document Type </label>
+                            @Html.HiddenFor(model => model.DocumentType, new { htmlAttributes = new { @id = "hdnDocumentType" } })
+                            @Html.DropDownList("DocumentType", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlDocumentType", @onChange = "fnDocumentTypeChange()" })
+                        </div>
+                    </div>
                 </div>
-                <!-- /.card -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="ModeOfPayment">Document Source </label>
+                            @Html.HiddenFor(model => model.DocumentSource, new { htmlAttributes = new { @id = "hdnDocumentSource" } })
+                            @Html.DropDownList("DocumentSource", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlDocumentSource", @onChange = "fnDocumentSourceChange()" })
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="ModeOfPayment">Reference Rec Id </label>
+                            @Html.HiddenFor(model => model.ReferenceRecId, new { htmlAttributes = new { @id = "hdnReferenceRecId" } })
+                            @Html.DropDownList("ReferenceRecId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlReferenceRecId", @onChange = "fnReferenceRecIdChange()" })
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="ModeOfPayment">Status </label>
+                            @Html.HiddenFor(model => model.Status, new { htmlAttributes = new { @id = "hdnStatus" } })
+                            @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="Description">Description</label>
+                            @Html.TextAreaFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @id = "txtDescription", @name = "Description" } })
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <!--/.col (left) -->
-            <!-- right column -->
-            <div class="col-md-6">
-
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Upload</button> <button type="button" class="btn btn-danger">Cancel</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='List'" id="btnBack">Back to List</button>
             </div>
-            <!--/.col (right) -->
-            <!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </section>
+    </div>-->
+    <!-- /.card-body -->
+    <!--</form>
+    </div>-->
+    <!-- /.card -->
+    <!--</div>-->
+    <!--/.col (left) -->
+    <!-- right column -->
+    <!--<div class="col-md-6">
+
+    </div>-->
+    <!--/.col (right) -->
+    <!-- /.row -->
+    <!--</div>--><!-- /.container-fluid -->
+    <!--</section>-->
     <!-- /.content -->
 </div>
 
@@ -187,7 +186,7 @@
             DocumentType: $('#ddlDocumentType').val(),
             DocumentSource: $('#ddlDocumentSource').val(),
             ReferenceRecId: $("#ddlReferenceRecId").val(),
-            Status: $("ddlStatus").val(),
+            Status: $("hdnStatus").val(),
             Description: $('#txtDescription').val()
         };
         debugger;

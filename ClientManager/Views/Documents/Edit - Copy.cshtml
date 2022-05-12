@@ -1,13 +1,10 @@
-﻿@model DBOperation.ExpenseTracker
-@using System.Globalization;
+﻿@model DBOperation.Document
+
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@{
-    var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
-}
 
 <style>
     textarea {
@@ -15,10 +12,6 @@
         border: 1px solid #ced4da !important;
         border-radius: .25rem !important;
         padding: .375rem .75rem !important;
-    }
-    .modal-dialog {
-        width: 900px !important;
-        margin: 30px auto !important;
     }
 </style>
 <div class="content-wrapper">
@@ -28,12 +21,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Expense Tracker</h1>
+                    <h1>Document</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Accounts</a></li>
-                        <li class="breadcrumb-item"><a href="#">Expense Tracker</a></li>
+                        <li class="breadcrumb-item"><a href="#">Document Management</a></li>
+                        <li class="breadcrumb-item"><a href="#">Documents</a></li>
                         <li class="breadcrumb-item active">Edit</li>
                     </ol>
                 </div>
@@ -50,64 +43,66 @@
                     <!-- jquery validation -->
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Expense Tracker</h3>
+                            <h3 class="card-title">Document Details</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
+                        
                         <form id="quickForm">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-9">
                                         <div class="form-group">
-                                            <label for="ExpenseAmount">Expense Amount</label>
+                                            <label for=">">Document Name</label>
                                             @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "Id" } })
-                                            @Html.EditorFor(model => model.ExpenseAmount, new { htmlAttributes = new { @class = "form-control", @id = "txtExpenseAmount", @name = "ExpenseAmount" } })
+                                            @Html.EditorFor(model => model.FileName, new { htmlAttributes = new { @class = "form-control", @id = "txtFileName", @name = "FileName" } })
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <div class="form-group">
-                                            <label for="ExpenseDate">Expense Date</label>
-                                            <div class="input-group date" data-target-input="nearest">
-                                                @Html.EditorFor(model => model.ExpenseDate, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtExpenseDate", @name = "ExpenseDate" } })
-                                                <div class="input-group-append" data-target="#txtExpenseDate" data-toggle="datetimepicker">
-                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                </div>
-                                            </div>
+                                            <label for="ModeOfPayment">Document Type </label>
+                                            @Html.HiddenFor(model => model.DocumentType, new { htmlAttributes = new { @id = "hdnDocumentType" } })
+                                            @Html.DropDownList("DocumentType", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlDocumentType", @onChange = "fnDocumentTypeChange()" })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="ExpenseCategory">Expense Category</label>
-                                            @Html.HiddenFor(model => model.ExpenseCategoryId, new { htmlAttributes = new { @id = "hdnExpenseCategoryId" } })
-                                            @Html.DropDownList("ExpenseCategory", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlExpenseCategory", @onChange = "fnExpenseCategoryChange()" })
+                                            <label for="ModeOfPayment">Document Source </label>
+                                            @Html.HiddenFor(model => model.DocumentSource, new { htmlAttributes = new { @id = "hdnDocumentSource" } })
+                                            @Html.DropDownList("DocumentSource", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlDocumentSource", @onChange = "fnDocumentSourceChange()" })
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="Status">Status</label>
+                                            <label for="ModeOfPayment">Reference Rec Id </label>
+                                            @Html.HiddenFor(model => model.ReferenceRecId, new { htmlAttributes = new { @id = "hdnReferenceRecId" } })
+                                            @Html.DropDownList("ReferenceRecId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlReferenceRecId", @onChange = "fnReferenceRecIdChange()" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="ModeOfPayment">Status </label>
                                             @Html.HiddenFor(model => model.Status, new { htmlAttributes = new { @id = "hdnStatus" } })
                                             @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="Description">Description</label>
-                                            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @id = "txtDescription", @name = "Description" } })
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Description">Description</label>
+                                                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @id = "txtDescription", @name = "Description" } })
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <!-- /.card-body -->
                             <div class="card-footer">
-                                @if ((currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin") && Model.Status == "Pending") || (currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager") && Model.Status == "Approved"))
-                                {
-                                    <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
-                                }
-                                <button type="button" id="btnDocument" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Document Upload</button>
+                                <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
                                 <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='../List'" id="btnBack">Back to List</button>
                             </div>
 
@@ -130,10 +125,6 @@
 </div>
 
 <script>
-    $(".btn-danger").click(function () {
-        debugger;
-        window.location.href = window.location.href;
-    });
     $(window).on('load', function () {
 
         if ('@ViewBag.AccessLevel' == "View") {
@@ -147,18 +138,13 @@
         }
     });
 
-    //Date picker
-    $('#txtExpenseDate').datetimepicker({
-        format: 'DD/MM/YYYY'
-    });
-
     $(function () {
         //debugger;
         $.validator.setDefaults({
             submitHandler: function () {
                 debugger;
                 // alert("Form successful submitted!");
-                fnSubmitExpenseTrakerDetails();
+                fnDocumentDetails();
             }
         });
         $('#quickForm').validate({
@@ -192,31 +178,40 @@
             }
         });
     });
+
+    function fnDocumentSourceChange() {
+        debugger;
+        $("input[name=DocumentSource]").val($('#ddlDocumentSource').val());
+    }
+    function fnReferenceRecIdChange() {
+        debugger;
+        $("input[name=ReferenceRecId]").val($('#ddlReferenceRecId').val());
+    }
+    function fnReferenceRecIdChange() {
+        debugger;
+        $("input[name=DocumentType]").val($('#ddlDocumentType').val());
+    }
     function fnStatusChange() {
         debugger;
-        $("input[name=Status]").val($('#ddlStatus').val());
+        $("input[name=Status]").val($('#ddlhdnStatus').val());
     }
 
-    function fnExpenseCategoryChange() {
+    function fnDocumentDetails() {
         debugger;
-        $("input[name=ExpenseCategory]").val($('#ddlExpenseCategory').val());
-    }
-
-    function fnSubmitExpenseTrakerDetails() {
-        debugger;
-        var ExpenseTrakerData = {
-            Id: $('#Id').val(),
-            ExpenseAmount: $('#txtExpenseAmount').val(),
-            ExpenseDate: $('#txtExpenseDate').val(),
-            ExpenseCategoryId: $('#ddlExpenseCategory').val(),
-            Status: $("input[name=Status]").val(),
+        var DocumentData = {
+            DocumentType: $('#txtFileName').val(),
+            AmountRecivedDate: $('#txtAmountRecivedDate').val(),
+            DocumentType: $("input[name=hdnDocumentType]").val(),
+            DocumentSource: $("input[name=hdnDocumentSource]").val(),
+            ReferenceRecId: $("input[name=hdnReferenceRecId]").val(),
+            Status: $("input[name=hdnStatus]").val(),
             Description: $('#txtDescription').val()
         };
         debugger;
         $.ajax({
             type: "POST",
-            url: "/ExpenseTrackers/Edit",
-            data: JSON.stringify(ExpenseTrakerData),
+            url: "/Documents/Edit",
+            data: JSON.stringify(DocumentData),
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
@@ -233,13 +228,5 @@
             }
         });
     }
-    $('#btnDocument').on('click', function () {
-        $('.modal-body').load('/Documents/CreatePartial', function () {
-            $('#myModal').modal({ show: true });
-            $('#myModal').find('.modal-title').text("Document Management")
-        });
-    });
-    
-    
-    $("#mnuExpenceTracker").addClass("active");
+    $("#mnuDocumentCreate").addClass("active");
 </script>
