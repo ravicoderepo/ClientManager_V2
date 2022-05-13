@@ -309,7 +309,16 @@
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="~/Home/AdminDashboard" class="nav-link" id="mnuFinanceDashboard">
+                                            <a href="~/Home/FinanceDashboard" class="nav-link" id="mnuFinanceDashboard">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Finance Dashboard</p>
+                                            </a>
+                                        </li>
+                                    }
+                                    else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "store admin") || currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "accounts manager"))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="~/Home/FinanceDashboard" class="nav-link" id="mnuFinanceDashboard">
                                                 <i class="far fa-circle nav-icon"></i>
                                                 <p>Finance Dashboard</p>
                                             </a>

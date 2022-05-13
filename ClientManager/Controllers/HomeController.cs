@@ -57,41 +57,46 @@ namespace ClientManager.Controllers
             return (ActionResult)this.View(dashboard);
         }
 
-        [CustomAuthorize("Super Admin", "Super User", "Accounts Manager")]
+        [CustomAuthorize("Super Admin", "Super User", "Store Admin", "Accounts Manager")]
         public ActionResult FinanceDashboard()
         {
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
-            IQueryable<SaleActivity> source = this.db.SaleActivities.Include<SaleActivity, SalesStatu>((Expression<Func<SaleActivity, SalesStatu>>)(s => s.SalesStatu));
-            List<GetMonthlySalesReport_Result> list = this.db.GetMonthlySalesReport("Super Admin", new int?(1), new int?(1)).ToList<GetMonthlySalesReport_Result>();
-            MonthlySalesReport monthlySalesReport = new MonthlySalesReport();
-            monthlySalesReport.Mname = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.mname.Value)).ToArray<int>();
-            monthlySalesReport.Calls = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.calls.Value)).ToArray<int>();
-            monthlySalesReport.Orders = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.orders.Value)).ToArray<int>();
-            monthlySalesReport.Cancels = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.cancels.Value)).ToArray<int>();
+            var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
+
+            //Current Month and Year
+            var MonthlyTotalPettyCashAmount = db.PettyCashes.Where(wh => wh.AmountRecivedDate.Month == DateTime.Now.Month && wh.AmountRecivedDate.Year == DateTime.Now.Year).ToList();
+            var MonthlyTotalApprovedExpenceAmount = expenceTracker.Where(wh => wh.ExpenseDate.Month == DateTime.Now.Month && wh.ExpenseDate.Year == DateTime.Now.Year && wh.Status == "Verified").ToList();
+            var MonthlyTotalUnApprovedExpenceAmount = expenceTracker.Where(wh => wh.ExpenseDate.Month == DateTime.Now.Month && wh.ExpenseDate.Year == DateTime.Now.Year && wh.Status == "Pending").ToList();
+            var MonthlyTotalUnVerifiedExpenceAmount = expenceTracker.Where(wh => wh.ExpenseDate.Month == DateTime.Now.Month && wh.ExpenseDate.Year == DateTime.Now.Year && wh.Status == "Approved").ToList();
+            decimal? MonthlyTotalPettyCash = (MonthlyTotalPettyCashAmount != null && MonthlyTotalPettyCashAmount.Count > 0) ? MonthlyTotalPettyCashAmount.Sum(S => S.AmountReceived) : 0;
+            decimal? MonthlyTotalApprovedExpence = (MonthlyTotalApprovedExpenceAmount != null && MonthlyTotalApprovedExpenceAmount.Count > 0) ? MonthlyTotalApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
+            decimal? MonthlyTotalUnApprovedExpence = (MonthlyTotalUnApprovedExpenceAmount != null && MonthlyTotalUnApprovedExpenceAmount.Count > 0) ? MonthlyTotalUnApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
+            decimal? MonthlyTotalUnVerifiedExpence = (MonthlyTotalUnVerifiedExpenceAmount != null && MonthlyTotalUnVerifiedExpenceAmount.Count > 0) ? MonthlyTotalUnVerifiedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
+                       
             Dashboard dashboard = new Dashboard();
-            dashboard.TotalSales = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 6)).Count<SaleActivity>();
-            dashboard.TotalOrders = 0;
-            //Dashboard dashboard1 = model;
-            int num1;
-            if (source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 4)).Count<SaleActivity>() <= 0)
-                num1 = 0;
-            else
-                num1 = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 4)).Count<SaleActivity>() * 100 / source.Count<SaleActivity>();
-            dashboard.CancelledRate = num1;
-            //Dashboard dashboard2 = model;
-            int num2;
-            if (!source.Sum<SaleActivity>((Expression<Func<SaleActivity, int?>>)(su => su.NoOfFollowUps)).HasValue)
-                num2 = 0;
-            else
-                num2 = source.Sum<SaleActivity>((Expression<Func<SaleActivity, int?>>)(su => su.NoOfFollowUps)).Value;
-            int? nullable = new int?(num2);
-            dashboard.TotalCalls = nullable;
-            dashboard.Closed = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 6)).Count<SaleActivity>();
-            dashboard.InDiscussion = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 2)).Count<SaleActivity>();
-            dashboard.InitialCall = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 1)).Count<SaleActivity>();
-            dashboard.PendingfromCustomer = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 3)).Count<SaleActivity>();
-            dashboard.POReceivedWIP = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 5)).Count<SaleActivity>();
-            dashboard.MonthlySalesReport = monthlySalesReport;
+            dashboard.MonthlyTotalPettyCash = MonthlyTotalPettyCash.Value;
+            dashboard.MonthlyUnApprovedExpenses = MonthlyTotalUnApprovedExpence.Value;
+            dashboard.MonthlyVerifiedExpenses = MonthlyTotalApprovedExpence.Value;
+            dashboard.MonthlyAvailablePettyCash = (MonthlyTotalPettyCash.Value - MonthlyTotalApprovedExpence.Value);
+            dashboard.CurrentMonthAndYear = DateTime.Now.Month + "/" + DateTime.Now.Year;
+
+            //Total
+            //Current Month and Year
+            var TotalPettyCashAmount = db.PettyCashes.ToList();
+            var TotalApprovedExpenceAmount = expenceTracker.Where(wh => wh.Status == "Verified").ToList();
+            var TotalUnApprovedExpenceAmount = expenceTracker.Where(wh => wh.Status == "Pending").ToList();
+            var TotalUnVerifiedExpenceAmount = expenceTracker.Where(wh => wh.Status == "Approved").ToList();
+            decimal? TotalPettyCash = (TotalPettyCashAmount != null && TotalPettyCashAmount.Count > 0) ? TotalPettyCashAmount.Sum(S => S.AmountReceived) : 0;
+            decimal? TotalApprovedExpence = (TotalApprovedExpenceAmount != null && TotalApprovedExpenceAmount.Count > 0) ? TotalApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
+            decimal? TotalUnApprovedExpence = (TotalUnApprovedExpenceAmount != null && TotalUnApprovedExpenceAmount.Count > 0) ? TotalUnApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
+            decimal? TotalUnVerifiedExpence = (TotalUnVerifiedExpenceAmount != null && TotalUnVerifiedExpenceAmount.Count > 0) ? TotalUnVerifiedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
+
+            dashboard.TotalPettyCash = TotalPettyCash.Value;
+            dashboard.UnApprovedExpenses = TotalUnApprovedExpence.Value;
+            dashboard.VerifiedExpenses = TotalApprovedExpence.Value;
+            dashboard.AvailablePettyCash = (TotalPettyCash.Value - TotalApprovedExpence.Value);
+            dashboard.CurrentMonthAndYear = DateTime.Now.Month + "/" + DateTime.Now.Year;
+
             return (ActionResult)this.View(dashboard);
         }
 

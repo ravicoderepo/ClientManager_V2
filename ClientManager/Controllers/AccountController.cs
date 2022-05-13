@@ -76,7 +76,7 @@ namespace ClientManager.Controllers
                             {
                                 message = "Valid Credentials",
                                 status = "Success",
-                                redirectURL = "/Home/MyDashboard"
+                                redirectURL = (userDetails2.UserRoles.Any(a=>a.RoleName =="Store Admin") || userDetails2.UserRoles.Any(a => a.RoleName == "Accounts Manager")) ? "/Home/FinanceDashboard" : "/Home/MyDashboard"
                             };
                         }
                     }

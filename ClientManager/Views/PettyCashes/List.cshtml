@@ -163,7 +163,14 @@
             type: 'GET',
             dataType: 'html',
             success: function (result) {
-                $('#gridView').html(result);
+                if (data.status == "Failed") {
+                    alert(data.message);
+                }
+                else {
+                    $('#gridView').html(result);
+                    //window.location.href = data.redirectURL;
+                }
+                
             },
             error: function (xhr, status) {
                 alert(status);
