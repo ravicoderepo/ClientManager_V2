@@ -28,35 +28,47 @@
     .dataTables_filter {
         display: none !important;
     }
+
+    .cashTableHeader {
+        width: 200px;
+    }
+    .cashTableAmounCol {
+        width: 80px;
+    }
 </style>
 <div class="row" id="pettyCashSummary">
     <div class="col-12 col-sm-12"><span style="font-weight:bold; font-size:15px"> PettyCash Summary of @ViewBag.CurrentMonthAndYear </span> </div>
     <div class="col-12 col-sm-12">
         <table>
             <tr>
-                <td>Total PettyCash  </td>
+                <td class="cashTableHeader">Total PettyCash  </td>
                 <td>:</td>
-                <td style="text-align:right; color:blue; font-weight:bold">@ViewBag.TotalPettyCash</td>
+                <td style="text-align:right; color:blue; font-weight:bold"> <a href="/PettyCashes/List"> @ViewBag.TotalPettyCash </a>  </td>
+                <td>[Click to PettyCash Details]</td>
             </tr>
             <tr>
-                <td>Available PettyCash (Total PettyCash - Total Approved & Verified)  </td>
+                <td class="cashTableHeader">Available PettyCash</td>
                 <td>:</td>
-                <td style="text-align: right; color: green; font-weight: bold">@ViewBag.AvailablePettyCash</td>
+                <td style="text-align: right; color: green; font-weight: bold" class="cashTableAmounCol">@ViewBag.AvailablePettyCash</td>
+                <td>[Total PettyCash - Total Approved & Verified]</td>
             </tr>
             <tr>
-                <td>Total Expense (Un Approved)   </td>
+                <td class="cashTableHeader">Total Expense (Un Approved)   </td>
                 <td>:</td>
-                <td style="text-align: right; color: red; font-weight: bold ">@ViewBag.TotalUnApprovedExpence</td>
+                <td style="text-align: right; color: red; font-weight: bold " class="cashTableAmounCol">@ViewBag.TotalUnApprovedExpence</td>
+                <td></td>
             </tr>
             <tr>
-                <td>Total Expense (Verified)   </td>
+                <td class="cashTableHeader">Total Expense (Verified)   </td>
                 <td>:</td>
-                <td style="text-align: right; color: darkred; font-weight: bold">@ViewBag.TotalApprovedExpence</td>
+                <td style="text-align: right; color: darkred; font-weight: bold" class="cashTableAmounCol">@ViewBag.TotalApprovedExpence</td>
+                <td></td>
             </tr>
             <tr>
-                <td>Total Expense (Un Verified)   </td>
+                <td class="cashTableHeader">Total Expense (Un Verified)   </td>
                 <td>:</td>
-                <td style="text-align: right; color: crimson; font-weight: bold">@ViewBag.TotalUnVerifiedExpence</td>
+                <td style="text-align: right; color: crimson; font-weight: bold" class="cashTableAmounCol">@ViewBag.TotalUnVerifiedExpence</td>
+                <td></td>
             </tr>
         </table>
     </div>
@@ -146,6 +158,8 @@
                         @Html.DisplayFor(modelItem => item.Description)
                     </td>
 
+
+
                         <!--<td>-->
                         @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
                         <!--@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
@@ -161,91 +175,91 @@
                             @Html.DisplayFor(modelItem => item.User1.FullName)
                         </td>-->
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
-<script>
-    $(function () {
-        $("#example1").DataTable({
-            "responsive": true, "lengthChange": false, "autoWidth": false,
-            //"buttons": ["excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
-    });
-
-    function fnDelete(id) {
-        $.ajax({
-            type: "GET",
-            url: "/ExpenceTrakers/Delete?id=" + id,
-            //data: JSON.stringify(Register),
-            dataType: "json",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                if (data.status == "Success") {
-                    alert(data.message);
-                    window.location.href = data.redirectURL;
                 }
-            },
-            error: function () {
-                alert("Error occured!!  " + data.message)
-            }
+            </tbody>
+        </table>
+    </div>
+    <script>
+        $(function () {
+            $("#example1").DataTable({
+                "responsive": true, "lengthChange": false, "autoWidth": false,
+                //"buttons": ["excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
         });
-    }
 
-    function fnApprove(id, status) {
-        debugger;
-        $.ajax({
-            type: "GET",
-            url: "/ExpenseTrackers/ExpenceEntryApproval?id=" + id + "&status=" + status,
-            //data: JSON.stringify(Register),
-            dataType: "json",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                if (data.status == "Success") {
-                    alert(data.message);
-                    window.location.href = data.redirectURL;
+        function fnDelete(id) {
+            $.ajax({
+                type: "GET",
+                url: "/ExpenceTrakers/Delete?id=" + id,
+                //data: JSON.stringify(Register),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.status == "Success") {
+                        alert(data.message);
+                        window.location.href = data.redirectURL;
+                    }
+                },
+                error: function () {
+                    alert("Error occured!!  " + data.message)
                 }
-                //else {
-                //    alert(data.message);
-                //}
+            });
+        }
 
-            },
-            error: function () {
-                alert("Error occured!!  " + data.message)
-            }
-        });
-    }
-    function fnVerify(id, status) {
-        debugger;
-        $.ajax({
-            type: "GET",
-            url: "/ExpenseTrackers/ExpenceEntryVerify?id=" + id + "&status=" + status,
-            //data: JSON.stringify(Register),
-            dataType: "json",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                if (data.status == "Success") {
-                    alert(data.message);
-                    window.location.href = data.redirectURL;
+        function fnApprove(id, status) {
+            debugger;
+            $.ajax({
+                type: "GET",
+                url: "/ExpenseTrackers/ExpenceEntryApproval?id=" + id + "&status=" + status,
+                //data: JSON.stringify(Register),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.status == "Success") {
+                        alert(data.message);
+                        window.location.href = data.redirectURL;
+                    }
+                    //else {
+                    //    alert(data.message);
+                    //}
+
+                },
+                error: function () {
+                    alert("Error occured!!  " + data.message)
                 }
-                //else {
-                //    alert(data.message);
-                //}
+            });
+        }
+        function fnVerify(id, status) {
+            debugger;
+            $.ajax({
+                type: "GET",
+                url: "/ExpenseTrackers/ExpenceEntryVerify?id=" + id + "&status=" + status,
+                //data: JSON.stringify(Register),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.status == "Success") {
+                        alert(data.message);
+                        window.location.href = data.redirectURL;
+                    }
+                    //else {
+                    //    alert(data.message);
+                    //}
 
-            },
-            error: function () {
-                alert("Error occured!!  " + data.message)
-            }
-        });
-    }
-    $("#mnuExpenceTracker").addClass("active");
-</script>
+                },
+                error: function () {
+                    alert("Error occured!!  " + data.message)
+                }
+            });
+        }
+        $("#mnuExpenceTracker").addClass("active");
+    </script>

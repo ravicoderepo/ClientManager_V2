@@ -2607,6 +2607,7 @@
     <Content Include="Views\Documents\CreatePartial.cshtml" />
     <Content Include="Views\Documents\Edit - Copy.cshtml" />
     <Content Include="Views\Documents\ImageViewer.cshtml" />
+    <Content Include="Views\Shared\_LayoutPopup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

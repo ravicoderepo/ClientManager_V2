@@ -236,7 +236,7 @@
         });
     }
     $('#btnDocument').on('click', function () {
-        $('.modal-body').load('/Documents/CreatePartial', function () {
+        $('.modal-body').load('/Documents/CreatePartial?docSource=ExpenseTracker&refRecId='+$('#Id').val(), function () {
             $('#myModal').modal({ show: true });
             $('#myModal').find('.modal-title').text("Document Management")
         });
@@ -249,7 +249,7 @@
         //});
         var left = ($(window).width() / 2) - (900 / 2),
             top = ($(window).height() / 2) - (700 / 2),
-            popup = window.open("/Documents/ImageViewer", "Image Viewer", "width=900, height=700, top=" + top + ", left=" + left);
+            popup = window.open("/Documents/ImageViewer?docSource=Expence Tracker&recRefId=" + $('#Id').val(), "Image Viewer", "width=900, height=700, top=" + top + ", left=" + left);
     });
     $("#mnuExpenceTracker").addClass("active");
 </script>

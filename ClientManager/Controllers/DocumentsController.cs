@@ -35,12 +35,12 @@ namespace ClientManager.Controllers
             return View();
         }
 
-        public ActionResult CreatePartial()
+        public ActionResult CreatePartial(string docSource, int refRecId)
         {
             ViewBag.DocumentType = new SelectList(Utility.DefaultList.GetDocumentTypeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             ViewBag.Status = new SelectList(Utility.DefaultList.GetDocumentStatusList(), "Value", "Text", (object)1).ToList<SelectListItem>();
-            ViewBag.DocumentSource = new SelectList(Utility.DefaultList.GetModuleList(), "Value", "Text", (object)1).ToList<SelectListItem>();
-            ViewBag.ReferenceRecId = new SelectList(db.ExpenseTrackers.Select(sel => new { Id = sel.Id, Name = sel.ExpenceCategory.CategoryName + "(" + sel.Id + ")" }).ToList(), "Id", "Name", null).ToList();
+            ViewBag.DocumentSource = new SelectList(Utility.DefaultList.GetModuleList(), "Value", "Text", docSource).ToList<SelectListItem>();
+            ViewBag.ReferenceRecId = new SelectList(db.ExpenseTrackers.Select(sel => new { Id = sel.Id, Name = sel.ExpenceCategory.CategoryName + "(" + sel.Id + ")" }).ToList(), "Id", "Name", refRecId).ToList();
             return PartialView();
         }
 
@@ -261,9 +261,9 @@ namespace ClientManager.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ImageViewer()
+        public ActionResult ImageViewer(string docSource, int recRefId)
         {
-            return PartialView(db.Documents);
+            return PartialView(db.Documents.Where(wh=> wh.ReferenceRecId == recRefId && wh.DocumentSource == docSource));
         }
         protected override void Dispose(bool disposing)
         {

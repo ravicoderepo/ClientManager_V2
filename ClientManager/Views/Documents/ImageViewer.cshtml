@@ -33,28 +33,36 @@
         <!--<section class="content">
             <div class="container-fluid">
                 <div class="row">-->
-                    <!-- left column -->
-                    <!--<div class="col-md-12">-->
-                        <!-- jquery validation -->
-                        <!--<div class="card card-primary">
-                            <div class="card-header">-->
-                                <h3 class="card-title">Document Details</h3>
-                            @*</div>*@
+        <!-- left column -->
+        <!--<div class="col-md-12">-->
+        <!-- jquery validation -->
+        <!--<div class="card card-primary">
+            <div class="card-header">-->
+        <h3 class="card-title">Document Viewer</h3>
+        @*</div>*@
 
-                            @foreach (var doc in Model)
-                            {
-                                <img class="img img-test" data-url="data:image/@doc.FileExtension.Replace(".","").ToLower();base64,@doc.FileData" src="data:image/@doc.FileExtension.Replace(".","").ToLower();base64,@doc.FileData" alt="@doc.FileName" style="width:200px; height:200px" />
-                            }
+        @if (Model.Count() > 0)
+        {
+            foreach (var doc in Model)
+            {
+                <img class="img img-test" data-url="data:image/@doc.FileExtension.Replace(".", "").ToLower();base64,@doc.FileData" src="data:image/@doc.FileExtension.Replace(".", "").ToLower();base64,@doc.FileData" alt="@doc.FileName" style="width:200px; height:200px" />
+            }
 
-                        @*</div>
+        }
+        else
+        {
+            <p>No Attachments!</p>
+
+        }
+        @*</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>*@
-    </div><!-- /.container-fluid -->
-    
-    <script type="text/javascript">
+            </section>*@
+        </div ><!--/.container - fluid-->
+
+        <script type = "text/javascript">
         $(".main").imageBox();
-    </script>
+        </script>
 </body>
 </html>
