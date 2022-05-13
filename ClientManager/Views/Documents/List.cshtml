@@ -89,9 +89,9 @@
                                     {
                                         <tr>
                                             <td>
-                                                <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/PettyCashes/Edit/@item.Id'"><i class="far fa-edit"></i></button>
-                                                <button type="button" class="btn btn-outline-success btn-xs" title="Approve" onclick="fnApprove(@item.Id,'Approved')"><i class="far fa-arrow-alt-circle-right"></i></button>
-                                                <button type="button" class="btn btn-outline-success btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-left"></i></button>
+                                                <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/Documents/Edit/@item.Id'"><i class="far fa-edit"></i></button>
+                                                @*<button type="button" class="btn btn-outline-success btn-xs" title="Approve" onclick="fnApprove(@item.Id,'Approved')"><i class="far fa-arrow-alt-circle-right"></i></button>
+                                                <button type="button" class="btn btn-outline-success btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-left"></i></button>*@
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.DocumentSource)
@@ -139,7 +139,7 @@
     $(function () {
         $("#example1").DataTable({
             "responsive": true, "lengthChange": false, "autoWidth": false,
-            "buttons": ["excel", "pdf", "print", "colvis"]
+           // "buttons": ["excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         $('#example2').DataTable({
             "paging": true,

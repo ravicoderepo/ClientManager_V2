@@ -48,7 +48,7 @@ namespace ClientManager.Controllers
 
             return View(expenceTracker.ToList());
         }
-
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         public ActionResult ListView(string expenseDateFrom = "", string expenseDateTo = "", string status = "", int month = 0,int year = 0, int expenseCat = 0)
         {
             DateTime dtExpenseDateFrom = new DateTime();
@@ -128,7 +128,7 @@ namespace ClientManager.Controllers
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
             JsonReponse jsonReponse = (JsonReponse)null;
-
+            var recId = 0;
             JsonReponse data;
             try
             {
@@ -144,7 +144,7 @@ namespace ClientManager.Controllers
                 }
                 else
                 {
-                    this.db.ExpenseTrackers.Add(new DBOperation.ExpenseTracker()
+                    var expnseTracker = new DBOperation.ExpenseTracker()
                     {
                         ExpenseDate = DateTime.ParseExact(expenceTrackerData.ExpenseDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
                         ExpenseCategoryId = expenceTrackerData.ExpenseCategoryId,
@@ -153,8 +153,10 @@ namespace ClientManager.Controllers
                         Status = expenceTrackerData.Status,
                         CreatedBy = userData.Id,
                         CreatedOn = DateTime.Now
-                    }); ;
+                    };
+                    this.db.ExpenseTrackers.Add(expnseTracker);
                     num = this.db.SaveChanges();
+                    recId = expnseTracker.Id;
 
                 }
                 if (num > 0)
@@ -162,7 +164,7 @@ namespace ClientManager.Controllers
                     {
                         message = "Expence entry created successfully!",
                         status = "Success",
-                        redirectURL = "/ExpenseTrackers/List"
+                        redirectURL = "/ExpenseTrackers/Edit/" + recId
                     };
                 else
                     data = new JsonReponse()

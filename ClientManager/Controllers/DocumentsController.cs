@@ -17,6 +17,7 @@ namespace ClientManager.Controllers
     {
         private ClientManagerEntities db = new ClientManagerEntities();
 
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         // GET: PettyCashes        
         public ActionResult List()
         {
@@ -25,6 +26,7 @@ namespace ClientManager.Controllers
             return View(documents.ToList());
         }
 
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
         // GET: PettyCashes/Create        
         public ActionResult Create()
         {
@@ -35,6 +37,7 @@ namespace ClientManager.Controllers
             return View();
         }
 
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
         public ActionResult CreatePartial(string docSource, int refRecId)
         {
             ViewBag.DocumentType = new SelectList(Utility.DefaultList.GetDocumentTypeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
@@ -44,6 +47,7 @@ namespace ClientManager.Controllers
             return PartialView();
         }
 
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         // POST: ExpenceCategories/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -137,6 +141,7 @@ namespace ClientManager.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         // GET: ExpenceCategories/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -156,6 +161,7 @@ namespace ClientManager.Controllers
             return View(document);
         }
 
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         // POST: ExpenceCategories/Edit/5
         [HttpPost]
         public ActionResult Edit(Models.DocumentData DocumentData)
@@ -221,6 +227,7 @@ namespace ClientManager.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
         [HttpGet]
         public ActionResult DocumentStatusUpdate(int id, string status)
         {
@@ -261,6 +268,7 @@ namespace ClientManager.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         public ActionResult ImageViewer(string docSource, int recRefId)
         {
             return PartialView(db.Documents.Where(wh=> wh.ReferenceRecId == recRefId && wh.DocumentSource == docSource));
