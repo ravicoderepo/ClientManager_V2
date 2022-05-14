@@ -21,6 +21,7 @@ namespace ClientManager.Controllers
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         public ActionResult List()
         {
+            UserDetails userData = (UserDetails)this.Session["UserDetails"];
             var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
             //var TotalPettyCashAmount = db.PettyCashes.Where(wh => wh.AmountRecivedDate.Month == DateTime.Now.Month && wh.AmountRecivedDate.Year == DateTime.Now.Year).ToList();
             //var TotalApprovedExpenceAmount = db.ExpenseTrackers.Where(wh => wh.ExpenseDate.Month == DateTime.Now.Month && wh.ExpenseDate.Year == DateTime.Now.Year && wh.Status == "Verified").ToList();
@@ -37,7 +38,13 @@ namespace ClientManager.Controllers
             //ViewBag.TotalUnVerifiedExpence = TotalUnVerifiedExpence;
             //ViewBag.AvailablePettyCash = (TotalPettyCash - TotalApprovedExpence);
             //ViewBag.CurrentMonthAndYear = Utility.ConstantData.ToMonthName(DateTime.Now) + "/" + DateTime.Now.Year;
-            List<SelectListItem> statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", "").ToList();
+            List<SelectListItem> statusList = new List<SelectListItem>();
+            statusList  = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", "").ToList();
+
+            //if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "store admin"))
+            //{
+            //    statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList().Where(w=> w.Text=="Pending").ToList(), "Value", "Text", "").ToList();
+            //}
             statusList.Insert(0, (new SelectListItem { Text = "", Value = "" }));
             ViewBag.Status = statusList;
             ViewBag.Years = new SelectList(Utility.DefaultList.GetYearList(), "Value", "Text", "").ToList();
@@ -91,11 +98,11 @@ namespace ClientManager.Controllers
             decimal? TotalUnApprovedExpence = (TotalUnApprovedExpenceAmount != null && TotalUnApprovedExpenceAmount.Count > 0) ? TotalUnApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
             decimal? TotalUnVerifiedExpence = (TotalUnVerifiedExpenceAmount != null && TotalUnVerifiedExpenceAmount.Count > 0) ? TotalUnVerifiedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
 
-            ViewBag.TotalPettyCash = TotalPettyCash;
-            ViewBag.TotalApprovedExpence = TotalApprovedExpence;
-            ViewBag.TotalUnApprovedExpence = TotalUnApprovedExpence;
-            ViewBag.TotalUnVerifiedExpence = TotalUnVerifiedExpence;
-            ViewBag.AvailablePettyCash = (TotalPettyCash - TotalApprovedExpence);
+            ViewBag.TotalPettyCash = TotalPettyCash.Value.ToString("0.00");
+            ViewBag.TotalApprovedExpence = TotalApprovedExpence.Value.ToString("0.00");
+            ViewBag.TotalUnApprovedExpence = TotalUnApprovedExpence.Value.ToString("0.00");
+            ViewBag.TotalUnVerifiedExpence = TotalUnVerifiedExpence.Value.ToString("0.00");
+            ViewBag.AvailablePettyCash = (TotalPettyCash.Value - TotalApprovedExpence.Value).ToString("0.00");
             ViewBag.CurrentMonthAndYear = month + "/" + year;
 
             //List<SelectListItem> statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", "").ToList();
@@ -113,7 +120,20 @@ namespace ClientManager.Controllers
         [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
         public ActionResult Create()
         {
-            ViewBag.Status = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", "Pending").ToList<SelectListItem>();
+            UserDetails userData = (UserDetails)this.Session["UserDetails"];
+            List<SelectListItem> statusList = new List<SelectListItem>();
+            statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", "").ToList();
+
+            if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "store admin"))
+            {
+                statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList().Where(w => w.Text == "Pending").ToList(), "Value", "Text", "").ToList();
+            }
+            statusList.Insert(0, new SelectListItem()
+            {
+                Text = "",
+                Value = ""
+            });
+            ViewBag.Status = new SelectList(statusList, "Value", "Text", "Pending").ToList<SelectListItem>();
             ViewBag.ExpenseCategory = new SelectList(db.ExpenceCategories, "Id", "CategoryName", 1);
             return View();
         }

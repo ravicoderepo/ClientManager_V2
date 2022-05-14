@@ -63,12 +63,13 @@
                     @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
                     {
                         <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/PettyCashes/Edit/@item.Id'"><i class="far fa-edit"></i></button>
+                        <button type="button" class="btn btn-danger btn-xs" title="Delete" onclick="fnDelete(@item.Id)"><i class="far fa-trash-alt"></i></button>
                     }
                     else
                     {
                         <button type="button" class="btn btn-primary btn-xs" title="View" onclick="javascript:location.href='/PettyCashes/Edit/@item.Id'"><i class="fas fa-eye"></i></button>
                     }
-                    </td>
+                </td>
                 <td style="text-align:right">
                     @Html.DisplayFor(modelItem => item.AmountReceived)
                 </td>
@@ -118,6 +119,23 @@
         });
     });
 
-
+    function fnDelete(id) {
+        $.ajax({
+            type: "GET",
+            url: "/PettyCashes/Delete?id=" + id,
+            //data: JSON.stringify(Register),
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data.status == "Success") {
+                    alert(data.message);
+                    window.location.href = data.redirectURL;
+                }
+            },
+            error: function () {
+                alert("Error occured!!  " + data.message)
+            }
+        });
+    }
     $("#mnuPettyCash").addClass("active");
 </script>

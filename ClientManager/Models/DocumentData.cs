@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 
 namespace ClientManager.Models
 {
@@ -9,7 +10,7 @@ namespace ClientManager.Models
         public int ReferenceRecId { get; set; }
         public string DocumentType { get; set; }
         public string Description { get; set; }
-        public string FileName { get; set; }
+        public HttpPostedFileBase PostedFile { get; set; }
         public string FileExtension { get; set; }
         public string FileData { get; set; }
         public string URL { get; set; }

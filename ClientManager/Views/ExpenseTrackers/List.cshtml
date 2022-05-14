@@ -176,6 +176,16 @@
         })
     }
 
+    function FilterPettyCash(status) {
+        $('#ddlStatus').val(status);
+        fnSearch();
+    }
+    function fnViewDocuments(recId) {
+        debugger;
+        var left = ($(window).width() / 2) - (900 / 2),
+            top = ($(window).height() / 2) - (700 / 2),
+            popup = window.open("/Documents/ImageViewer?docSource=Expence Tracker&recRefId=" + recId, "Image Viewer", "width=900, height=700, top=" + top + ", left=" + left)
+    }
     function fnToggleAdvSearch(action) {
 
         if (action == '1') {
@@ -200,7 +210,5 @@
         $('#ddlExpenseCategory').val(0);
         $('#ddlMonths').val(0);
         $('#ddlYears').val(0);
-
-
     }
 </script>

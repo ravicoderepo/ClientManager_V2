@@ -7,6 +7,7 @@
 
 @{
     var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+    string IsStoreAdmin = currentUser.UserRoles.Any(wh => wh.RoleName != "Store Admin").ToString().ToLower();
 }
 
 <style>
@@ -62,7 +63,7 @@
                                         <div class="form-group">
                                             <label for="ExpenseAmount">Expense Amount</label>
                                             @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "Id" } })
-                                            @Html.EditorFor(model => model.ExpenseAmount, new { htmlAttributes = new { @class = "form-control", @id = "txtExpenseAmount", @name = "ExpenseAmount" } })
+                                            @Html.EditorFor(model => model.ExpenseAmount, new { htmlAttributes = new { @class = "form-control", @id = "txtExpenseAmount", @name = "ExpenseAmount", @style = "text-align:right !important" } })
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -104,12 +105,15 @@
                             </div>
                             <!-- /.card-body -->
                             <div class="card-footer">
-                                @if ((currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin") && Model.Status == "Pending") || (currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager") && Model.Status == "Approved"))
+                                @if ((currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin" || wh.RoleName == "Super User") && Model.Status == "Pending") || (currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager") && Model.Status == "Approved"))
                                 {
                                     <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
                                 }
                                 <button type="button" id="imageViewer" class="btn btn-dark">Document Viewer</button>
-                                <button type="button" id="btnDocument" class="btn btn-success" data-toggle="modal" data-target="#myModal">Document Upload</button>
+                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin") && Model.Status == "Pending")
+                                {
+                                    <button type="button" id="btnDocument" class="btn btn-success" data-toggle="modal" data-target="#myModal">Document Upload</button>
+                                }
                                 <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='../List'" id="btnBack">Back to List</button>
                             </div>
 
@@ -252,4 +256,12 @@
             popup = window.open("/Documents/ImageViewer?docSource=Expence Tracker&recRefId=" + $('#Id').val(), "Image Viewer", "width=900, height=700, top=" + top + ", left=" + left);
     });
     $("#mnuExpenceTracker").addClass("active");
+
+
+    $('#txtExpenseAmount').prop("disabled", @IsStoreAdmin);
+        $('#txtExpenseDate').prop("disabled", @IsStoreAdmin);
+        $('#txtDescription').prop("disabled", @IsStoreAdmin));
+        $('#ddlExpenseCategory').prop("disabled", @IsStoreAdmin);
+
+
 </script>

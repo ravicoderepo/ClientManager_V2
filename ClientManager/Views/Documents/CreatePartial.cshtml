@@ -23,13 +23,17 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form id="quickForm">
+                     
+                        @using (Html.BeginForm("Create", "Documents", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @*<form id="quickForm">*@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-9">
                                         <div class="form-group">
-                                            <label for=">">Document Name</label>
-                                            @Html.EditorFor(model => model.FileName, new { htmlAttributes = new { @class = "form-control", @id = "txtFileName", @name = "FileName" } })
+                                            <label for="uploadFile">Document Name</label>
+                                            <input type="file" name="uploadFile" id="uploadFiles" />
+                                            @*@Html.TextBox("UploadFile", new { htmlAttributes = new { @class = "form-control", @id = "txtFileName", @name = "FileName", @type = "file" } })*@
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -76,9 +80,12 @@
                                 <button type="submit" class="btn btn-success" onclick="fnDocumentDetails()">Upload</button> <button type="button" class="btn btn-danger">Cancel</button>
                                 <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='List'" id="btnBack">Back to List</button>
                             </div>
+                            @*</form>*@
+                        }
                     </div>
+                        
                     <!-- /.card-body -->
-                    </form>
+                    
                 </div>
                 <!-- /.card -->
             </div>
@@ -178,7 +185,7 @@
         $("input[name=ReferenceRecId]").val($('#ddlReferenceRecId').val());
         $("input[name=DocumentType]").val($('#ddlDocumentType').val());
         var DocumentData = {
-            FileName: $('#txtFileName').val(),
+            PostedFile: new FormData(document.getElementById('uploadFiles')),
             DocumentType: $('#ddlDocumentType').val(),
             DocumentSource: $('#ddlDocumentSource').val(),
             ReferenceRecId: $("#ddlReferenceRecId").val(),
@@ -191,11 +198,13 @@
             url: "/Documents/Create",
             data: JSON.stringify(DocumentData),
             dataType: "json",
+            enctype: "multipart/form-data",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 if (data.status == "Success") {
                     alert(data.message);
-                    window.location.href = data.redirectURL;
+                    return false;
+                   // window.location.href = data.redirectURL;
                 }
                 else {
                     alert(data.message);

@@ -56,13 +56,16 @@ namespace ClientManager.Controllers
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
             JsonReponse jsonReponse = (JsonReponse)null;
-
+            //byte[] imagebyte = null;
+            //BinaryReader Reader = new BinaryReader(Image.InputStream);
+            //imagebyte = Reader.ReadBytes((int)Image.ContentLength);
+            //return imagebyte;
             JsonReponse data;
             try
             {
                 int num = 0;
-
-                if (DocumentData.FileName == null || DocumentData.DocumentType == null || DocumentData.DocumentSource == null || DocumentData.ReferenceRecId <= 0 || DocumentData.Status == null)
+                DocumentData.PostedFile = Request.Files["uploadFile"];
+                if (DocumentData.PostedFile == null||DocumentData.DocumentType == null || DocumentData.DocumentSource == null || DocumentData.ReferenceRecId <= 0 || DocumentData.Status == null)
                 {
                     jsonReponse = new JsonReponse()
                     {
@@ -73,11 +76,12 @@ namespace ClientManager.Controllers
                 }
                 else
                 {
+                    string fileName = Path.GetFileName(DocumentData.PostedFile.FileName);
                     //Use Namespace called :  System.IO  
-                    string FileName = Path.GetFileNameWithoutExtension(DocumentData.FileName);
+                    string FileName = Path.GetFileNameWithoutExtension(DocumentData.PostedFile.FileName);
 
                     //To Get File Extension  
-                    string FileExtension = Path.GetExtension(DocumentData.FileName);
+                    string FileExtension = Path.GetExtension(DocumentData.PostedFile.FileName);
 
                     //Add Current Date To Attached File Name  
                     FileName = DateTime.Now.ToString("yyyyMMdd") + "-" + FileName.Trim() + FileExtension;
@@ -93,10 +97,16 @@ namespace ClientManager.Controllers
                     string fileData = string.Empty;
                     if (DocumentData.DocumentType == "Image")
                     {
-                        fileData = Utility.FileProcess.ImageToBase64(DocumentData.FileName);
+                        System.IO.Stream fs = DocumentData.PostedFile.InputStream;
+                        System.IO.BinaryReader br = new System.IO.BinaryReader(fs);
+                        Byte[] bytes = br.ReadBytes((Int32)fs.Length);
+                        fileData = Convert.ToBase64String(bytes, 0, bytes.Length);
+
+                        //fileData = Utility.FileProcess.ImageToBase64(DocumentData.PostedFile.FileName);
+                        //fileData = Utility.FileProcess.ImageToBase64(DocumentData.PostedFile.FileName);
                     }
 
-                    FileInfo file = new FileInfo(DocumentData.FileName);
+                    //FileInfo file = new FileInfo(DocumentData.PostedFile.FileName);
 
                     this.db.Documents.Add(new DBOperation.Document()
                     {
@@ -138,7 +148,8 @@ namespace ClientManager.Controllers
                     redirectURL = ""
                 };
             }
-            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+            return RedirectToAction("Edit", "ExpenseTrackers", new { id = DocumentData.ReferenceRecId });
+           // return RedirectToAction("Edit/" + DocumentData.Id); //View(db.Documents.FirstOrDefault(w => w.Id == DocumentData.Id)); //(ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
@@ -178,7 +189,7 @@ namespace ClientManager.Controllers
                         status = "Failed",
                         redirectURL = ""
                     };
-                else if (DocumentData.FileName != null || DocumentData.DocumentType != null || DocumentData.DocumentSource != null || DocumentData.ReferenceRecId > 0 || DocumentData.Status != null || string.IsNullOrEmpty(DocumentData.Description))
+                else if (DocumentData.PostedFile != null || DocumentData.DocumentType != null || DocumentData.DocumentSource != null || DocumentData.ReferenceRecId > 0 || DocumentData.Status != null || string.IsNullOrEmpty(DocumentData.Description))
                 {
                     data = new JsonReponse()
                     {
@@ -191,7 +202,7 @@ namespace ClientManager.Controllers
                 {
                     this.db.Entry<DBOperation.Document>(entity).State = EntityState.Modified;
 
-                    entity.FileName = DocumentData.FileName;
+                    entity.FileName = DocumentData.PostedFile.FileName;
                     entity.DocumentType = DocumentData.DocumentType;
                     entity.DocumentSource = DocumentData.DocumentSource;
                     entity.ReferenceRecId = DocumentData.ReferenceRecId;

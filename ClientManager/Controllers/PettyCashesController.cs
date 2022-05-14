@@ -237,7 +237,45 @@ namespace ClientManager.Controllers
             }
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
-                
+
+        [HttpGet]
+        [CustomAuthorize(new string[] { "Store Admin" })]
+        public ActionResult Delete(int id)
+        {
+            UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
+
+            JsonReponse data;
+            try
+            {
+                if (id <= 0)
+                    return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+                PettyCash entity = this.db.PettyCashes.Find(id);
+
+                if (entity == null)
+                    return (ActionResult)this.HttpNotFound();
+
+                this.db.PettyCashes.Remove(entity);
+                this.db.SaveChanges();
+
+                data = new JsonReponse()
+                {
+                    message = "PettyCash Entry Deleted.",
+                    status = "Success",
+                    redirectURL = "/PettyCashes/List?" + DateTime.Now.Ticks.ToString()
+                };
+            }
+            catch (Exception ex)
+            {
+                data = new JsonReponse()
+                {
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
+            }
+            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
