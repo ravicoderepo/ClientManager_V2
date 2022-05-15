@@ -144,26 +144,26 @@ namespace Utility
                 Text = "Image",
                 Value = "Image"
             });
-            //items.Insert(1, new SelectListItem()
-            //{
-            //    Text = "PDF",
-            //    Value = "PDF"
-            //});
-            //items.Insert(2, new SelectListItem()
-            //{
-            //    Text = "Document",
-            //    Value = "Document"
-            //});
-            //items.Insert(3, new SelectListItem()
-            //{
-            //    Text = "Zip",
-            //    Value = "Zip"
-            //});
-            //items.Insert(4, new SelectListItem()
-            //{
-            //    Text = "Others",
-            //    Value = "Others"
-            //});
+            items.Insert(1, new SelectListItem()
+            {
+                Text = "PDF",
+                Value = "PDF"
+            });
+            items.Insert(2, new SelectListItem()
+            {
+                Text = "Document",
+                Value = "Document"
+            });
+            items.Insert(3, new SelectListItem()
+            {
+                Text = "Zip",
+                Value = "Zip"
+            });
+            items.Insert(4, new SelectListItem()
+            {
+                Text = "Others",
+                Value = "Others"
+            });
 
             return items;
         }

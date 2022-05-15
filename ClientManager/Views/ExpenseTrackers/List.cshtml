@@ -107,6 +107,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="Status">Status</label>
+                                                <input type="hidden" id="filterCon" value="@ViewBag.DashboardFilter" />
                                                 @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus" })
                                             </div>
                                         </div>
@@ -156,7 +157,27 @@
 </div>
 <script>
     $('#pnlAdvSearch').hide();
-    fnSearch();
+
+    function fnDasboardFilter(status) {
+        if (status != null) {
+            debugger;
+            var actionUrl = "/ExpenseTrackers/ListView?" + "expenseDateFrom=&expenseDateTo=&status=" + status + "&year=&month=&expenseCat=";
+            $('#gridView').html('');
+            $.ajax({
+                url: actionUrl,
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    $('#gridView').html(result);
+                    $('#pettyCashSummary').css("display", "none");
+                },
+                error: function (xhr, status) {
+                    alert(status);
+                }
+            })
+        }
+    }
     function fnSearch() {
         debugger;
         var actionUrl = "/ExpenseTrackers/ListView?" + "expenseDateFrom=" + $('#txtexpenseDateFrom').val().replace(/\//g, '-') + "&expenseDateTo=" + $('#txtexpenseDateTo').val().replace(/\//g, '-') + "&status=" + $('#ddlStatus').val() + "&year=" + $('#ddlYears').val() + "&month=" + $('#ddlMonths').val() + "&expenseCat=" + $('#ddlExpenseCategory').val();
@@ -211,4 +232,7 @@
         $('#ddlMonths').val(0);
         $('#ddlYears').val(0);
     }
+        
+    fnDasboardFilter($('#filterCon').val());
+
 </script>

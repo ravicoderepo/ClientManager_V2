@@ -114,7 +114,16 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="~/home/MyDashboard" class="nav-link">Home</a>
+                    @if (currentUser.UserRoles.Any(a => a.RoleName == "Store Admin"))
+                    {
+                        <a href="~/home/FinanceDashboard" class="nav-link">Home</a>
+                    }
+                    else
+                    {
+                        <a href="~/home/MyDashboard" class="nav-link">Home</a>
+                    }
+
+
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="~/Contact/Index" class="nav-link">Contact</a>

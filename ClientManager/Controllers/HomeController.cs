@@ -77,6 +77,7 @@ namespace ClientManager.Controllers
             dashboard.MonthlyTotalPettyCash = MonthlyTotalPettyCash.Value;
             dashboard.MonthlyUnApprovedExpenses = MonthlyTotalUnApprovedExpence.Value;
             dashboard.MonthlyVerifiedExpenses = MonthlyTotalApprovedExpence.Value;
+            dashboard.MonthlyUnVerifiedExpenses = MonthlyTotalUnVerifiedExpence.Value;
             dashboard.MonthlyAvailablePettyCash = (MonthlyTotalPettyCash.Value - MonthlyTotalApprovedExpence.Value);
             dashboard.CurrentMonthAndYear = DateTime.Now.Month + "/" + DateTime.Now.Year;
 
@@ -94,6 +95,7 @@ namespace ClientManager.Controllers
             dashboard.TotalPettyCash = TotalPettyCash.Value;
             dashboard.UnApprovedExpenses = TotalUnApprovedExpence.Value;
             dashboard.VerifiedExpenses = TotalApprovedExpence.Value;
+            dashboard.UnVerifiedExpenses = TotalUnVerifiedExpence.Value;
             dashboard.AvailablePettyCash = (TotalPettyCash.Value - TotalApprovedExpence.Value);
             dashboard.CurrentMonthAndYear = DateTime.Now.Month + "/" + DateTime.Now.Year;
 

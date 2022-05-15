@@ -19,7 +19,7 @@ namespace ClientManager.Controllers
 
         // GET: PettyCashes
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
-        public ActionResult List()
+        public ActionResult List(string dashboardFilter="")
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
             var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
@@ -52,7 +52,7 @@ namespace ClientManager.Controllers
             List<SelectListItem> expenseCategory = new SelectList(db.ExpenceCategories, "Id", "CategoryName", "").ToList();
             expenseCategory.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
             ViewBag.ExpenseCategory = expenseCategory;
-
+            ViewBag.DashboardFilter = string.IsNullOrEmpty(dashboardFilter) ? "" : dashboardFilter;
             return View(expenceTracker.ToList());
         }
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
@@ -153,7 +153,7 @@ namespace ClientManager.Controllers
             try
             {
                 int num = 0;
-                if (expenceTrackerData.ExpenseDate == null || expenceTrackerData.ExpenseAmount <= 0 || string.IsNullOrEmpty(expenceTrackerData.Description))
+                if (expenceTrackerData.Status == null||expenceTrackerData.ExpenseDate == null || expenceTrackerData.ExpenseAmount <= 0 || string.IsNullOrEmpty(expenceTrackerData.Description))
                 {
                     jsonReponse = new JsonReponse()
                     {

@@ -32,7 +32,7 @@ namespace ClientManager.Controllers
         {
             ViewBag.DocumentType = new SelectList(Utility.DefaultList.GetDocumentTypeList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             ViewBag.Status = new SelectList(Utility.DefaultList.GetDocumentStatusList(), "Value", "Text", (object)1).ToList<SelectListItem>();
-            ViewBag.DocumentSource = new SelectList(Utility.DefaultList.GetModuleList(), "Value", "Text", (object)1).ToList<SelectListItem>();           
+            ViewBag.DocumentSource = new SelectList(Utility.DefaultList.GetModuleList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             ViewBag.ReferenceRecId = new SelectList(db.ExpenseTrackers.Select(sel => new { Id = sel.Id, Name = sel.ExpenceCategory.CategoryName + "(" + sel.Id + ")" }).ToList(), "Id", "Name", null).ToList();
             return View();
         }
@@ -65,7 +65,7 @@ namespace ClientManager.Controllers
             {
                 int num = 0;
                 DocumentData.PostedFile = Request.Files["uploadFile"];
-                if (string.IsNullOrEmpty(DocumentData.PostedFile.FileName)||DocumentData.DocumentType == null || DocumentData.DocumentSource == null || DocumentData.ReferenceRecId <= 0 || DocumentData.Status == null)
+                if (string.IsNullOrEmpty(DocumentData.PostedFile.FileName) || DocumentData.DocumentType == null || DocumentData.DocumentSource == null || DocumentData.ReferenceRecId <= 0 || DocumentData.Status == null)
                 {
                     data = new JsonReponse()
                     {
@@ -83,7 +83,31 @@ namespace ClientManager.Controllers
 
                     //To Get File Extension  
                     string FileExtension = Path.GetExtension(DocumentData.PostedFile.FileName);
+                    string[] ImgExtensions = { ".jpeg", ".png", ".gif", ".tiff" };
+                    string[] DocExtensions = { ".txt", ".doc", ".docx", ".xls", ".xlsx" };
+                    string[] PdfExtension = { ".pdf" };
+                    string[] ZipExtensions = { ".zip" };
 
+                    if (ImgExtensions.Contains(FileExtension.ToLower()))
+                    {
+                        DocumentData.DocumentType = "Image";
+                    }
+                    else if (DocExtensions.Contains(FileExtension.ToLower()))
+                    {
+                        DocumentData.DocumentType = "Document";
+                    }
+                    else if (PdfExtension.Contains(FileExtension.ToLower()))
+                    {
+                        DocumentData.DocumentType = "PDF";
+                    }
+                    else if (ZipExtensions.Contains(FileExtension.ToLower()))
+                    {
+                        DocumentData.DocumentType = "Zip";
+                    }
+                    else
+                    {
+                        DocumentData.DocumentType = "Others";
+                    }
                     //Add Current Date To Attached File Name  
                     FileName = DateTime.Now.ToString("yyyyMMdd") + "-" + FileName.Trim() + FileExtension;
 
@@ -96,16 +120,16 @@ namespace ClientManager.Controllers
                     //To copy and save file into server.  
                     //membervalues.ImageFile.SaveAs(membervalues.ImagePath);
                     string fileData = string.Empty;
-                    if (DocumentData.DocumentType == "Image")
-                    {
-                        System.IO.Stream fs = DocumentData.PostedFile.InputStream;
-                        System.IO.BinaryReader br = new System.IO.BinaryReader(fs);
-                        Byte[] bytes = br.ReadBytes((Int32)fs.Length);
-                        fileData = Convert.ToBase64String(bytes, 0, bytes.Length);
+                    //if (DocumentData.DocumentType == "Image")
+                    //{
+                    System.IO.Stream fs = DocumentData.PostedFile.InputStream;
+                    System.IO.BinaryReader br = new System.IO.BinaryReader(fs);
+                    Byte[] bytes = br.ReadBytes((Int32)fs.Length);
+                    fileData = Convert.ToBase64String(bytes, 0, bytes.Length);
 
-                        //fileData = Utility.FileProcess.ImageToBase64(DocumentData.PostedFile.FileName);
-                        //fileData = Utility.FileProcess.ImageToBase64(DocumentData.PostedFile.FileName);
-                    }
+                    //fileData = Utility.FileProcess.ImageToBase64(DocumentData.PostedFile.FileName);
+                    //fileData = Utility.FileProcess.ImageToBase64(DocumentData.PostedFile.FileName);
+                    //}
 
                     //FileInfo file = new FileInfo(DocumentData.PostedFile.FileName);
 
@@ -150,7 +174,7 @@ namespace ClientManager.Controllers
                 };
             }
             return RedirectToAction("Edit", "ExpenseTrackers", new { id = DocumentData.ReferenceRecId });
-           // return RedirectToAction("Edit/" + DocumentData.Id); //View(db.Documents.FirstOrDefault(w => w.Id == DocumentData.Id)); //(ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+            // return RedirectToAction("Edit/" + DocumentData.Id); //View(db.Documents.FirstOrDefault(w => w.Id == DocumentData.Id)); //(ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
@@ -166,7 +190,7 @@ namespace ClientManager.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.DocumentType = new SelectList(Utility.DefaultList.GetDocumentTypeList().Where(w=> w.Text=="Image").ToList(), "Value", "Text", (object)1).ToList<SelectListItem>();
+            ViewBag.DocumentType = new SelectList(Utility.DefaultList.GetDocumentTypeList().Where(w => w.Text == "Image").ToList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             ViewBag.Status = new SelectList(Utility.DefaultList.GetDocumentStatusList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             ViewBag.DocumentSource = new SelectList(Utility.DefaultList.GetModuleList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             ViewBag.ReferenceRecId = new SelectList(db.ExpenseTrackers.Select(sel => new { Id = sel.Id, Name = sel.ExpenceCategory.CategoryName + "(" + sel.Id + ")" }).ToList(), "Id", "Name", null).ToList();
@@ -283,7 +307,7 @@ namespace ClientManager.Controllers
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         public ActionResult ImageViewer(string docSource, int recRefId)
         {
-            return PartialView(db.Documents.Where(wh=> wh.ReferenceRecId == recRefId && wh.DocumentSource == docSource));
+            return PartialView(db.Documents.Where(wh => wh.ReferenceRecId == recRefId && wh.DocumentSource == docSource));
         }
         protected override void Dispose(bool disposing)
         {
