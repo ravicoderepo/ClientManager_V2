@@ -107,8 +107,10 @@
                             <div class="card-footer">
                                 @if ((currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin" || wh.RoleName == "Super User") && Model.Status == "Pending") || (currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager") && Model.Status == "Approved"))
                                 {
-                                    <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
+                                    <button type="submit" class="btn btn-primary" id="btnSubmit">Submit</button>
+                                    <button type="button" class="btn btn-danger" id="btnCancel">Cancel</button>
                                 }
+
                                 <button type="button" id="imageViewer" class="btn btn-dark">Document Viewer</button>
                                 @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin") && Model.Status == "Pending")
                                 {
@@ -141,16 +143,23 @@
         window.location.href = window.location.href;
     });
     $(window).on('load', function () {
-
-        if ('@ViewBag.AccessLevel' == "View") {
+        debugger;
+        if ('@IsStoreAdmin' == 'true') {
             $('#quickForm :input').each(function () {
                 debugger;
-                if ($(this).attr('Id') != 'btnBack') {
+                $(this).prop('disabled', true);
+                if ($(this).attr('Id') == 'btnBack' || $(this).attr('Id') == 'ddlStatus' || $(this).attr('Id') == 'btnSubmit' || $(this).attr('Id') == 'btnCancel' || $(this).attr('Id') == 'imageViewer') {
                     debugger;
-                    $(this).prop('disabled', true);
+                  
+                    $(this).prop('disabled', false);
                 }
             });
         }
+
+        @*$('#txtExpenseAmount').prop("disabled", @IsStoreAdmin);
+        $('#txtExpenseDate').prop("disabled", @IsStoreAdmin);
+        $('#txtDescription').prop("disabled", @IsStoreAdmin));
+        $('#ddlExpenseCategory').prop("disabled", @IsStoreAdmin);*@
     });
 
     //Date picker
@@ -258,10 +267,7 @@
     $("#mnuExpenceTracker").addClass("active");
 
 
-    $('#txtExpenseAmount').prop("disabled", @IsStoreAdmin);
-        $('#txtExpenseDate').prop("disabled", @IsStoreAdmin);
-        $('#txtDescription').prop("disabled", @IsStoreAdmin));
-        $('#ddlExpenseCategory').prop("disabled", @IsStoreAdmin);
+
 
 
 </script>

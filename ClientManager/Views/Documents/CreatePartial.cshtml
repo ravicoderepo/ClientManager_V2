@@ -184,36 +184,42 @@
         $("input[name=DocumentSource]").val($('#ddlDocumentSource').val());
         $("input[name=ReferenceRecId]").val($('#ddlReferenceRecId').val());
         $("input[name=DocumentType]").val($('#ddlDocumentType').val());
-        var DocumentData = {
-            PostedFile: new FormData(document.getElementById('uploadFiles')),
-            DocumentType: $('#ddlDocumentType').val(),
-            DocumentSource: $('#ddlDocumentSource').val(),
-            ReferenceRecId: $("#ddlReferenceRecId").val(),
-            Status: $("#ddlStatus").val(),
-            Description: $('#txtDescription').val()
-        };
-        debugger;
-        $.ajax({
-            type: "POST",
-            url: "/Documents/Create",
-            data: JSON.stringify(DocumentData),
-            dataType: "json",
-            enctype: "multipart/form-data",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                if (data.status == "Success") {
-                    alert(data.message);
-                    return false;
-                   // window.location.href = data.redirectURL;
+        if (document.getElementById("uploadFiles").files.length == 0) {
+            alert("please select file to upload.");
+            return false;
+        }
+        else {
+            var DocumentData = {
+                PostedFile: new FormData(document.getElementById('uploadFiles')),
+                DocumentType: $('#ddlDocumentType').val(),
+                DocumentSource: $('#ddlDocumentSource').val(),
+                ReferenceRecId: $("#ddlReferenceRecId").val(),
+                Status: $("#ddlStatus").val(),
+                Description: $('#txtDescription').val()
+            };
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "/Documents/Create",
+                data: JSON.stringify(DocumentData),
+                dataType: "json",
+                enctype: "multipart/form-data",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.status == "Success") {
+                        alert(data.message);
+                        return false;
+                        // window.location.href = data.redirectURL;
+                    }
+                    else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("Error occured!!  " + data.message)
                 }
-                else {
-                    alert(data.message);
-                }
-            },
-            error: function () {
-                alert("Error occured!!  " + data.message)
-            }
-        });
+            });
+        }
     }
  
     $("#mnuDocumentCreate").addClass("active");

@@ -181,34 +181,40 @@
 
     function fnDocumentDetails() {
         debugger;
-        var DocumentData = {
-            FileName: $('#txtFileName').val(),
-            DocumentType: $('#ddlDocumentType').val(),
-            DocumentSource: $('#ddlDocumentSource').val(),
-            ReferenceRecId: $("#ddlReferenceRecId").val(),
-            Status: $("hdnStatus").val(),
-            Description: $('#txtDescription').val()
-        };
-        debugger;
-        $.ajax({
-            type: "POST",
-            url: "/Documents/Create",
-            data: JSON.stringify(DocumentData),
-            dataType: "json",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                if (data.status == "Success") {
-                    alert(data.message);
-                    window.location.href = data.redirectURL;
+        if (document.getElementById("uploadFiles").files.length == 0) {
+            alert("please select file to upload.");
+            return false;
+        }
+        else {
+            var DocumentData = {
+                FileName: $('#txtFileName').val(),
+                DocumentType: $('#ddlDocumentType').val(),
+                DocumentSource: $('#ddlDocumentSource').val(),
+                ReferenceRecId: $("#ddlReferenceRecId").val(),
+                Status: $("hdnStatus").val(),
+                Description: $('#txtDescription').val()
+            };
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "/Documents/Create",
+                data: JSON.stringify(DocumentData),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.status == "Success") {
+                        alert(data.message);
+                        window.location.href = data.redirectURL;
+                    }
+                    else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("Error occured!!  " + data.message)
                 }
-                else {
-                    alert(data.message);
-                }
-            },
-            error: function () {
-                alert("Error occured!!  " + data.message)
-            }
-        });
+            });
+        }
     }
     $("#mnuDocumentCreate").addClass("active");
 

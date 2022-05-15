@@ -65,14 +65,15 @@ namespace ClientManager.Controllers
             {
                 int num = 0;
                 DocumentData.PostedFile = Request.Files["uploadFile"];
-                if (DocumentData.PostedFile == null||DocumentData.DocumentType == null || DocumentData.DocumentSource == null || DocumentData.ReferenceRecId <= 0 || DocumentData.Status == null)
+                if (string.IsNullOrEmpty(DocumentData.PostedFile.FileName)||DocumentData.DocumentType == null || DocumentData.DocumentSource == null || DocumentData.ReferenceRecId <= 0 || DocumentData.Status == null)
                 {
-                    jsonReponse = new JsonReponse()
+                    data = new JsonReponse()
                     {
                         message = "Enter all required fields.",
                         status = "Failed",
                         redirectURL = ""
                     };
+                    //return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
