@@ -78,9 +78,10 @@ namespace ClientManager.Controllers
             dashboard.MonthlyUnApprovedExpenses = MonthlyTotalUnApprovedExpence.Value;
             dashboard.MonthlyVerifiedExpenses = MonthlyTotalApprovedExpence.Value;
             dashboard.MonthlyUnVerifiedExpenses = MonthlyTotalUnVerifiedExpence.Value;
-            dashboard.MonthlyAvailablePettyCash = (MonthlyTotalPettyCash.Value - MonthlyTotalApprovedExpence.Value);
-            dashboard.CurrentMonthAndYear = DateTime.Now.Month + "/" + DateTime.Now.Year;
-
+            dashboard.MonthlyPendingPettyCash = (MonthlyTotalPettyCash.Value - MonthlyTotalApprovedExpence.Value);
+            dashboard.MonthlyAvailablePettyCash = (MonthlyTotalPettyCash.Value - (MonthlyTotalUnApprovedExpence.Value + MonthlyTotalUnVerifiedExpence.Value));
+            dashboard.CurrentMonthAndYear = Utility.ConstantData.ToShortMonthName(DateTime.Now) + "/" + DateTime.Now.Year;
+            
             //Total
             //Current Month and Year
             var TotalPettyCashAmount = db.PettyCashes.ToList();
@@ -96,8 +97,9 @@ namespace ClientManager.Controllers
             dashboard.UnApprovedExpenses = TotalUnApprovedExpence.Value;
             dashboard.VerifiedExpenses = TotalApprovedExpence.Value;
             dashboard.UnVerifiedExpenses = TotalUnVerifiedExpence.Value;
-            dashboard.AvailablePettyCash = (TotalPettyCash.Value - TotalApprovedExpence.Value);
-            dashboard.CurrentMonthAndYear = DateTime.Now.Month + "/" + DateTime.Now.Year;
+            dashboard.PendingPettyCash = (TotalPettyCash.Value - TotalApprovedExpence.Value);
+            dashboard.AvailablePettyCash = (TotalPettyCash.Value - (TotalUnApprovedExpence.Value + TotalUnVerifiedExpence.Value));
+            dashboard.CurrentMonthAndYear = Utility.ConstantData.ToShortMonthName(DateTime.Now) + "/" + DateTime.Now.Year;
 
             return (ActionResult)this.View(dashboard);
         }

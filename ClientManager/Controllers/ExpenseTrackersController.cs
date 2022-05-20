@@ -98,11 +98,12 @@ namespace ClientManager.Controllers
             decimal? TotalUnApprovedExpence = (TotalUnApprovedExpenceAmount != null && TotalUnApprovedExpenceAmount.Count > 0) ? TotalUnApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
             decimal? TotalUnVerifiedExpence = (TotalUnVerifiedExpenceAmount != null && TotalUnVerifiedExpenceAmount.Count > 0) ? TotalUnVerifiedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
 
-            ViewBag.TotalPettyCash = TotalPettyCash.Value.ToString("0.00");
-            ViewBag.TotalApprovedExpence = TotalApprovedExpence.Value.ToString("0.00");
-            ViewBag.TotalUnApprovedExpence = TotalUnApprovedExpence.Value.ToString("0.00");
-            ViewBag.TotalUnVerifiedExpence = TotalUnVerifiedExpence.Value.ToString("0.00");
-            ViewBag.AvailablePettyCash = (TotalPettyCash.Value - TotalApprovedExpence.Value).ToString("0.00");
+            ViewBag.TotalPettyCash = TotalPettyCash.Value.ToString("#,##0.00");
+            ViewBag.TotalApprovedExpence = TotalApprovedExpence.Value.ToString("#,##0.00");
+            ViewBag.TotalUnApprovedExpence = TotalUnApprovedExpence.Value.ToString("#,##0.00");
+            ViewBag.TotalUnVerifiedExpence = TotalUnVerifiedExpence.Value.ToString("#,##0.00");
+            ViewBag.PendingPettyCash = (TotalPettyCash.Value - TotalApprovedExpence.Value).ToString("#,##0.00");
+            ViewBag.AvailablePettyCash = (TotalPettyCash.Value - (TotalUnApprovedExpence.Value + TotalUnVerifiedExpence.Value)).ToString("#,##0.00");
             ViewBag.CurrentMonthAndYear = month + "/" + year;
 
             //List<SelectListItem> statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", "").ToList();

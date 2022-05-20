@@ -312,7 +312,7 @@ namespace Utility
             {
                 Text = "2020",
                 Value = "2020"
-            });            
+            });
 
             return items;
         }
@@ -329,28 +329,53 @@ namespace Utility
                 string from = ConfigSettings.ReadSetting("EmailFrom");
                 string password = ConfigSettings.ReadSetting("EmailFromPassword").ToString();
                 string emailHost = ConfigSettings.ReadSetting("EmailHost").ToString();
+                string emailServer = ConfigSettings.ReadSetting("EmailServer").ToString();
 
-                using (MailMessage mm = new MailMessage(from, to))
-                {
-                    mm.Subject = subject;
-                    mm.Body = body;
-                    //if (postedFile.ContentLength > 0)
-                    //{
-                    //    string fileName = Path.GetFileName(postedFile.FileName);
-                    //    mm.Attachments.Add(new Attachment(postedFile.InputStream, fileName));
-                    //}
-                    mm.IsBodyHtml = true;
-                    SmtpClient smtp = new SmtpClient();
-                    smtp.Host = emailHost;
-                    smtp.EnableSsl = false;
-                    smtp.UseDefaultCredentials = false;
-                    NetworkCredential NetworkCred = new NetworkCredential(from, password);
-                 //   smtp.EnableSsl = true;
-                    smtp.Credentials = NetworkCred;
-                    smtp.Timeout = 100000;
-                    smtp.Port = 25;
-                    smtp.Send(mm);
-                }
+                //using (MailMessage mm = new MailMessage(from, to))
+                //{
+                //    mm.Subject = subject;
+                //    mm.Body = body;
+                //    //if (postedFile.ContentLength > 0)
+                //    //{
+                //    //    string fileName = Path.GetFileName(postedFile.FileName);
+                //    //    mm.Attachments.Add(new Attachment(postedFile.InputStream, fileName));
+                //    //}
+                //    mm.IsBodyHtml = true;
+                //    SmtpClient smtp = new SmtpClient();
+                //    smtp.Host = emailHost;
+                //    smtp.EnableSsl = false;
+                //    smtp.UseDefaultCredentials = false;
+                //    NetworkCredential NetworkCred = new NetworkCredential(from, password);
+                // //   smtp.EnableSsl = true;
+                //    smtp.Credentials = NetworkCred;
+                //    smtp.Timeout = 100000;
+                //    smtp.Port = 25;
+                //    smtp.Send(mm);
+                //}
+
+                System.Net.Mail.MailMessage oMail = new System.Net.Mail.MailMessage();
+                oMail.From = new MailAddress(from);
+                oMail.To.Add(to);
+                oMail.Subject = subject;
+                oMail.IsBodyHtml = true; // enumeration
+                oMail.Priority = System.Net.Mail.MailPriority.High; // from
+                oMail.Body = body;
+                SmtpClient objSmtp = new SmtpClient();
+                objSmtp.Host = emailHost;
+                objSmtp.Send(oMail);
+                oMail = null; // free up resources
+
+                //MailMessage mail = new MailMessage();
+                //mail.To.Add(to);
+                //mail.From = new MailAddress(from);
+                //mail.Subject = subject;
+                //mail.Body = body;
+                //mail.IsBodyHtml = true;
+                //SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                //smtp.EnableSsl = true;
+                //smtp.UseDefaultCredentials = false;
+                //smtp.Credentials = new System.Net.NetworkCredential(from, password);
+                //smtp.Send(mail);
 
                 return true;
             }
@@ -489,6 +514,6 @@ namespace Utility
             ms.Write(imageBytes, 0, imageBytes.Length);
             System.Drawing.Image image = System.Drawing.Image.FromStream(ms, true);
             return image;
-        }                      
+        }
     }
 }

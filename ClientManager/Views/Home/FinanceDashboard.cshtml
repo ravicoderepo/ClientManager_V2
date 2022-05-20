@@ -37,11 +37,11 @@
                 </div><!-- /.col -->
             </div>
             <div class="row">
-                <div class="col-lg-3 col-12">
+                <div class="col-lg-4 col-12">
                     <!-- small box -->
                     <div class="small-box bg-blue">
                         <div class="inner">
-                            <h3>&#8377;@Model.MonthlyTotalPettyCash.ToString("0.00")</h3>
+                            <h3>&#8377;@Model.MonthlyTotalPettyCash.ToString("#,##0.00")</h3>
 
                             <p>Total Petty Cash</p>
                         </div>
@@ -52,26 +52,44 @@
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-3 col-12">
+                <div class="col-lg-4 col-12">
                     <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3>&#8377;@Model.MonthlyAvailablePettyCash.ToString("0.00") </h3>
+                            <h3>&#8377;@Model.MonthlyAvailablePettyCash.ToString("#,##0.00") </h3>
 
                             <p>Available Petty Cash</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-bag"></i>
                         </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="javascript:fnSearch('Pending')" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-3 col-12">
+                <div class="col-lg-4 col-12">
+                    <!-- small box -->
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>&#8377;@Model.MonthlyPendingPettyCash.ToString("#,##0.00") </h3>
+
+                            <p>Pending Petty Cash</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                        <a href="javascript:fnSearch('Pending')" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-12">
                     <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>&#8377;@Model.MonthlyUnApprovedExpenses.ToString("0.00")</h3>
+                            <h3>&#8377;@Model.MonthlyUnApprovedExpenses.ToString("#,##0.00")</h3>
 
                             <p>Expense To Approve</p>
                         </div>
@@ -81,11 +99,11 @@
                         <a href="javascript:fnSearch('Pending')" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <div class="col-lg-3 col-12">
+                <div class="col-lg-6 col-12">
                     <!-- small box -->
                     <div class="small-box bg-fuchsia">
                         <div class="inner">
-                            <h3>&#8377;@Model.MonthlyUnVerifiedExpenses.ToString("0.00")</h3>
+                            <h3>&#8377;@Model.MonthlyUnVerifiedExpenses.ToString("#,##0.00")</h3>
 
                             <p>Expense To Verify</p>
                         </div>
@@ -98,21 +116,21 @@
                 <!-- ./col -->
             </div>
             <!--<div class="row">
-                <div class="col-lg-4 col-12">
-                     small box 
-                    <div class="small-box bg-gradient-teal">
-                        <div class="inner">
-                            <h3>&#8377;@Model.MonthlyVerifiedExpenses.ToString("0.00")</h3>
+            <div class="col-lg-4 col-12">
+                 small box
+                <div class="small-box bg-gradient-teal">
+                    <div class="inner">
+                        <h3>&#8377;@Model.MonthlyVerifiedExpenses.ToString("#,##0.00")</h3>
 
-                            <p>Verified Expense</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-pie-graph"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <p>Verified Expense</p>
                     </div>
-                </div>-->
-                <!-- ./col -->
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>-->
+            <!-- ./col -->
             <!--</div>-->
 
             <div class="row mb-2">
@@ -121,11 +139,11 @@
                 </div><!-- /.col -->
             </div>
             <div class="row">
-                <div class="col-lg-3 col-12">
+                <div class="col-lg-4 col-12">
                     <!-- small box -->
                     <div class="small-box bg-blue">
                         <div class="inner">
-                            <h3>&#8377;@Model.TotalPettyCash.ToString("0.00")</h3>
+                            <h3>&#8377;@Model.TotalPettyCash.ToString("#,##0.00")</h3>
 
                             <p>Total Petty Cash</p>
                         </div>
@@ -136,26 +154,43 @@
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-3 col-12">
+                <div class="col-lg-4 col-12">
                     <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3>&#8377;@Model.AvailablePettyCash.ToString("0.00")</h3>
+                            <h3>&#8377;@Model.AvailablePettyCash.ToString("#,##0.00")</h3>
 
                             <p>Available Petty Cash</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-bag"></i>
                         </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="javascript:fnSearch('Pending')" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-3 col-12">
+                <div class="col-lg-4 col-12">
+                    <!-- small box -->
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>&#8377;@Model.PendingPettyCash.ToString("#,##0.00")</h3>
+
+                            <p>Pending Petty Cash</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                        <a href="javascript:fnSearch('Pending')" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div><!-- ./col -->
+         
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-12">
                     <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>&#8377;@Model.UnApprovedExpenses.ToString("0.00")</h3>
+                            <h3>&#8377;@Model.UnApprovedExpenses.ToString("#,##0.00")</h3>
 
                             <p>
                                 Expense To Approve
@@ -168,11 +203,11 @@
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-3 col-12">
+                <div class="col-lg-6 col-12">
                     <!-- small box -->
                     <div class="small-box bg-fuchsia">
                         <div class="inner">
-                            <h3>&#8377;@Model.UnVerifiedExpenses.ToString("0.00")</h3>
+                            <h3>&#8377;@Model.UnVerifiedExpenses.ToString("#,##0.00")</h3>
                             <p>
                                 Expense To Verify
                             </p>
@@ -187,10 +222,10 @@
             </div>
             <div class="row">
                 <!--<div class="col-lg-4 col-12">-->
-                    <!-- small box -->
-                    <!--<div class="small-box bg-gradient-teal">
+                <!-- small box -->
+                <!--<div class="small-box bg-gradient-teal">
                         <div class="inner">
-                            <h3>&#8377;@Model.VerifiedExpenses.ToString("0.00")</h3>
+                            <h3>&#8377;@Model.VerifiedExpenses.ToString("#,##0.00")</h3>
 
                             <p>Verified Expense</p>
                         </div>
@@ -201,7 +236,7 @@
                     </div>
                 </div>-->
                 <!-- ./col -->
-               
+
             </div>
             <!-- /.row -->
             <!-- Main row -->

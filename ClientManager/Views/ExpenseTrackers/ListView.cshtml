@@ -55,6 +55,13 @@
                 @*[Total PettyCash - Total Approved & Verified]*@
             </tr>
             <tr>
+                <td class="cashTableHeader">Pending PettyCash</td>
+                <td>:</td>
+                <td style="text-align: right; color: green; font-weight: bold" class="cashTableAmounCol">&#8377;@ViewBag.PendingPettyCash</td>
+                <td></td>
+                @*[Total PettyCash - Total Approved & Verified]*@
+            </tr>
+            <tr>
                 <td class="cashTableHeader">Expense To Approve   </td>
                 <td>:</td>
                 <td style="text-align: right; color: red; font-weight: bold " class="cashTableAmounCol"><a href="javascript:FilterPettyCash('Pending')"> &#8377;@ViewBag.TotalUnApprovedExpence </a></td>
@@ -73,11 +80,11 @@
                 <td></td>
             </tr>
             @*<tr>
-                    <td class="cashTableHeader">Total Expense (Verified)   </td>
-                    <td>:</td>
-                    <td style="text-align: right; color: darkred; font-weight: bold" class="cashTableAmounCol">&#8377;@ViewBag.TotalApprovedExpence</td>
-                    <td></td>
-                </tr>*@
+            <td class="cashTableHeader">Total Expense (Verified)   </td>
+            <td>:</td>
+            <td style="text-align: right; color: darkred; font-weight: bold" class="cashTableAmounCol">&#8377;@ViewBag.TotalApprovedExpence</td>
+            <td></td>
+        </tr>*@
 
         </table>
     </div>
@@ -152,7 +159,8 @@
 
                     </td>
                     <td style="text-align:right">
-                        @Html.DisplayFor(modelItem => item.ExpenseAmount)
+                        @*@Html.DisplayFor(modelItem => item.ExpenseAmount.ToString("#,##0.00"))*@
+                        @item.ExpenseAmount.ToString("#,##0.00")
                     </td>
                     <td>
                         @*@Html.DisplayFor(modelItem => item.ExpenseDate)*@

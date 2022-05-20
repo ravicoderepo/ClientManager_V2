@@ -16,12 +16,14 @@ namespace ClientManager.Models
         public decimal MonthlyUnApprovedExpenses { get; set; }
         public decimal MonthlyVerifiedExpenses { get; set; }
         public decimal MonthlyUnVerifiedExpenses { get; set; }
-
+        public decimal MonthlyPendingPettyCash { get; set; }
         public decimal TotalPettyCash { get; set; }
         public decimal AvailablePettyCash { get; set; }
         public decimal UnApprovedExpenses { get; set; }
         public decimal VerifiedExpenses { get; set; }
         public decimal UnVerifiedExpenses { get; set; }
+        public decimal PendingPettyCash { get; set; }
+        
 
         public string CurrentMonthAndYear { get; set; }
         //Others

@@ -451,6 +451,38 @@ namespace ClientManager.Controllers
         //    return RedirectToAction("Index");
         //}
 
+        public JsonResult GetItemCode(string term)
+        {
+            // var codes = db.w_Items.Where(i => i.ItemCode.StartsWith(term)).ToList();
+            var result = new List<KeyValuePair<string, string>>();
+            var namecodes = new List<SelectListItem>();
+            namecodes = (from u in db.SaleActivities select new SelectListItem { Text = u.ClientName + "|" + u.ClientEmail + "|" + u.ClientPhoneNo, Value = u.Id.ToString() }).ToList();
+
+            foreach (var item in namecodes)
+            {
+                result.Add(new KeyValuePair<string, string>(item.Value.ToString(), item.Text));
+            }
+
+            var namecodes1 = result.Where(s => s.Value.ToLower().Contains
+                        (term.ToLower())).Select(w => w).ToList();
+            return Json(namecodes1, JsonRequestBehavior.AllowGet);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult GetItemDetails(int id)
+        {
+            var codeList = db.SaleActivities.Where(i => i.Id == id).ToList();
+
+            var viewmodel = codeList.Select(x => new
+            {
+                Name = x.ClientName,
+                Email = x.ClientEmail,
+                PhoneNo = x.ClientPhoneNo
+            });
+
+            return Json(viewmodel);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -4,7 +4,7 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<link rel="stylesheet" href="@Url.Content("//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css")">
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -146,7 +146,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="InvoiceAmount">Invoice Amount</label>
-                                            @Html.EditorFor(model => model.InvoiceAmount, new { htmlAttributes = new { @class = "form-control allow_decimal", @id = "txtInvoiceAmount" } })
+                                            @Html.EditorFor(model => model.InvoiceAmount, new { htmlAttributes = new { @class = "form-control allow_decimal", @id = "txtInvoiceAmount", @style = "text-align:right !important" } })
                                         </div>
                                     </div>
 
@@ -198,7 +198,7 @@
 </div>
 
 <script>
-  
+
     $(window).on('load', function () {
         $('#pnlInvoice').hide();
         //debugger;
@@ -352,6 +352,45 @@
     }).on('paste', function (event) {
         event.preventDefault();
     });
+
+    $(function () {
+        $("#txtClientName").autocomplete({
+        source: function (request, response) {
+            var itemnamecodes = new Array();
+            $.ajax({
+                async: false, cache: false,
+                //type: "POST",
+                url: "@(Url.Action("GetItemCode", "SaleActivities"))",
+                data: { "term": request.term },
+                success: function (data) {
+                    for (var i = 0; i < data.length ; i++) {
+                        itemnamecodes[i] = { label: data[i].Value, Id: data[i].Key };
+                    }
+                 }
+            });
+            response(itemnamecodes);
+        },
+         select: function (event, ui) {
+             $.ajax({
+                 cache: false, async: false, type: "POST",
+                 url: "@(Url.Action("GetItemDetails", "SaleActivities"))",
+                 data: { "id": ui.item.Id },
+                success: function (data) {
+                    var item = data[0];
+                    $("#txtClientEmail").val(item.Email);
+                    $("#txtClientPhoneNo").val(item.PhoneNo);
+                    $("#txtClientName").val(item.Name);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Failed to retrieve Item.');
+                }
+            });
+        }
+});
+});
+
+
+
     $("#mnuSalesAdd").addClass("active");
 
 </script>
