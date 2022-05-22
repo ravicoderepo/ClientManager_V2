@@ -37,7 +37,7 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-4 col-sm-8">
-                                    <h3 class="card-title">List of Sales Details</h3>
+                                    <h3 class="card-title">List of Sales Details <span id="lblSalesPersonName"></span></h3>
                                 </div>
                                 @if (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName)))
                                 {
@@ -145,6 +145,8 @@
             dataType: 'html',
             success: function (result) {
                 $('#gridView').html(result);
+                $('#lblSalesPersonName').text(' of ' + $('#ddlSalesPerson option:selected').text());
+               // @ViewBag.SelectedSalesPerson = $('#ddlSalesPerson option:selected').text();
             },
             error: function (xhr, status) {
                 alert(status);
@@ -234,5 +236,6 @@
     //    })
 
     //});
+      $('#lblSalesPersonName').text(' of ' + $('#ddlSalesPerson option:selected').text());
     $("#mnuSalesList").addClass("active");
 </script>
