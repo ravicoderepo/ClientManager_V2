@@ -320,7 +320,7 @@ namespace Utility
 
     public static class Emails
     {
-        public static bool SendEmail(string to, string subject, string body)
+        public static bool SendEmail(string to, string cc, string subject, string body)
         {
             //File as Param
             //HttpPostedFile postedFile

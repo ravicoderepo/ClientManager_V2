@@ -17,6 +17,9 @@
         padding: .375rem .75rem !important;
     }
 </style>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.css" />
+
 <div class="content-wrapper">
 
     <!-- Content Header (Page header) -->
@@ -204,9 +207,10 @@
 
                                     @if (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName)))
                                     {
-                                        @*@if (Model.CreatedBy == currentUser.Id)
-                                            {*@
-                                        <button type="submit" class="btn btn-primary">Submit</button> <button type="reset" class="btn btn-danger">Cancel</button>
+                                        if (Model.Status != 6)
+                                        {
+                                            <button type="submit" class="btn btn-primary">Submit</button> <button type="reset" class="btn btn-danger">Cancel</button>
+                                        }
                                     }
                                     <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='../List'" id="btnBack">Back to List</button>
                                 </div>
@@ -228,6 +232,7 @@
     </section>
     <!-- /.content -->
 </div>
+
 
 <script>
     $(window).on('load', function () {

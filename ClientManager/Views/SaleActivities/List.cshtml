@@ -37,7 +37,7 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-4 col-sm-8">
-                                    <h3 class="card-title">List of Sales Details <span id="lblSalesPersonName"></span></h3>
+                                    <h3 class="card-title">List of sales record <span id="lblSalesPersonName"> </span></h3>
                                 </div>
                                 @if (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName)))
                                 {
@@ -88,21 +88,29 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="Status">Status</label>
-                                                @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus" })
+                                                <input type="hidden" name="hdnStatus" />
+                                                @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="CustomerName">Customer Name</label>
+                                                <input type="text" class="form-control" id="txtCustomerName" name="CustomerName">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="ProductName">Product Name</label>
                                                 <input type="text" class="form-control" id="txtProductName" name="ProductName">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="SalesPerson">Sales Person</label>
-                                                @Html.DropDownList("SalesPerson", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlSalesPerson" })
+                                               <input type="hidden" name="hdnSalesPerson" />
+                                                @Html.DropDownList("SalesPerson", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlSalesPerson", @onChange = "fnSalesPersonChange()" })
                                             </div>
                                         </div>
                                     </div>
@@ -136,7 +144,7 @@
     $('#pnlAdvSearch').hide();
     function fnSearch() {
         debugger;
-        var actionUrl = "/SaleActivities/ListView?" + "callDateFrom=" + $('#txtCallDateFrom').val().replace(/\//g, '-') + "&callDateTo=" + $('#txtCallDateTo').val().replace(/\//g, '-') + "&status=" + $('#ddlStatus').val() + "&productName=" + $('#txtProductName').val() + "&salesPerson=" + $('#ddlSalesPerson').val();
+        var actionUrl = "/SaleActivities/ListView?" + "callDateFrom=" + $('#txtCallDateFrom').val().replace(/\//g, '-') + "&callDateTo=" + $('#txtCallDateTo').val().replace(/\//g, '-') + "&status=" + $("input[name=hdnStatus]").val() + "&productName=" + $('#txtProductName').val() + "&customerName=" + $('#txtCustomerName').val() + "&salesPerson=" + $("input[name=hdnSalesPerson]").val();
         $('#gridView').html('');
         $.ajax({
             url: actionUrl,
@@ -145,13 +153,23 @@
             dataType: 'html',
             success: function (result) {
                 $('#gridView').html(result);
-                $('#lblSalesPersonName').text(' of ' + $('#ddlSalesPerson option:selected').text());
+                $('#lblSalesPersonName').text(' for ' + $('#ddlSalesPerson option:selected').text() + '@ViewBag.TotalSalesBySalesPerson');
                // @ViewBag.SelectedSalesPerson = $('#ddlSalesPerson option:selected').text();
             },
             error: function (xhr, status) {
                 alert(status);
             }
         })
+    }
+
+    function fnSalesPersonChange() {
+        debugger;
+        $("input[name=hdnSalesPerson]").val($('#ddlSalesPerson').val());
+    }
+
+    function fnStatusChange() {
+        debugger;
+        $("input[name=hdnStatus]").val($('#ddlStatus').val());
     }
 
     function fnToggleAdvSearch(action) {
@@ -176,6 +194,7 @@
         $('#txtCallDateTo').val('');
         $('#txtCallDateFrom').val('');
         $('#txtProductName').val('');
+        $('#txtCustomerName').val('');
         $('#ddlSalesPerson').val(0);
         $('#ddlStatus').val(0);
 

@@ -14,7 +14,9 @@
     <title>SalesManager | Dashboard</title>
 
     <!-- jQuery -->
-    <script src="~/Content/plugins/jquery/jquery.min.js"></script>
+    @*<script src="~/Content/plugins/jquery/jquery.min.js"></script>*@
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- jQuery UI 1.11.4 -->
     <script src="~/Content/plugins/jquery-ui/jquery-ui.min.js"></script>
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -54,6 +56,8 @@
     <link rel="stylesheet" href="~/Content/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
     <!-- iCheck -->
     <link rel="stylesheet" href="~/Content/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+
+
     <!-- JQVMap -->
     <link rel="stylesheet" href="~/Content/plugins/jqvmap/jqvmap.min.css">
     <!-- Theme style -->
@@ -131,6 +135,11 @@
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="~/Account/Logout" class="nav-link">Logout</a>
                 </li>
+                <li>
+                   
+                        <button type="button" style="float: right; margin-top: 3px !important;" class="btn btn-block btn-warning btn-sm " onclick="javascript:fnRedirect('http://vrmstructures.in/')"><i class="fa fa-mercury"></i> VRM Stocks</button>
+                   
+                </li>
             </ul>
 
             <!-- Right navbar links -->
@@ -147,10 +156,7 @@
                                 <div class="input-group-append">
                                     <button class="btn btn-navbar" type="submit">
                                         <i class="fas fa-search"></i>
-                                    </button>
-                                    <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                                        <i class="fas fa-times"></i>
-                                    </button>
+                                    </button>                                   
                                 </div>
                             </div>
                         </form>
@@ -653,7 +659,12 @@
     @*<script src="~/Content/plugins/sweetalert2/sweetalert2.min.js"></script>*@
     <!-- Toastr -->
     @*<script src="~/Content/plugins/toastr/toastr.min.js"></script>*@
-
+    <script>
+        function fnRedirect(url)
+        {
+            location.href = url;
+        }
+    </script>
 </body>
 
 </html>

@@ -114,8 +114,15 @@ namespace ClientManager.Controllers
                     });
                     num = this.db.SaveChanges();
 
-                    string EmailBody = Utility.Emails.GetEmailTemplate("PettyCashAdded").Replace("{PettyCashValue}", PettyCashData.AmountReceived.ToString()).Replace("{PaymentMode}", PettyCashData.ModeOfPayment).Replace("{AmountReceivedDate}", PettyCashData.AmountRecivedDate.ToShortDateString()).Replace("{Description}", (!string.IsNullOrEmpty(PettyCashData.Description) ? PettyCashData.Description : "N/A"));
-                    Utility.Emails.SendEmail(Utility.ConfigSettings.ReadSetting("FinanceEmailId"), "Petty Cash Added", EmailBody);
+                    var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
+                    var TotalPettyCashAmount = db.PettyCashes.Where(wh => wh.AmountRecivedDate.Month == DateTime.Now.Month && wh.AmountRecivedDate.Year == DateTime.Now.Year).ToList();
+                    var TotalApprovedExpenceAmount = expenceTracker.Where(wh => wh.ExpenseDate.Month == DateTime.Now.Month && wh.ExpenseDate.Year == DateTime.Now.Year && wh.Status == "Verified").ToList();
+                    decimal? TotalPettyCash = (TotalPettyCashAmount != null && TotalPettyCashAmount.Count > 0) ? TotalPettyCashAmount.Sum(S => S.AmountReceived) : 0;
+                    decimal? TotalApprovedExpence = (TotalApprovedExpenceAmount != null && TotalApprovedExpenceAmount.Count > 0) ? TotalApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
+                    var PendingPettyCash = (TotalPettyCash.Value - TotalApprovedExpence.Value).ToString("#,##0.00");
+
+                    string EmailBody = Utility.Emails.GetEmailTemplate("PettyCashAdded").Replace("{PettyCashValue}", PettyCashData.AmountReceived.ToString()).Replace("{PaymentMode}", PettyCashData.ModeOfPayment).Replace("{AmountReceivedDate}", PettyCashData.AmountRecivedDate.ToShortDateString()).Replace("{Description}", (!string.IsNullOrEmpty(PettyCashData.Description) ? PettyCashData.Description : "N/A")).Replace("{PendingPettyCash}", PendingPettyCash);
+                    Utility.Emails.SendEmail(Utility.ConfigSettings.ReadSetting("FinanceEmailIdTo"), Utility.ConfigSettings.ReadSetting("FinanceEmailIdCC"), "Petty Cash Added", EmailBody);
                 }
                 if (num > 0)
                     data = new JsonReponse()

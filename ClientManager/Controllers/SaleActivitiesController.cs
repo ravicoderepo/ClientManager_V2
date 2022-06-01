@@ -20,7 +20,7 @@ namespace ClientManager.Controllers
 
         [CustomAuthorize(new string[] { "Super User", "Super Admin", "Sales Manager", "Sales Engineer" })]
         // GET: SaleActivities
-        public ActionResult ListView(string callDateFrom ="", string callDateTo="", int status=0, string productName = "", int salesPerson = 0)
+        public ActionResult ListView(string callDateFrom ="", string callDateTo="", int status=0, string productName = "", string customerName ="", int salesPerson = 0)
         {
             
             DateTime dtcallDateFrom = new DateTime();
@@ -83,10 +83,21 @@ namespace ClientManager.Controllers
             {
                 saleActivities = saleActivities.Where(wh => wh.ProductName.Contains(productName.Trim()));
             }
+            if (!string.IsNullOrEmpty(customerName))
+            {
+                saleActivities = saleActivities.Where(wh => wh.ClientName.Contains(customerName.Trim()));
+            }
 
             if (salesPerson > 0)
             {
                 saleActivities = saleActivities.Where(wh => wh.CreatedBy == salesPerson);
+                var output = saleActivities.Where(wh => wh.Status == 6 && wh.CreatedBy == salesPerson && wh.InvoiceAmount != null).Select(sel => (sel.InvoiceAmount.HasValue) ? sel.InvoiceAmount.Value : 0).ToList();
+                ViewBag.TotalSalesBySalesPerson = "Rs." + output.Sum(s=> s).ToString("#,##0.00");
+            }
+            else
+            {
+                var output = saleActivities.Where(wh => wh.Status == 6 && wh.InvoiceAmount != null).Select(sel => (sel.InvoiceAmount.HasValue) ? sel.InvoiceAmount.Value : 0).ToList();
+                ViewBag.TotalSalesBySalesPerson = "Rs." + output.Sum(s=> s).ToString("#,##0.00");
             }
 
             if (status > 0)
@@ -132,7 +143,7 @@ namespace ClientManager.Controllers
 
             statusList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
             selesPersonList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
-
+          
             ViewBag.SalesPerson = selesPersonList;
             ViewBag.Status = statusList;
            
@@ -318,7 +329,7 @@ namespace ClientManager.Controllers
                     {
                         if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName) || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit) || string.IsNullOrEmpty(saleData.InvoiceNo) || saleData.InvoiceAmount < 0 || string.IsNullOrEmpty(saleData.Remarks))
                         {
-                            saleData.DateOfClosing = DateTime.ParseExact(DateTime.Now.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString();
+                            //saleData.DateOfClosing = DateTime.Now.ToString("dd/MM/yyyy"); //DateTime.ParseExact(DateTime.Now.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString();
                             jsonRes = new JsonReponse { message = "Enter all required fields.", status = "Failed", redirectURL = "" };
                             isMandatoryError = true;
                         }

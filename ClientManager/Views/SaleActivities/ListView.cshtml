@@ -77,19 +77,19 @@
                 Unit
             </th>*@
             <th>
-                @Html.DisplayNameFor(model => model.RecentCallDate)
+                @*@Html.DisplayNameFor(model => model.RecentCallDate)*@
                 Recent Call Date
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AnticipatedClosingDate)
+                @*@Html.DisplayNameFor(model => model.AnticipatedClosingDate)*@
                 Anticipated Closing Date
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Remarks)
+                @*@Html.DisplayNameFor(model => model.Remarks)*@
                 Remarks
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedOn)
+                @*@Html.DisplayNameFor(model => model.CreatedOn)*@
                 Created On
             </th>
             <th>
@@ -122,7 +122,7 @@
                         <button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/SaleActivities/Edit/@item.Id'"><i class="fas fa-eye"></i></button>
                     }
 
-                    @if (item.CreatedBy == currentUser.Id)
+                    @if (item.CreatedBy == currentUser.Id && item.Status != 6)
                     {
                         <button type="button" class="btn btn-danger btn-xs" title="Delete" onclick="fnSubmitSaleDetails(@item.Id)"><i class="far fa-trash-alt"></i></button>
                     }
@@ -168,7 +168,7 @@
                     @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.AnticipatedClosingDate))
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Remarks)
+                   @Html.Raw(item.Remarks)
                 </td>
                 <td>
                     @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
@@ -240,4 +240,6 @@
             });
         }
     }
+
+     $('#lblSalesPersonName').text(' for ' + $('#ddlSalesPerson option:selected').text() + ' @ViewBag.TotalSalesBySalesPerson');
 </script>
