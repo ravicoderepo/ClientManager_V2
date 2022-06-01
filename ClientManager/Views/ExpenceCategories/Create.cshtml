@@ -69,7 +69,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="status">Description</label>
-                                            @Html.TextAreaFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @id = "txtDescription", @name = "Description"} })
+                                            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @id = "txtDescription", @name = "Description"} })
                                         </div>
                                     </div>
                                 </div>
@@ -162,7 +162,7 @@
 
     function fnSubmitUserDetails() {
         debugger;
-        var CategoryData = {
+        var expenceCategoryData = {
             Id: $('#Id').val(),
             IsActive: ($("input[name=IsActive]").val()=='1') ? true: false,
             CategoryName: $('#txtCategoryName').val(),
@@ -171,8 +171,8 @@
         debugger;
         $.ajax({
             type: "POST",
-            url: "/ExpenceCategory/Create",
-            data: JSON.stringify(CategoryData),
+            url: "/ExpenceCategories/Create",
+            data: JSON.stringify(expenceCategoryData),
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {

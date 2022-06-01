@@ -57,20 +57,20 @@
             <tr>
                 <td class="cashTableHeader">Pending PettyCash</td>
                 <td>:</td>
-                <td style="text-align: right; color: red; font-weight: bold" class="cashTableAmounCol">&#8377;@ViewBag.PendingPettyCash</td>
+                <td style="text-align: right; color: red !important; font-weight: bold" class="cashTableAmounCol">&#8377;@ViewBag.PendingPettyCash</td>
                 <td></td>
                 @*[Total PettyCash - Total Approved & Verified]*@
             </tr>
             <tr>
                 <td class="cashTableHeader">Expense To Approve   </td>
                 <td>:</td>
-                <td style="text-align: right; color: orange; font-weight: bold " class="cashTableAmounCol"><a href="javascript:FilterPettyCash('Pending')"> &#8377;@ViewBag.TotalUnApprovedExpence </a></td>
+                <td style="text-align: right; color: orange !important; font-weight: bold " class="cashTableAmounCol"><a style="color: orange !important;" href="javascript:FilterPettyCash('Pending')"> &#8377;@ViewBag.TotalUnApprovedExpence </a></td>
                 <td></td>
             </tr>
             <tr>
                 <td class="cashTableHeader">Expense To Verify   </td>
                 <td>:</td>
-                <td style="text-align: right; color: orange; font-weight: bold" class="cashTableAmounCol"><a href="javascript:FilterPettyCash('Approved')">&#8377;@ViewBag.TotalUnVerifiedExpence</a></td>
+                <td style="text-align: right; color: orange !important; font-weight: bold" class="cashTableAmounCol"><a style="color: orange !important;" href="javascript:FilterPettyCash('Approved')">&#8377;@ViewBag.TotalUnVerifiedExpence</a></td>
                 <td></td>
             </tr>
             <tr>

@@ -42,7 +42,6 @@ namespace ClientManager.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
-        [ValidateAntiForgeryToken]
         public ActionResult Create(Models.ExpenceCategoryData expenceCategoryData)
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
