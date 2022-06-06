@@ -31,13 +31,13 @@
 <body class="main">
     <div class="container">
         <!--<section class="content">
-    <div class="container-fluid">
-        <div class="row">-->
+        <div class="container-fluid">
+            <div class="row">-->
         <!-- left column -->
         <!--<div class="col-md-12">-->
         <!-- jquery validation -->
         <!--<div class="card card-primary">
-    <div class="card-header">-->
+        <div class="card-header">-->
         <h3 class="card-title">Document Viewer</h3>
         @*</div>*@
 
@@ -49,12 +49,23 @@
                 {
                     <img class="img img-test" data-url="data:image/@doc.FileExtension.Replace(".", "").ToLower();base64,@doc.FileData" src="data:image/@doc.FileExtension.Replace(".", "").ToLower();base64,@doc.FileData" alt="@doc.FileName" style="width:200px; height:200px" />
                 }
-                
+
             }
-            foreach (var doc in Model.Where(wh => wh.DocumentType != "Image"))
+            foreach (var doc in Model.Where(wh => wh.DocumentType == "PDF"))
+            {
+                if (doc.DocumentType == "PDF")
+                {
+                    var filedata = "data:application/pdf;base64," + doc.FileData;
+                    <iframe src=@filedata
+                            style="width:600px; height:500px;" frameborder="0"></iframe>
+                    @*<img class="img img-test" data-url="data:image/@doc.FileExtension.Replace(".", "").ToLower();base64,@doc.FileData" src="data:image/@doc.FileExtension.Replace(".", "").ToLower();base64,@doc.FileData" alt="@doc.FileName" style="width:200px; height:200px" />*@
+                }
+
+            }
+            foreach (var doc in Model.Where(wh => wh.DocumentType != "Image" && wh.DocumentType != "PDF"))
             {
                 var filedata = "data:application/octet-stream;base64," + doc.FileData;
-    <br /> <a href="@filedata" download="@doc.FileName">@doc.FileName</a> 
+                <br /> <a href="@filedata" download="@doc.FileName">@doc.FileName</a>
             }
 
         }
@@ -64,10 +75,10 @@
 
         }
         @*</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>*@
+            </section>*@
     </div><!--/.container - fluid-->
 
     <script type="text/javascript">

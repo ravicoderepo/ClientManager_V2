@@ -32,9 +32,10 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="uploadFile">Document Name</label>
-                                            <input type="file" name="uploadFile" id="uploadFiles" /> <br />
+                                            <input type="file" name="uploadFile" id="uploadFiles" multiple="multiple" /> <br />
+                                            @*accept="application/jpeg,application/png,application/gif,application/tiff,application/txt,application/doc,application/docx,application/xls,application/xlsx,application/zip,application/pdf"*@
                                             <span style="font-size:12px; color:darkblue">Supporting file formats : .jpeg,.png,.gif,.tiff,.txt,.doc,.docx,.xls,.xlsx,.pdf,.zip</span>
-                                            
+
                                             @*@Html.TextBox("UploadFile", new { htmlAttributes = new { @class = "form-control", @id = "txtFileName", @name = "FileName", @type = "file" } })*@
                                         </div>
                                     </div>

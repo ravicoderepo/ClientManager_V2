@@ -1,7 +1,9 @@
 ﻿@model IEnumerable<DBOperation.ExpenseTracker>
-
+@using DBOperation;
+@using System.Linq;
 @{
     var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+    ClientManagerEntities db = new ClientManagerEntities();
 }
 <style>
     table tr td:first-child {
@@ -80,11 +82,11 @@
                 <td></td>
             </tr>
             @*<tr>
-            <td class="cashTableHeader">Total Expense (Verified)   </td>
-            <td>:</td>
-            <td style="text-align: right; color: darkred; font-weight: bold" class="cashTableAmounCol">&#8377;@ViewBag.TotalApprovedExpence</td>
-            <td></td>
-        </tr>*@
+                    <td class="cashTableHeader">Total Expense (Verified)   </td>
+                    <td>:</td>
+                    <td style="text-align: right; color: darkred; font-weight: bold" class="cashTableAmounCol">&#8377;@ViewBag.TotalApprovedExpence</td>
+                    <td></td>
+                </tr>*@
 
         </table>
     </div>
@@ -94,6 +96,7 @@
         <thead>
             <tr>
                 <th>Action</th>
+                <th>Select</th>
                 <th>
                     Expence Amount
                 </th>
@@ -110,17 +113,17 @@
                     Description
                 </th>
                 @*<th>
-                        Created On
-                    </th>
-                    <th>
-                        Created By
-                    </th>
-                    <th>
-                        Modified On
-                    </th>
-                    <th>
-                        Modified By
-                    </th>*@
+            Created On
+        </th>
+        <th>
+            Created By
+        </th>
+        <th>
+            Modified On
+        </th>
+        <th>
+            Modified By
+        </th>*@
             </tr>
         </thead>
         <tbody>
@@ -131,7 +134,11 @@
                         @*@if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
                             {*@
                         <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/ExpenseTrackers/Edit/@item.Id'"><i class="far fa-edit"></i></button>
-                        <button type="button" class="btn btn-info btn-xs" title="View Documents" onclick="fnViewDocuments(@item.Id)"><i class="far fa-eye"></i></button>
+
+                        @if (db.Documents.Any(wh => wh.ReferenceRecId == item.Id))
+                        {
+                            <button type="button" class="btn btn-info btn-xs" title="View Documents" onclick="fnViewDocuments(@item.Id)"><i class="far fa-eye"></i></button>
+                        }
                         @*}*@
                         @*else
                             {
@@ -158,6 +165,12 @@
                         }
 
                     </td>
+                    <td>
+                        @if (!db.Documents.Any(wh => wh.ReferenceRecId == item.Id) && item.Status != "Approved")
+                        {                       
+                            <input type="checkbox" id="@item.Id" />
+                        }
+                    </td>
                     <td style="text-align:right">
                         @*@Html.DisplayFor(modelItem => item.ExpenseAmount.ToString("#,##0.00"))*@
                         @item.ExpenseAmount.ToString("#,##0.00")
@@ -182,20 +195,20 @@
 
 
 
-                        <!--<td>-->
-                        @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
-                        <!--@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.User.FullName)
-                        </td>
-                        <td>-->
-                        @*@Html.DisplayFor(modelItem => item.ModifiedOn)*@
-                        <!--@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.User1.FullName)
-                        </td>-->
+                    <!--<td>-->
+                    @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
+                    <!--@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User.FullName)
+                    </td>
+                    <td>-->
+                    @*@Html.DisplayFor(modelItem => item.ModifiedOn)*@
+                    <!--@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User1.FullName)
+                    </td>-->
                 </tr>
             }
         </tbody>
@@ -259,6 +272,65 @@
                 alert("Error occured!!  " + data.message)
             }
         });
+    }
+    function fnApprove(id, status) {
+        debugger;
+        $.ajax({
+            type: "GET",
+            url: "/ExpenseTrackers/ExpenceEntryApproval?id=" + id + "&status=" + status,
+            //data: JSON.stringify(Register),
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data.status == "Success") {
+                    alert(data.message);
+                    window.location.href = data.redirectURL;
+                }
+                //else {
+                //    alert(data.message);
+                //}
+
+            },
+            error: function () {
+                alert("Error occured!!  " + data.message)
+            }
+        });
+    }
+    function fnBulkApprove() {
+
+        if ($('#example1 input:checkbox:checked').length > 0) {
+            var id = [];
+            $('#example1 input[type=checkbox]:checked').each(function () {
+                id.push($(this).attr('id'));
+            });
+
+            var inputData = { 'id': id, 'status': 'Approved' };
+
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "/ExpenseTrackers/ExpenceEntryApproval",
+                data: JSON.stringify(inputData),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.status == "Success") {
+                        alert(data.message);
+                        window.location.href = data.redirectURL;
+                    }
+                    //else {
+                    //    alert(data.message);
+                    //}
+
+                },
+                error: function () {
+                    alert("Error occured!!  " + data.message)
+                }
+            });
+        }
+        else {
+            alert("select any item to Approve");
+        }
     }
     function fnVerify(id, status) {
         debugger;

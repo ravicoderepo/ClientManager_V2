@@ -64,91 +64,103 @@ namespace ClientManager.Controllers
             try
             {
                 int num = 0;
-                DocumentData.PostedFile = Request.Files["uploadFile"];
-                if (string.IsNullOrEmpty(DocumentData.PostedFile.FileName) || DocumentData.DocumentType == null || DocumentData.DocumentSource == null || DocumentData.ReferenceRecId <= 0 || DocumentData.Status == null)
-                {
-                    data = new JsonReponse()
-                    {
-                        message = "Enter all required fields.",
-                        status = "Failed",
-                        redirectURL = ""
-                    };
-                    //return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    string fileName = Path.GetFileName(DocumentData.PostedFile.FileName);
-                    //Use Namespace called :  System.IO  
-                    string FileName = Path.GetFileNameWithoutExtension(DocumentData.PostedFile.FileName);
+                //DocumentData.PostedFile = Request.Files["uploadFile"];
 
-                    //To Get File Extension  
-                    string FileExtension = Path.GetExtension(DocumentData.PostedFile.FileName);
-                    string[] ImgExtensions = { ".jpeg", ".png", ".gif", ".tiff" };
-                    string[] DocExtensions = { ".txt", ".doc", ".docx", ".xls", ".xlsx" };
-                    string[] PdfExtension = { ".pdf" };
-                    string[] ZipExtensions = { ".zip" };
+                for (int i = 0; i < Request.Files.Count; i++)
+                {
+                    DocumentData.PostedFile = Request.Files[i];
 
-                    if (ImgExtensions.Contains(FileExtension.ToLower()))
+                    if (false)
+                    //if (string.IsNullOrEmpty(DocumentData.PostedFile.FileName) || DocumentData.DocumentType == null || DocumentData.DocumentSource == null || DocumentData.ReferenceRecId <= 0 || DocumentData.Status == null)
                     {
-                        DocumentData.DocumentType = "Image";
-                    }
-                    else if (DocExtensions.Contains(FileExtension.ToLower()))
-                    {
-                        DocumentData.DocumentType = "Document";
-                    }
-                    else if (PdfExtension.Contains(FileExtension.ToLower()))
-                    {
-                        DocumentData.DocumentType = "PDF";
-                    }
-                    else if (ZipExtensions.Contains(FileExtension.ToLower()))
-                    {
-                        DocumentData.DocumentType = "Zip";
+                        //data = new JsonReponse()
+                        //{
+                        //    message = "Enter all required fields.",
+                        //    status = "Failed",
+                        //    redirectURL = ""
+                        //};
+                        ////return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
-                        DocumentData.DocumentType = "Others";
+                        string fileName = Path.GetFileName(DocumentData.PostedFile.FileName);
+                        //Use Namespace called :  System.IO  
+                        string FileName = Path.GetFileNameWithoutExtension(DocumentData.PostedFile.FileName);
+
+                        //To Get File Extension  
+                        string FileExtension = Path.GetExtension(DocumentData.PostedFile.FileName);
+                        string[] ImgExtensions = { ".jpg",".jpeg", ".png", ".gif", ".tiff" };
+                        string[] DocExtensions = { ".txt", ".doc", ".docx", ".xls", ".xlsx" };
+                        string[] PdfExtension = { ".pdf" };
+                        string[] ZipExtensions = { ".zip" };
+
+                        if (ImgExtensions.Contains(FileExtension.ToLower()))
+                        {
+                            DocumentData.DocumentType = "Image";
+                        }
+                        else if (DocExtensions.Contains(FileExtension.ToLower()))
+                        {
+                            DocumentData.DocumentType = "Document";
+                        }
+                        else if (PdfExtension.Contains(FileExtension.ToLower()))
+                        {
+                            DocumentData.DocumentType = "PDF";
+                        }
+                        else if (ZipExtensions.Contains(FileExtension.ToLower()))
+                        {
+                            DocumentData.DocumentType = "Zip";
+                        }
+                        else
+                        {
+                            DocumentData.DocumentType = "Others";
+                        }
+                        //Add Current Date To Attached File Name  
+                        FileName = DateTime.Now.ToString("yyyyMMdd") + "-" + FileName.Trim() + FileExtension;
+
+                        //Get Upload path from Web.Config file AppSettings.  
+                        //string UploadPath = ConfigurationManager.AppSettings["UserImagePath"].ToString();
+
+                        //Its Create complete path to store in server.  
+                        //ImagePath = UploadPath + FileName;
+
+                        //To copy and save file into server.  
+                        //membervalues.ImageFile.SaveAs(membervalues.ImagePath);
+                        string fileData = string.Empty;
+                        //if (DocumentData.DocumentType == "Image")
+                        //{
+                        System.IO.Stream fs = DocumentData.PostedFile.InputStream;
+                        System.IO.BinaryReader br = new System.IO.BinaryReader(fs);
+                        Byte[] bytes = br.ReadBytes((Int32)fs.Length);
+                        fileData = Convert.ToBase64String(bytes, 0, bytes.Length);
+
+                        //fileData = Utility.FileProcess.ImageToBase64(DocumentData.PostedFile.FileName);
+                        //fileData = Utility.FileProcess.ImageToBase64(DocumentData.PostedFile.FileName);
+                        //}
+
+                        //FileInfo file = new FileInfo(DocumentData.PostedFile.FileName);
+
+                        this.db.Documents.Add(new DBOperation.Document()
+                        {
+                            FileName = FileName,
+                            DocumentType = DocumentData.DocumentType,
+                            DocumentSource = DocumentData.DocumentSource,
+                            ReferenceRecId = DocumentData.ReferenceRecId,
+                            Status = DocumentData.Status,
+                            Description = DocumentData.Description,
+                            FileData = fileData,
+                            FileExtension = FileExtension,
+                            CreatedBy = userData.Id,
+                            CreatedOn = DateTime.Now
+                        });
+
+                        //var expenseData = db.Documents.Where(wh=> wh.ReferenceRecId == DocumentData.ReferenceRecId).FirstOrDefault();
+
+                        //expenseData.
+
+                        num = this.db.SaveChanges();
                     }
-                    //Add Current Date To Attached File Name  
-                    FileName = DateTime.Now.ToString("yyyyMMdd") + "-" + FileName.Trim() + FileExtension;
-
-                    //Get Upload path from Web.Config file AppSettings.  
-                    //string UploadPath = ConfigurationManager.AppSettings["UserImagePath"].ToString();
-
-                    //Its Create complete path to store in server.  
-                    //ImagePath = UploadPath + FileName;
-
-                    //To copy and save file into server.  
-                    //membervalues.ImageFile.SaveAs(membervalues.ImagePath);
-                    string fileData = string.Empty;
-                    //if (DocumentData.DocumentType == "Image")
-                    //{
-                    System.IO.Stream fs = DocumentData.PostedFile.InputStream;
-                    System.IO.BinaryReader br = new System.IO.BinaryReader(fs);
-                    Byte[] bytes = br.ReadBytes((Int32)fs.Length);
-                    fileData = Convert.ToBase64String(bytes, 0, bytes.Length);
-
-                    //fileData = Utility.FileProcess.ImageToBase64(DocumentData.PostedFile.FileName);
-                    //fileData = Utility.FileProcess.ImageToBase64(DocumentData.PostedFile.FileName);
-                    //}
-
-                    //FileInfo file = new FileInfo(DocumentData.PostedFile.FileName);
-
-                    this.db.Documents.Add(new DBOperation.Document()
-                    {
-                        FileName = FileName,
-                        DocumentType = DocumentData.DocumentType,
-                        DocumentSource = DocumentData.DocumentSource,
-                        ReferenceRecId = DocumentData.ReferenceRecId,
-                        Status = DocumentData.Status,
-                        Description = DocumentData.Description,
-                        FileData = fileData,
-                        FileExtension = FileExtension,
-                        CreatedBy = userData.Id,
-                        CreatedOn = DateTime.Now
-                    });
-
-                    num = this.db.SaveChanges();
                 }
+
                 if (num > 0)
                     data = new JsonReponse()
                     {
@@ -283,6 +295,52 @@ namespace ClientManager.Controllers
                 entity.ModifiedBy = new int?(userDetails.Id);
                 entity.ModifiedOn = new DateTime?(DateTime.Now);
                 this.db.Entry<Document>(entity).State = EntityState.Modified;
+                this.db.SaveChanges();
+
+                data = new JsonReponse()
+                {
+                    message = "Document status updated.",
+                    status = "Success",
+                    redirectURL = "/Documents/List?" + DateTime.Now.Ticks.ToString()
+                };
+            }
+            catch (Exception ex)
+            {
+                data = new JsonReponse()
+                {
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
+            }
+            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+        }
+
+        [CustomAuthorize(new string[] { "Super Admin", "Store Admin" })]
+        [HttpGet]
+        public ActionResult DocumentStatusUpdate(int[] id, string status)
+        {
+            UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
+            JsonReponse data;
+            try
+            {
+                if (id.Length < 0)
+                    return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+
+                foreach (var item in id)
+                {
+                    Document entity = this.db.Documents.Find(item);
+
+                    if (entity == null)
+                        return (ActionResult)this.HttpNotFound();
+
+                    entity.Status = status;
+                    entity.ModifiedBy = new int?(userDetails.Id);
+                    entity.ModifiedOn = new DateTime?(DateTime.Now);
+                    this.db.Entry<Document>(entity).State = EntityState.Modified;
+                }
+
                 this.db.SaveChanges();
 
                 data = new JsonReponse()

@@ -57,8 +57,6 @@
                                         <h3 class="card-title">Expense Tracker</h3>
                                     </div>
                                 }
-                                <div class="col-4 col-sm-2">
-                                </div>
                                 @*<div class="col-4 col-sm-2">
                                         <button type="button"  <div class="col-4 col-sm-2">
                                         <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Search</button>
@@ -67,93 +65,99 @@
                                 <div class="col-4 col-sm-2">
                                     <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Search</button>
                                 </div>
-                                <div class="col-4 col-sm-2">
-                                    @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
-                                    {
+
+                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                {
+                                    <div class="col-4 col-sm-2">
                                         <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:location.href='/ExpenseTrackers/Create'"><i class="fa fa-plus"></i> New</button>
-
-                                    }
-                                </div>
-                            </div>
-
+                                    </div>
+                                }
+                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Super User"))
+                                {
+                                    <div class="col-4 col-sm-2">
+                                        <button type="button" style="float:right" class="btn btn-block btn-success btn-sm " onclick="javascript:fnBulkApprove()"><i class="fa fa-tags"></i>Bulk Approve</button>
+                                    </div>
+                                }
                         </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <div id="pnlAdvSearch">
-                                <div class="card-body" style="background-color:whitesmoke">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="expenseDateFrom">Expense Date From</label>
-                                                <div class="input-group date" data-target-input="nearest">
-                                                    <input type="text" class="form-control datetimepicker-input" data-target="#txtexpenseDateFrom" name="expenseDateFrom" id="txtexpenseDateFrom">
-                                                    <div class="input-group-append" data-target="#txtexpenseDateFrom" data-toggle="datetimepicker">
-                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="expenseDateTo">Expense Date To</label>
-                                                <div class="input-group date" data-target-input="nearest">
-                                                    <input type="text" class="form-control datetimepicker-input" data-target="#txtexpenseDateTo" name="expenseDateTo" id="txtexpenseDateTo">
-                                                    <div class="input-group-append" data-target="#txtexpenseDateTo" data-toggle="datetimepicker">
-                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="Status">Status</label>
-                                                <input type="hidden" id="filterCon" value="@ViewBag.DashboardFilter" />
-                                                @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus" })
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="Status">Expense Category</label>
-                                                @Html.DropDownList("ExpenseCategory", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlExpenseCategory" })
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="Status">Month</label>
-                                                @Html.DropDownList("Months", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlMonths" })
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="Status">Year</label>
-                                                @Html.DropDownList("Years", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlYears" })
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /.card-body -->
-                                    <div class="card-footer">
-                                        <button type="submit" class="btn btn-primary btn-sm" onclick="javascript:fnSearch()"> <i class="fa fa-search"></i> Search</button>
-                                        <button type="button" onclick="javascript:fnClearSearch()" class="btn btn-danger btn-sm">Clear</button>
-                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="javascript:fnToggleAdvSearch('0')">Hide</button>
-                                    </div>
-                                </div>
-                                <br />
-                            </div>
-                            @Html.Partial("ListView", Model)
-                        </div>
-                        <!-- /.card-body -->
+
                     </div>
-                    <!-- /.card -->
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div id="pnlAdvSearch">
+                            <div class="card-body" style="background-color:whitesmoke">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="expenseDateFrom">Expense Date From</label>
+                                            <div class="input-group date" data-target-input="nearest">
+                                                <input type="text" class="form-control datetimepicker-input" data-target="#txtexpenseDateFrom" name="expenseDateFrom" id="txtexpenseDateFrom">
+                                                <div class="input-group-append" data-target="#txtexpenseDateFrom" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="expenseDateTo">Expense Date To</label>
+                                            <div class="input-group date" data-target-input="nearest">
+                                                <input type="text" class="form-control datetimepicker-input" data-target="#txtexpenseDateTo" name="expenseDateTo" id="txtexpenseDateTo">
+                                                <div class="input-group-append" data-target="#txtexpenseDateTo" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Status">Status</label>
+                                            <input type="hidden" id="filterCon" value="@ViewBag.DashboardFilter" />
+                                            @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Status">Expense Category</label>
+                                            @Html.DropDownList("ExpenseCategory", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlExpenseCategory" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Status">Month</label>
+                                            @Html.DropDownList("Months", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlMonths" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Status">Year</label>
+                                            @Html.DropDownList("Years", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlYears" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-primary btn-sm" onclick="javascript:fnSearch()"> <i class="fa fa-search"></i> Search</button>
+                                    <button type="button" onclick="javascript:fnClearSearch()" class="btn btn-danger btn-sm">Clear</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="javascript:fnToggleAdvSearch('0')">Hide</button>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                        @Html.Partial("ListView", Model)
+                    </div>
+                    <!-- /.card-body -->
                 </div>
-                <!-- /.col -->
+                <!-- /.card -->
             </div>
-            <!-- /.row -->
+            <!-- /.col -->
         </div>
-        <!-- /.container-fluid -->
+        <!-- /.row -->
+</div>
+<!-- /.container-fluid -->
     </section>
-    <!-- /.content -->
+<!-- /.content -->
 </div>
 <script>
     $('#pnlAdvSearch').hide();
@@ -232,7 +236,7 @@
         $('#ddlMonths').val(0);
         $('#ddlYears').val(0);
     }
-        
+
     fnDasboardFilter($('#filterCon').val());
 
 </script>

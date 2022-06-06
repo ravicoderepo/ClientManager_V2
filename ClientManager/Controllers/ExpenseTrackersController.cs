@@ -355,6 +355,53 @@ namespace ClientManager.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        [CustomAuthorize(new string[] { "Super User"})]
+        public ActionResult ExpenceEntryApproval(int[] id, string status)
+        {
+            UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
+            JsonReponse data;
+            try
+            {
+                if (id.Length < 0)
+                    return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                else
+                {
+                    foreach (var item in id)
+                    {
+                        ExpenseTracker entity = this.db.ExpenseTrackers.Find(item);
+
+                        if (entity == null)
+                            return (ActionResult)this.HttpNotFound();
+
+                        entity.Status = status;
+                        entity.ModifiedBy = new int?(userDetails.Id);
+                        entity.ModifiedOn = new DateTime?(DateTime.Now);
+                        this.db.Entry<ExpenseTracker>(entity).State = EntityState.Modified;
+                        this.db.SaveChanges();
+                    }
+
+                    data = new JsonReponse()
+                    {
+                        message = "Expence Entry Approved.",
+                        status = "Success",
+                        redirectURL = "/ExpenseTrackers/List?" + DateTime.Now.Ticks.ToString()
+                    };
+
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new JsonReponse()
+                {
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
+            }
+            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpGet]
         [CustomAuthorize(new string[] { "Accounts Manager" })]
         public ActionResult ExpenceEntryVerify(int id, string status)
