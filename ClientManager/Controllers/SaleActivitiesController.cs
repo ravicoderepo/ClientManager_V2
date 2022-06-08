@@ -20,9 +20,9 @@ namespace ClientManager.Controllers
 
         [CustomAuthorize(new string[] { "Super User", "Super Admin", "Sales Manager", "Sales Engineer" })]
         // GET: SaleActivities
-        public ActionResult ListView(string callDateFrom ="", string callDateTo="", int status=0, string productName = "", string customerName ="", int salesPerson = 0)
+        public ActionResult ListView(string callDateFrom = "", string callDateTo = "", int status = 0, string productName = "", string customerName = "", int salesPerson = 0)
         {
-            
+
             DateTime dtcallDateFrom = new DateTime();
             DateTime dtcallDateTo = new DateTime();
             var currentUser = (UserDetails)Session["UserDetails"];
@@ -34,7 +34,7 @@ namespace ClientManager.Controllers
             }
             else
             {
-                ViewBag.SelectedSalesPerson = "of " + db.Users.FirstOrDefault(n=> n.Id == salesPerson).FullName;
+                ViewBag.SelectedSalesPerson = "of " + db.Users.FirstOrDefault(n => n.Id == salesPerson).FullName;
             }
             //var saleActivities = db.SaleActivities.Include(s => s.SalesStatu);
             var saleActivities = (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName))) ? db.SaleActivities.Include(s => s.SalesStatu) : (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "sales manager")) ? db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id || currentUser.ReportingToMe.Contains(wh.CreatedBy)) : db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id);
@@ -72,7 +72,7 @@ namespace ClientManager.Controllers
                 dtcallDateFrom = DateTime.Parse(callDateFrom);
                 saleActivities = saleActivities.Where(wh => wh.SaleDate >= dtcallDateFrom);
             }
-            
+
             if (!string.IsNullOrEmpty(callDateTo))
             {
                 dtcallDateTo = DateTime.Parse(callDateTo);
@@ -92,12 +92,12 @@ namespace ClientManager.Controllers
             {
                 saleActivities = saleActivities.Where(wh => wh.CreatedBy == salesPerson);
                 var output = saleActivities.Where(wh => wh.Status == 6 && wh.CreatedBy == salesPerson && wh.InvoiceAmount != null).Select(sel => (sel.InvoiceAmount.HasValue) ? sel.InvoiceAmount.Value : 0).ToList();
-                ViewBag.TotalSalesBySalesPerson = "Rs." + output.Sum(s=> s).ToString("#,##0.00");
+                ViewBag.TotalSalesBySalesPerson = " Rs." + output.Sum(s => s).ToString("#,##0.00");
             }
             else
             {
                 var output = saleActivities.Where(wh => wh.Status == 6 && wh.InvoiceAmount != null).Select(sel => (sel.InvoiceAmount.HasValue) ? sel.InvoiceAmount.Value : 0).ToList();
-                ViewBag.TotalSalesBySalesPerson = "Rs." + output.Sum(s=> s).ToString("#,##0.00");
+                ViewBag.TotalSalesBySalesPerson = " Rs." + output.Sum(s => s).ToString("#,##0.00");
             }
 
             if (status > 0)
@@ -105,8 +105,8 @@ namespace ClientManager.Controllers
 
             statusList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
             ViewBag.Status = statusList;
-           
-            return PartialView(saleActivities.OrderByDescending(ord=> ord.SaleDate).ToList());
+
+            return PartialView(saleActivities.OrderByDescending(ord => ord.SaleDate).ToList());
         }
 
         [CustomAuthorize(new string[] { "Super User", "Super Admin", "Sales Manager", "Sales Engineer" })]
@@ -119,12 +119,12 @@ namespace ClientManager.Controllers
             var saleActivities = (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName))) ? db.SaleActivities.Include(s => s.SalesStatu) : (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "sales manager")) ? db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id || currentUser.ReportingToMe.Contains(wh.CreatedBy)) : db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id);
 
             List<SelectListItem> statusList = new SelectList(db.SalesStatus, "Id", "Status").ToList();
-            var salesPersons = db.Users.Where(wh=> wh.IsActive == true);
+            var salesPersons = db.Users.Where(wh => wh.IsActive == true);
             List<SelectListItem> selesPersonList = new List<SelectListItem>();
             if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "super admin" || wh.RoleName.ToLower() == "super user"))
             {
-                string[] roleNames = { "Super User","Sales Manager", "Sales Engineer" };
-                selesPersonList  = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName)).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName", currentUser.Id).ToList();               
+                string[] roleNames = { "Super User", "Sales Manager", "Sales Engineer" };
+                selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName)).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName", currentUser.Id).ToList();
             }
             else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "sales manager"))
             {
@@ -134,19 +134,23 @@ namespace ClientManager.Controllers
             else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "sales engineer"))
             {
                 string[] roleNames = { "Sales Engineer" };
-                selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName) && rl.UserId == currentUser.Id).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName",currentUser.Id).ToList();
+                selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName) && rl.UserId == currentUser.Id).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName", currentUser.Id).ToList();
             }
 
             //ViewBag.SelectedSalesPerson = " of " + currentUser.FullName;
             //db.UserRoles.Where(rl => rl.Role.RoleName.ToLower() == "Sales Engineer").Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName });            
 
 
+            var output = saleActivities.Where(wh => wh.Status == 6 && wh.InvoiceAmount != null).Select(sel => (sel.InvoiceAmount.HasValue) ? sel.InvoiceAmount.Value : 0).ToList();
+            ViewBag.TotalSalesBySalesPerson = "Rs." + output.Sum(s => s).ToString("#,##0.00");
+
+
             statusList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
             selesPersonList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
-          
+
             ViewBag.SalesPerson = selesPersonList;
             ViewBag.Status = statusList;
-           
+
 
             return View(saleActivities.OrderByDescending(ord => ord.SaleDate).ToList());
         }
@@ -203,30 +207,30 @@ namespace ClientManager.Controllers
             var lastSavedId = 0;
             try
             {
-                var saleDetails = new SaleActivity 
-                { 
-                    SaleDate = DateTime.ParseExact(saleData.SaleDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), 
-                    Status = saleData.Status, 
-                    ClientPhoneNo = saleData.ClientPhoneNo, 
-                    ClientEmail = saleData.ClientEmail, 
-                    ClientName = saleData.ClientName, 
-                    ProductName = saleData.ProductName, 
-                    RecentCallDate = DateTime.ParseExact(saleData.RecentCallDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), 
-                    Capacity = saleData.Capacity, 
-                    Unit = saleData.Unit, 
-                    Remarks = saleData.Remarks, 
-                    CreatedBy = currentUser.Id, 
-                    CreatedOn = DateTime.Now, 
-                    AnticipatedClosingDate = DateTime.ParseExact(saleData.AnticipatedClosingDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), 
-                    SalesRepresentativeId = saleData.SalesRepresentativeId, 
-                    NoOfFollowUps = saleData.NoOfFollowUps, 
-                    InvoiceAmount = saleData.InvoiceAmount, 
-                    InvoiceNo = saleData.InvoiceNo 
+                var saleDetails = new SaleActivity
+                {
+                    SaleDate = DateTime.ParseExact(saleData.SaleDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    Status = saleData.Status,
+                    ClientPhoneNo = saleData.ClientPhoneNo,
+                    ClientEmail = saleData.ClientEmail,
+                    ClientName = saleData.ClientName,
+                    ProductName = saleData.ProductName,
+                    RecentCallDate = DateTime.ParseExact(saleData.RecentCallDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    Capacity = saleData.Capacity,
+                    Unit = saleData.Unit,
+                    Remarks = saleData.Remarks,
+                    CreatedBy = currentUser.Id,
+                    CreatedOn = DateTime.Now,
+                    AnticipatedClosingDate = DateTime.ParseExact(saleData.AnticipatedClosingDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    SalesRepresentativeId = saleData.SalesRepresentativeId,
+                    NoOfFollowUps = saleData.NoOfFollowUps,
+                    InvoiceAmount = saleData.InvoiceAmount,
+                    InvoiceNo = saleData.InvoiceNo
                 };
 
                 if (saleData.Status == 6)
                 {
-                    if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName)  || saleData.RecentCallDate == null || string.IsNullOrEmpty(saleData.Remarks) || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit) || string.IsNullOrEmpty(saleData.InvoiceNo) || saleData.InvoiceAmount < 0)
+                    if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName) || saleData.RecentCallDate == null || string.IsNullOrEmpty(saleData.Remarks) || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit) || string.IsNullOrEmpty(saleData.InvoiceNo) || saleData.InvoiceAmount < 0)
                     {
                         jsonRes = new JsonReponse { message = "Enter all required fields.", status = "Failed", redirectURL = "" };
                     }

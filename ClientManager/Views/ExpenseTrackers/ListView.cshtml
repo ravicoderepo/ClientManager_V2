@@ -96,7 +96,10 @@
         <thead>
             <tr>
                 <th>Action</th>
-                <th>Select</th>
+                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Super User"))
+                {
+                    <th>Select</th>
+                }
                 <th>
                     Expence Amount
                 </th>
@@ -113,64 +116,69 @@
                     Description
                 </th>
                 @*<th>
-            Created On
-        </th>
-        <th>
-            Created By
-        </th>
-        <th>
-            Modified On
-        </th>
-        <th>
-            Modified By
-        </th>*@
+                        Created On
+                    </th>
+                    <th>
+                        Created By
+                    </th>
+                    <th>
+                        Modified On
+                    </th>
+                    <th>
+                        Modified By
+                    </th>*@
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
+            <tr>
+                <td>
+                    @*@if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+            {*@
+                    <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/ExpenseTrackers/Edit/@item.Id'"><i class="far fa-edit"></i></button>
+
+                    @if (db.Documents.Any(wh => wh.ReferenceRecId == item.Id))
+                    {
+                        <button type="button" class="btn btn-info btn-xs" title="View Documents" onclick="fnViewDocuments(@item.Id)"><i class="far fa-eye"></i></button>
+                    }
+                    @*}*@
+                    @*else
+            {
+                <button type="button" class="btn btn-primary btn-xs" title="View" onclick="javascript:location.href='/ExpenseTrackers/Edit/@item.Id'"><i class="fas fa-eye"></i></button>
+            }*@
+
+                    @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Approver") && item.Status == "Pending")
+                    {
+                        <button type="button" class="btn btn-success btn-xs" title="Approve" onclick="fnApprove(@item.Id,'Approved')"><i class="far fa-arrow-alt-circle-right"></i></button>
+                        @*<button type="button" class="btn btn-outline-secondary btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-up"></i></button>*@
+                        @*<button type="button" class="btn btn-outline-secondary btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-up"></i></button>*@
+                    }
+
+                    @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Verifier") && item.Status == "Approved")
+                    {
+                        <button type="button" class="btn btn-success btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-right"></i></button>
+                    }
+
+                    @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin") && item.Status == "Pending")
+                    {
+
+                        <button type="button" class="btn btn-danger btn-xs" title="Delete" onclick="fnDelete(@item.Id)"><i class="far fa-trash-alt"></i></button>
+
+                    }
+
+                </td> 
+                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Super User"))
+                {
                     <td>
-                        @*@if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
-                            {*@
-                        <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/ExpenseTrackers/Edit/@item.Id'"><i class="far fa-edit"></i></button>
 
-                        @if (db.Documents.Any(wh => wh.ReferenceRecId == item.Id))
-                        {
-                            <button type="button" class="btn btn-info btn-xs" title="View Documents" onclick="fnViewDocuments(@item.Id)"><i class="far fa-eye"></i></button>
-                        }
-                        @*}*@
-                        @*else
-                            {
-                                <button type="button" class="btn btn-primary btn-xs" title="View" onclick="javascript:location.href='/ExpenseTrackers/Edit/@item.Id'"><i class="fas fa-eye"></i></button>
-                            }*@
-
-                        @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Approver") && item.Status == "Pending")
-                        {
-                            <button type="button" class="btn btn-success btn-xs" title="Approve" onclick="fnApprove(@item.Id,'Approved')"><i class="far fa-arrow-alt-circle-right"></i></button>
-                            @*<button type="button" class="btn btn-outline-secondary btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-up"></i></button>*@
-                            @*<button type="button" class="btn btn-outline-secondary btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-up"></i></button>*@
-                        }
-
-                        @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Verifier") && item.Status == "Approved")
-                        {
-                            <button type="button" class="btn btn-success btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-right"></i></button>
-                        }
-
-                        @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin") && item.Status == "Pending")
-                        {
-
-                            <button type="button" class="btn btn-danger btn-xs" title="Delete" onclick="fnDelete(@item.Id)"><i class="far fa-trash-alt"></i></button>
-
-                        }
-
-                    </td>
-                    <td>
                         @if (!db.Documents.Any(wh => wh.ReferenceRecId == item.Id) && item.Status != "Approved")
-                        {                       
-                            <input type="checkbox" id="@item.Id" />
+                        {
+                        <input type="checkbox" id="@item.Id" />
                         }
+                        
                     </td>
+                }
                     <td style="text-align:right">
                         @*@Html.DisplayFor(modelItem => item.ExpenseAmount.ToString("#,##0.00"))*@
                         @item.ExpenseAmount.ToString("#,##0.00")
@@ -198,17 +206,17 @@
                     <!--<td>-->
                     @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
                     <!--@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.User.FullName)
-                    </td>
-                    <td>-->
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.User.FullName)
+        </td>
+        <td>-->
                     @*@Html.DisplayFor(modelItem => item.ModifiedOn)*@
                     <!--@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.User1.FullName)
-                    </td>-->
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.User1.FullName)
+        </td>-->
                 </tr>
             }
         </tbody>
@@ -232,22 +240,27 @@
     });
 
     function fnDelete(id) {
-        $.ajax({
-            type: "GET",
-            url: "/ExpenceTrakers/Delete?id=" + id,
-            //data: JSON.stringify(Register),
-            dataType: "json",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                if (data.status == "Success") {
-                    alert(data.message);
-                    window.location.href = data.redirectURL;
+        if (confirm("do you want to delete?")) {
+            $.ajax({
+                type: "GET",
+                url: "/ExpenceTrakers/Delete?id=" + id,
+                //data: JSON.stringify(Register),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.status == "Success") {
+                        alert(data.message);
+                        window.location.href = data.redirectURL;
+                    }
+                },
+                error: function () {
+                    alert("Error occured!!  " + data.message)
                 }
-            },
-            error: function () {
-                alert("Error occured!!  " + data.message)
-            }
-        });
+            });
+        }
+        else {
+            return false;
+        }
     }
 
     function fnApprove(id, status) {

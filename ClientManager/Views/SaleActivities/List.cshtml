@@ -153,7 +153,7 @@
             dataType: 'html',
             success: function (result) {
                 $('#gridView').html(result);
-                $('#lblSalesPersonName').text(' for ' + $('#ddlSalesPerson option:selected').text() + '@ViewBag.TotalSalesBySalesPerson');
+                $('#lblSalesPersonName').text(' for ' + $('#ddlSalesPerson option:selected').text() + ' : ' + '@ViewBag.TotalSalesBySalesPerson');
                // @ViewBag.SelectedSalesPerson = $('#ddlSalesPerson option:selected').text();
             },
             error: function (xhr, status) {
@@ -255,6 +255,7 @@
     //    })
 
     //});
-      $('#lblSalesPersonName').text(' of ' + $('#ddlSalesPerson option:selected').text());
+  //  $('#lblSalesPersonName').text(' of ' + $('#ddlSalesPerson option:selected').text());
+     $('#lblSalesPersonName').text(' for ' + $('#ddlSalesPerson option:selected').text() + ' : ' + '@ViewBag.TotalSalesBySalesPerson');
     $("#mnuSalesList").addClass("active");
 </script>

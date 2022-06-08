@@ -65,6 +65,8 @@ namespace ClientManager.Controllers
             year = (year == 0) ? DateTime.Now.Year : year;
 
             var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
+            var expenceTracker1 = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
+
             if (!string.IsNullOrEmpty(expenseDateFrom))
             {
                 dtExpenseDateFrom = DateTime.Parse(expenseDateFrom);
@@ -90,9 +92,9 @@ namespace ClientManager.Controllers
                 expenceTracker = expenceTracker.Where(wh => wh.ExpenseCategoryId == expenseCat);
 
             var TotalPettyCashAmount = db.PettyCashes.Where(wh => wh.AmountRecivedDate.Month == month && wh.AmountRecivedDate.Year == year).ToList();
-            var TotalApprovedExpenceAmount = expenceTracker.Where(wh => wh.ExpenseDate.Month == month && wh.ExpenseDate.Year == year && wh.Status == "Verified").ToList();
-            var TotalUnApprovedExpenceAmount = expenceTracker.Where(wh => wh.ExpenseDate.Month == month && wh.ExpenseDate.Year == year && wh.Status == "Pending").ToList();
-            var TotalUnVerifiedExpenceAmount = expenceTracker.Where(wh => wh.ExpenseDate.Month == month && wh.ExpenseDate.Year == year && wh.Status == "Approved").ToList();
+            var TotalApprovedExpenceAmount = expenceTracker1.Where(wh => wh.ExpenseDate.Month == month && wh.ExpenseDate.Year == year && wh.Status == "Verified").ToList();
+            var TotalUnApprovedExpenceAmount = expenceTracker1.Where(wh => wh.ExpenseDate.Month == month && wh.ExpenseDate.Year == year && wh.Status == "Pending").ToList();
+            var TotalUnVerifiedExpenceAmount = expenceTracker1.Where(wh => wh.ExpenseDate.Month == month && wh.ExpenseDate.Year == year && wh.Status == "Approved").ToList();
             decimal? TotalPettyCash = (TotalPettyCashAmount != null && TotalPettyCashAmount.Count > 0) ? TotalPettyCashAmount.Sum(S => S.AmountReceived) : 0;
             decimal? TotalApprovedExpence = (TotalApprovedExpenceAmount != null && TotalApprovedExpenceAmount.Count > 0) ? TotalApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
             decimal? TotalUnApprovedExpence = (TotalUnApprovedExpenceAmount != null && TotalUnApprovedExpenceAmount.Count > 0) ? TotalUnApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
