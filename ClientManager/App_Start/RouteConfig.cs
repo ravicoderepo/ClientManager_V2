@@ -18,8 +18,13 @@ namespace ClientManager
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Account", action = "Index", id = UrlParameter.Optional }
-            );           
+                defaults: new { controller = "Account", action = "Index", id = UrlParameter.Optional }, namespaces: new string[] { "ClientManager.Controllers" }
+            );
+            routes.MapRoute(
+                name: "Default1",
+                url: "Admin/{controller}/{action}/{id}",
+                defaults: new { controller = "Account", action = "Index", id = UrlParameter.Optional }, namespaces: new string[] { "ClientManager.Areas.Admin.Controllers" }
+            );
 
         }
     }

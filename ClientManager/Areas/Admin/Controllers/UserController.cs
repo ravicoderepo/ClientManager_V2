@@ -18,7 +18,7 @@ namespace ClientManager.Areas.Admin.Controllers
     {
         private ClientManagerEntities db = new ClientManagerEntities();
 
-        [CustomAuthorize(new string[] { "Super Admin"})]
+        [CustomAuthorize(new string[] { "Super Admin", "Sales Manager" })]
         public ActionResult List()
         {
             UserDetails currentUser = (UserDetails)this.Session["UserDetails"];
@@ -112,7 +112,7 @@ namespace ClientManager.Areas.Admin.Controllers
         {
             ViewBag.ModifiedBy = new SelectList(db.Users, "Id", "FullName");
             ViewBag.ReportingManager = new SelectList(db.Users, "Id", "FullName");
-            ViewBag.CreatedBy = new SelectList(db.Users, "Id", "FullName");            
+            ViewBag.CreatedBy = new SelectList(db.Users, "Id", "FullName");
             ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", 1).ToList<SelectListItem>();
             return View();
 
@@ -123,9 +123,9 @@ namespace ClientManager.Areas.Admin.Controllers
         public ActionResult Create(UserData userData)
         {
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
-            
+
             JsonReponse jsonReponse = (JsonReponse)null;
-            
+
             JsonReponse data;
             try
             {
@@ -189,7 +189,7 @@ namespace ClientManager.Areas.Admin.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
-        [CustomAuthorize(new string[] { "Super Admin"})]
+        [CustomAuthorize(new string[] { "Super Admin", "Sales Manager" })]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -205,90 +205,90 @@ namespace ClientManager.Areas.Admin.Controllers
             ViewBag.ReportingManager = new SelectList(db.Users, "Id", "FullName", user.ReportingManager);
             ViewBag.CreatedBy = new SelectList(db.Users, "Id", "FullName", user.CreatedBy);
 
-            
+
             ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", (object)1).ToList<SelectListItem>();
             return View(user);
         }
 
-            [HttpPost]
-            [CustomAuthorize(new string[] { "Super Admin"})]
-            public ActionResult Edit(UserData userData)
+        [HttpPost]
+        [CustomAuthorize(new string[] { "Super Admin", "Sales Manager" })]
+        public ActionResult Edit(UserData userData)
+        {
+            JsonReponse data;
+            try
             {
-                JsonReponse data;
-                try
-                {
-                    UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
-                    User entity = this.db.Users.FirstOrDefault<User>((Expression<Func<User, bool>>)(wh => wh.Id == userData.Id));
-                    if (entity == null)
-                        data = new JsonReponse()
-                        {
-                            message = "There is no record for given Id",
-                            status = "Failed",
-                            redirectURL = ""
-                        };
-                    else if (string.IsNullOrEmpty(userData.UserId) || string.IsNullOrEmpty(userData.Password) || string.IsNullOrEmpty(userData.FullName))
+                UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
+                User entity = this.db.Users.FirstOrDefault<User>((Expression<Func<User, bool>>)(wh => wh.Id == userData.Id));
+                if (entity == null)
+                    data = new JsonReponse()
                     {
-                        data = new JsonReponse()
-                        {
-                            message = "Enter all required fields.",
-                            status = "Failed",
-                            redirectURL = ""
-                        };
-                    }
-                    else
-                    {
-                        this.db.Entry<User>(entity).State = EntityState.Modified;
-                        string str;
-                        if (userDetails.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "super admin")))
-                        {
-                            entity.FullName = userData.FullName;
-                            entity.Email = userData.UserId;
-                            entity.Password = userData.Password;
-                            entity.EmployeeId = userData.EmpId;
-                            entity.AddressLine1 = userData.AddressLine1;
-                            entity.AddressLine2 = userData.AddressLine2;
-                            entity.City = userData.City;
-                            entity.State = userData.State;
-                            entity.Pincode = userData.PinCode;
-                            entity.IsActive = new bool?(userData.IsActive);
-                            entity.DateOfBirth = userData.DateOfBirth;
-                            entity.DateOfJoining = userData.DateofJoining;
-                            entity.SaleTarget = userData.SaleTarget;
-                            entity.ReportingManager = userData.ReportingManager;
-                            str = "User Updated";
-                        }
-                        else
-                            str = "User Sale Target";
-                        entity.ModifiedBy = new int?(userDetails.Id);
-                        entity.ModifiedOn = new DateTime?(DateTime.Now);
-
-                        if (this.db.SaveChanges() > 0)
-                            data = new JsonReponse()
-                            {
-                                message = str + " successfully!",
-                                status = "Success",
-                                redirectURL = "/Admin/User/List"
-                            };
-                        else
-                            data = new JsonReponse()
-                            {
-                                message = str + " Not completed, try again after sometime.",
-                                status = "Failed",
-                                redirectURL = ""
-                            };
-                    }
-                }
-                catch (Exception ex)
+                        message = "There is no record for given Id",
+                        status = "Failed",
+                        redirectURL = ""
+                    };
+                else if (string.IsNullOrEmpty(userData.UserId) || string.IsNullOrEmpty(userData.Password) || string.IsNullOrEmpty(userData.FullName))
                 {
                     data = new JsonReponse()
                     {
-                        message = ex.Message,
-                        status = "Error",
+                        message = "Enter all required fields.",
+                        status = "Failed",
                         redirectURL = ""
                     };
                 }
-                return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+                else
+                {
+                    this.db.Entry<User>(entity).State = EntityState.Modified;
+                    string str;
+                    if (userDetails.UserRoles.Any(wh => wh.RoleName.ToLower() == "super admin" || wh.RoleName.ToLower() == "sales manager"))
+                    {
+                        entity.FullName = userData.FullName;
+                        entity.Email = userData.UserId;
+                        entity.Password = userData.Password;
+                        entity.EmployeeId = userData.EmpId;
+                        entity.AddressLine1 = userData.AddressLine1;
+                        entity.AddressLine2 = userData.AddressLine2;
+                        entity.City = userData.City;
+                        entity.State = userData.State;
+                        entity.Pincode = userData.PinCode;
+                        entity.IsActive = new bool?(userData.IsActive);
+                        entity.DateOfBirth = userData.DateOfBirth;
+                        entity.DateOfJoining = userData.DateofJoining;
+                        entity.SaleTarget = userData.SaleTarget;
+                        entity.ReportingManager = userData.ReportingManager;
+                        str = "User Updated";
+                    }
+                    else
+                        str = "User Sale Target";
+                    entity.ModifiedBy = new int?(userDetails.Id);
+                    entity.ModifiedOn = new DateTime?(DateTime.Now);
+
+                    if (this.db.SaveChanges() > 0)
+                        data = new JsonReponse()
+                        {
+                            message = str + " successfully!",
+                            status = "Success",
+                            redirectURL = "/Admin/User/List"
+                        };
+                    else
+                        data = new JsonReponse()
+                        {
+                            message = str + " Not completed, try again after sometime.",
+                            status = "Failed",
+                            redirectURL = ""
+                        };
+                }
             }
+            catch (Exception ex)
+            {
+                data = new JsonReponse()
+                {
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
+            }
+            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+        }
 
         [CustomAuthorize(new string[] { "Super Admin" })]
         public ActionResult Delete(int? id)

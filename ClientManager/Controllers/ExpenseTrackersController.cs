@@ -53,7 +53,7 @@ namespace ClientManager.Controllers
             expenseCategory.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
             ViewBag.ExpenseCategory = expenseCategory;
             ViewBag.DashboardFilter = string.IsNullOrEmpty(dashboardFilter) ? "" : dashboardFilter;
-            return View(expenceTracker.ToList());
+            return View(expenceTracker.ToList().OrderBy(ord => ord.Status));
         }
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         public ActionResult ListView(string expenseDateFrom = "", string expenseDateTo = "", string status = "", int month = 0,int year = 0, int expenseCat = 0)
@@ -101,6 +101,7 @@ namespace ClientManager.Controllers
             decimal? TotalUnVerifiedExpence = (TotalUnVerifiedExpenceAmount != null && TotalUnVerifiedExpenceAmount.Count > 0) ? TotalUnVerifiedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
 
             ViewBag.TotalPettyCash = TotalPettyCash.Value.ToString("#,##0.00");
+            ViewBag.TotalFilteredExpense = (expenceTracker.Count() >0) ? expenceTracker.Sum(w => w.ExpenseAmount).ToString("#,##0.00") : "0.00";
             ViewBag.TotalApprovedExpence = TotalApprovedExpence.Value.ToString("#,##0.00");
             ViewBag.TotalUnApprovedExpence = TotalUnApprovedExpence.Value.ToString("#,##0.00");
             ViewBag.TotalUnVerifiedExpence = TotalUnVerifiedExpence.Value.ToString("#,##0.00");
@@ -116,7 +117,7 @@ namespace ClientManager.Controllers
             //List<SelectListItem> expenseCategory = new SelectList(db.ExpenceCategories, "Id", "CategoryName", "").ToList();
             //expenseCategory.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
             //ViewBag.ExpenseCategory = expenseCategory;
-            return PartialView(expenceTracker.ToList().OrderByDescending(ord => ord.ExpenseDate).ToList());
+            return PartialView(expenceTracker.ToList().OrderBy(ord=> ord.Status).ToList());
         }
 
         // GET: PettyCashes/Create
@@ -470,7 +471,7 @@ namespace ClientManager.Controllers
                 {
                     message = "Expence Entry Deleted.",
                     status = "Success",
-                    redirectURL = "/ExpenceTrackers/List?" + DateTime.Now.Ticks.ToString()
+                    redirectURL = "/ExpenseTrackers/List?" + DateTime.Now.Ticks.ToString()
                 };
             }
             catch (Exception ex)

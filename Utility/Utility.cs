@@ -74,9 +74,11 @@ namespace Utility
         public static List<SelectListItem> GetUnitList()
         {
             List<SelectListItem> unitList = new List<SelectListItem>()
-            {
-                new SelectListItem() {Text="No.", Value="No."},
-                new SelectListItem() {Text="KW", Value="KW"},
+            {                
+                new SelectListItem() {Text="KW", Value="KW"},                
+                new SelectListItem() {Text="Kgs", Value="Kgs"},
+                new SelectListItem() {Text="Meter", Value="Meter"},
+                new SelectListItem() {Text="No.", Value="No."}
             };
 
             return unitList;
@@ -173,8 +175,8 @@ namespace Utility
             List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
             items.Insert(0, new SelectListItem()
             {
-                Text = "Expence Tracker",
-                Value = "Expence Tracker"
+                Text = "Business Tracker",
+                Value = "Business Tracker"
             });
 
             return items;

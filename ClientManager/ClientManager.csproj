@@ -140,6 +140,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\RolesController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserRolesController.cs" />
@@ -2514,6 +2515,11 @@
     <Content Include="Areas\Admin\Views\Roles\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Roles\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Roles\List.cshtml" />
+    <Content Include="Content\VRMStructures-ProductBrochure.pdf" />
+    <Content Include="Areas\Admin\Views\Home\NotAuthorized.cshtml" />
+    <Content Include="Areas\Admin\Views\Home\PageNotFound.cshtml" />
+    <Content Include="Areas\Admin\Views\Home\InternalServerError.cshtml" />
+    <Content Include="Areas\Admin\Views\Home\UnAuthorized.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />

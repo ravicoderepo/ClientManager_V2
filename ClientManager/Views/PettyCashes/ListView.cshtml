@@ -39,8 +39,8 @@
                 Description
             </th>
             @*<th>
-                Status
-            </th>*@
+                    Status
+                </th>*@
             @*<th>
                     Created On
                 </th>
@@ -85,8 +85,8 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 @*<td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>*@
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>*@
                 @*<td>
                         @Html.DisplayFor(modelItem => item.CreatedOn)
                     </td>
@@ -121,22 +121,27 @@
     });
 
     function fnDelete(id) {
-        $.ajax({
-            type: "GET",
-            url: "/PettyCashes/Delete?id=" + id,
-            //data: JSON.stringify(Register),
-            dataType: "json",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                if (data.status == "Success") {
-                    alert(data.message);
-                    window.location.href = data.redirectURL;
+        if (confirm("do you want to delete?")) {
+            $.ajax({
+                type: "GET",
+                url: "/PettyCashes/Delete?id=" + id,
+                //data: JSON.stringify(Register),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.status == "Success") {
+                        alert(data.message);
+                        window.location.href = data.redirectURL;
+                    }
+                },
+                error: function () {
+                    alert("Error occured!!  " + data.message)
                 }
-            },
-            error: function () {
-                alert("Error occured!!  " + data.message)
-            }
-        });
+            });
+        }
+        else {
+            return false;
+        }
     }
     $("#mnuPettyCash").addClass("active");
 </script>

@@ -11,7 +11,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SalesManager | Dashboard</title>
+    <title>BusinessTracker v1.0 | Dashboard</title>
 
     <!-- jQuery -->
     @*<script src="~/Content/plugins/jquery/jquery.min.js"></script>*@
@@ -130,25 +130,26 @@
 
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="~/Contact/Index" class="nav-link">Contact</a>
+                    @*<a href="~/Contact/Index" class="nav-link">Contact</a>*@
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="~/Account/Logout" class="nav-link">Logout</a>
                 </li>
-                <li>
-                   
+                @*<li>                   
                         <button type="button" style="float: right; margin-top: 3px !important;" class="btn btn-block btn-warning btn-sm " onclick="javascript:fnRedirect('http://vrmstructures.in/stocks')"><i class="fa fa-mercury"></i> VRM Stocks</button>
-                   
-                </li>
+                 </li>*@
+                @*<li>
+                    <button id="btnDownload" style="float: left; margin-top: 0px !important;" class="btn" onclick=""><i class="fa fa-download"></i> Download Product Brochure</button>  
+                </li>*@
             </ul>
 
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
                 <!-- Navbar Search -->
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+                    @*<a class="nav-link" data-widget="navbar-search" href="#" role="button">
                         <i class="fas fa-search"></i>
-                    </a>
+                    </a>*@
                     <div class="navbar-search-block">
                         <form class="form-inline">
                             <div class="input-group input-group-sm">
@@ -165,14 +166,14 @@
 
                 <!-- Messages Dropdown Menu -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
+                    <!--<a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-comments"></i>
                         <span class="badge badge-danger navbar-badge">3</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <a href="#" class="dropdown-item">
+                        <a href="#" class="dropdown-item">-->
                             <!-- Message Start -->
-                            <div class="media">
+                            <!--<div class="media">
                                 <img src="~/Content/dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
@@ -182,13 +183,13 @@
                                     <p class="text-sm">Call me whenever you can...</p>
                                     <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
                                 </div>
-                            </div>
+                            </div>-->
                             <!-- Message End -->
-                        </a>
+                        <!--</a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
+                        <a href="#" class="dropdown-item">-->
                             <!-- Message Start -->
-                            <div class="media">
+                            <!--<div class="media">
                                 <img src="~/Content/dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
@@ -198,13 +199,13 @@
                                     <p class="text-sm">I got your message bro</p>
                                     <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
                                 </div>
-                            </div>
+                            </div>-->
                             <!-- Message End -->
-                        </a>
+                        <!--</a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
+                        <a href="#" class="dropdown-item">-->
                             <!-- Message Start -->
-                            <div class="media">
+                            <!--<div class="media">
                                 <img src="~/Content/dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
@@ -214,16 +215,16 @@
                                     <p class="text-sm">The subject goes here</p>
                                     <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
                                 </div>
-                            </div>
+                            </div>-->
                             <!-- Message End -->
-                        </a>
+                        <!--</a>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-                    </div>
+                    </div>-->
                 </li>
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
+                    @*<a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-bell"></i>
                         <span class="badge badge-warning navbar-badge">15</span>
                     </a>
@@ -246,18 +247,18 @@
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-                    </div>
+                    </div>*@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-widget="fullscreen" href="#" role="button">
                         <i class="fas fa-expand-arrows-alt"></i>
                     </a>
                 </li>
-                <li class="nav-item">
+                @*<li class="nav-item">
                     <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
                         <i class="fas fa-th-large"></i>
                     </a>
-                </li>
+                </li>*@
             </ul>
         </nav>
         <!-- /.navbar -->
@@ -266,7 +267,7 @@
             <!-- Brand Logo -->
             <a href="~/Home/MyDashboard" class="brand-link">
                 <img src="~/Content/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">SalesManager</span>
+                <span class="brand-text font-weight-light">Business Tracker v1.0</span>
             </a>
 
             <!-- Sidebar -->
@@ -326,7 +327,7 @@
                                         <li class="nav-item">
                                             <a href="~/Home/FinanceDashboard" class="nav-link" id="mnuFinanceDashboard">
                                                 <i class="far fa-circle nav-icon"></i>
-                                                <p>Finance Dashboard</p>
+                                                <p>Accounts Dashboard</p>
                                             </a>
                                         </li>
                                     }
@@ -335,7 +336,7 @@
                                         <li class="nav-item">
                                             <a href="~/Home/FinanceDashboard" class="nav-link" id="mnuFinanceDashboard">
                                                 <i class="far fa-circle nav-icon"></i>
-                                                <p>Finance Dashboard</p>
+                                                <p>Accounts Dashboard</p>
                                             </a>
                                         </li>
                                     }
@@ -374,7 +375,7 @@
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-rupee-sign"></i>
                                 <p>
-                                    Finance
+                                    Accounts
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
@@ -399,15 +400,32 @@
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-shopping-cart"></i>
                                 <p>
-                                    Sales
+                                    Sales Tracker
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview" style="display: block;">
                                 <li class="nav-item">
                                     <a href="~/SaleActivities/List" class="nav-link" id="mnuSalesList">
-                                        <i class="far fas fa-list nav-icon"></i>
-                                        <p>Sales List</p>
+                                        <i class="far fas fa-balance-scale"></i>
+                                        <p>Sales</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item menu-is-opening menu-open">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-shopping-bag"></i>
+                                <p>
+                                    Stock Management
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview" style="display: block;">
+                                <li class="nav-item">
+                                    <a href="#" onclick="javascript:fnRedirect('http://vrmstructures.in/stocks')" class="nav-link" id="mnuSalesList">
+                                        <i class="far fas fa-battery-half nav-icon"></i>
+                                        <p>VRM Stock</p>
                                     </a>
                                 </li>
                             </ul>
@@ -461,147 +479,147 @@
         </li>*@
                         @if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "store admin") || currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "accounts manager") || currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "super user") || currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "super admin"))
                         {
-                                <li class="nav-header">DOCUMENTS MANAGEMENT</li>
-                                <li class="nav-item">
-                                    <a href="~/Documents/List" class="nav-link" id="mnuDocumentList">
-                                        <i class="far fas fa-list nav-icon"></i>
-                                        <p>
-                                            List
-                                        </p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="~/Documents/Create" class="nav-link" id="mnuDocumentCreate">
-                                        <i class="far fas fa-plus-circle nav-icon"></i>
-                                        <p>
-                                            Create
-                                        </p>
-                                    </a>
-                                </li>
-                            }
-                            @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Super Admin"))
-                            {
-                                <li class="nav-header">ADMIN</li>
-                                <li class="nav-item">
-                                    <a href="~/Admin/User/List" class="nav-link" id="mnuUsers">
-                                        <i class="nav-icon fas fa-users"></i>
-                                        <p>
-                                            Users
-                                        </p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="~/Admin/Roles/List" class="nav-link" id="mnuRoles">
-                                        <i class="nav-icon fas fa-user-tie"></i>
-                                        <p>
-                                            Roles
-                                        </p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="~/Admin/UserRoles/Create" class="nav-link" id="mnuRoleMapping">
-                                        <i class="nav-icon fas fa-user-graduate"></i>
-                                        <p>
-                                            Role Mapping
-                                        </p>
-                                    </a>
-                                </li>
-                            }
-                            <li class="nav-header">MASTERS</li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link" id="mnuClients">
-                                    <i class="nav-icon fas fa-user-shield"></i>
-                                    <p>
-                                        Clients
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link" id="mnuContacts">
-                                    <i class="nav-icon fas fa-address-book"></i>
-                                    <p>
-                                        Contacts
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link" id="mnuProducts">
-                                    <i class="nav-icon fas fa-file-invoice"></i>
-                                    <p>
-                                        Products
-                                    </p>
-                                </a>
-                            </li>
-                            @if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "store admin") || currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "accounts manager") || currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "super user") || currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "super admin"))
-                            {
-                                <li class="nav-item">
-                                    <a href="~/ExpenceCategories/List" class="nav-link" id="mnuExpenceCategory">
-                                        <i class="nav-icon fas fa-sort-amount-up"></i>
-                                        <p>
-                                            Expence Categories
-                                        </p>
-                                    </a>
-                                </li>
-                            }
-                            @*<li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-anchor"></i>
+                            @*<li class="nav-header">DOCUMENTS MANAGEMENT</li>
+            <li class="nav-item">
+                <a href="~/Documents/List" class="nav-link" id="mnuDocumentList">
+                    <i class="far fas fa-list nav-icon"></i>
                     <p>
-                        Client Management
+                        List
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="~/Documents/Create" class="nav-link" id="mnuDocumentCreate">
+                    <i class="far fas fa-plus-circle nav-icon"></i>
+                    <p>
+                        Create
                     </p>
                 </a>
             </li>*@
-                            <li class="nav-header">REPORTS</li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link" id="mnuReport1">
-                                    <i class="nav-icon fas fa-circle"></i>
-                                    <p>
-                                        Report 1
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link" id="mnuReport2">
-                                    <i class="nav-icon fas fa-circle"></i>
-                                    <p>
-                                        Report 2
-                                    </p>
-                                </a>
-                            </li>
+                        }
+                        @*@if (currentUser.UserRoles.Any(wh => wh.RoleName == "Super Admin"))
+        {*@
+                        <li class="nav-header">ADMIN</li>
+                        <li class="nav-item">
+                            <a href="~/Admin/User/List" class="nav-link" id="mnuUsers">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>
+                                    Users
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="~/Admin/Roles/List" class="nav-link" id="mnuRoles">
+                                <i class="nav-icon fas fa-user-tie"></i>
+                                <p>
+                                    Roles
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="~/Admin/UserRoles/Create" class="nav-link" id="mnuRoleMapping">
+                                <i class="nav-icon fas fa-user-graduate"></i>
+                                <p>
+                                    Role Mapping
+                                </p>
+                            </a>
+                        </li>
+                        @*}*@
+                        <li class="nav-header">MASTERS</li>
+                        @*<li class="nav-item">
+            <a href="#" class="nav-link" id="mnuClients">
+                <i class="nav-icon fas fa-user-shield"></i>
+                <p>
+                    Clients
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link" id="mnuContacts">
+                <i class="nav-icon fas fa-address-book"></i>
+                <p>
+                    Contacts
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link" id="mnuProducts">
+                <i class="nav-icon fas fa-file-invoice"></i>
+                <p>
+                    Products
+                </p>
+            </a>
+        </li>*@
+                        @*@if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "store admin") || currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "accounts manager") || currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "super user") || currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "super admin"))
+        {*@
+                        <li class="nav-item">
+                            <a href="~/ExpenceCategories/List" class="nav-link" id="mnuExpenceCategory">
+                                <i class="nav-icon fas fa-sort-amount-up"></i>
+                                <p>
+                                    Expence Categories
+                                </p>
+                            </a>
+                        </li>
+                        @*}*@
+                        @*<li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-anchor"></i>
+                <p>
+                    Client Management
+                </p>
+            </a>
+        </li>*@
+                        <li class="nav-header">REPORTS</li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="mnuReport1">
+                                <i class="nav-icon fas fa-circle"></i>
+                                <p>
+                                    Sales Report
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="mnuReport2">
+                                <i class="nav-icon fas fa-circle"></i>
+                                <p>
+                                    Pettycash Report
+                                </p>
+                            </a>
+                        </li>
 
-                            <li class="nav-header">MISCELLANEOUS</li>
-                            @*<li class="nav-item">
-                <a href="iframe.html" class="nav-link">
-                    <i class="nav-icon fas fa-ellipsis-h"></i>
-                    <p>Tabbed IFrame Plugin</p>
-                </a>
-            </li>*@
-                            <li class="nav-item">
-                                <a href="https://adminlte.io/docs/3.1/" class="nav-link">
-                                    <i class="nav-icon fas fa-book-open"></i>
-                                    <p>Documentation</p>
-                                </a>
-                            </li>
-                            @*<li class="nav-header">LABELS</li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="nav-icon far fa-circle text-danger"></i>
-                    <p class="text">Important</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="nav-icon far fa-circle text-warning"></i>
-                    <p>Warning</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="nav-icon far fa-circle text-info"></i>
-                    <p>Informational</p>
-                </a>
-            </li>*@
-                        </ul>
+                        @*<li class="nav-header">MISCELLANEOUS</li>*@
+                        @*<li class="nav-item">
+            <a href="iframe.html" class="nav-link">
+                <i class="nav-icon fas fa-ellipsis-h"></i>
+                <p>Tabbed IFrame Plugin</p>
+            </a>
+        </li>*@
+                        @*<li class="nav-item">
+            <a href="https://adminlte.io/docs/3.1/" class="nav-link">
+                <i class="nav-icon fas fa-book-open"></i>
+                <p>Documentation</p>
+            </a>
+        </li>*@
+                        @*<li class="nav-header">LABELS</li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="nav-icon far fa-circle text-danger"></i>
+                <p class="text">Important</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="nav-icon far fa-circle text-warning"></i>
+                <p>Warning</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="nav-icon far fa-circle text-info"></i>
+                <p>Informational</p>
+            </a>
+        </li>*@
+                    </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
             </div>
@@ -660,6 +678,11 @@
     <!-- Toastr -->
     @*<script src="~/Content/plugins/toastr/toastr.min.js"></script>*@
     <script>
+        $('#btnDownload').click(function (e) {
+            e.preventDefault();  //stop the browser from following
+            window.location.href = '../../Content/VRMStructures-ProductBrochure.pdf';
+        });
+
         function fnRedirect(url)
         {
             location.href = url;

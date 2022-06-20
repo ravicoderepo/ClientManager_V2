@@ -2,7 +2,7 @@
 
 namespace ClientManager.Areas.Admin
 {
-  public class AdminAreaRegistration : AreaRegistration
+    public class AdminAreaRegistration : AreaRegistration
   {
     public override string AreaName => "Admin";
 
