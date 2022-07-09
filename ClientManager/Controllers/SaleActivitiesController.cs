@@ -106,7 +106,10 @@ namespace ClientManager.Controllers
             statusList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
             ViewBag.Status = statusList;
 
-            return PartialView(saleActivities.OrderByDescending(ord => ord.SaleDate).ToList());
+            var result = saleActivities.OrderBy(wh => wh.Status).ToList();
+                //from sale in saleActivities orderby sale.Status ascending select sale;
+
+            return PartialView(result.ToList());
         }
 
         [CustomAuthorize(new string[] { "Super User", "Super Admin", "Sales Manager", "Sales Engineer" })]
@@ -152,7 +155,9 @@ namespace ClientManager.Controllers
             ViewBag.Status = statusList;
 
 
-            return View(saleActivities.OrderByDescending(ord => ord.SaleDate).ToList());
+            var result = from sale in saleActivities orderby sale.Status ascending select sale;
+
+            return PartialView(result.ToList());
         }
 
         [CustomAuthorize("Super User", "Super Admin", "Sales Manager", "Sales Engineer")]
