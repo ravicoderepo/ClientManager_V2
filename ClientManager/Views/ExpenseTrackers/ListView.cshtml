@@ -234,9 +234,11 @@
 </div>
 <script>
     $(function () {
+        debugger;
+        var sortCol = ('@currentUser.UserRoles.Any(wh => wh.RoleName == "Super User")' == 'False') ? 4 : 5;
         $("#example1").DataTable({
             "responsive": true, "lengthChange": false, "autoWidth": false,
-            "order": [[5, 'desc']]
+            "order": [[sortCol, 'desc']]
             //"buttons": ["excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         $('#example2').DataTable({
@@ -262,7 +264,8 @@
                 success: function (data) {
                     if (data.status == "Success") {
                         alert(data.message);
-                        window.location.href = data.redirectURL;
+                        fnSearch();
+                        //window.location.href = data.redirectURL;
                     }
                 },
                 error: function () {
@@ -287,7 +290,8 @@
                 success: function (data) {
                     if (data.status == "Success") {
                         alert(data.message);
-                        window.location.href = data.redirectURL;
+                        fnSearch();
+                        //window.location.href = data.redirectURL;
                     }
                     //else {
                     //    alert(data.message);
@@ -315,7 +319,8 @@
                 success: function (data) {
                     if (data.status == "Success") {
                         alert(data.message);
-                        window.location.href = data.redirectURL;
+                        fnSearch();
+                        //window.location.href = data.redirectURL;
                     }
                     //else {
                     //    alert(data.message);
@@ -351,7 +356,8 @@
                 success: function (data) {
                     if (data.status == "Success") {
                         alert(data.message);
-                        window.location.href = data.redirectURL;
+                        fnSearch();
+                        //window.location.href = data.redirectURL;
                     }
                     //else {
                     //    alert(data.message);
@@ -378,7 +384,8 @@
             success: function (data) {
                 if (data.status == "Success") {
                     alert(data.message);
-                    window.location.href = data.redirectURL;
+                    fnSearch();
+                    //window.location.href = data.redirectURL;
                 }
                 //else {
                 //    alert(data.message);
