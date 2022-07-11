@@ -19,7 +19,7 @@ namespace ClientManager.Controllers
 
         // GET: PettyCashes
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
-        public ActionResult List(string dashboardFilter="")
+        public ActionResult List(string dashboardFilter = "")
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
             var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
@@ -39,7 +39,7 @@ namespace ClientManager.Controllers
             //ViewBag.AvailablePettyCash = (TotalPettyCash - TotalApprovedExpence);
             //ViewBag.CurrentMonthAndYear = Utility.ConstantData.ToMonthName(DateTime.Now) + "/" + DateTime.Now.Year;
             List<SelectListItem> statusList = new List<SelectListItem>();
-            statusList  = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", "").ToList();
+            statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", "").ToList();
 
             //if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "store admin"))
             //{
@@ -56,29 +56,37 @@ namespace ClientManager.Controllers
             return View(expenceTracker.ToList().OrderBy(ord => ord.Status));
         }
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
-        public ActionResult ListView(string expenseDateFrom = "", string expenseDateTo = "", string status = "", int month = 0,int year = 0, int expenseCat = 0)
+        public ActionResult ListView(string expenseDateFrom = "", string expenseDateTo = "", string status = "", int month = 0, int year = 0, int expenseCat = 0)
         {
             DateTime dtExpenseDateFrom = new DateTime();
             DateTime dtExpenseDateTo = new DateTime();
 
-            month = (month == 0) ? DateTime.Now.Month : month;
-            year = (year == 0) ? DateTime.Now.Year : year;
+            month = (month > 0) ? month : 0;
+            year = (year > 0) ? year : 0;
 
             var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
             var expenceTracker1 = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
-
-
-            if (!string.IsNullOrEmpty(expenseDateFrom))
+                        
+            if (!string.IsNullOrEmpty(expenseDateTo) && !string.IsNullOrEmpty(expenseDateFrom))
             {
                 dtExpenseDateFrom = DateTime.Parse(expenseDateFrom);
-                expenceTracker = expenceTracker.Where(wh => wh.ExpenseDate >= dtExpenseDateFrom);
-            }
-
-            if (!string.IsNullOrEmpty(expenseDateTo))
-            {
                 dtExpenseDateTo = DateTime.Parse(expenseDateTo);
-                expenceTracker = expenceTracker.Where(wh => wh.ExpenseDate <= dtExpenseDateTo);
+                expenceTracker = expenceTracker.Where(wh => wh.ExpenseDate >= dtExpenseDateFrom && wh.ExpenseDate <= dtExpenseDateTo);
+            }
+            else 
+            {
+                if (!string.IsNullOrEmpty(expenseDateFrom))
+                {
+                    dtExpenseDateFrom = DateTime.Parse(expenseDateFrom);
+                    expenceTracker = expenceTracker.Where(wh => wh.ExpenseDate >= dtExpenseDateFrom);
+                }
+
+                if (!string.IsNullOrEmpty(expenseDateTo))
+                {
+                    dtExpenseDateTo = DateTime.Parse(expenseDateTo);
+                    expenceTracker = expenceTracker.Where(wh => wh.ExpenseDate <= dtExpenseDateTo);
+                }
             }
 
             if (!string.IsNullOrEmpty(status))
@@ -95,7 +103,7 @@ namespace ClientManager.Controllers
                 }
             }
             if (year > 0)
-                expenceTracker = expenceTracker.Where(wh => wh.ExpenseDate.Year == year);          
+                expenceTracker = expenceTracker.Where(wh => wh.ExpenseDate.Year == year);
 
             if (month > 0)
                 expenceTracker = expenceTracker.Where(wh => wh.ExpenseDate.Month == month);
@@ -117,7 +125,7 @@ namespace ClientManager.Controllers
             decimal? TotalUnVerifiedExpence = (TotalUnVerifiedExpenceAmount != null && TotalUnVerifiedExpenceAmount.Count > 0) ? TotalUnVerifiedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
 
             ViewBag.TotalPettyCash = TotalPettyCash.Value.ToString("#,##0.00");
-            ViewBag.TotalFilteredExpense = (expenceTracker.Count() >0) ? expenceTracker.Sum(w => w.ExpenseAmount).ToString("#,##0.00") : "0.00";
+            ViewBag.TotalFilteredExpense = (expenceTracker.Count() > 0) ? expenceTracker.Sum(w => w.ExpenseAmount).ToString("#,##0.00") : "0.00";
             ViewBag.TotalApprovedExpence = TotalApprovedExpence.Value.ToString("#,##0.00");
             ViewBag.TotalUnApprovedExpence = TotalUnApprovedExpence.Value.ToString("#,##0.00");
             ViewBag.TotalUnVerifiedExpence = TotalUnVerifiedExpence.Value.ToString("#,##0.00");
@@ -133,7 +141,7 @@ namespace ClientManager.Controllers
             //List<SelectListItem> expenseCategory = new SelectList(db.ExpenceCategories, "Id", "CategoryName", "").ToList();
             //expenseCategory.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
             //ViewBag.ExpenseCategory = expenseCategory;
-            return PartialView(expenceTracker.ToList().OrderBy(ord=> ord.Status).ToList());
+            return PartialView(expenceTracker.ToList().OrderBy(ord => ord.Status).ToList());
         }
 
         // GET: PettyCashes/Create
@@ -173,7 +181,7 @@ namespace ClientManager.Controllers
             try
             {
                 int num = 0;
-                if (expenceTrackerData.Status == null||expenceTrackerData.ExpenseDate == null || expenceTrackerData.ExpenseAmount <= 0 || string.IsNullOrEmpty(expenceTrackerData.Description))
+                if (expenceTrackerData.Status == null || expenceTrackerData.ExpenseDate == null || expenceTrackerData.ExpenseAmount <= 0 || string.IsNullOrEmpty(expenceTrackerData.Description))
                 {
                     jsonReponse = new JsonReponse()
                     {
@@ -375,7 +383,7 @@ namespace ClientManager.Controllers
         }
 
         [HttpPost]
-        [CustomAuthorize(new string[] { "Super User"})]
+        [CustomAuthorize(new string[] { "Super User" })]
         public ActionResult ExpenceEntryApproval(int[] id, string status)
         {
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
