@@ -93,14 +93,14 @@ namespace ClientManager.Controllers
                 expenceTracker = expenceTracker.Where(wh => wh.Status == status);
             else
             {
-                if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "approver"))
-                {
-                    expenceTracker = expenceTracker.Where(wh => wh.Status == "Pending");
-                }
-                else if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "verifier"))
-                {
-                    expenceTracker = expenceTracker.Where(wh => wh.Status == "Approved");
-                }
+                //if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "approver"))
+                //{
+                //    expenceTracker = expenceTracker.Where(wh => wh.Status == "Pending");
+                //}
+                //else if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "verifier"))
+                //{
+                //    expenceTracker = expenceTracker.Where(wh => wh.Status == "Approved");
+                //}
             }
             if (year > 0)
                 expenceTracker = expenceTracker.Where(wh => wh.ExpenseDate.Year == year);
