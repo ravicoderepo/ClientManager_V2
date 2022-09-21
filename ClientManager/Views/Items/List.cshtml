@@ -1,0 +1,220 @@
+﻿@model IEnumerable<DBOperation.Item>
+
+@{
+    ViewBag.Title = "Items";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    table tr td:first-child {
+        white-space: nowrap;
+    }
+</style>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Items</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Master</a></li>
+                        <li class="breadcrumb-item"><a href="#">Item</a></li>
+                        <li class="breadcrumb-item active">List</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-4 col-sm-8">
+                                    <h3 class="card-title">Items</h3>
+                                </div>
+                                <div class="col-4 col-sm-2">
+                                </div>
+                                @*<div class="col-4 col-sm-2">
+                                        <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Adv. Search</button>
+                                    </div>*@
+                                <div class="col-4 col-sm-2">
+                                    <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:location.href='/Items/Create'"><i class="fa fa-plus"></i> New</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Action</th>
+                                        <th>
+                                            Item Name
+                                        </th>
+                                        <th>
+                                            Description
+                                        </th>
+                                        <th>
+                                            Is Active?
+                                        </th>                                        
+                                        @*<th>
+                                            Created On
+                                        </th>
+                                        <th>
+                                            Created By
+                                        </th>
+                                        <th>
+                                            Modified On
+                                        </th>
+                                        <th>
+                                            Modified By
+                                        </th>*@
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+
+                                                <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/Items/Edit/@item.ItemId'"><i class="far fa-edit"></i></button>
+                                                @*<button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/Admin/User/Details/@item.Id'"><i class="fas fa-eye"></i></button>*@
+
+
+                                                @if (item.IsActive == true)
+                                                {
+
+                                                    <button type="button" class="btn btn-danger btn-xs" title="De-ctivate" onclick="fnDeActivate(@item.ItemId)"><i class="far fa-trash-alt"></i></button>
+
+                                                }
+                                                else
+                                                {
+                                                    <button type="button" class="btn btn-danger btn-xs" title="Activate" onclick="fnActivate(@item.ItemId)"><i class="far fa-trash-alt"></i></button>
+
+                                                }
+
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ItemName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Description)
+                                            </td>
+                                            <td>
+                                                @if (item.IsActive)
+                                                {
+                                                    <span>Active</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>De-Active</span>
+                                                }
+
+                                            </td>
+                                            @*<td>
+                                                @Html.DisplayFor(modelItem => item.CreatedOn)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.User.FullName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ModifiedOn)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.User1.FullName)
+                                            </td>*@
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+<script>
+    $(function () {
+        $("#example1").DataTable({
+            "responsive": true, "lengthChange": false, "autoWidth": false,
+           // "buttons": ["excel", "pdf", "print", "colvis"]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        $('#example2').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+        });
+    });
+
+
+
+    function fnActivate(id) {
+        $.ajax({
+            type: "GET",
+            url: "/Items/Activate/" + id,
+            //data: JSON.stringify(Register),
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data.status == "Success") {
+                    alert(data.message);
+                    window.location.href = data.redirectURL;
+                }
+                //else {
+                //    alert(data.message);
+                //}
+
+            },
+            error: function () {
+                alert("Error occured!!  " + data.message)
+            }
+        });
+    }
+
+    function fnDeActivate(id) {
+        $.ajax({
+            type: "GET",
+            url: "/Items/DeActivate/" + id,
+            //data: JSON.stringify(Register),
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data.status == "Success") {
+                    alert(data.message);
+                    window.location.href = data.redirectURL;
+                }
+                //else {
+                //    alert(data.message);
+                //}
+
+            },
+            error: function () {
+                alert("Error occured!!  " + data.message)
+            }
+        });
+    }
+
+
+    $("#mnuExpenceCategory").addClass("active");
+</script>

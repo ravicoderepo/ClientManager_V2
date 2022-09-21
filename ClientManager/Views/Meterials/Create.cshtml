@@ -1,0 +1,193 @@
+﻿@model DBOperation.Material
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    textarea {
+        width: 100% !important;
+        border: 1px solid #ced4da !important;
+        border-radius: .25rem !important;
+        padding: .375rem .75rem !important;
+    }
+</style>
+<div class="content-wrapper">
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Meterial</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Master</a></li>
+                        <li class="breadcrumb-item"><a href="#">Meterial</a></li>
+                        <li class="breadcrumb-item active">Create</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- jquery validation -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Meterial Details</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form id="quickForm">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="status">Status</label>
+                                            @Html.HiddenFor(model => model.IsActive, new { htmlAttributes = new { @id = "hdnUserStatus" } })
+                                            @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="FullName">Metrial Name</label>
+                                            @Html.EditorFor(model => model.MaterialName, new { htmlAttributes = new { @class = "form-control", @id = "txtMaterialName", @name = "MaterialName" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="status">Description</label>
+                                            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @id = "txtDescription", @name = "Description"} })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='List'" id="btnBack">Back to List</button>
+                            </div>
+                    </div>
+                    <!-- /.card-body -->
+                    </form>
+                </div>
+                <!-- /.card -->
+            </div>
+
+            <!--/.col (left) -->
+            <!-- right column -->
+            <div class="col-md-6">
+
+            </div>
+            <!--/.col (right) -->
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+<script>
+    $(window).on('load', function () {
+
+        if ('@ViewBag.AccessLevel' == "View") {
+            $('#quickForm :input').each(function () {
+                debugger;
+                if ($(this).attr('Id') != 'btnBack') {
+                    debugger;
+                    $(this).prop('disabled', true);
+                }
+            });
+        }
+    });
+
+
+    $(function () {
+        //debugger;
+        $.validator.setDefaults({
+            submitHandler: function () {
+                debugger;
+                // alert("Form successful submitted!");
+                $("input[name=IsActive]").val($('#ddlStatus').val());
+                fnSubmitMaterialDetails();
+            }
+        });
+        $('#quickForm').validate({
+
+            rules: {
+                saleDate: {
+                    required: true,
+                },
+                clientName: {
+                    required: true,
+                },
+            },
+            messages: {
+                saleDate: {
+                    required: "Please enter a email address",
+                },
+                clientName: {
+                    required: "Please provide a password",
+                },
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+    });
+
+
+    function fnStatusChange() {
+        debugger;
+        $("input[name=IsActive]").val($('#ddlStatus').val());
+    }
+
+    function fnSubmitMaterialDetails() {
+        debugger;
+        var materialData = {
+            //MaterialId: $('#Id').val(),
+            IsActive: ($("input[name=IsActive]").val()=='1') ? true: false,
+            MaterialName: $('#txtMaterialName').val(),
+            Description: $('#txtDescription').val()
+        };
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: "/Meterials/Create",
+            data: JSON.stringify(materialData),
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data.status == "Success") {
+                    alert(data.message);
+                    window.location.href = data.redirectURL;
+                }
+                else {
+                    alert(data.message);
+                }
+            },
+            error: function () {
+                alert("Error occured!!  " + data.message)
+            }
+        });
+    }
+    $("#mnuExpenceCategory").addClass("active");
+</script>

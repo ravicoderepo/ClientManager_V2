@@ -29,11 +29,14 @@ namespace DBOperation
     
         public virtual DbSet<ClientContact> ClientContacts { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
+        public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<ExpenceCategory> ExpenceCategories { get; set; }
         public virtual DbSet<ExpenseTracker> ExpenseTrackers { get; set; }
+        public virtual DbSet<Item> Items { get; set; }
+        public virtual DbSet<Material> Materials { get; set; }
         public virtual DbSet<PettyCash> PettyCashes { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProjectClient> ProjectClients { get; set; }
@@ -45,6 +48,7 @@ namespace DBOperation
         public virtual DbSet<SaleProduct> SaleProducts { get; set; }
         public virtual DbSet<Sale> Sales { get; set; }
         public virtual DbSet<SalesStatu> SalesStatus { get; set; }
+        public virtual DbSet<Type> Types { get; set; }
         public virtual DbSet<UserContact> UserContacts { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<User> Users { get; set; }

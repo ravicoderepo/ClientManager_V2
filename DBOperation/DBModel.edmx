@@ -31,6 +31,19 @@
           <Property Name="ModifiedOn" Type="datetime" />
           <Property Name="ModifiedBy" Type="int" />
         </EntityType>
+        <EntityType Name="Companies">
+          <Key>
+            <PropertyRef Name="CompanyId" />
+          </Key>
+          <Property Name="CompanyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="ModifiedOn" Type="datetime" />
+          <Property Name="ModifiedBy" Type="int" />
+        </EntityType>
         <EntityType Name="Contact">
           <Key>
             <PropertyRef Name="Id" />
@@ -123,6 +136,35 @@
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="ModifiedBy" Type="int" />
           <Property Name="ModifiedOn" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Items">
+          <Key>
+            <PropertyRef Name="ItemId" />
+          </Key>
+          <Property Name="ItemId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MaterialId" Type="int" Nullable="false" />
+          <Property Name="TypeId" Type="int" Nullable="false" />
+          <Property Name="ItemName" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="MinimumAvailableQuantity" Type="int" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="ModifiedOn" Type="datetime" />
+          <Property Name="ModifiedBy" Type="int" />
+        </EntityType>
+        <EntityType Name="Materials">
+          <Key>
+            <PropertyRef Name="MaterialId" />
+          </Key>
+          <Property Name="MaterialId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MaterialName" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="ModifiedOn" Type="datetime" />
+          <Property Name="ModifiedBy" Type="int" />
         </EntityType>
         <EntityType Name="PettyCash">
           <Key>
@@ -297,6 +339,20 @@
           <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" />
           <Property Name="ModifiedOn" Type="datetime" />
           <Property Name="ModifiedBy" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Types">
+          <Key>
+            <PropertyRef Name="TypeId" />
+          </Key>
+          <Property Name="TypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MaterialId" Type="int" Nullable="false" />
+          <Property Name="TypeName" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="ModifiedOn" Type="datetime" />
+          <Property Name="ModifiedBy" Type="int" />
         </EntityType>
         <EntityType Name="UserContacts">
           <Key>
@@ -766,6 +822,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Types_Materials1">
+          <End Role="Materials" Type="Self.Materials" Multiplicity="1" />
+          <End Role="Types" Type="Self.Types" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Materials">
+              <PropertyRef Name="MaterialId" />
+            </Principal>
+            <Dependent Role="Types">
+              <PropertyRef Name="MaterialId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserContacts_ContactDetails">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
           <End Role="UserContacts" Type="Self.UserContacts" Multiplicity="*" />
@@ -906,11 +974,14 @@
         <EntityContainer Name="ClientManagerModelStoreContainer">
           <EntitySet Name="ClientContacts" EntityType="Self.ClientContacts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Clients" EntityType="Self.Clients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Companies" EntityType="Self.Companies" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Contact" EntityType="Self.Contact" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Document" EntityType="Self.Document" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExpenceCategory" EntityType="Self.ExpenceCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExpenseTracker" EntityType="Self.ExpenseTracker" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Items" EntityType="Self.Items" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Materials" EntityType="Self.Materials" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PettyCash" EntityType="Self.PettyCash" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectClient" EntityType="Self.ProjectClient" Schema="dbo" store:Type="Tables" />
@@ -922,6 +993,7 @@
           <EntitySet Name="SaleProducts" EntityType="Self.SaleProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sales" EntityType="Self.Sales" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SalesStatus" EntityType="Self.SalesStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Types" EntityType="Self.Types" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserContacts" EntityType="Self.UserContacts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
@@ -1065,6 +1137,10 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Sales" EntitySet="Sales" />
           </AssociationSet>
+          <AssociationSet Name="FK_Types_Materials1" Association="Self.FK_Types_Materials1">
+            <End Role="Materials" EntitySet="Materials" />
+            <End Role="Types" EntitySet="Types" />
+          </AssociationSet>
           <AssociationSet Name="FK_UserContacts_ContactDetails" Association="Self.FK_UserContacts_ContactDetails">
             <End Role="Users" EntitySet="Users" />
             <End Role="UserContacts" EntitySet="UserContacts" />
@@ -1122,11 +1198,14 @@
           </FunctionImport>
           <EntitySet Name="ClientContacts" EntityType="ClientManagerModel.ClientContact" />
           <EntitySet Name="Clients" EntityType="ClientManagerModel.Client" />
+          <EntitySet Name="Companies" EntityType="ClientManagerModel.Company" />
           <EntitySet Name="Contacts" EntityType="ClientManagerModel.Contact" />
           <EntitySet Name="Documents" EntityType="ClientManagerModel.Document" />
           <EntitySet Name="Employees" EntityType="ClientManagerModel.Employee" />
           <EntitySet Name="ExpenceCategories" EntityType="ClientManagerModel.ExpenceCategory" />
           <EntitySet Name="ExpenseTrackers" EntityType="ClientManagerModel.ExpenseTracker" />
+          <EntitySet Name="Items" EntityType="ClientManagerModel.Item" />
+          <EntitySet Name="Materials" EntityType="ClientManagerModel.Material" />
           <EntitySet Name="PettyCashes" EntityType="ClientManagerModel.PettyCash" />
           <EntitySet Name="Products" EntityType="ClientManagerModel.Product" />
           <EntitySet Name="ProjectClients" EntityType="ClientManagerModel.ProjectClient" />
@@ -1138,6 +1217,7 @@
           <EntitySet Name="SaleProducts" EntityType="ClientManagerModel.SaleProduct" />
           <EntitySet Name="Sales" EntityType="ClientManagerModel.Sale" />
           <EntitySet Name="SalesStatus" EntityType="ClientManagerModel.SalesStatu" />
+          <EntitySet Name="Types" EntityType="ClientManagerModel.Type" />
           <EntitySet Name="UserContacts" EntityType="ClientManagerModel.UserContact" />
           <EntitySet Name="UserRoles" EntityType="ClientManagerModel.UserRole" />
           <EntitySet Name="Users" EntityType="ClientManagerModel.User" />
@@ -1204,6 +1284,10 @@
           <AssociationSet Name="FK_ExpenseTracker_Users" Association="ClientManagerModel.FK_ExpenseTracker_Users">
             <End Role="User" EntitySet="Users" />
             <End Role="ExpenseTracker" EntitySet="ExpenseTrackers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Types_Materials1" Association="ClientManagerModel.FK_Types_Materials1">
+            <End Role="Material" EntitySet="Materials" />
+            <End Role="Type" EntitySet="Types" />
           </AssociationSet>
           <AssociationSet Name="FK_PettyCash_Users" Association="ClientManagerModel.FK_PettyCash_Users">
             <End Role="User" EntitySet="Users" />
@@ -1366,6 +1450,19 @@
           <NavigationProperty Name="User1" Relationship="ClientManagerModel.FK_Clients_Users1" FromRole="Client" ToRole="User" />
           <NavigationProperty Name="ProjectClients" Relationship="ClientManagerModel.FK_ProjectClient_ClientDetails" FromRole="Client" ToRole="ProjectClient" />
         </EntityType>
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="CompanyId" />
+          </Key>
+          <Property Name="CompanyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int32" />
+        </EntityType>
         <EntityType Name="Contact">
           <Key>
             <PropertyRef Name="Id" />
@@ -1469,6 +1566,36 @@
           <NavigationProperty Name="ExpenceCategory" Relationship="ClientManagerModel.FK_ExpenceTracker_ExpenceCategory" FromRole="ExpenseTracker" ToRole="ExpenceCategory" />
           <NavigationProperty Name="User" Relationship="ClientManagerModel.FK_ExpenceTracker_Users" FromRole="ExpenseTracker" ToRole="User" />
           <NavigationProperty Name="User1" Relationship="ClientManagerModel.FK_ExpenseTracker_Users" FromRole="ExpenseTracker" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="ItemId" />
+          </Key>
+          <Property Name="ItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MaterialId" Type="Int32" Nullable="false" />
+          <Property Name="TypeId" Type="Int32" Nullable="false" />
+          <Property Name="ItemName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="MinimumAvailableQuantity" Type="Int32" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Material">
+          <Key>
+            <PropertyRef Name="MaterialId" />
+          </Key>
+          <Property Name="MaterialId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MaterialName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <NavigationProperty Name="Types" Relationship="ClientManagerModel.FK_Types_Materials1" FromRole="Material" ToRole="Type" />
         </EntityType>
         <EntityType Name="PettyCash">
           <Key>
@@ -1671,6 +1798,21 @@
           <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="SaleActivities" Relationship="ClientManagerModel.FK_SaleActivity_SalesStatus" FromRole="SalesStatu" ToRole="SaleActivity" />
           <NavigationProperty Name="Sales" Relationship="ClientManagerModel.FK_SaleDetails_SalesStatus" FromRole="SalesStatu" ToRole="Sale" />
+        </EntityType>
+        <EntityType Name="Type">
+          <Key>
+            <PropertyRef Name="TypeId" />
+          </Key>
+          <Property Name="TypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MaterialId" Type="Int32" Nullable="false" />
+          <Property Name="TypeName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <NavigationProperty Name="Material" Relationship="ClientManagerModel.FK_Types_Materials1" FromRole="Type" ToRole="Material" />
         </EntityType>
         <EntityType Name="UserContact">
           <Key>
@@ -1954,6 +2096,18 @@
             </Principal>
             <Dependent Role="ExpenseTracker">
               <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Types_Materials1">
+          <End Type="ClientManagerModel.Material" Role="Material" Multiplicity="1" />
+          <End Type="ClientManagerModel.Type" Role="Type" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Material">
+              <PropertyRef Name="MaterialId" />
+            </Principal>
+            <Dependent Role="Type">
+              <PropertyRef Name="MaterialId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2361,6 +2515,20 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Companies">
+            <EntityTypeMapping TypeName="ClientManagerModel.Company">
+              <MappingFragment StoreEntitySet="Companies">
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Contacts">
             <EntityTypeMapping TypeName="ClientManagerModel.Contact">
               <MappingFragment StoreEntitySet="Contact">
@@ -2456,6 +2624,37 @@
                 <ScalarProperty Name="ExpenseDate" ColumnName="ExpenseDate" />
                 <ScalarProperty Name="ExpenseAmount" ColumnName="ExpenseAmount" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Items">
+            <EntityTypeMapping TypeName="ClientManagerModel.Item">
+              <MappingFragment StoreEntitySet="Items">
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="MinimumAvailableQuantity" ColumnName="MinimumAvailableQuantity" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+                <ScalarProperty Name="MaterialId" ColumnName="MaterialId" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Materials">
+            <EntityTypeMapping TypeName="ClientManagerModel.Material">
+              <MappingFragment StoreEntitySet="Materials">
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="MaterialName" ColumnName="MaterialName" />
+                <ScalarProperty Name="MaterialId" ColumnName="MaterialId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2641,6 +2840,21 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Types">
+            <EntityTypeMapping TypeName="ClientManagerModel.Type">
+              <MappingFragment StoreEntitySet="Types">
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="TypeName" ColumnName="TypeName" />
+                <ScalarProperty Name="MaterialId" ColumnName="MaterialId" />
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
