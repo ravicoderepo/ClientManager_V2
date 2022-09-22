@@ -52,7 +52,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="status">Status</label>
-                                            @Html.HiddenFor(model => model.ItemId, new { htmlAttributes = new { @id = "Id" } })
+                                            @Html.HiddenFor(model => model.ItemId, new { htmlAttributes = new { @id = "ItemId" } })
                                             @Html.HiddenFor(model => model.IsActive, new { htmlAttributes = new { @id = "hdnUserStatus" } })
                                             @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
                                         </div>
@@ -62,8 +62,34 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="FullName">Category Name</label>
+                                            <label for="MaterialId">Material</label>
+                                            @Html.HiddenFor(model => model.MaterialId, new { htmlAttributes = new { @id = "hdnMaterialId" } })
+                                            @Html.DropDownList("MaterialId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlMaterialId", @onChange = "fnValueChange()" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="status">Type</label>
+                                            @Html.HiddenFor(model => model.TypeId, new { htmlAttributes = new { @id = "hdnTypeId" } })
+                                            @Html.DropDownList("TypeId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlTypeId", @onChange = "fnValueChange()" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="ItemName">Item Name</label>
                                             @Html.EditorFor(model => model.ItemName, new { htmlAttributes = new { @class = "form-control", @id = "txtItemName", @name = "ItemName" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="MinimumAvailableQuantity">MinimumAvailableQuantity</label>
+                                            @Html.EditorFor(model => model.MinimumAvailableQuantity, new { htmlAttributes = new { @class = "form-control", @id = "txtMinimumAvailableQuantity", @name = "MinimumAvailableQuantity" } })
                                         </div>
                                     </div>
                                 </div>
@@ -120,6 +146,9 @@
             submitHandler: function () {
                 debugger;
                 // alert("Form successful submitted!");
+                $("input[name=IsActive]").val(($('#ddlStatus').val() == '1' ? true : false));
+                $("input[name=TypeId]").val($('#ddlTypeId').val());
+                $("input[name=MaterialId]").val($('#ddlMaterialId').val());
                 fnSubmitItemDetails();
             }
         });
@@ -158,13 +187,20 @@
     function fnStatusChange() {
         $("input[name=IsActive]").val(($('#ddlStatus').val()=='1' ? true: false));
     }
+    function fnValueChange() {
+        debugger;
+        $("input[name=TypeId]").val($('#ddlTypeId').val());
+        $("input[name=MaterialId]").val($('#ddlMaterialId').val())
 
+    }
         function fnSubmitItemDetails() {
         debugger;
         var ItemsData = {
-            Id: $('#Id').val(),
-            IsActive: ($("input[name=IsActive]").val().toLowerCase() == 'true') ? true : false,
-            CategoryName: $('#txtItemName').val(),
+            ItemId: $('#ItemId').val(),
+            TypeId: $("input[name=TypeId]").val(),
+            MaterialId: $("input[name=MaterialId]").val(),
+            IsActive: ($("input[name=IsActive]").val() == '1') ? true : false,
+            ItemName: $('#txtItemName').val(),
             Description: $('#txtDescription').val()
         };
         debugger;
