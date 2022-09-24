@@ -175,8 +175,8 @@ namespace Utility
             List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
             items.Insert(0, new SelectListItem()
             {
-                Text = "Business Tracker",
-                Value = "Business Tracker"
+                Text = "Expense Tracker",
+                Value = "Expense Tracker"
             });
 
             return items;

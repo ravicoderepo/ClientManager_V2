@@ -76,7 +76,8 @@
                 </td>
                 <td>
                     @*@Html.DisplayFor(modelItem => item.AmountRecivedDate, "{0:MM/dd/yyyy}")*@
-                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.AmountRecivedDate))
+                    @*@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.AmountRecivedDate))*@
+                    @item.AmountRecivedDate
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ModeOfPayment)
@@ -106,18 +107,18 @@
 <script>
     $(function () {
         $("#example1").DataTable({
-            "responsive": true, "lengthChange": false, "autoWidth": false,
+            "responsive": true, "lengthChange": false, "autoWidth": false, "lengthChange": true
             //"buttons": ["excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
+        //$('#example2').DataTable({
+        //    "paging": true,
+        //    "lengthChange": true,
+        //    "searching": false,
+        //    "ordering": true,
+        //    "info": true,
+        //    "autoWidth": false,
+        //    "responsive": true,
+        //});
     });
 
     function fnDelete(id) {

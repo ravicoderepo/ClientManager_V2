@@ -53,7 +53,17 @@ namespace ClientManager.Controllers
             expenseCategory.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
             ViewBag.ExpenseCategory = expenseCategory;
             ViewBag.DashboardFilter = string.IsNullOrEmpty(dashboardFilter) ? "" : dashboardFilter;
-            return View(expenceTracker.ToList().OrderBy(ord => ord.Status));
+
+            if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "approver"))
+            {
+                expenceTracker = expenceTracker.Where(wh => wh.Status == "Pending");
+            }
+            else if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "verifier"))
+            {
+                expenceTracker = expenceTracker.Where(wh => wh.Status == "Approved");
+            }
+
+            return View(expenceTracker.ToList().OrderByDescending(ord => ord.CreatedOn));
         }
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         public ActionResult ListView(string expenseDateFrom = "", string expenseDateTo = "", string status = "", int month = 0, int year = 0, int expenseCat = 0)
@@ -67,14 +77,14 @@ namespace ClientManager.Controllers
             var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
             var expenceTracker1 = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
-                        
+
             if (!string.IsNullOrEmpty(expenseDateTo) && !string.IsNullOrEmpty(expenseDateFrom))
             {
                 dtExpenseDateFrom = DateTime.Parse(expenseDateFrom);
                 dtExpenseDateTo = DateTime.Parse(expenseDateTo);
                 expenceTracker = expenceTracker.Where(wh => wh.ExpenseDate >= dtExpenseDateFrom && wh.ExpenseDate <= dtExpenseDateTo);
             }
-            else 
+            else
             {
                 if (!string.IsNullOrEmpty(expenseDateFrom))
                 {
@@ -93,14 +103,14 @@ namespace ClientManager.Controllers
                 expenceTracker = expenceTracker.Where(wh => wh.Status == status);
             else
             {
-                //if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "approver"))
-                //{
-                //    expenceTracker = expenceTracker.Where(wh => wh.Status == "Pending");
-                //}
-                //else if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "verifier"))
-                //{
-                //    expenceTracker = expenceTracker.Where(wh => wh.Status == "Approved");
-                //}
+                if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "approver"))
+                {
+                    expenceTracker = expenceTracker.Where(wh => wh.Status == "Pending");
+                }
+                else if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "verifier"))
+                {
+                    expenceTracker = expenceTracker.Where(wh => wh.Status == "Approved");
+                }
             }
             if (year > 0)
                 expenceTracker = expenceTracker.Where(wh => wh.ExpenseDate.Year == year);
@@ -141,7 +151,8 @@ namespace ClientManager.Controllers
             //List<SelectListItem> expenseCategory = new SelectList(db.ExpenceCategories, "Id", "CategoryName", "").ToList();
             //expenseCategory.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
             //ViewBag.ExpenseCategory = expenseCategory;
-            return PartialView(expenceTracker.ToList().OrderBy(ord => ord.Status).ToList());
+            var data = expenceTracker.ToList().OrderByDescending(ord => ord.ExpenseDate).ToList();
+            return PartialView(data);
         }
 
         // GET: PettyCashes/Create
@@ -291,7 +302,15 @@ namespace ClientManager.Controllers
                         status = "Failed",
                         redirectURL = ""
                     };
-                if (expenceTrackerData.ExpenseDate == null || expenceTrackerData.ExpenseAmount <= 0 || string.IsNullOrEmpty(expenceTrackerData.Description))
+                if (userDetails.UserRoles.Any(a => a.RoleName.ToLower() == "verifier") && expenceTrackerData.Status.ToLower() == "approved")
+                {
+                    expenceTrackerData.Status = "";
+                }
+                if (userDetails.UserRoles.Any(a => a.RoleName.ToLower() == "approver") && expenceTrackerData.Status.ToLower() == "pending")
+                {
+                    expenceTrackerData.Status = "";
+                }
+                if (expenceTrackerData.ExpenseDate == null || expenceTrackerData.ExpenseAmount <= 0 || string.IsNullOrEmpty(expenceTrackerData.Description) || string.IsNullOrEmpty(expenceTrackerData.Status))
                 {
                     data = new JsonReponse()
                     {

@@ -1,0 +1,1193 @@
+<html>
+<head>
+    <title>National flags of the all 197 independent countries</title>
+    <style>
+        html, body, div, span, h1, p, a, ul, li, img, table, tbody, tr, th, td {
+            margin: 0;
+            padding: 0
+        }
+
+        body, #mainwrap {
+            width: 100%;
+            height: 100%;
+            min-width: 320px;
+            font-family: Tahoma, Helvetica, sans-serif;
+            font-size: 100%;
+            color: #004997;
+            text-align: center;
+            -webkit-font-smoothing: antialiased
+        }
+
+        #mainwrap, #footer {
+            max-width: 1680px;
+            margin: 0 auto;
+            text-align: left;
+            padding-bottom: 1em
+        }
+
+        #contentarea, #header, #topmenu, #footer {
+            width: 100%;
+            position: relative;
+            clear: both
+        }
+
+        #leftcolumn, #rightcolumn {
+            width: 190px;
+            height: auto;
+            position: absolute;
+            top: 34px;
+            overflow: hidden
+        }
+
+        #leftcolumn {
+            left: 0;
+            padding: 10px 0 0 10px
+        }
+
+        #rightcolumn {
+            right: 0
+        }
+
+        #centercolumn {
+            margin: 0 200px 4em 220px
+        }
+
+        img {
+            border: 0
+        }
+
+        ul {
+            list-style-type: none
+        }
+
+        a {
+            color: #0750ff;
+            text-decoration: none
+        }
+
+            a:hover, #footer a:hover, .active {
+                color: #e80028
+            }
+
+        .list-header, .table-header, .header {
+            font-size: 1.0625em;
+            margin: 5px 0 5px 3%;
+            background: #fff;
+            padding: 0 0.2em;
+            color: #e80028;
+            text-align: center
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: 0 auto 0.5em auto
+        }
+
+        table, td, th, .list-container {
+            border: solid 1px #d4d4d4
+        }
+
+        td, th {
+            padding: 5px;
+            font-size: 0.875em
+        }
+
+        .container {
+            border-top: solid 2px #e9e9e9
+        }
+
+        th {
+            background: #edffd4;
+            color: #353535
+        }
+
+        .td-red td:last-child {
+            color: #e80028
+        }
+
+        .td-red td:first-child {
+            width: 50%
+        }
+
+        .two-column {
+            width: 46%;
+            float: left;
+            text-align: left;
+            margin: 0 2% 10px 2%
+        }
+
+        .codes td:last-child, .codes th:last-child {
+            text-align: center;
+            font-weight: bold;
+            color: #e80028;
+            font-size: 0.75em
+        }
+
+        .line td {
+            padding: 0 5px
+        }
+
+        .codes, .rank, .tz {
+            width: 96%
+        }
+
+        .codes, td.cur_c, h1, .column {
+            text-align: left
+        }
+
+        .cur_c {
+            color: #008521
+        }
+
+        .d_state span, .column span, .two-column span {
+            color: #383838;
+            font-size: 96%;
+            font-style: italic
+        }
+
+        span.black {
+            color: #333;
+            font-size: 100%;
+            font-style: normal
+        }
+
+        #logo {
+            float: left;
+            width: 530px;
+            height: 50px;
+            margin: 3px 0
+        }
+
+        #logocw {
+            position: absolute;
+            top: 3px;
+            left: 12px;
+            width: 120px;
+            height: 50px
+        }
+
+        #logo:after {
+            content: 'COUNTRIES-ofthe-WORLD.COM';
+            position: absolute;
+            top: 11px;
+            left: 145px;
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            color: #3e7eff;
+            font-size: 1.5em;
+            line-height: 1.4
+        }
+
+        #topmenu ul {
+            width: 100%;
+            display: table;
+            margin: 0 0 10px 0
+        }
+
+        #topmenu li {
+            display: table-cell;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1em;
+            line-height: 1.8
+        }
+
+        #topmenu a, #current {
+            height: 1.8125em
+        }
+
+        #topmenu a {
+            display: block;
+            background: #0069fa;
+            color: #fff;
+            border-right: solid 1px #61b1e9
+        }
+
+            #topmenu a:hover, #topmenu #current {
+                background: #c8e856;
+                color: #000;
+                border-color: #afe440
+            }
+
+        .menu-toggle span {
+            display: none;
+            width: 100%;
+            height: 100%;
+            cursor: pointer
+        }
+
+        #leftmenu ul, #leftmenu-style div, #section-nav li {
+            text-transform: uppercase
+        }
+
+        #leftmenu li, #leftmenu-style div {
+            font-size: 0.625em;
+            font-weight: bold;
+            border-bottom: dotted 1px #aaa
+        }
+
+        #leftmenu-style div {
+            font-size: 0.6875em;
+            color: #000;
+            padding: 22px 0 3px 4px;
+            margin: 0;
+            border-bottom: solid 2px #c8e856
+        }
+
+        #leftmenu a, #leftmenu .active {
+            display: block;
+            padding: 11px 4px 4px 4px
+        }
+
+            #leftmenu a:hover, #leftmenu .active {
+                background: #eaffe0
+            }
+
+        .content-text {
+            text-align: justify;
+            margin: 0 1% 0.125em;
+            clear: both
+        }
+
+            .content-text a, .cc_more_info {
+                text-decoration: underline
+            }
+
+            .content-text p, .content-text li, h1 {
+                color: #333;
+                font: 1.0625em/1.3 "TimesNewRomanPSMT", "Times New Roman", Times, serif;
+                margin-bottom: 0.375em
+            }
+
+        h1 {
+            font-weight: normal;
+            font-size: 2em;
+            padding: 10px 0;
+            margin: 0;
+            line-height: 1.1
+        }
+
+        .container {
+            width: 98%;
+            float: left;
+            text-align: center;
+            margin: 0.25em 1% 4em
+        }
+
+        .list-container {
+            border-radius: 5px
+        }
+
+        .column {
+            float: left;
+            margin: 10px 2%;
+            width: 28%
+        }
+
+            .column li {
+                font-size: 0.875em;
+                margin: 5px 0;
+                line-height: 1.25;
+                min-width: 8em
+            }
+
+        li.letter, td.letter, .td-red td.letter, .codes td.letter {
+            font: bold 1.0625em Tahoma, Helvetica, sans-serif;
+            padding: 10px 0 0 0.5em;
+            color: #008a12;
+            text-align: left
+        }
+
+        #section-nav {
+            float: left;
+            width: 99.8%;
+            text-align: left;
+            margin: 7px auto 0 auto;
+            background: #fff
+        }
+
+        #nav-style {
+            float: left;
+            width: 5.5em;
+            font-size: 0.875em;
+            white-space: nowrap;
+            margin: 2px 4px 5px;
+            color: #008a12;
+            z-index: 0
+        }
+
+            #nav-style.capitals {
+                width: 4.8em
+            }
+
+            #nav-style span {
+                vertical-align: top
+            }
+
+            #nav-style.flags {
+                width: 3.7em
+            }
+
+            #nav-style .arrow-icon {
+                width: 20px;
+                height: 20px;
+                margin: -2px 0 0 -2px
+            }
+
+        #section-nav ul {
+            float: left;
+            width: 85%;
+            margin: 0 0 0 10px
+        }
+
+        #section-nav li {
+            min-width: 50px;
+            height: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.8125em;
+            float: left;
+            border-right: solid 1px #2158CC;
+            padding: 3px 11px;
+            margin-bottom: 8px
+        }
+
+            #section-nav li:last-child {
+                border: none
+            }
+
+        #section-nav a {
+            display: block;
+            height: 15px
+        }
+
+        .grey {
+            background: #fafafa
+        }
+
+        #footer {
+            text-align: left;
+            border-top: solid 3px #d1d1d1;
+            padding: 1.5em 0 6em 0;
+            font-size: 0.8125em;
+            color: #383838
+        }
+
+            #footer div {
+                float: left;
+                margin-left: 1em
+            }
+
+            #footer ul {
+                display: table;
+                float: right
+            }
+
+            #footer li {
+                padding: 0 1em 0.75em 0;
+                display: table-cell;
+                color: #e80028
+            }
+
+            #footer a {
+                color: #383838
+            }
+
+        .cw_mainbanner {
+            width: 160px;
+            height: 600px;
+            margin-top: 60px
+        }
+
+        .cc_banner-wrapper {
+            width: 100%;
+            min-width: 300px;
+            position: fixed;
+            bottom: 0;
+            z-index: 100;
+            background: #666
+        }
+
+        .cc_container {
+            text-align: center;
+            margin: 0.25em auto;
+            display: table
+        }
+
+        .cc_message {
+            font-size: 0.9375em;
+            display: table-cell;
+            padding: 0.75em 0 0.75em 0.5em;
+            color: #fff
+        }
+
+        .cc_more_info {
+            color: #fff;
+            white-space: nowrap
+        }
+
+        .cc_btn {
+            display: inline-block;
+            cursor: pointer;
+            font-size: 0.9375em;
+            vertical-align: middle;
+            border-radius: 4px;
+            background: #333;
+            padding: 3px 20px;
+            margin: auto 20px;
+            color: #fff
+        }
+
+            .cc_btn:hover {
+                background: #ffd400;
+                color: #000
+            }
+
+        @media(min-width:1201px) {
+            #leftcolumn {
+                width: 205px;
+                padding-left: 1.3%
+            }
+
+            #centercolumn {
+                margin: 0 210px 4em 245px
+            }
+
+            #leftmenu li {
+                font-size: 0.6875em
+            }
+        }
+
+        @media(min-width:1435px) {
+            body {
+                font-size: 18px
+            }
+
+            #logo {
+                width: 600px
+            }
+
+            .content-text p, .content-text li {
+                font-size: 19px
+            }
+
+            #leftcolumn {
+                top: 40px;
+                width: 240px
+            }
+
+            #centercolumn {
+                margin: 0 330px 4em 275px
+            }
+
+            #rightcolumn {
+                top: 38px;
+                width: 320px
+            }
+
+            #leftmenu li, #leftmenu-style div {
+                font-size: 12px
+            }
+
+            #topmenu li {
+                font-size: 18px
+            }
+
+            .cw_mainbanner {
+                width: 300px
+            }
+
+            h1 {
+                font-size: 34px
+            }
+
+            .column li, td, th {
+                font-size: 16px
+            }
+        }
+
+        @media(min-width:1599px) {
+            body {
+                font-size: 19px
+            }
+
+            .content-text p, .content-text li {
+                font-size: 20px
+            }
+
+            .column li, td, th {
+                font-size: 17px
+            }
+
+            #leftmenu li, #leftmenu-style div {
+                font-size: 13px
+            }
+
+            #topmenu li {
+                font-size: 19px
+            }
+
+            h1 {
+                font-size: 36px
+            }
+        }
+
+        @media(min-width:1800px) {
+            #leftcolumn {
+                width: 265px
+            }
+
+            #centercolumn {
+                margin: 0 340px 4em 310px
+            }
+
+            #leftmenu li, #leftmenu-style div {
+                font-size: 14px
+            }
+
+            .column li, td, th {
+                font-size: 18px
+            }
+
+            .content-text p, .content-text li {
+                font-size: 21px
+            }
+        }
+
+        @media(max-width:1130px) {
+            #section-nav ul {
+                width: 75%
+            }
+
+            .cc_message {
+                text-align: left;
+                padding: 0.375em 2%
+            }
+        }
+
+        @media(max-width:1200px) {
+            #leftcolumn, #rightcolumn {
+                top: 65px
+            }
+
+            #topmenu ul, #topmenu li {
+                float: left;
+                display: block
+            }
+
+            #topmenu li {
+                width: 24.99%
+            }
+
+            #topmenu a {
+                border-bottom: solid 1px #61b1e9
+            }
+
+            #topmenu #current {
+                border-bottom: solid 1px #afe440
+            }
+        }
+
+        @media(max-width:1030px) {
+            #leftmenu li {
+                font-size: 0.6875em
+            }
+
+            #rightcolumn {
+                position: relative;
+                top: 0;
+                width: 97%;
+                margin: 0 auto;
+                text-align: center
+            }
+
+            #centercolumn {
+                margin: 0 2% 0 220px
+            }
+
+            .container {
+                margin-bottom: 0.5em
+            }
+
+            .column {
+                width: 27%;
+                min-width: 5.6em
+            }
+
+            .content-text {
+                text-align: left
+            }
+
+                .content-text p, .content-text li {
+                    font-size: 1.125em
+                }
+
+            #footer ul, #footer div {
+                float: none;
+                margin-left: 2%
+            }
+
+            .cw_mainbanner {
+                margin: 2.5em auto;
+                width: 728px;
+                height: 120px
+            }
+        }
+
+        @media(max-width:760px) {
+            #logo {
+                width: 100%;
+                height: 45px
+            }
+
+            #logocw {
+                width: 108px;
+                height: 45px;
+                left: 7px
+            }
+
+            #logo:after {
+                left: 125px
+            }
+
+            #centercolumn {
+                margin: 0 2% 0 3%;
+                padding-top: 42px
+            }
+
+            .rank {
+                width: 99%
+            }
+
+            #topmenu {
+                position: absolute;
+                z-index: 1
+            }
+
+            #topmenu, #leftcolumn {
+                width: 99.7%;
+                padding: 0;
+                top: 0
+            }
+
+            #leftcolumn {
+                left: 0
+            }
+
+            .menu-toggle {
+                height: 37px;
+                text-align: center;
+                top: 0;
+                display: block;
+                position: relative;
+                z-index: 1
+            }
+
+            #topmenu .menu-toggle {
+                width: 40%;
+                left: 60%
+            }
+
+            #leftcolumn .menu-toggle {
+                width: 60%
+            }
+
+            h1 {
+                text-align: center
+            }
+
+            #topmenu ul, #leftmenu {
+                border: none;
+                border-bottom: solid 1px #ccc;
+                width: 100%;
+                display: none;
+                padding: 0.25em 0 1.5em 0;
+                float: left;
+                background: #ececec
+            }
+
+            #topmenu li {
+                padding: 0.75em 0
+            }
+
+            #topmenu li, #topmenu a, #topmenu a:hover, #topmenu #current {
+                border: none;
+                height: auto;
+                background: none;
+                width: 100%
+            }
+
+                #topmenu li, #leftmenu li, #topmenu li#current {
+                    font-size: 1em;
+                    display: block;
+                    margin: 0;
+                    text-transform: uppercase;
+                    border-bottom: dotted 1px #aaa
+                }
+
+            #topmenu a {
+                color: #0750ff
+            }
+
+                #topmenu a:hover, #topmenu #current {
+                    color: #e80028
+                }
+
+            #leftmenu-style {
+                margin: 0 3% 0 6%
+            }
+
+            #topmenu li:last-child {
+                border: none
+            }
+
+            #leftmenu-style div {
+                font-size: 0.8125em
+            }
+
+            .menu-toggle span:before {
+                background: #0069fa;
+                font-size: 1.375em;
+                display: inline-block;
+                font-weight: bold;
+                color: #fff;
+                height: 27px;
+                padding: 5px 0;
+                width: 100%
+            }
+
+            #leftcolumn .menu-toggle span:before {
+                content: "Main Menu";
+                padding-left: 8%;
+                width: 92%;
+                text-align: left
+            }
+
+            #topmenu .menu-toggle span:before {
+                content: "Sections";
+                border-left: solid 1px #c2ddf5
+            }
+
+            .menu-toggle span.close:before {
+                background: #c8e856;
+                color: #000
+            }
+
+            .menu-toggle span.close {
+                display: none
+            }
+
+            .menu-toggle span.open {
+                display: inline-block
+            }
+
+            .cw_mainbanner {
+                width: 336px;
+                height: 280px
+            }
+
+            #footer {
+                padding: 1em 0 4.5em 0
+            }
+
+            .cc_message {
+                display: inline;
+                padding: 0 1%;
+                font-size: 0.875em
+            }
+
+            .cc_btn {
+                margin: 3px 3px 3px 10px
+            }
+        }
+
+        @media(max-width:570px) {
+            #logo, #logocw {
+                height: 33px
+            }
+
+            #logocw {
+                width: 79px
+            }
+
+            #logo:after {
+                font-size: 1.1875em;
+                left: 95px;
+                line-height: 1.1
+            }
+
+            .two-column, .codes {
+                width: 95.7%
+            }
+        }
+
+        @media(max-width:395px) {
+            .cw_mainbanner {
+                width: 85%;
+                height: 250px
+            }
+        }
+
+        @media(min-width:357px) and (max-width:435px) {
+            h1 {
+                font-size: 2.25em
+            }
+        }
+
+        @media(max-width:425px) {
+            #nav-style {
+                font-size: 12px;
+                margin-left: 0
+            }
+
+            #section-nav ul {
+                font-size: 0.9375em;
+                margin-left: 7px
+            }
+
+            .column {
+                width: 85%;
+                margin: 0 5% 10px 5%
+            }
+
+                .column li {
+                    font-size: 1.0625em
+                }
+        }
+
+        @media(max-width:409px) {
+            #logo, #logocw {
+                height: 28px
+            }
+
+            #logocw {
+                width: 67px
+            }
+
+            #logo:after {
+                font-size: 1.0625em;
+                left: 81px;
+                top: 8px
+            }
+        }
+
+        @media(max-width:356px) {
+            #logo:after {
+                font-size: 15px;
+                top: 10px
+            }
+
+            #leftmenu li {
+                font-weight: normal;
+                font-size: 0.8125em
+            }
+
+            #nav-style {
+                display: block
+            }
+
+            #section-nav ul {
+                width: 98%;
+                margin-left: 1%
+            }
+
+            .cw_mainbanner {
+                width: 250px
+            }
+
+            .cc_message, #footer {
+                font-size: 0.75em
+            }
+        }
+
+        .td-image th:first-child {
+            width: 20%;
+            text-align: center
+        }
+
+        .td-image td img {
+            border: solid 1px #ddd;
+            width: 88px;
+            height: 60px;
+            margin: 0 14px
+        }
+
+            .td-image td img:hover {
+                border-color: #fff;
+                box-shadow: 0 0 7px #ccc
+            }
+    </style>
+    <script src="jquery-3.6.0.min.js"></script>
+    <script src="articulate.js"></script>
+    
+</head>
+<body>
+    <div class="container">
+
+        <div class="table-header">National flags of the all 197 independent countries of the world in alphabetical&nbsp;order</div>
+        <div>
+            <table class="td-image">
+                <thead><tr><th>Flag</th><th>Country</th></tr></thead>
+                <tbody>
+                    <tr class="line" onclick="fnShowCountries('A')"><td colspan="2" class="letter">A</td></tr>
+                    <tr class="A" ><td><img src="flags/flag-of-Afghanistan.png" title="Flag of Afghanistan"></td><td>Afghanistan</td></tr>
+                    <tr class="A" ><td><img src="flags/flag-of-Albania.png" title="Flag of Albania"></td><td>Albania</td></tr>
+                    <tr class="A" ><td><img src="flags/flag-of-Algeria.png" title="Flag of Algeria"></td><td>Algeria</td></tr>
+                    <tr class="A" ><td><img src="flags/flag-of-Andorra.png" title="Flag of Andorra"></td><td>Andorra</td></tr>
+                    <tr class="A" ><td><img src="flags/flag-of-Angola.png" title="Flag of Angola"></td><td>Angola</td></tr>
+                    <tr class="A" ><td><img src="flags/flag-of-Antigua.png" title="Flag of Antigua &amp; Barbuda"></td><td>Antigua and Barbuda</td></tr>
+                    <tr class="A" ><td><img src="flags/flag-of-Argentina.png" title="Flag of Argentina"></td><td>Argentina</td></tr>
+                    <tr class="A" ><td><img src="flags/flag-of-Armenia.png" title="Flag of Armenia"></td><td>Armenia</td></tr>
+                    <tr class="A" ><td><img src="flags/flag-of-Australia.png" title="Flag of Australia"></td><td>Australia</td></tr>
+                    <tr class="A" ><td><img src="flags/flag-of-Austria.png" title="Flag of Austria"></td><td>Austria</td></tr>
+                    <tr class="A" ><td><img src="flags/flag-of-Azerbaijan.png" title="Flag of Azerbaijan"></td><td>Azerbaijan</td></tr>
+                    <tr class="line"onclick="fnShowCountries('B')" ><td colspan="2" class="letter">B</td></tr>
+                    <tr class="B" ><td><img src="flags/flag-of-Bahamas.png" title="Flag of Bahamas"></td><td>Bahamas</td></tr>
+                    <tr class="B" ><td><img src="flags/flag-of-Bahrain.png" title="Flag of Bahrain"></td><td>Bahrain</td></tr>
+                    <tr class="B" ><td><img src="flags/flag-of-Bangladesh.png" title="Flag of Bangladesh"></td><td>Bangladesh</td></tr>
+                    <tr class="B" ><td><img src="flags/flag-of-Barbados.png" title="Flag of Barbados"></td><td>Barbados</td></tr>
+                    <tr class="B" ><td><img src="flags/flag-of-Belarus.png" title="Flag of Belarus"></td><td>Belarus</td></tr>
+                    <tr class="B" ><td><img src="flags/flag-of-Belgium.png" title="Flag of Belgium"></td><td>Belgium</td></tr>
+                    <tr class="B" ><td><img src="flags/flag-of-Belize.png" title="Flag of Belize"></td><td>Belize</td></tr>
+                    <tr class="B" ><td><img src="flags/flag-of-Benin.png" title="Flag of Benin"></td><td>Benin</td></tr>
+                    <tr class="B" ><td><img src="flags/flag-of-Bhutan.png" title="Flag of Bhutan"></td><td>Bhutan</td></tr>
+                    <tr class="B" ><td><img src="flags/flag-of-Bolivia.png" title="Flag of Bolivia"></td><td>Bolivia</td></tr>
+                    <tr class="B" ><td><img src="flags/flag-of-Bosnia-Herzegovina.png" title="Flag of Bosnia and Herzegovina"></td><td>Bosnia and Herzegovina</td></tr>
+                    <tr class="B" ><td><img src="flags/flag-of-Botswana.png" title="Flag of Botswana"></td><td>Botswana</td></tr>
+                    <tr class="B" ><td><img src="flags/flag-of-Brazil.png" title="Flag of Brazil"></td><td>Brazil</td></tr>
+                    <tr class="B" ><td><img src="flags/flag-of-Brunei.png" title="Flag of Brunei"></td><td>Brunei</td></tr>
+                    <tr class="B" ><td><img src="flags/flag-of-Bulgaria.png" title="Flag of Bulgaria"></td><td>Bulgaria</td></tr>
+                    <tr class="B" ><td><img src="flags/flag-of-Burkina-Faso.png" title="Flag of Burkina Faso"></td><td>Burkina Faso</td></tr>
+                    <tr class="B" ><td><img src="flags/flag-of-Burundi.png" title="Flag of Burundi"></td><td>Burundi</td></tr>
+                    <tr class="line" onclick="fnShowCountries('C')"><td colspan="2" class="letter">C</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-Cabo-Verde.png" title="Flag of Cabo Verde"></td><td>Cabo Verde</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-Cambodia.png" title="Flag of Cambodia"></td><td>Cambodia</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-Cameroon.png" title="Flag of Cameroon"></td><td>Cameroon</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-Canada.png" title="Flag of Canada"></td><td>Canada</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-Central-African-Republic.png" title="Flag of Central African Republic"></td><td>Central African Republic</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-Chad.png" title="Flag of Chad"></td><td>Chad</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-Chile.png" title="Flag of Chile"></td><td>Chile</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-China.png" title="Flag of China"></td><td>China</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-Colombia.png" title="Flag of Colombia"></td><td>Colombia</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-Comoros.png" title="Flag of Comoros"></td><td>Comoros</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-Congo-Democratic-Republic-of.png" title="Flag of the Democratic Republic of Congo"></td><td>Democratic Republic of the Congo</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-Congo.png" title="Flag of the Republic of Congo"></td><td>Republic of the Congo</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-Costa-Rica.png" title="Flag of Costa Rica"></td><td>Costa Rica</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-Cote-d-Ivoire.png" title="Flag of Cote d'Ivoire"></td><td>Cote d'Ivoire</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-Croatia.png" title="Flag of Croatia"></td><td>Croatia</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-Cuba.png" title="Flag of Cuba"></td><td>Cuba</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-Cyprus.png" title="Flag of Cyprus"></td><td>Cyprus</td></tr>
+                    <tr class="C" ><td><img src="flags/flag-of-Czech-Republic.png" title="Flag of Czechia"></td><td>Czechia</td></tr>
+                    <tr class="line" onclick="fnShowCountries('D')"><td colspan="2" class="letter">D</td></tr>
+                    <tr class="D" ><td><img src="flags/flag-of-Denmark.png" title="Flag of Denmark"></td><td>Denmark</td></tr>
+                    <tr class="D" ><td><img src="flags/flag-of-Djibouti.png" title="Flag of Djibouti"></td><td>Djibouti</td></tr>
+                    <tr class="D" ><td><img src="flags/flag-of-Dominica.png" title="Flag of Dominica"></td><td>Dominica</td></tr>
+                    <tr class="D" ><td><img src="flags/flag-of-Dominican-Republic.png" title="Flag of Dominican Republic"></td><td>Dominican Republic</td></tr>
+                    <tr class="line" onclick="fnShowCountries('E')"><td colspan="2" class="letter">E</td></tr>
+                    <tr class="E" ><td><img src="flags/flag-of-Ecuador.png" title="Flag of Ecuador"></td><td>Ecuador</td></tr>
+                    <tr class="E" ><td><img src="flags/flag-of-Egypt.png" title="Flag of Egypt"></td><td>Egypt</td></tr>
+                    <tr class="E" ><td><img src="flags/flag-of-El-Salvador.png" title="Flag of El Salvador"></td><td>El Salvador</td></tr>
+                    <tr class="E" ><td><img src="flags/flag-of-Equatorial-Guinea.png" title="Flag of Equatorial Guinea"></td><td>Equatorial Guinea</td></tr>
+                    <tr class="E" ><td><img src="flags/flag-of-Eritrea.png" title="Flag of Eritrea"></td><td>Eritrea</td></tr>
+                    <tr class="E" ><td><img src="flags/flag-of-Estonia.png" title="Flag of Estonia"></td><td>Estonia</td></tr>
+                    <tr class="E" ><td><img src="flags/flag-of-Eswatini.png" title="Flag of Eswatini"></td><td>Eswatini</td></tr>
+                    <tr class="E" ><td><img src="flags/flag-of-Ethiopia.png" title="Flag of Ethiopia"></td><td>Ethiopia</td></tr>
+                    <tr class="line" onclick="fnShowCountries('F')"><td colspan="2" class="letter">F</td></tr>
+                    <tr class="F" ><td><img src="flags/flag-of-Fiji.png" title="Flag of Fiji"></td><td>Fiji</td></tr>
+                    <tr class="F" ><td><img src="flags/flag-of-Finland.png" title="Flag of Finland"></td><td>Finland</td></tr>
+                    <tr class="F" ><td><img src="flags/flag-of-France.png" title="Flag of France"></td><td>France</td></tr>
+                    <tr class="line" onclick="fnShowCountries('G')"><td colspan="2" class="letter">G</td></tr>
+                    <tr class="G" ><td><img src="flags/flag-of-Gabon.png" title="Flag of Gabon"></td><td>Gabon</td></tr>
+                    <tr class="G" ><td><img src="flags/flag-of-Gambia.png" title="Flag of Gambia"></td><td>Gambia</td></tr>
+                    <tr class="G" ><td><img src="flags/flag-of-Georgia.png" title="Flag of Georgia"></td><td>Georgia</td></tr>
+                    <tr class="G" ><td><img src="flags/flag-of-Germany.png" title="Flag of Germany"></td><td>Germany</td></tr>
+                    <tr class="G" ><td><img src="flags/flag-of-Ghana.png" title="Flag of Ghana"></td><td>Ghana</td></tr>
+                    <tr class="G" ><td><img src="flags/flag-of-Greece.png" title="Flag of Greece"></td><td>Greece</td></tr>
+                    <tr class="G" ><td><img src="flags/flag-of-Grenada.png" title="Flag of Grenada"></td><td>Grenada</td></tr>
+                    <tr class="G" ><td><img src="flags/flag-of-Guatemala.png" title="Flag of Guatemala"></td><td>Guatemala</td></tr>
+                    <tr class="G" ><td><img src="flags/flag-of-Guinea.png" title="Flag of Guinea"></td><td>Guinea</td></tr>
+                    <tr class="G" ><td><img src="flags/flag-of-Guinea-Bissau.png" title="Flag of Guinea-Bissau"></td><td>Guinea-Bissau</td></tr>
+                    <tr class="G" ><td><img src="flags/flag-of-Guyana.png" title="Flag of Guyana"></td><td>Guyana</td></tr>
+                    <tr class="line" onclick="fnShowCountries('H')"><td colspan="2" class="letter">H</td></tr>
+                    <tr class="H" ><td><img src="flags/flag-of-Haiti.png" title="Flag of Haiti"></td><td>Haiti</td></tr>
+                    <tr class="H" ><td><img src="flags/flag-of-Honduras.png" title="Flag of Honduras"></td><td>Honduras</td></tr>
+                    <tr class="H" ><td><img src="flags/flag-of-Hungary.png" title="Flag of Hungary"></td><td>Hungary</td></tr>
+                    <tr class="line" onclick="fnShowCountries('I')"><td colspan="2" class="letter">I</td></tr>
+                    <tr class="I" ><td><img src="flags/flag-of-Iceland.png" title="Flag of Iceland"></td><td>Iceland</td></tr>
+                    <tr class="I" ><td><img src="flags/flag-of-India.png" title="Flag of India"></td><td>India</td></tr>
+                    <tr class="I" ><td><img src="flags/flag-of-Indonesia.png" title="Flag of Indonesia"></td><td>Indonesia</td></tr>
+                    <tr class="I" ><td><img src="flags/flag-of-Iran.png" title="Flag of Iran"></td><td>Iran</td></tr>
+                    <tr class="I" ><td><img src="flags/flag-of-Iraq.png" title="Flag of Iraq"></td><td>Iraq</td></tr>
+                    <tr class="I" ><td><img src="flags/flag-of-Ireland.png" title="Flag of Ireland"></td><td>Ireland</td></tr>
+                    <tr class="I" ><td><img src="flags/flag-of-Israel.png" title="Flag of Israel"></td><td>Israel</td></tr>
+                    <tr class="I" ><td><img src="flags/flag-of-Italy.png" title="Flag of Italy"></td><td>Italy</td></tr>
+                    <tr class="line" onclick="fnShowCountries('J')"><td colspan="2" class="letter">J</td></tr>
+                    <tr class="J" ><td><img src="flags/flag-of-Jamaica.png" title="Flag of Jamaica"></td><td>Jamaica</td></tr>
+                    <tr class="J" ><td><img src="flags/flag-of-Japan.png" title="Flag of Japan"></td><td>Japan</td></tr>
+                    <tr class="J" ><td><img src="flags/flag-of-Jordan.png" title="Flag of Jordan"></td><td>Jordan</td></tr>
+                    <tr class="line" onclick="fnShowCountries('K')"><td colspan="2" class="letter">K</td></tr>
+                    <tr class="K" ><td><img src="flags/flag-of-Kazakhstan.png" title="Flag of Kazakhstan"></td><td> Kazakhstan</td></tr>
+                    <tr class="K" ><td><img src="flags/flag-of-Kenya.png" title="Flag of Kenya"></td><td>Kenya</td></tr>
+                    <tr class="K" ><td><img src="flags/flag-of-Kiribati.png" title="Flag of Kiribati"></td><td>Kiribati</td></tr>
+                    <tr class="K" ><td><img src="flags/flag-of-Kosovo.png" title="Flag of Kosovo"></td><td>Kosovo</td></tr>
+                    <tr class="K" ><td><img src="flags/flag-of-Kuwait.png" title="Flag of Kuwait"></td><td>Kuwait</td></tr>
+                    <tr class="K" ><td><img src="flags/flag-of-Kyrgyzstan.png" title="Flag of Kyrgyzstan"></td><td>Kyrgyzstan</td></tr>
+                    <tr class="line" onclick="fnShowCountries('L')"><td colspan="2" class="letter">L</td></tr>
+                    <tr class="L" ><td><img src="flags/flag-of-Laos.png" title="Flag of Laos"></td><td>Laos</td></tr>
+                    <tr class="L" ><td><img src="flags/flag-of-Latvia.png" title="Flag of Latvia"></td><td>Latvia</td></tr>
+                    <tr class="L" ><td><img src="flags/flag-of-Lebanon.png" title="Flag of Lebanon"></td><td>Lebanon</td></tr>
+                    <tr class="L" ><td><img src="flags/flag-of-Lesotho.png" title="Flag of Lesotho"></td><td>Lesotho</td></tr>
+                    <tr class="L" ><td><img src="flags/flag-of-Liberia.png" title="Flag of Liberia"></td><td>Liberia</td></tr>
+                    <tr class="L" ><td><img src="flags/flag-of-Libya.png" title="Flag of Libya"></td><td>Libya</td></tr>
+                    <tr class="L" ><td><img src="flags/flag-of-Liechtenstein.png" title="Flag of Liechtenstein"></td><td>Liechtenstein</td></tr>
+                    <tr class="L" ><td><img src="flags/flag-of-Lithuania.png" title="Flag of Lithuania"></td><td>Lithuania</td></tr>
+                    <tr class="L" ><td><img src="flags/flag-of-Luxembourg.png" title="Flag of Luxembourg"></td><td>Luxembourg</td></tr>
+                    <tr class="line" onclick="fnShowCountries('M')"><td colspan="2" class="letter">M</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Madagascar.png" title="Flag of Madagascar"></td><td>Madagascar</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Malawi.png" title="Flag of Malawi"></td><td>Malawi</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Malaysia.png" title="Flag of Malaysia"></td><td>Malaysia</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Maldives.png" title="Flag of Maldives"></td><td>Maldives</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Mali.png" title="Flag of Mali"></td><td>Mali</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Malta.png" title="Flag of Malta"></td><td>Malta</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Marshall-Islands.png" title="Flag of Marshall Islands"></td><td>Marshall Islands</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Mauritania.png" title="Flag of Mauritania"></td><td>Mauritania</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Mauritius.png" title="Flag of Mauritius"></td><td>Mauritius</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Mexico.png" title="Flag of Mexico"></td><td>Mexico</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Micronesia.png" title="Flag of Micronesia"></td><td>Micronesia</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Moldova.png" title="Flag of Moldova"></td><td>Moldova</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Monaco.png" title="Flag of Monaco"></td><td>Monaco</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Mongolia.png" title="Flag of Mongolia"></td><td>Mongolia</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Montenegro.png" title="Flag of Montenegro"></td><td>Montenegro</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Morocco.png" title="Flag of Morocco"></td><td>Morocco</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Mozambique.png" title="Flag of Mozambique"></td><td>Mozambique</td></tr>
+                    <tr class="M" ><td><img src="flags/flag-of-Myanmar.png" title="Flag of Myanmar"></td><td>Myanmar</td></tr>
+                    <tr class="line" onclick="fnShowCountries('N')"><td colspan="2" class="letter">N</td></tr>
+                    <tr class="N" ><td><img src="flags/flag-of-Namibia.png" title="Flag of Namibia"></td><td>Namibia</td></tr>
+                    <tr class="N" ><td><img src="flags/flag-of-Nauru.png" title="Flag of Nauru"></td><td>Nauru</td></tr>
+                    <tr class="N" ><td><img src="flags/flag-of-Nepal.png" title="Flag of Nepal"></td><td>Nepal</td></tr>
+                    <tr class="N" ><td><img src="flags/flag-of-Netherlands.png" title="Flag of Netherlands"></td><td>Netherlands</td></tr>
+                    <tr class="N" ><td><img src="flags/flag-of-New-Zealand.png" title="Flag of New Zealand"></td><td>New Zealand</td></tr>
+                    <tr class="N" ><td><img src="flags/flag-of-Nicaragua.png" title="Flag of Nicaragua"></td><td>Nicaragua</td></tr>
+                    <tr class="N" ><td><img src="flags/flag-of-Niger.png" title="Flag of Niger"></td><td>Niger</td></tr>
+                    <tr class="N" ><td><img src="flags/flag-of-Nigeria.png" title="Flag of Nigeria"></td><td>Nigeria</td></tr>
+                    <tr class="N" ><td><img src="flags/flag-of-Korea-North.png" title="Flag of North Korea"></td><td>North Korea</td></tr>
+                    <tr class="N" ><td><img src="flags/flag-of-North-Macedonia.png" title="Flag of North Macedonia"></td><td>North Macedonia</td></tr>
+                    <tr class="N" ><td><img src="flags/flag-of-Norway.png" title="Flag of Norway"></td><td>Norway</td></tr>
+                    <tr class="line" onclick="fnShowCountries('O')"><td colspan="2" class="letter">O</td></tr>
+                    <tr class="O" ><td><img src="flags/flag-of-Oman.png" title="Flag of Oman"></td><td>Oman</td></tr>
+                    <tr class="line" onclick="fnShowCountries('P')"><td colspan="2" class="letter">P</td></tr>
+                    <tr class="P" ><td><img src="flags/flag-of-Pakistan.png" title="Flag of Pakistan"></td><td>Pakistan</td></tr>
+                    <tr class="P" ><td><img src="flags/flag-of-Palau.png" title="Flag of Palau"></td><td>Palau</td></tr>
+                    <tr class="P" ><td><img src="flags/flag-of-Palestine.png" title="Flag of Palestine"></td><td>Palestine</td></tr>
+                    <tr class="P" ><td><img src="flags/flag-of-Panama.png" title="Flag of Panama"></td><td>Panama</td></tr>
+                    <tr class="P" ><td><img src="flags/flag-of-Papua-New-Guinea.png" title="Flag of Papua New Guinea"></td><td>Papua New Guinea</td></tr>
+                    <tr class="P" ><td><img src="flags/flag-of-Paraguay.png" title="Flag of Paraguay"></td><td>Paraguay</td></tr>
+                    <tr class="P" ><td><img src="flags/flag-of-Peru.png" title="Flag of Peru"></td><td>Peru</td></tr>
+                    <tr class="P" ><td><img src="flags/flag-of-Philippines.png" title="Flag of Philippines"></td><td>Philippines</td></tr>
+                    <tr class="P" ><td><img src="flags/flag-of-Poland.png" title="Flag of Poland"></td><td>Poland</td></tr>
+                    <tr class="P" ><td><img src="flags/flag-of-Portugal.png" title="Flag of Portugal"></td><td>Portugal</td></tr>
+                    <tr class="line" onclick="fnShowCountries('Q')"><td colspan="2" class="letter">Q</td></tr>
+                    <tr class="Q" ><td><img src="flags/flag-of-Qatar.png" title="Flag of Qatar"></td><td>Qatar</td></tr>
+                    <tr class="line" onclick="fnShowCountries('R')"><td colspan="2" class="letter">R</td></tr>
+                    <tr class="R" ><td><img src="flags/flag-of-Romania.png" title="Flag of Romania"></td><td>Romania</td></tr>
+                    <tr class="R" ><td><img src="flags/flag-of-Russia.png" title="Flag of Russia"></td><td>Russia</td></tr>
+                    <tr class="R" ><td><img src="flags/flag-of-Rwanda.png" title="Flag of Rwanda"></td><td>Rwanda</td></tr>
+                    <tr class="line" onclick="fnShowCountries('S')"><td colspan="2" class="letter">S</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-St-Kitts-Nevis.png" title="Flag of Saint Kitts and Nevis"></td><td>Saint Kitts and Nevis</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-St-Lucia.png" title="Flag of Saint Lucia"></td><td>Saint Lucia</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-St-Vincent-the-Grenadines.png" title="Flag of Saint Vincent and the Grenadines"></td><td>Saint Vincent and the Grenadines</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Samoa.png" title="Flag of Samoa"></td><td>Samoa</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-San-Marino.png" title="Flag of San Marino"></td><td>San Marino</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Sao-Tome-and-Principe.png" title="Flag of Sao Tome and Principe"></td><td>Sao Tome and Principe</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Saudi-Arabia.png" title="Flag of Saudi Arabia"></td><td>Saudi Arabia</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Senegal.png" title="Flag of Senegal"></td><td>Senegal</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Serbia.png" title="Flag of Serbia"></td><td>Serbia</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Seychelles.png" title="Flag of Seychelles"></td><td>Seychelles</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Sierra-Leone.png" title="Flag of Sierra Leone"></td><td>Sierra Leone</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Singapore.png" title="Flag of Singapore"></td><td>Singapore</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Slovakia.png" title="Flag of Slovakia"></td><td>Slovakia</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Slovenia.png" title="Flag of Slovenia"></td><td>Slovenia</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Solomon-Islands.png" title="Flag of Solomon Islands"></td><td>Solomon Islands</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Somalia.png" title="Flag of Somalia"></td><td>Somalia</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-South-Africa.png" title="Flag of South Africa"></td><td>South Africa</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Korea-South.png" title="Flag of South Korea"></td><td>South Korea</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-South-Sudan.png" title="Flag of South Sudan"></td><td>South Sudan</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Spain.png" title="Flag of Spain"></td><td>Spain</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Sri-Lanka.png" title="Flag of Sri Lanka"></td><td>Sri Lanka</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Sudan.png" title="Flag of Sudan"></td><td>Sudan</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Suriname.png" title="Flag of Suriname"></td><td>Suriname</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Sweden.png" title="Flag of Sweden"></td><td>Sweden</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Switzerland.png" title="Flag of Switzerland"></td><td>Switzerland</td></tr>
+                    <tr class="S" ><td><img src="flags/flag-of-Syria.png" title="Flag of Syria"></td><td>Syria</td></tr>
+                    <tr class="line" onclick="fnShowCountries('T')"><td colspan="2" class="letter">T</td></tr>
+                    <tr class="T" ><td><img src="flags/flag-of-Taiwan.png" title="Flag of Taiwan"></td><td>Taiwan</td></tr>
+                    <tr class="T" ><td><img src="flags/flag-of-Tajikistan.png" title="Flag of Tajikistan"></td><td>Tajikistan</td></tr>
+                    <tr class="T" ><td><img src="flags/flag-of-Tanzania.png" title="Flag of Tanzania"></td><td>Tanzania</td></tr>
+                    <tr class="T" ><td><img src="flags/flag-of-Thailand.png" title="Flag of Thailand"></td><td>Thailand</td></tr>
+                    <tr class="T" ><td><img src="flags/flag-of-Timor-Leste.png" title="Flag of Timor-Leste"></td><td>Timor-Leste</td></tr>
+                    <tr class="T" ><td><img src="flags/flag-of-Togo.png" title="Flag of Togo"></td><td>Togo</td></tr>
+                    <tr class="T" ><td><img src="flags/flag-of-Tonga.png" title="Flag of Tonga"></td><td>Tonga</td></tr>
+                    <tr class="T" ><td><img src="flags/flag-of-Trinidad-and-Tobago.png" title="Flag of Trinidad and Tobago"></td><td>Trinidad and Tobago</td></tr>
+                    <tr class="T" ><td><img src="flags/flag-of-Tunisia.png" title="Flag of Tunisia"></td><td>Tunisia</td></tr>
+                    <tr class="T" ><td><img src="flags/flag-of-Turkey.png" title="Flag of Turkey"></td><td>Turkey</td></tr>
+                    <tr class="T" ><td><img src="flags/flag-of-Turkmenistan.png" title="Flag of Turkmenistan"></td><td>Turkmenistan</td></tr>
+                    <tr class="T" ><td><img src="flags/flag-of-Tuvalu.png" title="Flag of Tuvalu"></td><td>Tuvalu</td></tr>
+                    <tr class="line" onclick="fnShowCountries('U')"><td colspan="2" class="letter">U</td></tr>
+                    <tr class="U" ><td><img src="flags/flag-of-Uganda.png" title="Flag of Uganda"></td><td>Uganda</td></tr>
+                    <tr class="U" ><td><img src="flags/flag-of-Ukraine.png" title="Flag of Ukraine"></td><td>Ukraine</td></tr>
+                    <tr class="U" ><td><img src="flags/flag-of-United-Arab-Emirates.png" title="Flag of United Arab Emirates"></td><td>United Arab Emirates</td></tr>
+                    <tr class="U" ><td><img src="flags/flag-of-United-Kingdom.png" title="Flag of United Kingdom"></td><td>United Kingdom</td></tr>
+                    <tr class="U" ><td><img src="flags/flag-of-United-States-of-America.png" title="Flag of United States of America"></td><td>United States of America</td></tr>
+                    <tr class="U" ><td><img src="flags/flag-of-Uruguay.png" title="Flag of Uruguay"></td><td>Uruguay</td></tr>
+                    <tr class="U" ><td><img src="flags/flag-of-Uzbekistan.png" title="Flag of Uzbekistan"></td><td>Uzbekistan</td></tr>
+                    <tr class="line" onclick="fnShowCountries('V')"><td colspan="2" class="letter">V</td></tr>
+                    <tr class="V" ><td><img src="flags/flag-of-Vanuatu.png" title="Flag of Vanuatu"></td><td>Vanuatu</td></tr>
+                    <tr class="V" ><td><img src="flags/flag-of-Vatican-City.png" title="Flag of Vatican City (Holy See)"></td><td>Vatican City (Holy See)</td></tr>
+                    <tr class="V" ><td><img src="flags/flag-of-Venezuela.png" title="Flag of Venezuela"></td><td>Venezuela</td></tr>
+                    <tr class="V" ><td><img src="flags/flag-of-Vietnam.png" title="Flag of Vietnam"></td><td>Vietnam</td></tr>
+                    <tr class="line" onclick="fnShowCountries('Y')" ><td colspan="2" class="letter">Y</td></tr>
+                    <tr class="Y" ><td><img src="flags/flag-of-Yemen.png" title="Flag of Yemen"></td><td>Yemen</td></tr>
+                    <tr class="line" onclick="fnShowCountries('Z')"><td colspan="2" class="letter">Z</td></tr>
+                    <tr class="Z" ><td><img src="flags/flag-of-Zambia.png" title="Flag of Zambia"></td><td>Zambia</td></tr>
+                    <tr class="Z" id="last" ><td><img src="flags/flag-of-Zimbabwe.png" title="Flag of Zimbabwe"></td><td>Zimbabwe <br /> Thank you SriGanesh, bye...bye...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+
+
+        $('img').click(function () {
+            
+            $($(this).parent('td').siblings('td')).articulate('speak');
+            $(this).parent('td').siblings('td').css('color', '#004997');
+            //debugger;
+            //if ($(this).parent('tr').attr('id') == "last") {
+            //    $('Thank you SriGanesh, bye...bye...').articulate('speak');
+            //}
+            //// pause
+            //$().articulate('pause');
+
+            //// resume
+            //$().articulate('resume');
+
+            //// stop
+            //$().articulate('stop');
+
+            //https://www.jqueryscript.net/other/Lightweight-jQuery-Based-Text-To-Speech-Engine-Articulate-js.html#google_vignette
+        });
+
+        $(document).ready(function () {
+            $('img').each(function () {
+                $(this).parent('td').siblings('td').css('color', '#ffffff');
+            });
+        });
+
+        function fnShowCountries(char)
+        {
+            $('.' + char).toggle();
+        }
+
+    </script>
+
+</body>
+</html>
