@@ -45,7 +45,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="row">
-                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin") || currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager"))
                                 {
                                     <div class="col-4 col-sm-6">
                                         <h3 class="card-title">Expense Tracker</h3>
@@ -58,11 +58,11 @@
                                     </div>
                                 }
                                 @*<div class="col-4 col-sm-2">
-                                        <button type="button"  <div class="col-4 col-sm-2">
-                                        <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Search</button>
-                                    </div>="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Adv. Search</button>
-                                    </div>*@
-                                @if (!currentUser.UserRoles.Any(wh => wh.RoleName == "Super User"))
+            <button type="button"  <div class="col-4 col-sm-2">
+            <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Search</button>
+        </div>="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Adv. Search</button>
+        </div>*@
+                                @if (!currentUser.UserRoles.Any(wh => wh.RoleName == "Super User") || currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager"))
                                 {
                                     <div class="col-4 col-sm-2">
                                     </div>
@@ -81,6 +81,12 @@
                                 {
                                     <div class="col-4 col-sm-2">
                                         <button type="button" style="float:right" class="btn btn-block btn-success btn-sm " onclick="javascript:fnBulkApprove()"><i class="fa fa-tags"></i>Bulk Approve</button>
+                                    </div>
+                                }
+                                else if (currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager"))
+                                {
+                                    <div class="col-4 col-sm-2">
+                                        <button type="button" style="float:right" class="btn btn-block btn-success btn-sm " onclick="javascript:fnBulkVerify()"><i class="fa fa-tags"></i>Bulk Verify</button>
                                     </div>
                                 }
                             </div>
@@ -166,7 +172,7 @@
 </div>
 <script>
     $('#pnlAdvSearch').hide();
-  
+
     function fnDasboardFilter(status) {
         if (status != null) {
             debugger;

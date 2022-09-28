@@ -490,32 +490,39 @@ namespace ClientManager.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpGet]
-        [CustomAuthorize(new string[] { "Store Admin" })]
-        public ActionResult Delete(int id)
+        [HttpPost]
+        [CustomAuthorize(new string[] { "Accounts Manager" })]
+        public ActionResult ExpenceEntryVerify(int[] id, string status)
         {
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
 
             JsonReponse data;
             try
             {
-                if (id <= 0)
+                if (id.Length < 0)
                     return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
-                ExpenseTracker entity = this.db.ExpenseTrackers.Find(id);
-
-                if (entity == null)
-                    return (ActionResult)this.HttpNotFound();
-
-                this.db.ExpenseTrackers.Remove(entity);
-                this.db.SaveChanges();
-
-                data = new JsonReponse()
+                else
                 {
-                    message = "Expence Entry Deleted.",
-                    status = "Success",
-                    redirectURL = "/ExpenseTrackers/List?" + DateTime.Now.Ticks.ToString()
-                };
+                    foreach (var item in id)
+                    {
+                        ExpenseTracker entity = this.db.ExpenseTrackers.Find(item);
+
+                        if (entity == null)
+                            return (ActionResult)this.HttpNotFound();
+
+                        entity.Status = status;
+                        entity.ModifiedBy = new int?(userDetails.Id);
+                        entity.ModifiedOn = new DateTime?(DateTime.Now);
+                        this.db.Entry<ExpenseTracker>(entity).State = EntityState.Modified;
+                        this.db.SaveChanges();
+                    }
+                    data = new JsonReponse()
+                    {
+                        message = "Expence Entry Verified.",
+                        status = "Success",
+                        redirectURL = "/ExpenseTrackers/List?" + DateTime.Now.Ticks.ToString()
+                    };
+                }
             }
             catch (Exception ex)
             {
@@ -528,13 +535,52 @@ namespace ClientManager.Controllers
             }
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
-        protected override void Dispose(bool disposing)
+
+    [HttpGet]
+    [CustomAuthorize(new string[] { "Store Admin" })]
+    public ActionResult Delete(int id)
+    {
+        UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
+
+        JsonReponse data;
+        try
         {
-            if (disposing)
+            if (id <= 0)
+                return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            ExpenseTracker entity = this.db.ExpenseTrackers.Find(id);
+
+            if (entity == null)
+                return (ActionResult)this.HttpNotFound();
+
+            this.db.ExpenseTrackers.Remove(entity);
+            this.db.SaveChanges();
+
+            data = new JsonReponse()
             {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+                message = "Expence Entry Deleted.",
+                status = "Success",
+                redirectURL = "/ExpenseTrackers/List?" + DateTime.Now.Ticks.ToString()
+            };
         }
+        catch (Exception ex)
+        {
+            data = new JsonReponse()
+            {
+                message = ex.Message,
+                status = "Error",
+                redirectURL = ""
+            };
+        }
+        return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
     }
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            db.Dispose();
+        }
+        base.Dispose(disposing);
+    }
+}
 }
