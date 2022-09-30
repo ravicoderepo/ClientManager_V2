@@ -1,4 +1,4 @@
-﻿@model DBOperation.Type
+﻿@model DBOperation.Company
 
 @{
     ViewBag.Title = "Edit";
@@ -20,12 +20,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Type</h1>
+                    <h1>Company</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Master</a></li>
-                        <li class="breadcrumb-item"><a href="#">Type</a></li>
+                        <li class="breadcrumb-item"><a href="#">Company</a></li>
                         <li class="breadcrumb-item active">Edit</li>
                     </ol>
                 </div>
@@ -42,7 +42,7 @@
                     <!-- jquery validation -->
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Type</h3>
+                            <h3 class="card-title">Companies</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
@@ -52,8 +52,8 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="status">Status</label>
-                                            @Html.HiddenFor(model => model.TypeId, new { htmlAttributes = new { @id = "TypeId" } })
-                                            @Html.HiddenFor(model => model.IsActive, new { htmlAttributes = new { @id = "hdnTypeStatus" } })
+                                            @Html.HiddenFor(model => model.CompanyId, new { htmlAttributes = new { @id = "CompanyId" } })
+                                            @Html.HiddenFor(model => model.IsActive, new { htmlAttributes = new { @id = "hdnStatus" } })
                                             @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
                                         </div>
                                     </div>
@@ -62,20 +62,11 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="MaterialId">Material</label>
-                                            @Html.HiddenFor(model => model.MaterialId, new { htmlAttributes = new { @id = "hdnMaterialId" } })
-                                            @Html.DropDownList("MaterialId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlMaterialId", @onChange = "fnValueChange()" })
+                                            <label for="FullName">Company Name</label>
+                                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @id = "txtCompanyName", @name = "CompanyName" } })
                                         </div>
                                     </div>
-                                </div>                        
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="ItemName">Type Name</label>
-                                            @Html.EditorFor(model => model.TypeName, new { htmlAttributes = new { @class = "form-control", @id = "txtTypeName", @name = "TypeName" } })
-                                        </div>
-                                    </div>
-                                </div>                               
+                                </div>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
@@ -129,9 +120,7 @@
             submitHandler: function () {
                 debugger;
                 // alert("Form successful submitted!");
-                $("input[name=IsActive]").val(($('#ddlStatus').val() == '1' ? true : false));               
-                $("input[name=MaterialId]").val($('#ddlMaterialId').val());
-                fnSubmitTypeDetails();
+                fnSubmitCompanyDetails();
             }
         });
         $('#quickForm').validate({
@@ -169,25 +158,20 @@
     function fnStatusChange() {
         $("input[name=IsActive]").val(($('#ddlStatus').val()=='1' ? true: false));
     }
-    function fnValueChange() {
-        debugger;
-        $("input[name=MaterialId]").val($('#ddlMaterialId').val())
 
-    }
-        function fnSubmitTypeDetails() {
+    function fnSubmitCompanyDetails() {
         debugger;
-        var typeData = {         
-            TypeId: $("input[name=TypeId]").val(),
-            MaterialId: $("input[name=MaterialId]").val(),
-            IsActive: ($("input[name=IsActive]").val() == '1') ? true : false,
-            TypeName: $('#txtTypeName').val(),
+        var companyData = {
+            CompanyId: $('#MaterialId').val(),
+            IsActive: ($("input[name=IsActive]").val().toLowerCase() == 'true') ? true : false,
+            Name: $('#txtMaterialName').val(),
             Description: $('#txtDescription').val()
         };
         debugger;
         $.ajax({
             type: "POST",
-            url: "/Types/Edit",
-            data: JSON.stringify(typeData),
+            url: "/Companies/Edit",
+            data: JSON.stringify(companyData),
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
@@ -204,5 +188,5 @@
             }
         });
     }
-    $("#mnuTypeList").addClass("active");
+    $("#mnuCompaniesList").addClass("active");
 </script>

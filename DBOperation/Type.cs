@@ -14,6 +14,12 @@ namespace DBOperation
     
     public partial class Type
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Type()
+        {
+            this.Items = new HashSet<Item>();
+        }
+    
         public int TypeId { get; set; }
         public int MaterialId { get; set; }
         public string TypeName { get; set; }
@@ -24,6 +30,8 @@ namespace DBOperation
         public Nullable<System.DateTime> ModifiedOn { get; set; }
         public Nullable<int> ModifiedBy { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Item> Items { get; set; }
         public virtual Material Material { get; set; }
     }
 }

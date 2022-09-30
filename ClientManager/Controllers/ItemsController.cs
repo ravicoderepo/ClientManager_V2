@@ -17,7 +17,7 @@ namespace ClientManager.Controllers
         private ClientManagerEntities db = new ClientManagerEntities();
 
         // GET: ExpenceCategories
-        [CustomAuthorize(new string[] { "Super Admin","Super User" })]
+       [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult List()
         {
             var items = db.Items;
@@ -25,7 +25,7 @@ namespace ClientManager.Controllers
         }
 
         // GET: ExpenceCategories/Create
-        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult Create()
         {
             ViewBag.MaterialId = new SelectList(db.Materials, "MaterialId", "MaterialName", 1).ToList<SelectListItem>();
@@ -38,12 +38,10 @@ namespace ClientManager.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult Create(Models.ItemData itemData)
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
-            
-            JsonReponse jsonReponse = (JsonReponse)null;
 
             JsonReponse data;
             try
@@ -51,7 +49,7 @@ namespace ClientManager.Controllers
                 int num = 0;
                 if (string.IsNullOrEmpty(itemData.ItemName) || string.IsNullOrEmpty(itemData.Description))
                 {
-                    jsonReponse = new JsonReponse()
+                    data = new JsonReponse()
                     {
                         message = "Enter all required fields.",
                         status = "Failed",
@@ -72,21 +70,22 @@ namespace ClientManager.Controllers
                         CreatedOn = DateTime.Now
                     });
                     num = this.db.SaveChanges();
+                    if (num > 0)
+                        data = new JsonReponse()
+                        {
+                            message = "Item created successfully!",
+                            status = "Success",
+                            redirectURL = "/items/List"
+                        };
+                    else
+                        data = new JsonReponse()
+                        {
+                            message = "Item creation not completed, try again after sometime.",
+                            status = "Failed",
+                            redirectURL = ""
+                        };
                 }
-                if (num > 0)
-                    data = new JsonReponse()
-                    {
-                        message = "Item created successfully!",
-                        status = "Success",
-                        redirectURL = "/items/List"
-                    };
-                else
-                    data = new JsonReponse()
-                    {
-                        message = "Item creation not completed, try again after sometime.",
-                        status = "Failed",
-                        redirectURL = ""
-                    };
+                
             }
             catch (Exception ex)
             {
@@ -101,28 +100,28 @@ namespace ClientManager.Controllers
         }
 
         // GET: ExpenceCategories/Edit/5
-        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DBOperation.Item expenceCategory = db.Items.Find(id);
-            if (expenceCategory == null)
+            DBOperation.Item item = db.Items.Find(id);
+            if (item == null)
             {
                 return HttpNotFound();
             }
 
-            ViewBag.MaterialId = new SelectList(db.Materials, "MaterialId", "MaterialName", 1).ToList<SelectListItem>();
-            ViewBag.TypeId = new SelectList(db.Types, "TypeId", "TypeName", 1).ToList<SelectListItem>();
-            ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", (object)1).ToList<SelectListItem>();
-            return View(expenceCategory);
+            ViewBag.MaterialId = new SelectList(db.Materials, "MaterialId", "MaterialName", item.MaterialId).ToList<SelectListItem>();
+            ViewBag.TypeId = new SelectList(db.Types, "TypeId", "TypeName", item.TypeId).ToList<SelectListItem>();
+            ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", item.IsActive ? 1: 0).ToList<SelectListItem>();
+            return View(item);
         }
 
         // POST: ExpenceCategories/Edit/5
         [HttpPost]
-        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult Edit(Models.ItemData itemData)
         {
             JsonReponse data;
@@ -193,7 +192,7 @@ namespace ClientManager.Controllers
         }
 
         [HttpGet]
-        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult Activate(int? id)
         {
             JsonReponse data;
@@ -251,7 +250,7 @@ namespace ClientManager.Controllers
         }
 
         [HttpGet]
-        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult DeActivate(int? id)
         {
             JsonReponse data;

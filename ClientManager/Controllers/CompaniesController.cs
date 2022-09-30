@@ -12,7 +12,7 @@ using DBOperation;
 
 namespace ClientManager.Controllers
 {
-    public class MaterialsController : Controller
+    public class CompaniesController : Controller
     {
         private ClientManagerEntities db = new ClientManagerEntities();
 
@@ -20,8 +20,8 @@ namespace ClientManager.Controllers
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult List()
         {
-            var Materials = db.Materials;
-            return View(Materials.ToList());
+            var companies = db.Companies;
+            return View(companies.ToList());
         }
 
         // GET: ExpenceCategories/Create
@@ -37,17 +37,15 @@ namespace ClientManager.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
-        public ActionResult Create(Models.MaterialData materialData)
+        public ActionResult Create(Models.CompanyData companyData)
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
             
-            JsonReponse jsonReponse = (JsonReponse)null;
-
             JsonReponse data;
             try
             {
                 int num = 0;
-                if (string.IsNullOrEmpty(materialData.MaterialName) || string.IsNullOrEmpty(materialData.Description))
+                if (string.IsNullOrEmpty(companyData.Name) || string.IsNullOrEmpty(companyData.Description))
                 {
                     data = new JsonReponse()
                     {
@@ -58,32 +56,31 @@ namespace ClientManager.Controllers
                 }
                 else
                 {
-                    this.db.Materials.Add(new DBOperation.Material()
+                    this.db.Companies.Add(new DBOperation.Company()
                     {
-                        MaterialName = materialData.MaterialName,
-                        Description = materialData.Description,
-                        IsActive = materialData.IsActive,
+                        Name = companyData.Name,
+                        Description = companyData.Description,
+                        IsActive = companyData.IsActive,
                         CreatedBy = userData.Id,
                         CreatedOn = DateTime.Now
                     });
                     num = this.db.SaveChanges();
-
                     if (num > 0)
                         data = new JsonReponse()
                         {
-                            message = "Material created successfully!",
+                            message = "Company created successfully!",
                             status = "Success",
-                            redirectURL = "/Materials/List"
+                            redirectURL = "/Companies/List"
                         };
                     else
                         data = new JsonReponse()
                         {
-                            message = "Not completed, try again after sometime.",
+                            message = "Company creation not completed, try again after sometime.",
                             status = "Failed",
                             redirectURL = ""
                         };
                 }
-                
+               
             }
             catch (Exception ex)
             {
@@ -105,27 +102,27 @@ namespace ClientManager.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DBOperation.Material meterial = db.Materials.Find(id);
-            if (meterial == null)
+            DBOperation.Company company = db.Companies.Find(id);
+            if (company == null)
             {
                 return HttpNotFound();
             }
 
            
-            ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", meterial.IsActive ? 1 : 0).ToList<SelectListItem>();
-            return View(meterial);
+            ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", company.IsActive?1:0).ToList<SelectListItem>();
+            return View(company);
         }
 
         // POST: ExpenceCategories/Edit/5
         [HttpPost]
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
-        public ActionResult Edit(Models.MaterialData materialData)
+        public ActionResult Edit(Models.CompanyData companyData)
         {
             JsonReponse data;
             try
             {
                 UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
-                DBOperation.Material entity = this.db.Materials.FirstOrDefault(wh => wh.MaterialId == materialData.MaterialId);
+                DBOperation.Company entity = this.db.Companies.FirstOrDefault(wh => wh.CompanyId == companyData.CompanyId);
                 if (entity == null)
                     data = new JsonReponse()
                     {
@@ -133,7 +130,7 @@ namespace ClientManager.Controllers
                         status = "Failed",
                         redirectURL = ""
                     };
-                else if (string.IsNullOrEmpty(materialData.MaterialName) || string.IsNullOrEmpty(materialData.Description))
+                else if (string.IsNullOrEmpty(companyData.Name) || string.IsNullOrEmpty(companyData.Description))
                 {
                     data = new JsonReponse()
                     {
@@ -144,14 +141,14 @@ namespace ClientManager.Controllers
                 }
                 else
                 {
-                    this.db.Entry<DBOperation.Material>(entity).State = EntityState.Modified;
+                    this.db.Entry<DBOperation.Company>(entity).State = EntityState.Modified;
                     string str;
                     if (userDetails.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "super admin")))
                     {
-                        entity.MaterialName = materialData.MaterialName;
-                        entity.Description = materialData.Description;
-                        entity.IsActive = materialData.IsActive;                       
-                        str = "Material details Updated";
+                        entity.Name = companyData.Name;
+                        entity.Description = companyData.Description;
+                        entity.IsActive = companyData.IsActive;                       
+                        str = "Company details Updated";
                     }
                    
                     entity.ModifiedBy = new int?(userDetails.Id);
@@ -160,9 +157,9 @@ namespace ClientManager.Controllers
                     if (this.db.SaveChanges() > 0)
                         data = new JsonReponse()
                         {
-                            message = "Material details saved successfully!",
+                            message = "Company details saved successfully!",
                             status = "Success",
-                            redirectURL = "/Materials/List"
+                            redirectURL = "/Companies/List"
                         };
                     else
                         data = new JsonReponse()
@@ -193,7 +190,7 @@ namespace ClientManager.Controllers
             try
             {
 
-                DBOperation.Material entity = this.db.Materials.FirstOrDefault(wh => wh.MaterialId == id);
+                DBOperation.Company entity = this.db.Companies.FirstOrDefault(wh => wh.CompanyId == id);
 
 
                 if (entity == null)
@@ -207,7 +204,7 @@ namespace ClientManager.Controllers
                 }
                 else
                 {
-                    this.db.Entry<DBOperation.Material>(entity).State = EntityState.Modified;
+                    this.db.Entry<DBOperation.Company>(entity).State = EntityState.Modified;
                     entity.IsActive = true;
 
                     if (this.db.SaveChanges() > 0)
@@ -216,7 +213,7 @@ namespace ClientManager.Controllers
                         {
                             message = "Activated Successfully!",
                             status = "Success",
-                            redirectURL = "/Materials/List"
+                            redirectURL = "/Companies/List"
                         };
                     }
                     else
@@ -225,7 +222,7 @@ namespace ClientManager.Controllers
                         {
                             message = "Failed to update!",
                             status = "Error",
-                            redirectURL = "/Materials/List"
+                            redirectURL = "/Companies/List"
                         };
                     }
 
@@ -237,7 +234,7 @@ namespace ClientManager.Controllers
                 {
                     message = ex.Message,
                     status = "Error",
-                    redirectURL = "/Materials/List"
+                    redirectURL = "/Companies/List"
                 };
             }
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
@@ -251,7 +248,7 @@ namespace ClientManager.Controllers
             try
             {
 
-                DBOperation.Material entity = this.db.Materials.FirstOrDefault(wh => wh.MaterialId == id);
+                DBOperation.Company entity = this.db.Companies.FirstOrDefault(wh => wh.CompanyId == id);
 
 
                 if (entity == null)
@@ -260,12 +257,12 @@ namespace ClientManager.Controllers
                     {
                         message = "There is no record for given Id",
                         status = "Failed",
-                        redirectURL = "/Materials/List"
+                        redirectURL = "/Companies/List"
                     };
                 }
                 else
                 {
-                    this.db.Entry<DBOperation.Material>(entity).State = EntityState.Modified;
+                    this.db.Entry<DBOperation.Company>(entity).State = EntityState.Modified;
                     entity.IsActive = false;
 
                     if (this.db.SaveChanges() > 0)
@@ -274,7 +271,7 @@ namespace ClientManager.Controllers
                         {
                             message = "De-Activated Successfully!",
                             status = "Success",
-                            redirectURL = "/Materials/List"
+                            redirectURL = "/Companies/List"
                         };
                     }
                     else
@@ -283,7 +280,7 @@ namespace ClientManager.Controllers
                         {
                             message = "Failed to update!",
                             status = "Error",
-                            redirectURL = "/Materials/List"
+                            redirectURL = "/Companies/List"
                         };
                     }
 

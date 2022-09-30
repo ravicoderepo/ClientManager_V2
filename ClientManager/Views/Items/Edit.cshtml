@@ -20,7 +20,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Items</h1>
+                    <h1>Item</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -42,7 +42,7 @@
                     <!-- jquery validation -->
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Items</h3>
+                            <h3 class="card-title">Item</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
@@ -201,7 +201,8 @@
             MaterialId: $("input[name=MaterialId]").val(),
             IsActive: ($("input[name=IsActive]").val() == '1') ? true : false,
             ItemName: $('#txtItemName').val(),
-            Description: $('#txtDescription').val()
+            Description: $('#txtDescription').val(),
+            MinimumAvailableQuantity: $('#txtMinimumAvailableQuantity').val()
         };
         debugger;
         $.ajax({
@@ -224,5 +225,5 @@
             }
         });
     }
-    $("#mnuExpenceCategory").addClass("active");
+    $("#mnuItemList").addClass("active");
 </script>

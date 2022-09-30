@@ -1,7 +1,7 @@
-﻿@model DBOperation.Type
+﻿@model DBOperation.Material
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -20,13 +20,13 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Type</h1>
+                    <h1>Material</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Master</a></li>
-                        <li class="breadcrumb-item"><a href="#">Type</a></li>
-                        <li class="breadcrumb-item active">Edit</li>
+                        <li class="breadcrumb-item"><a href="#">Material</a></li>
+                        <li class="breadcrumb-item active">Create</li>
                     </ol>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                     <!-- jquery validation -->
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Type</h3>
+                            <h3 class="card-title">Material Details</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
@@ -52,57 +52,45 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="status">Status</label>
-                                            @Html.HiddenFor(model => model.TypeId, new { htmlAttributes = new { @id = "TypeId" } })
-                                            @Html.HiddenFor(model => model.IsActive, new { htmlAttributes = new { @id = "hdnTypeStatus" } })
+                                            @Html.HiddenFor(model => model.IsActive, new { htmlAttributes = new { @id = "hdnUserStatus" } })
                                             @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="MaterialId">Material</label>
-                                            @Html.HiddenFor(model => model.MaterialId, new { htmlAttributes = new { @id = "hdnMaterialId" } })
-                                            @Html.DropDownList("MaterialId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlMaterialId", @onChange = "fnValueChange()" })
+                                            <label for="FullName">Material Name</label>
+                                            @Html.EditorFor(model => model.MaterialName, new { htmlAttributes = new { @class = "form-control", @id = "txtMaterialName", @name = "MaterialName" } })
                                         </div>
                                     </div>
-                                </div>                        
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="ItemName">Type Name</label>
-                                            @Html.EditorFor(model => model.TypeName, new { htmlAttributes = new { @class = "form-control", @id = "txtTypeName", @name = "TypeName" } })
-                                        </div>
-                                    </div>
-                                </div>                               
+                                </div>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="status">Description</label>
-                                            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @id = "txtDescription", @name = "Description" } })
+                                            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @id = "txtDescription", @name = "Description"} })
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- /.card-body -->
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
-                                <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='../List'" id="btnBack">Back to List</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='List'" id="btnBack">Back to List</button>
                             </div>
-
-                        </form>
                     </div>
-                    <!-- /.card -->
+                    <!-- /.card-body -->
+                    </form>
                 </div>
-
-                <!--/.col (left) -->
-                <!-- right column -->
-                <div class="col-md-6">
-
-                </div>
-                <!--/.col (right) -->
+                <!-- /.card -->
             </div>
+
+            <!--/.col (left) -->
+            <!-- right column -->
+            <div class="col-md-6">
+
+            </div>
+            <!--/.col (right) -->
             <!-- /.row -->
         </div><!-- /.container-fluid -->
     </section>
@@ -123,15 +111,15 @@
         }
     });
 
+
     $(function () {
         //debugger;
         $.validator.setDefaults({
             submitHandler: function () {
                 debugger;
                 // alert("Form successful submitted!");
-                $("input[name=IsActive]").val(($('#ddlStatus').val() == '1' ? true : false));               
-                $("input[name=MaterialId]").val($('#ddlMaterialId').val());
-                fnSubmitTypeDetails();
+                $("input[name=IsActive]").val($('#ddlStatus').val());
+                fnSubmitMaterialDetails();
             }
         });
         $('#quickForm').validate({
@@ -166,28 +154,25 @@
         });
     });
 
-    function fnStatusChange() {
-        $("input[name=IsActive]").val(($('#ddlStatus').val()=='1' ? true: false));
-    }
-    function fnValueChange() {
-        debugger;
-        $("input[name=MaterialId]").val($('#ddlMaterialId').val())
 
-    }
-        function fnSubmitTypeDetails() {
+    function fnStatusChange() {
         debugger;
-        var typeData = {         
-            TypeId: $("input[name=TypeId]").val(),
-            MaterialId: $("input[name=MaterialId]").val(),
-            IsActive: ($("input[name=IsActive]").val() == '1') ? true : false,
-            TypeName: $('#txtTypeName').val(),
+        $("input[name=IsActive]").val($('#ddlStatus').val());
+    }
+
+    function fnSubmitMaterialDetails() {
+        debugger;
+        var materialData = {
+            //MaterialId: $('#Id').val(),
+            IsActive: ($("input[name=IsActive]").val()=='1') ? true: false,
+            MaterialName: $('#txtMaterialName').val(),
             Description: $('#txtDescription').val()
         };
         debugger;
         $.ajax({
             type: "POST",
-            url: "/Types/Edit",
-            data: JSON.stringify(typeData),
+            url: "/Materials/Create",
+            data: JSON.stringify(materialData),
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
@@ -204,5 +189,5 @@
             }
         });
     }
-    $("#mnuTypeList").addClass("active");
+    $("#mnuMaterialList").addClass("active");
 </script>

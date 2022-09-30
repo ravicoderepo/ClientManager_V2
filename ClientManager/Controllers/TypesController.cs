@@ -17,7 +17,7 @@ namespace ClientManager.Controllers
         private ClientManagerEntities db = new ClientManagerEntities();
 
         // GET: ExpenceCategories
-        [CustomAuthorize(new string[] { "Super Admin","Super User" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult List()
         {
             var types = db.Types;
@@ -25,7 +25,7 @@ namespace ClientManager.Controllers
         }
 
         // GET: ExpenceCategories/Create
-        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult Create()
         {
             ViewBag.MaterialId = new SelectList(db.Materials, "MaterialId", "MaterialName", 1).ToList<SelectListItem>();
@@ -37,7 +37,7 @@ namespace ClientManager.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult Create(Models.TypesData typesData)
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
@@ -50,7 +50,7 @@ namespace ClientManager.Controllers
                 int num = 0;
                 if (string.IsNullOrEmpty(typesData.TypeName) || string.IsNullOrEmpty(typesData.Description))
                 {
-                    jsonReponse = new JsonReponse()
+                    data = new JsonReponse()
                     {
                         message = "Enter all required fields.",
                         status = "Failed",
@@ -69,21 +69,22 @@ namespace ClientManager.Controllers
                         CreatedOn = DateTime.Now
                     });
                     num = this.db.SaveChanges();
+                    if (num > 0)
+                        data = new JsonReponse()
+                        {
+                            message = "Type created successfully!",
+                            status = "Success",
+                            redirectURL = "/Types/List"
+                        };
+                    else
+                        data = new JsonReponse()
+                        {
+                            message = "Type creation not completed, try again after sometime.",
+                            status = "Failed",
+                            redirectURL = ""
+                        };
                 }
-                if (num > 0)
-                    data = new JsonReponse()
-                    {
-                        message = "Type created successfully!",
-                        status = "Success",
-                        redirectURL = "/Types/List"
-                    };
-                else
-                    data = new JsonReponse()
-                    {
-                        message = "Typr creation not completed, try again after sometime.",
-                        status = "Failed",
-                        redirectURL = ""
-                    };
+               
             }
             catch (Exception ex)
             {
@@ -98,27 +99,27 @@ namespace ClientManager.Controllers
         }
 
         // GET: ExpenceCategories/Edit/5
-        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DBOperation.Type typeData = db.Types.Find(id);
-            if (typeData == null)
+            DBOperation.Type type = db.Types.Find(id);
+            if (type == null)
             {
                 return HttpNotFound();
             }
 
-            ViewBag.MaterialId = new SelectList(db.Materials, "MaterialId", "MaterialName").ToList<SelectListItem>();
-            ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", (object)1).ToList<SelectListItem>();
-            return View(typeData);
+            ViewBag.MaterialId = new SelectList(db.Materials, "MaterialId", "MaterialName", type.MaterialId).ToList<SelectListItem>();
+            ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", type.IsActive?1:0).ToList<SelectListItem>();
+            return View(type);
         }
 
         // POST: ExpenceCategories/Edit/5
         [HttpPost]
-        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult Edit(Models.TypesData typesData)
         {
             JsonReponse data;
@@ -161,7 +162,7 @@ namespace ClientManager.Controllers
                     if (this.db.SaveChanges() > 0)
                         data = new JsonReponse()
                         {
-                            message = "Type details saved successfully!",
+                            message = "Type details updated successfully!",
                             status = "Success",
                             redirectURL = "/Types/List"
                         };
@@ -187,7 +188,7 @@ namespace ClientManager.Controllers
         }
 
         [HttpGet]
-        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult Activate(int? id)
         {
             JsonReponse data;
@@ -247,7 +248,7 @@ namespace ClientManager.Controllers
         }
 
         [HttpGet]
-        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult DeActivate(int? id)
         {
             JsonReponse data;

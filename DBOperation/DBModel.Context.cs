@@ -52,6 +52,12 @@ namespace DBOperation
         public virtual DbSet<UserContact> UserContacts { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<VRM_Attachment> VRM_Attachment { get; set; }
+        public virtual DbSet<VRM_ErrorLog> VRM_ErrorLog { get; set; }
+        public virtual DbSet<VRM_InwardStock> VRM_InwardStock { get; set; }
+        public virtual DbSet<VRM_InwardStockTransaction> VRM_InwardStockTransaction { get; set; }
+        public virtual DbSet<VRM_OutwardStock> VRM_OutwardStock { get; set; }
+        public virtual DbSet<VRM_OutwardStockTransaction> VRM_OutwardStockTransaction { get; set; }
     
         public virtual ObjectResult<GetMonthlySalesReport_Result> GetMonthlySalesReport(string userType, Nullable<int> currentUserId, Nullable<int> userManagerId)
         {

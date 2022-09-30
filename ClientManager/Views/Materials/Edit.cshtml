@@ -20,7 +20,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Materials</h1>
+                    <h1>Material</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -42,7 +42,7 @@
                     <!-- jquery validation -->
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Materials</h3>
+                            <h3 class="card-title">Material</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
@@ -170,7 +170,7 @@
         debugger;
         $.ajax({
             type: "POST",
-            url: "/Meterials/Edit",
+            url: "/Materials/Edit",
             data: JSON.stringify(materialData),
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
@@ -188,5 +188,5 @@
             }
         });
     }
-    $("#mnuExpenceCategory").addClass("active");
+    $("#mnuMaterialList").addClass("active");
 </script>

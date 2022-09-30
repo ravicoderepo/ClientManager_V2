@@ -149,6 +149,7 @@
     <Compile Include="Controllers\DocumentsController.cs" />
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\ItemsController.cs" />
+    <Compile Include="Controllers\CompaniesController.cs" />
     <Compile Include="Controllers\TypesController.cs" />
     <Compile Include="Controllers\MeterialsController.cs" />
     <Compile Include="Controllers\ExpenceCategoriesController.cs" />
@@ -2823,15 +2824,18 @@
     <Content Include="Views\Documents\Edit - Copy.cshtml" />
     <Content Include="Views\Documents\ImageViewer.cshtml" />
     <Content Include="Views\Shared\_LayoutPopup.cshtml" />
-    <Content Include="Views\Meterials\Create.cshtml" />
-    <Content Include="Views\Meterials\Edit.cshtml" />
-    <Content Include="Views\Meterials\List.cshtml" />
+    <Content Include="Views\Materials\Create.cshtml" />
+    <Content Include="Views\Materials\Edit.cshtml" />
+    <Content Include="Views\Materials\List.cshtml" />
     <Content Include="Views\Items\Create.cshtml" />
     <Content Include="Views\Items\Edit.cshtml" />
     <Content Include="Views\Items\List.cshtml" />
     <Content Include="Views\Types\Create.cshtml" />
     <Content Include="Views\Types\Edit.cshtml" />
     <Content Include="Views\Types\List.cshtml" />
+    <Content Include="Views\Companies\Create.cshtml" />
+    <Content Include="Views\Companies\Edit.cshtml" />
+    <Content Include="Views\Companies\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
