@@ -29,7 +29,14 @@ namespace ClientManager.Controllers
             string[] superroles = { "Super Admin", "Super User" };
             if (salesPerson == 0)
             {
-                salesPerson = currentUser.Id;
+                if (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName)))
+                {
+                    salesPerson = 0; 
+                }
+                else
+                {
+                    salesPerson = currentUser.Id;
+                }
                 ViewBag.SelectedSalesPerson = "of " + currentUser.FullName;
             }
             else
@@ -107,7 +114,7 @@ namespace ClientManager.Controllers
             ViewBag.Status = statusList;
 
             var result = saleActivities.OrderBy(wh => wh.Status).ToList();
-                //from sale in saleActivities orderby sale.Status ascending select sale;
+            //from sale in saleActivities orderby sale.Status ascending select sale;
 
             return PartialView(result.ToList());
         }
@@ -226,7 +233,7 @@ namespace ClientManager.Controllers
                     Remarks = saleData.Remarks,
                     CreatedBy = currentUser.Id,
                     CreatedOn = DateTime.Now,
-                    AnticipatedClosingDate = DateTime.ParseExact(saleData.AnticipatedClosingDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    AnticipatedClosingDate = (!string.IsNullOrEmpty(saleData.AnticipatedClosingDate)) ? DateTime.ParseExact(saleData.AnticipatedClosingDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) : new Nullable<DateTime>(),
                     SalesRepresentativeId = saleData.SalesRepresentativeId,
                     NoOfFollowUps = saleData.NoOfFollowUps,
                     InvoiceAmount = saleData.InvoiceAmount,
@@ -336,7 +343,7 @@ namespace ClientManager.Controllers
                 {
                     if (saleData.Status == 6)
                     {
-                        if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName) || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit) || string.IsNullOrEmpty(saleData.InvoiceNo) || saleData.InvoiceAmount < 0 || string.IsNullOrEmpty(saleData.Remarks))
+                        if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName) || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit) || string.IsNullOrEmpty(saleData.InvoiceNo) || saleData.InvoiceAmount < 0 || string.IsNullOrEmpty(saleData.Remarks) || string.IsNullOrEmpty(saleData.DateOfClosing))
                         {
                             //saleData.DateOfClosing = DateTime.Now.ToString("dd/MM/yyyy"); //DateTime.ParseExact(DateTime.Now.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString();
                             jsonRes = new JsonReponse { message = "Enter all required fields.", status = "Failed", redirectURL = "" };
@@ -400,7 +407,7 @@ namespace ClientManager.Controllers
             saleActivity.RecentCallDate = DateTime.ParseExact(saleData.RecentCallDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             saleActivity.Capacity = saleData.Capacity;
             saleActivity.Unit = saleData.Unit;
-            saleActivity.Remarks += !string.IsNullOrEmpty(saleData.Remarks) ? "<br/>" + saleData.Remarks + "-" + DateTime.ParseExact(saleData.RecentCallDate, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString().Substring(0,10) : "";
+            saleActivity.Remarks += !string.IsNullOrEmpty(saleData.Remarks) ? "<br/>" + saleData.Remarks + "-" + DateTime.ParseExact(saleData.RecentCallDate, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString().Substring(0, 10) : "";
             saleActivity.AnticipatedClosingDate = DateTime.ParseExact(saleData.AnticipatedClosingDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             saleActivity.SalesRepresentativeId = saleData.SalesRepresentativeId;
             SaleActivity saleActivity1 = saleActivity;

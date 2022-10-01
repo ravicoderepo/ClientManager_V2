@@ -187,7 +187,7 @@
         format: 'DD/MM/YYYY'
     });
     $('#txtCallDateFrom').datetimepicker({
-        format: 'DD/MM/YYYY'
+        format: 'MM'
     });
 
     function fnClearSearch() {
@@ -257,7 +257,7 @@
 
     //});
   //  $('#lblSalesPersonName').text(' of ' + $('#ddlSalesPerson option:selected').text());
-    $('#lblSalesPersonName').text(' for ' + $('#ddlSalesPerson option:selected').text() + ' : ' + '@ViewBag.TotalSalesBySalesPerson');
-
+ $('#lblSalesPersonName').text($('#ddlSalesPerson option:selected').text() + ' : ' + '@ViewBag.TotalSalesBySalesPerson');
+    //$('#lblSalesPersonName').html(' for ' + '<span style="font-weight:bold; color:green; font-size:15px !important">' + $('#ddlSalesPerson option:selected').text() + ' : ' + '@ViewBag.TotalSalesBySalesPerson' + '</span>');
     $("#mnuSalesList").addClass("active");
 </script>

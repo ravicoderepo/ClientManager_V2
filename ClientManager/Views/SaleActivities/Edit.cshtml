@@ -8,7 +8,6 @@
     var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
     string[] superroles = { "Super User", "Sales Engineer", "Sales Manager" };
 }
-
 <style>
     textarea {
         width: 100% !important;
@@ -18,7 +17,7 @@
     }
 </style>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.css" />
 
 <div class="content-wrapper">
 
@@ -142,7 +141,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="anticipatgedClosingDate">Next Call Date</label>
+                                            <label for="anticipatgedClosingDate">Anticipated Closing Date</label>
                                             <div class="input-group date" id="anticipatgedClosingDate" data-target-input="nearest">
                                                 @Html.EditorFor(model => model.AnticipatedClosingDate, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtAnticipatedClosingDate" } })
                                                 <div class="input-group-append" data-target="#txtAnticipatedClosingDate" data-toggle="datetimepicker">
@@ -236,7 +235,20 @@
 
 <script>
     $(window).on('load', function () {
-        debugger;
+        //Date picker
+        $('#txtSaleDate').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+        $('#txtAnticipatedClosingDate').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+        $('#txtClosingDate').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+        $('#txtRecentCallDate').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+        $("#txtSaleDate").attr('readonly', 'readonly');
         $('#Remarks').val('');
         //$('#lblRemarks').val().Replace("\r\n", "\n").Replace("\n", "<br />");;
 
@@ -274,7 +286,9 @@
             submitHandler: function () {
                 debugger;
                 // alert("Form successful submitted!");
+
                 fnSubmitSaleDetails();
+
             }
         });
         $('#quickForm').validate({
@@ -309,20 +323,7 @@
         });
     });
 
-    //Date picker
-    $('#txtSaleDate').datetimepicker({
-        format: 'DD/MM/YYYY'
-    });
-    $('#txtAnticipatedClosingDate').datetimepicker({
-        format: 'DD/MM/YYYY'
-    });
-    $('#txtClosingDate').datetimepicker({
-        format: 'DD/MM/YYYY'
-    });
-    $('#txtRecentCallDate').datetimepicker({
-        format: 'DD/MM/YYYY'
-    });
-    $("#txtSaleDate").attr('readonly', 'readonly');
+
     function fnToggleInvoiceFields() {
         debugger;
         //6-Closed
@@ -335,7 +336,7 @@
     }
 
     function fnSubmitSaleDetails() {
-        var SaleData = {
+        var saleData = {
             Id: $('#Id').val(),
             SaleDate: $('#txtSaleDate').val(),
             SalesRepresentativeId: $('#ddlRepresentative').val(),
@@ -358,7 +359,7 @@
         $.ajax({
             type: "POST",
             url: "/SaleActivities/Edit",
-            data: JSON.stringify(SaleData),
+            data: JSON.stringify(saleData),
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
@@ -368,11 +369,13 @@
                 }
                 else {
                     alert(data.message);
+                    return false;
                 }
 
             },
             error: function () {
-                alert("Error occured!!  " + data.message)
+                alert("Error occured!!  " + data.message);
+                return false;
             }
         });
     }
@@ -402,3 +405,6 @@
 </script>
 
 
+<!-- Tempusdominus Bootstrap 4 -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.js"></script>

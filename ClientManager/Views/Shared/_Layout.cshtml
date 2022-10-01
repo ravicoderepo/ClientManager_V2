@@ -2,7 +2,7 @@
     Layout = null;
     ViewBag.Title = "Dashboard";
     var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
-    var stockURL = Utility.ConfigSettings.ReadSetting("StockURL").ToString() + "?email=" + currentUser.Email + "&password=scm@1234&role=" + currentUser.UserRoles.First().ToString();
+    
 }
 
 <!DOCTYPE html>
@@ -743,6 +743,7 @@
     <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
     <script src="~/Scripts/jquery.validate.js"></script>
     <script src="~/Content/dist/js/demo.js"></script>
+
     @*<script src="~/Content/plugins/sweetalert2/sweetalert2.min.js"></script>*@
     <!-- Toastr -->
     @*<script src="~/Content/plugins/toastr/toastr.min.js"></script>*@
