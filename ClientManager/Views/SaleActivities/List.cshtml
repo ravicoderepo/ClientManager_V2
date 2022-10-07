@@ -260,4 +260,11 @@
  $('#lblSalesPersonName').text($('#ddlSalesPerson option:selected').text() + ' : ' + '@ViewBag.TotalSalesBySalesPerson');
     //$('#lblSalesPersonName').html(' for ' + '<span style="font-weight:bold; color:green; font-size:15px !important">' + $('#ddlSalesPerson option:selected').text() + ' : ' + '@ViewBag.TotalSalesBySalesPerson' + '</span>');
     $("#mnuSalesList").addClass("active");
+    var parentMenu = $("#mnuSalesList").parent().parent().parent();
+    debugger;
+    parentMenu.attr("class", "nav-item menu-is-opening menu-open");
+    parentMenu.find("ul").each(function () {
+        debugger;
+        $(this).attr("style", "display:block");
+    });
 </script>

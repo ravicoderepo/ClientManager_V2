@@ -83,7 +83,16 @@
 
             <th>
                 @*@Html.DisplayNameFor(model => model.AnticipatedClosingDate)*@
-                Next Call Date
+                Anticipated Closing Date
+            </th>
+            <th>
+                Invoice No.
+            </th>
+            <th>
+                Invoice Amount
+            </th>
+            <th>
+                Closing Date
             </th>
             <th>
                 @*@Html.DisplayNameFor(model => model.Remarks)*@
@@ -114,7 +123,7 @@
         {
         <tr>
             <td>
-                @if (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName)))
+                @if (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName)) && item.Status != 6)
                 {
                     <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/SaleActivities/Edit/@item.Id'"><i class="far fa-edit"></i></button>
                 }
@@ -169,6 +178,12 @@
                 @*@Html.DisplayFor(modelItem => item.AnticipatedClosingDate.Value.ToShortDateString())*@
                 @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.AnticipatedClosingDate))
             </td>
+            <td>@item.InvoiceNo</td>
+            
+            <td style="text-align:right">             
+                @item.InvoiceAmount.Value.ToString("#,##0.00")
+            </td>
+            <td> @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.DateOfClosing))</td>
             <td>
                 @Html.Raw(item.Remarks)
             </td>

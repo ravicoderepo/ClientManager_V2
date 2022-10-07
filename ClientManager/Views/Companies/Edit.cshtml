@@ -162,9 +162,9 @@
     function fnSubmitCompanyDetails() {
         debugger;
         var companyData = {
-            CompanyId: $('#MaterialId').val(),
+            CompanyId: $('#CompanyId').val(),
             IsActive: ($("input[name=IsActive]").val().toLowerCase() == 'true') ? true : false,
-            Name: $('#txtMaterialName').val(),
+            Name: $('#txtCompanyName').val(),
             Description: $('#txtDescription').val()
         };
         debugger;
@@ -188,5 +188,12 @@
             }
         });
     }
-    $("#mnuCompaniesList").addClass("active");
+    $("#mnuCompanyList").addClass("active");
+    var parentMenu = $("#mnuCompanyList").parent().parent().parent();
+    debugger;
+    parentMenu.attr("class", "nav-item menu-is-opening menu-open");
+    parentMenu.find("ul").each(function () {
+        debugger;
+        $(this).attr("style", "display:block");
+    });
 </script>

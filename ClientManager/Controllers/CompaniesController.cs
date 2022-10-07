@@ -148,7 +148,7 @@ namespace ClientManager.Controllers
                         entity.Name = companyData.Name;
                         entity.Description = companyData.Description;
                         entity.IsActive = companyData.IsActive;                       
-                        str = "Company details Updated";
+                        str = "Vendor details Updated";
                     }
                    
                     entity.ModifiedBy = new int?(userDetails.Id);
@@ -157,7 +157,7 @@ namespace ClientManager.Controllers
                     if (this.db.SaveChanges() > 0)
                         data = new JsonReponse()
                         {
-                            message = "Company details saved successfully!",
+                            message = "Vendor details saved successfully!",
                             status = "Success",
                             redirectURL = "/Companies/List"
                         };

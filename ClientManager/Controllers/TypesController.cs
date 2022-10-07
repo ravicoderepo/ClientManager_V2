@@ -72,14 +72,14 @@ namespace ClientManager.Controllers
                     if (num > 0)
                         data = new JsonReponse()
                         {
-                            message = "Type created successfully!",
+                            message = "Product Master created successfully!",
                             status = "Success",
                             redirectURL = "/Types/List"
                         };
                     else
                         data = new JsonReponse()
                         {
-                            message = "Type creation not completed, try again after sometime.",
+                            message = "Product Master creation not completed, try again after sometime.",
                             status = "Failed",
                             redirectURL = ""
                         };
@@ -162,7 +162,7 @@ namespace ClientManager.Controllers
                     if (this.db.SaveChanges() > 0)
                         data = new JsonReponse()
                         {
-                            message = "Type details updated successfully!",
+                            message = "Product Master details updated successfully!",
                             status = "Success",
                             redirectURL = "/Types/List"
                         };

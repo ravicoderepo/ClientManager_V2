@@ -401,7 +401,13 @@
 
 
     //$('#txtSaleDate').val(new date());
-    $("#mnuSalesAdd").addClass("active");
-
+    $("#mnuSalesList").addClass("active");
+    var parentMenu = $("#mnuSalesList").parent().parent().parent();
+    debugger;
+    parentMenu.attr("class", "nav-item menu-is-opening menu-open");
+    parentMenu.find("ul").each(function () {
+        debugger;
+        $(this).attr("style", "display:block");
+    });
 </script>
 

@@ -265,6 +265,13 @@
             popup = window.open("/Documents/ImageViewer?docSource=Expense Tracker&recRefId=" + $('#Id').val(), "Image Viewer", "width=900, height=700, top=" + top + ", left=" + left);
     });
     $("#mnuExpenceTracker").addClass("active");
+    var parentMenu = $("#mnuExpenceTracker").parent().parent().parent();
+    debugger;
+    parentMenu.attr("class", "nav-item menu-is-opening menu-open");
+    parentMenu.find("ul").each(function () {
+        debugger;
+        $(this).attr("style", "display:block");
+    });
 
 
 

@@ -408,7 +408,7 @@ namespace ClientManager.Controllers
             saleActivity.Capacity = saleData.Capacity;
             saleActivity.Unit = saleData.Unit;
             saleActivity.Remarks += !string.IsNullOrEmpty(saleData.Remarks) ? "<br/>" + saleData.Remarks + "-" + DateTime.ParseExact(saleData.RecentCallDate, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString().Substring(0, 10) : "";
-            saleActivity.AnticipatedClosingDate = DateTime.ParseExact(saleData.AnticipatedClosingDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            saleActivity.AnticipatedClosingDate = (!string.IsNullOrEmpty(saleData.AnticipatedClosingDate)) ? DateTime.ParseExact(saleData.AnticipatedClosingDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) : new Nullable<DateTime>();
             saleActivity.SalesRepresentativeId = saleData.SalesRepresentativeId;
             SaleActivity saleActivity1 = saleActivity;
             int? nullable;

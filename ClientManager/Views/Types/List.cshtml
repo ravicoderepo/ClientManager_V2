@@ -17,12 +17,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Types</h1>
+                    <h1>Product Master</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Master</a></li>
-                        <li class="breadcrumb-item"><a href="#">Types</a></li>
+                        <li class="breadcrumb-item"><a href="#">Product Master</a></li>
                         <li class="breadcrumb-item active">List</li>
                     </ol>
                 </div>
@@ -39,7 +39,7 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-4 col-sm-8">
-                                    <h3 class="card-title">Types</h3>
+                                    <h3 class="card-title">Product Masters</h3>
                                 </div>
                                 <div class="col-4 col-sm-2">
                                 </div>
@@ -58,10 +58,10 @@
                                     <tr>
                                         <th>Action</th>
                                         <th>
-                                            Material Name
+                                            Material Type Name
                                         </th>
                                         <th>
-                                            Type Name
+                                            Product Master Name
                                         </th>
                                         <th>
                                             Description
@@ -223,4 +223,11 @@
 
 
     $("#mnuTypeList").addClass("active");
+    var parentMenu = $("#mnuTypeList").parent().parent().parent();
+    debugger;
+    parentMenu.attr("class", "nav-item menu-is-opening menu-open");
+    parentMenu.find("ul").each(function () {
+        debugger;
+        $(this).attr("style", "display:block");
+    });
 </script>

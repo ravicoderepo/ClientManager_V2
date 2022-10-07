@@ -16,8 +16,6 @@
         padding: .375rem .75rem !important;
     }
 </style>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.css" />
 
 <div class="content-wrapper">
 
@@ -165,11 +163,10 @@
                                             @Html.EditorFor(model => model.InvoiceAmount, new { htmlAttributes = new { @class = "form-control allow_decimal", @id = "txtInvoiceAmount", @style = "text-align:right !important" } })
                                         </div>
                                     </div>
-
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="DateOfClosing">Closing Date</label>
-                                            <div class="input-group date" id="txtClosingDate" data-target-input="nearest">
+                                            <div class="input-group date" id="recentCallDate" data-target-input="nearest">
                                                 @Html.EditorFor(model => model.DateOfClosing, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtClosingDate" } })
                                                 <div class="input-group-append" data-target="#txtClosingDate" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
@@ -177,7 +174,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
@@ -329,13 +325,21 @@
         //6-Closed
         if ($('#ddlStatus').val() == "6") {
             $('#pnlInvoice').show();
+          
+                $('#txtClosingDate').datetimepicker({
+                    format: 'DD/MM/YYYY',
+                    defaultDate: new Date()
+                });
+           
         }
         else {
             $('#pnlInvoice').hide();
+            $('#txtClosingDate').val('');
         }
     }
 
     function fnSubmitSaleDetails() {
+        
         var saleData = {
             Id: $('#Id').val(),
             SaleDate: $('#txtSaleDate').val(),
@@ -401,10 +405,12 @@
         debugger;
         $("input[name=ModeOfPayment]").val($('#ddlModeOfPayment').val());
     }
-
+    $("#mnuSalesList").addClass("active");
+    var parentMenu = $("#mnuSalesList").parent().parent().parent();
+    debugger;
+    parentMenu.attr("class", "nav-item menu-is-opening menu-open");
+    parentMenu.find("ul").each(function () {
+        debugger;
+        $(this).attr("style", "display:block");
+    });
 </script>
-
-
-<!-- Tempusdominus Bootstrap 4 -->
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.js"></script>

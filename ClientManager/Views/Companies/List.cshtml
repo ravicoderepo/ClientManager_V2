@@ -17,12 +17,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Companies</h1>
+                    <h1>Vendors</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Master</a></li>
-                        <li class="breadcrumb-item"><a href="#">Company</a></li>
+                        <li class="breadcrumb-item"><a href="#">Vendor</a></li>
                         <li class="breadcrumb-item active">List</li>
                     </ol>
                 </div>
@@ -39,7 +39,7 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-4 col-sm-8">
-                                    <h3 class="card-title">Companies</h3>
+                                    <h3 class="card-title">Vendors</h3>
                                 </div>
                                 <div class="col-4 col-sm-2">
                                 </div>
@@ -58,7 +58,7 @@
                                     <tr>
                                         <th>Action</th>
                                         <th>
-                                            Company Name
+                                            Vendor Name
                                         </th>
                                         <th>
                                             Description
@@ -215,5 +215,13 @@
         });
     }
 
+    
     $("#mnuCompanyList").addClass("active");
+    var parentMenu = $("#mnuCompanyList").parent().parent().parent();
+    debugger;
+    parentMenu.attr("class", "nav-item menu-is-opening menu-open");
+    parentMenu.find("ul").each(function () {
+        debugger;
+        $(this).attr("style", "display:block");
+    });
 </script>

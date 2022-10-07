@@ -18,13 +18,13 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        Materials
+                        Material Types
                     </h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Master</a></li>
-                        <li class="breadcrumb-item"><a href="#">Materials</a></li>
+                        <li class="breadcrumb-item"><a href="#">Material Types</a></li>
                         <li class="breadcrumb-item active">List</li>
                     </ol>
                 </div>
@@ -41,7 +41,7 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-4 col-sm-8">
-                                    <h3 class="card-title">Materials</h3>
+                                    <h3 class="card-title">Material Types</h3>
                                 </div>
                                 <div class="col-4 col-sm-2">
                                 </div>
@@ -218,4 +218,11 @@
     }
 
     $("#mnuMaterialList").addClass("active");
+    var parentMenu = $("#mnuMaterialList").parent().parent().parent();
+    debugger;
+    parentMenu.attr("class", "nav-item menu-is-opening menu-open");
+    parentMenu.find("ul").each(function () {
+        debugger;
+        $(this).attr("style", "display:block");
+    });
 </script>

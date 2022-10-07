@@ -73,14 +73,14 @@ namespace ClientManager.Controllers
                     if (num > 0)
                         data = new JsonReponse()
                         {
-                            message = "Item created successfully!",
+                            message = "Product created successfully!",
                             status = "Success",
                             redirectURL = "/items/List"
                         };
                     else
                         data = new JsonReponse()
                         {
-                            message = "Item creation not completed, try again after sometime.",
+                            message = "Product creation not completed, try again after sometime.",
                             status = "Failed",
                             redirectURL = ""
                         };
@@ -166,7 +166,7 @@ namespace ClientManager.Controllers
                     if (this.db.SaveChanges() > 0)
                         data = new JsonReponse()
                         {
-                            message = "Item details Updated successfully!",
+                            message = "Product details Updated successfully!",
                             status = "Success",
                             redirectURL = "/items/List"
                         };
