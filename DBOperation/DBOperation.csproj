@@ -92,6 +92,9 @@
     <Compile Include="GetMonthlySalesReport_Result.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Inward.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Item.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>

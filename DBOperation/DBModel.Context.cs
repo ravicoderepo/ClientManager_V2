@@ -35,6 +35,7 @@ namespace DBOperation
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<ExpenceCategory> ExpenceCategories { get; set; }
         public virtual DbSet<ExpenseTracker> ExpenseTrackers { get; set; }
+        public virtual DbSet<Inward> Inwards { get; set; }
         public virtual DbSet<Item> Items { get; set; }
         public virtual DbSet<Material> Materials { get; set; }
         public virtual DbSet<PettyCash> PettyCashes { get; set; }

@@ -12,18 +12,17 @@ namespace DBOperation
     using System;
     using System.Collections.Generic;
     
-    public partial class VRM_InwardStock
+    public partial class Inward
     {
-        public int StockId { get; set; }
-        public int MaterialId { get; set; }
-        public int TypeId { get; set; }
-        public int ItemId { get; set; }
-        public int AvailableQuantity { get; set; }
+        public int InwardId { get; set; }
         public int Quantity { get; set; }
+        public string Description { get; set; }
+        public string PONumber { get; set; }
+        public int ReceivedFrom { get; set; }
+        public string ReceivedBy { get; set; }
+        public System.DateTime ReceivedDate { get; set; }
+        public System.DateTime CreatedDate { get; set; }
         public bool IsActive { get; set; }
-    
-        public virtual Item Item { get; set; }
-        public virtual Material Material { get; set; }
-        public virtual Type Type { get; set; }
+        public string GRNnumber { get; set; }
     }
 }

@@ -18,6 +18,7 @@ namespace DBOperation
         public Type()
         {
             this.Items = new HashSet<Item>();
+            this.VRM_InwardStock = new HashSet<VRM_InwardStock>();
         }
     
         public int TypeId { get; set; }
@@ -33,5 +34,7 @@ namespace DBOperation
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Item> Items { get; set; }
         public virtual Material Material { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<VRM_InwardStock> VRM_InwardStock { get; set; }
     }
 }

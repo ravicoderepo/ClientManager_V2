@@ -5,37 +5,38 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="3b3ea6db01c54b09854c10c3960c35db" Name="Diagram1" ZoomLevel="67">
-        <EntityTypeShape EntityType="ClientManagerModel.ClientContact" Width="1.5" PointX="5.25" PointY="39.375" />
-        <EntityTypeShape EntityType="ClientManagerModel.Client" Width="1.5" PointX="3" PointY="47" />
+        <EntityTypeShape EntityType="ClientManagerModel.ClientContact" Width="1.5" PointX="5.25" PointY="38.25" />
+        <EntityTypeShape EntityType="ClientManagerModel.Client" Width="1.5" PointX="3" PointY="14.5" />
         <EntityTypeShape EntityType="ClientManagerModel.Company" Width="1.5" PointX="2.75" PointY="0.75" />
-        <EntityTypeShape EntityType="ClientManagerModel.Contact" Width="1.5" PointX="3" PointY="51.25" />
-        <EntityTypeShape EntityType="ClientManagerModel.Document" Width="1.5" PointX="3" PointY="65" />
-        <EntityTypeShape EntityType="ClientManagerModel.Employee" Width="1.5" PointX="7.75" PointY="0.75" />
-        <EntityTypeShape EntityType="ClientManagerModel.ExpenceCategory" Width="1.5" PointX="3" PointY="27" />
-        <EntityTypeShape EntityType="ClientManagerModel.ExpenseTracker" Width="1.5" PointX="5.25" PointY="29.625" />
-        <EntityTypeShape EntityType="ClientManagerModel.Item" Width="1.5" PointX="5.25" PointY="5.375" />
-        <EntityTypeShape EntityType="ClientManagerModel.Material" Width="1.5" PointX="0.75" PointY="3.375" />
-        <EntityTypeShape EntityType="ClientManagerModel.PettyCash" Width="1.5" PointX="3" PointY="23" />
-        <EntityTypeShape EntityType="ClientManagerModel.Product" Width="1.5" PointX="5.75" PointY="48.25" />
-        <EntityTypeShape EntityType="ClientManagerModel.ProjectClient" Width="1.5" PointX="8.25" PointY="36" />
-        <EntityTypeShape EntityType="ClientManagerModel.Project" Width="1.5" PointX="6" PointY="22.125" />
-        <EntityTypeShape EntityType="ClientManagerModel.ProjectStatu" Width="1.5" PointX="3.75" PointY="19" />
-        <EntityTypeShape EntityType="ClientManagerModel.RepresentativeSaleTarget" Width="1.5" PointX="3" PointY="60.75" />
-        <EntityTypeShape EntityType="ClientManagerModel.Role" Width="1.5" PointX="3" PointY="57.125" />
-        <EntityTypeShape EntityType="ClientManagerModel.SaleActivity" Width="1.5" PointX="8" PointY="28.25" />
-        <EntityTypeShape EntityType="ClientManagerModel.SaleProduct" Width="1.5" PointX="5.25" PointY="34.75" />
-        <EntityTypeShape EntityType="ClientManagerModel.Sale" Width="1.5" PointX="3" PointY="31.25" />
-        <EntityTypeShape EntityType="ClientManagerModel.SalesStatu" Width="1.5" PointX="5.75" PointY="14.75" />
-        <EntityTypeShape EntityType="ClientManagerModel.Type" Width="1.5" PointX="3" PointY="7.625" />
-        <EntityTypeShape EntityType="ClientManagerModel.UserContact" Width="1.5" PointX="3" PointY="14.5" />
-        <EntityTypeShape EntityType="ClientManagerModel.UserRole" Width="1.5" PointX="5.25" PointY="44.125" />
+        <EntityTypeShape EntityType="ClientManagerModel.Contact" Width="1.5" PointX="3" PointY="60.25" />
+        <EntityTypeShape EntityType="ClientManagerModel.Document" Width="1.5" PointX="3" PointY="47.375" />
+        <EntityTypeShape EntityType="ClientManagerModel.Employee" Width="1.5" PointX="9.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ClientManagerModel.ExpenceCategory" Width="1.5" PointX="3" PointY="66" />
+        <EntityTypeShape EntityType="ClientManagerModel.ExpenseTracker" Width="1.5" PointX="5.25" PointY="47.5" />
+        <EntityTypeShape EntityType="ClientManagerModel.Inward" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ClientManagerModel.Item" Width="1.5" PointX="5.25" PointY="5" />
+        <EntityTypeShape EntityType="ClientManagerModel.Material" Width="1.5" PointX="0.75" PointY="3.5" />
+        <EntityTypeShape EntityType="ClientManagerModel.PettyCash" Width="1.5" PointX="3" PointY="18.75" />
+        <EntityTypeShape EntityType="ClientManagerModel.Product" Width="1.5" PointX="6" PointY="24.5" />
+        <EntityTypeShape EntityType="ClientManagerModel.ProjectClient" Width="1.5" PointX="5.25" PointY="14.875" />
+        <EntityTypeShape EntityType="ClientManagerModel.Project" Width="1.5" PointX="6" PointY="29.125" />
+        <EntityTypeShape EntityType="ClientManagerModel.ProjectStatu" Width="1.5" PointX="3.75" PointY="11" />
+        <EntityTypeShape EntityType="ClientManagerModel.RepresentativeSaleTarget" Width="1.5" PointX="3" PointY="52.25" />
+        <EntityTypeShape EntityType="ClientManagerModel.Role" Width="1.5" PointX="3" PointY="56.5" />
+        <EntityTypeShape EntityType="ClientManagerModel.SaleActivity" Width="1.5" PointX="3" PointY="34.25" />
+        <EntityTypeShape EntityType="ClientManagerModel.SaleProduct" Width="1.5" PointX="8.25" PointY="29.75" />
+        <EntityTypeShape EntityType="ClientManagerModel.Sale" Width="1.5" PointX="3" PointY="29.25" />
+        <EntityTypeShape EntityType="ClientManagerModel.SalesStatu" Width="1.5" PointX="0.75" PointY="21" />
+        <EntityTypeShape EntityType="ClientManagerModel.Type" Width="1.5" PointX="3" PointY="6.875" />
+        <EntityTypeShape EntityType="ClientManagerModel.UserContact" Width="1.5" PointX="3" PointY="22.75" />
+        <EntityTypeShape EntityType="ClientManagerModel.UserRole" Width="1.5" PointX="5.25" PointY="42.75" />
         <EntityTypeShape EntityType="ClientManagerModel.User" Width="1.5" PointX="0.75" PointY="25.5" />
-        <EntityTypeShape EntityType="ClientManagerModel.VRM_Attachment" Width="1.5" PointX="4.75" PointY="0.75" />
-        <EntityTypeShape EntityType="ClientManagerModel.VRM_ErrorLog" Width="1.5" PointX="7.75" PointY="6.75" />
-        <EntityTypeShape EntityType="ClientManagerModel.VRM_InwardStock" Width="1.5" PointX="9.75" PointY="0.75" />
-        <EntityTypeShape EntityType="ClientManagerModel.VRM_InwardStockTransaction" Width="1.5" PointX="9.75" PointY="4.75" />
-        <EntityTypeShape EntityType="ClientManagerModel.VRM_OutwardStock" Width="1.5" PointX="5.75" PointY="9.75" />
-        <EntityTypeShape EntityType="ClientManagerModel.VRM_OutwardStockTransaction" Width="1.5" PointX="7.75" PointY="9.75" />
+        <EntityTypeShape EntityType="ClientManagerModel.VRM_Attachment" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ClientManagerModel.VRM_ErrorLog" Width="1.5" PointX="5.75" PointY="9.75" />
+        <EntityTypeShape EntityType="ClientManagerModel.VRM_InwardStock" Width="1.5" PointX="7.5" PointY="5.375" />
+        <EntityTypeShape EntityType="ClientManagerModel.VRM_InwardStockTransaction" Width="1.5" PointX="9.75" PointY="6.75" />
+        <EntityTypeShape EntityType="ClientManagerModel.VRM_OutwardStock" Width="1.5" PointX="7.75" PointY="10.75" />
+        <EntityTypeShape EntityType="ClientManagerModel.VRM_OutwardStockTransaction" Width="1.5" PointX="9.75" PointY="10.75" />
         <AssociationConnector Association="ClientManagerModel.FK_ClientContacts_Clients" />
         <AssociationConnector Association="ClientManagerModel.FK_ClientContacts_Contact" />
         <AssociationConnector Association="ClientManagerModel.FK_ClientContacts_Users" />
@@ -54,7 +55,9 @@
         <AssociationConnector Association="ClientManagerModel.FK_ExpenseTracker_Users" />
         <AssociationConnector Association="ClientManagerModel.FK_Items_Materials" />
         <AssociationConnector Association="ClientManagerModel.FK_Items_Types" />
+        <AssociationConnector Association="ClientManagerModel.FK_VRM_InwardStock_Items" />
         <AssociationConnector Association="ClientManagerModel.FK_Types_Materials1" />
+        <AssociationConnector Association="ClientManagerModel.FK_VRM_InwardStock_Materials" />
         <AssociationConnector Association="ClientManagerModel.FK_PettyCash_Users" />
         <AssociationConnector Association="ClientManagerModel.FK_PettyCash_Users1" />
         <AssociationConnector Association="ClientManagerModel.FK_SaleActivity_Products" />
@@ -75,6 +78,7 @@
         <AssociationConnector Association="ClientManagerModel.FK_SaleDetails_SalesStatus" />
         <AssociationConnector Association="ClientManagerModel.FK_SaleDetails_UserDetails" />
         <AssociationConnector Association="ClientManagerModel.FK_Sales_Users" />
+        <AssociationConnector Association="ClientManagerModel.FK_VRM_InwardStock_Types" />
         <AssociationConnector Association="ClientManagerModel.FK_UserContacts_ContactDetails" />
         <AssociationConnector Association="ClientManagerModel.FK_UserContacts_UserDetails" />
         <AssociationConnector Association="ClientManagerModel.FK_UserContacts_Users" />

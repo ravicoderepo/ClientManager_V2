@@ -1,0 +1,387 @@
+﻿@model ClientManager.Models.InwardData
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+    textarea {
+        width: 100% !important;
+        border: 1px solid #ced4da !important;
+        border-radius: .25rem !important;
+        padding: .375rem .75rem !important;
+    }
+    fieldset {
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        padding: 5px 10px;
+    }
+
+    legend {
+        background-color: #a0b5c9;
+        color: white;
+        padding: 5px 10px;
+        border-radius: .25rem !important;
+        width: 50%;
+        font-size: 1.1rem;
+        font-weight: 400;
+    }
+</style>
+<div class="content-wrapper">
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Inward</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Stock</a></li>
+                        <li class="breadcrumb-item"><a href="#">Inward</a></li>
+                        <li class="breadcrumb-item active">Create</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- jquery validation -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Inward Details</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form id="quickForm">
+                            <div class="card-body">
+                                @*<div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="status">Status</label>
+                                                @Html.HiddenFor(model => model.IsActive, new { htmlAttributes = new { @id = "hdnUserStatus" } })
+                                                @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
+                                            </div>
+                                        </div>
+                                    </div>*@
+                                <fieldset>
+                                    <legend>Stock Details</legend>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="MaterialId">Material Type Name</label>
+                                                @Html.HiddenFor(model => model.MaterialId, new { htmlAttributes = new { @id = "hdnMaterialId" } })
+                                                @Html.DropDownList("MaterialId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlMaterialId", @onChange = "fnValueChange('material')" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="status">Product Master Name</label>
+                                                @Html.HiddenFor(model => model.TypeId, new { htmlAttributes = new { @id = "hdnTypeId" } })
+                                                @Html.DropDownList("TypeId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlTypeId", @onChange = "fnValueChange('type')" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="status">Product Name</label>
+                                                @Html.HiddenFor(model => model.ItemId, new { htmlAttributes = new { @id = "hdnItemId" } })
+                                                @Html.DropDownList("ItemId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlItemId", @onChange = "fnValueChange('item')" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="AvailableQuantity">Available Quantity</label>
+                                                @Html.EditorFor(model => model.AvailableQuantity, new { htmlAttributes = new { @class = "form-control", @id = "txtAvailableQuantity", @name = "AvailableQuantity", @readonly= "readonly" } })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="AddQuality">Add Quantity</label>
+                                                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control allow_numeric", @id = "txtAddQuantity", @name = "AddQuantity" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <br />
+                                <fieldset>
+                                    <legend>Transation Details</legend>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="status">Received From</label>
+                                                @Html.HiddenFor(model => model.ReceivedFrom, new { htmlAttributes = new { @id = "hdnCompanyId" } })
+                                                @Html.DropDownList("CompanyId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlCompanyId", @onChange = "fnValueChange('company')" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="PONumber">PO Number</label>
+                                                @Html.EditorFor(model => model.PONumber, new { htmlAttributes = new { @class = "form-control", @id = "txtPONumber", @name = "PONumber" } })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="GRNnumber">GRN Number</label>
+                                                @Html.EditorFor(model => model.GRNnumber, new { htmlAttributes = new { @class = "form-control", @id = "txtGRNnumber", @name = "GRNnumber" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="ReceivedBy">Received By</label>
+                                                @Html.EditorFor(model => model.ReceivedBy, new { htmlAttributes = new { @class = "form-control", @id = "txtReceivedBy", @name = "ReceivedBy" } })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="ReceivedDate">Received Date</label>
+                                                <div class="input-group date" data-target-input="nearest">
+                                                    @Html.EditorFor(model => model.ReceivedDate, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtReceivedDate", @name = "ReceivedDate" } })
+                                                    <div class="input-group-append" data-target="#txtReceivedDate" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Description">Description</label>
+                                                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @id = "txtDescription", @name = "Description" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='List'" id="btnBack">Back to List</button>
+                            </div>
+                            <!-- /.card-body -->
+                        </form>
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+
+            <!--/.col (left) -->
+            <!-- right column -->
+            <div class="col-md-6">
+
+            </div>
+            <!--/.col (right) -->
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+<script>
+    $(window).on('load', function () {
+
+        if ('@ViewBag.AccessLevel' == "View") {
+            $('#quickForm :input').each(function () {
+                debugger;
+                if ($(this).attr('Id') != 'btnBack') {
+                    debugger;
+                    $(this).prop('disabled', true);
+                }
+            });
+        }
+    });
+    $('#txtReceivedDate').datetimepicker({
+        format: 'DD/MM/YYYY'
+    });
+
+    $(function () {
+        //debugger;
+        $.validator.setDefaults({
+            submitHandler: function () {
+                debugger;
+                // alert("Form successful submitted!");
+                $("input[name=IsActive]").val($('#ddlStatus').val());
+                $("input[name=TypeId]").val($('#ddlTypeId').val());
+                $("input[name=ItemId]").val($('#ddlItemId').val());                
+                $("input[name=MaterialId]").val($('#ddlMaterialId').val());
+                $("input[name=ReceivedFrom]").val($('#ddlCompanyId').val());
+                $("input[name=ItemId]").val($('#ddlItemId').val());
+
+                fnSubmitItemDetails();
+            }
+        });
+        $('#quickForm').validate({
+
+            rules: {
+                saleDate: {
+                    required: true,
+                },
+                clientName: {
+                    required: true,
+                },
+            },
+            messages: {
+                saleDate: {
+                    required: "Please enter a email address",
+                },
+                clientName: {
+                    required: "Please provide a password",
+                },
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+    });
+
+
+    function fnStatusChange() {
+        debugger;
+        $("input[name=IsActive]").val($('#ddlStatus').val());
+
+    }
+    function fnValueChange(evntFrom) {
+        debugger;
+        $("input[name=TypeId]").val($('#ddlTypeId').val());
+        $("input[name=MaterialId]").val($('#ddlMaterialId').val());
+        $("input[name=ItemId]").val($('#ddlItemId').val());
+        $("input[name=ReceivedFrom]").val($('#ddlCompanyId').val());
+        if (evntFrom == "material") {
+            fnBindTypesDropdown($("input[name=MaterialId]").val());
+        }
+        else if (evntFrom == "type") {
+            fnBindItemsDropDown($("input[name=TypeId]").val());
+        }
+        else if (evntFrom == "item") {
+            fnGetAvailableQuantity($("input[name=ddlItemId]").val());
+        }
+    }
+    function fnSubmitItemDetails() {
+        debugger;
+
+        var inwardData = {
+
+            ItemId: $('input[name=ItemId]').val(),
+            TypeId: $("input[name=TypeId]").val() ,
+            MaterialId: $("input[name=MaterialId]").val(),
+            Quantity: $("#txtAddQuantity").val(),
+            PONumber: $("#txtPONumber").val(),
+            ReceivedFrom: $("input[name=ReceivedFrom]").val(),
+            ReceivedBy: $("#txtReceivedBy").val(),
+            ReceivedDate: $("#txtReceivedDate").val(),
+            GRNnumber: $("#txtGRNnumber").val(),
+            //IsActive: ($("input[name=IsActive]").val()=='1') ? true: false,
+            Description: $('#txtDescription').val()
+        };
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: "/Inward/Create",
+            data: JSON.stringify(inwardData),
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data.status == "Success") {
+                    alert(data.message);
+                    window.location.href = data.redirectURL;
+                }
+                else {
+                    alert(data.message);
+                }
+            },
+            error: function () {
+                alert("Error occured!!  " + data.message)
+            }
+        });
+    }
+    $("#mnuInwardList").addClass("active");
+    var parentMenu = $("#mnuInwardList").parent().parent().parent();
+    debugger;
+    parentMenu.attr("class", "nav-item menu-is-opening menu-open");
+    parentMenu.find("ul").each(function () {
+        debugger;
+        $(this).attr("style", "display:block");
+    });
+
+    function fnBindTypesDropdown(id) {
+        $.ajax({
+            url: "/types/GetProductMaster?materialId=" + id,
+            type: "Get",
+            success: function (data) {
+                debugger;
+                $('#ddlTypeId').empty();
+                for (var i = 0; i < data.length; i++) {
+                    var opt = new Option(data[i].Text, data[i].Value);
+                    $('#ddlTypeId').append(opt);
+
+                }
+
+            }
+
+        });
+
+        $("input[name=TypeId]").val($('#ddlTypeId').val());
+    }
+
+    function fnBindItemsDropDown(id) {
+        $.ajax({
+            url: "/items/GetProducts?prodMasterId=" + id,
+            type: "Get",
+            success: function (data) {
+                debugger;
+                $('#ddlItemId').empty();
+                for (var i = 0; i < data.length; i++) {
+                    var opt = new Option(data[i].Text, data[i].Value);
+                    $('#ddlItemId').append(opt);
+
+                }
+
+            }
+
+        });
+
+        $("input[name=ItemId]").val($('#ddlItemId').val());
+    }
+    function fnGetAvailableQuantity() {
+        $.ajax({
+            url: "/stocks/GetAvailableQuantity?itemId=" + $("input[name=ItemId]").val(),
+            type: "Get",
+            success: function (data) {
+                debugger;
+                $('#txtAvailableQuantity').val(data);
+            }
+
+        });
+    }
+
+
+    $("input[name=IsActive]").val($('#ddlStatus').val());
+    $("input[name=TypeId]").val($('#ddlTypeId').val());
+    $("input[name=ItemId]").val($('#ddlItemId').val());
+    $("input[name=MaterialId]").val($('#ddlMaterialId').val());
+    $("input[name=ReceivedFrom]").val($('#ddlCompanyId').val());
+    $("input[name=ItemId]").val($('#ddlItemId').val());
+
+    fnGetAvailableQuantity();
+</script>
+
+

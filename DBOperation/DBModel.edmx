@@ -137,6 +137,21 @@
           <Property Name="ModifiedBy" Type="int" />
           <Property Name="ModifiedOn" Type="datetime" />
         </EntityType>
+        <EntityType Name="Inward">
+          <Key>
+            <PropertyRef Name="InwardId" />
+          </Key>
+          <Property Name="InwardId" Type="int" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="PONumber" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="ReceivedFrom" Type="int" Nullable="false" />
+          <Property Name="ReceivedBy" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="ReceivedDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="GRNnumber" Type="nvarchar" MaxLength="500" />
+        </EntityType>
         <EntityType Name="Items">
           <Key>
             <PropertyRef Name="ItemId" />
@@ -1059,6 +1074,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_VRM_InwardStock_Items">
+          <End Role="Items" Type="Self.Items" Multiplicity="1" />
+          <End Role="VRM_InwardStock" Type="Self.VRM_InwardStock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Items">
+              <PropertyRef Name="ItemId" />
+            </Principal>
+            <Dependent Role="VRM_InwardStock">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VRM_InwardStock_Materials">
+          <End Role="Materials" Type="Self.Materials" Multiplicity="1" />
+          <End Role="VRM_InwardStock" Type="Self.VRM_InwardStock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Materials">
+              <PropertyRef Name="MaterialId" />
+            </Principal>
+            <Dependent Role="VRM_InwardStock">
+              <PropertyRef Name="MaterialId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VRM_InwardStock_Types">
+          <End Role="Types" Type="Self.Types" Multiplicity="1" />
+          <End Role="VRM_InwardStock" Type="Self.VRM_InwardStock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Types">
+              <PropertyRef Name="TypeId" />
+            </Principal>
+            <Dependent Role="VRM_InwardStock">
+              <PropertyRef Name="TypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="GetMonthlySalesReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserType" Type="nvarchar" Mode="In" />
           <Parameter Name="CurrentUserId" Type="int" Mode="In" />
@@ -1073,6 +1124,7 @@
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExpenceCategory" EntityType="Self.ExpenceCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExpenseTracker" EntityType="Self.ExpenseTracker" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Inward" EntityType="Self.Inward" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Items" EntityType="Self.Items" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Materials" EntityType="Self.Materials" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PettyCash" EntityType="Self.PettyCash" Schema="dbo" store:Type="Tables" />
@@ -1292,6 +1344,18 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Users1" EntitySet="Users" />
           </AssociationSet>
+          <AssociationSet Name="FK_VRM_InwardStock_Items" Association="Self.FK_VRM_InwardStock_Items">
+            <End Role="Items" EntitySet="Items" />
+            <End Role="VRM_InwardStock" EntitySet="VRM_InwardStock" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VRM_InwardStock_Materials" Association="Self.FK_VRM_InwardStock_Materials">
+            <End Role="Materials" EntitySet="Materials" />
+            <End Role="VRM_InwardStock" EntitySet="VRM_InwardStock" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VRM_InwardStock_Types" Association="Self.FK_VRM_InwardStock_Types">
+            <End Role="Types" EntitySet="Types" />
+            <End Role="VRM_InwardStock" EntitySet="VRM_InwardStock" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -1311,6 +1375,7 @@
           <EntitySet Name="Employees" EntityType="ClientManagerModel.Employee" />
           <EntitySet Name="ExpenceCategories" EntityType="ClientManagerModel.ExpenceCategory" />
           <EntitySet Name="ExpenseTrackers" EntityType="ClientManagerModel.ExpenseTracker" />
+          <EntitySet Name="Inwards" EntityType="ClientManagerModel.Inward" />
           <EntitySet Name="Items" EntityType="ClientManagerModel.Item" />
           <EntitySet Name="Materials" EntityType="ClientManagerModel.Material" />
           <EntitySet Name="PettyCashes" EntityType="ClientManagerModel.PettyCash" />
@@ -1406,9 +1471,17 @@
             <End Role="Type" EntitySet="Types" />
             <End Role="Item" EntitySet="Items" />
           </AssociationSet>
+          <AssociationSet Name="FK_VRM_InwardStock_Items" Association="ClientManagerModel.FK_VRM_InwardStock_Items">
+            <End Role="Item" EntitySet="Items" />
+            <End Role="VRM_InwardStock" EntitySet="VRM_InwardStock" />
+          </AssociationSet>
           <AssociationSet Name="FK_Types_Materials1" Association="ClientManagerModel.FK_Types_Materials1">
             <End Role="Material" EntitySet="Materials" />
             <End Role="Type" EntitySet="Types" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VRM_InwardStock_Materials" Association="ClientManagerModel.FK_VRM_InwardStock_Materials">
+            <End Role="Material" EntitySet="Materials" />
+            <End Role="VRM_InwardStock" EntitySet="VRM_InwardStock" />
           </AssociationSet>
           <AssociationSet Name="FK_PettyCash_Users" Association="ClientManagerModel.FK_PettyCash_Users">
             <End Role="User" EntitySet="Users" />
@@ -1489,6 +1562,10 @@
           <AssociationSet Name="FK_Sales_Users" Association="ClientManagerModel.FK_Sales_Users">
             <End Role="User" EntitySet="Users" />
             <End Role="Sale" EntitySet="Sales" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VRM_InwardStock_Types" Association="ClientManagerModel.FK_VRM_InwardStock_Types">
+            <End Role="Type" EntitySet="Types" />
+            <End Role="VRM_InwardStock" EntitySet="VRM_InwardStock" />
           </AssociationSet>
           <AssociationSet Name="FK_UserContacts_ContactDetails" Association="ClientManagerModel.FK_UserContacts_ContactDetails">
             <End Role="User" EntitySet="Users" />
@@ -1688,6 +1765,21 @@
           <NavigationProperty Name="User" Relationship="ClientManagerModel.FK_ExpenceTracker_Users" FromRole="ExpenseTracker" ToRole="User" />
           <NavigationProperty Name="User1" Relationship="ClientManagerModel.FK_ExpenseTracker_Users" FromRole="ExpenseTracker" ToRole="User" />
         </EntityType>
+        <EntityType Name="Inward">
+          <Key>
+            <PropertyRef Name="InwardId" />
+          </Key>
+          <Property Name="InwardId" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PONumber" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ReceivedFrom" Type="Int32" Nullable="false" />
+          <Property Name="ReceivedBy" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ReceivedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="GRNnumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityType Name="Item">
           <Key>
             <PropertyRef Name="ItemId" />
@@ -1705,6 +1797,7 @@
           <Property Name="ModifiedBy" Type="Int32" />
           <NavigationProperty Name="Material" Relationship="ClientManagerModel.FK_Items_Materials" FromRole="Item" ToRole="Material" />
           <NavigationProperty Name="Type" Relationship="ClientManagerModel.FK_Items_Types" FromRole="Item" ToRole="Type" />
+          <NavigationProperty Name="VRM_InwardStock" Relationship="ClientManagerModel.FK_VRM_InwardStock_Items" FromRole="Item" ToRole="VRM_InwardStock" />
         </EntityType>
         <EntityType Name="Material">
           <Key>
@@ -1720,6 +1813,7 @@
           <Property Name="ModifiedBy" Type="Int32" />
           <NavigationProperty Name="Items" Relationship="ClientManagerModel.FK_Items_Materials" FromRole="Material" ToRole="Item" />
           <NavigationProperty Name="Types" Relationship="ClientManagerModel.FK_Types_Materials1" FromRole="Material" ToRole="Type" />
+          <NavigationProperty Name="VRM_InwardStock" Relationship="ClientManagerModel.FK_VRM_InwardStock_Materials" FromRole="Material" ToRole="VRM_InwardStock" />
         </EntityType>
         <EntityType Name="PettyCash">
           <Key>
@@ -1938,6 +2032,7 @@
           <Property Name="ModifiedBy" Type="Int32" />
           <NavigationProperty Name="Items" Relationship="ClientManagerModel.FK_Items_Types" FromRole="Type" ToRole="Item" />
           <NavigationProperty Name="Material" Relationship="ClientManagerModel.FK_Types_Materials1" FromRole="Type" ToRole="Material" />
+          <NavigationProperty Name="VRM_InwardStock" Relationship="ClientManagerModel.FK_VRM_InwardStock_Types" FromRole="Type" ToRole="VRM_InwardStock" />
         </EntityType>
         <EntityType Name="UserContact">
           <Key>
@@ -2063,6 +2158,9 @@
           <Property Name="AvailableQuantity" Type="Int32" Nullable="false" />
           <Property Name="Quantity" Type="Int32" Nullable="false" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Item" Relationship="ClientManagerModel.FK_VRM_InwardStock_Items" FromRole="VRM_InwardStock" ToRole="Item" />
+          <NavigationProperty Name="Material" Relationship="ClientManagerModel.FK_VRM_InwardStock_Materials" FromRole="VRM_InwardStock" ToRole="Material" />
+          <NavigationProperty Name="Type" Relationship="ClientManagerModel.FK_VRM_InwardStock_Types" FromRole="VRM_InwardStock" ToRole="Type" />
         </EntityType>
         <EntityType Name="VRM_InwardStockTransaction">
           <Key>
@@ -2317,6 +2415,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_VRM_InwardStock_Items">
+          <End Type="ClientManagerModel.Item" Role="Item" Multiplicity="1" />
+          <End Type="ClientManagerModel.VRM_InwardStock" Role="VRM_InwardStock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="ItemId" />
+            </Principal>
+            <Dependent Role="VRM_InwardStock">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Types_Materials1">
           <End Type="ClientManagerModel.Material" Role="Material" Multiplicity="1" />
           <End Type="ClientManagerModel.Type" Role="Type" Multiplicity="*" />
@@ -2325,6 +2435,18 @@
               <PropertyRef Name="MaterialId" />
             </Principal>
             <Dependent Role="Type">
+              <PropertyRef Name="MaterialId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VRM_InwardStock_Materials">
+          <End Type="ClientManagerModel.Material" Role="Material" Multiplicity="1" />
+          <End Type="ClientManagerModel.VRM_InwardStock" Role="VRM_InwardStock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Material">
+              <PropertyRef Name="MaterialId" />
+            </Principal>
+            <Dependent Role="VRM_InwardStock">
               <PropertyRef Name="MaterialId" />
             </Dependent>
           </ReferentialConstraint>
@@ -2566,6 +2688,18 @@
             </Principal>
             <Dependent Role="Sale">
               <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VRM_InwardStock_Types">
+          <End Type="ClientManagerModel.Type" Role="Type" Multiplicity="1" />
+          <End Type="ClientManagerModel.VRM_InwardStock" Role="VRM_InwardStock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Type">
+              <PropertyRef Name="TypeId" />
+            </Principal>
+            <Dependent Role="VRM_InwardStock">
+              <PropertyRef Name="TypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2842,6 +2976,22 @@
                 <ScalarProperty Name="ExpenseDate" ColumnName="ExpenseDate" />
                 <ScalarProperty Name="ExpenseAmount" ColumnName="ExpenseAmount" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Inwards">
+            <EntityTypeMapping TypeName="ClientManagerModel.Inward">
+              <MappingFragment StoreEntitySet="Inward">
+                <ScalarProperty Name="GRNnumber" ColumnName="GRNnumber" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ReceivedDate" ColumnName="ReceivedDate" />
+                <ScalarProperty Name="ReceivedBy" ColumnName="ReceivedBy" />
+                <ScalarProperty Name="ReceivedFrom" ColumnName="ReceivedFrom" />
+                <ScalarProperty Name="PONumber" ColumnName="PONumber" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="InwardId" ColumnName="InwardId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

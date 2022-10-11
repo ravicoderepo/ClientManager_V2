@@ -306,6 +306,16 @@ namespace ClientManager.Controllers
             }
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpGet]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
+        public ActionResult GetProductMaster(int materialId = 1)
+        {
+            var list = new SelectList(db.Types.Where(wh => wh.MaterialId == materialId), "TypeId", "TypeName", 0).ToList<SelectListItem>();
+            list.Insert(0, new SelectListItem { Text = "Select", Value = "", Selected = true });
+            return Json(list.ToList(), JsonRequestBehavior.AllowGet);
+
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

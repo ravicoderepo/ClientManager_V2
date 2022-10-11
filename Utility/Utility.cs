@@ -11,6 +11,8 @@ using System.Configuration;
 using System.IO;
 using System.Drawing;
 using System.Globalization;
+using System.Data.Entity;
+using DBOperation;
 
 namespace Utility
 {
@@ -74,8 +76,8 @@ namespace Utility
         public static List<SelectListItem> GetUnitList()
         {
             List<SelectListItem> unitList = new List<SelectListItem>()
-            {                
-                new SelectListItem() {Text="KW", Value="KW"},                
+            {
+                new SelectListItem() {Text="KW", Value="KW"},
                 new SelectListItem() {Text="Kgs", Value="Kgs"},
                 new SelectListItem() {Text="Meter", Value="Meter"},
                 new SelectListItem() {Text="No.", Value="No."}
@@ -518,4 +520,15 @@ namespace Utility
             return image;
         }
     }
+
+    public static class CommonFunctions
+    {
+        private static readonly ClientManagerEntities db = new ClientManagerEntities();
+        public static int GetAvailableQuantity(int itemId = 0)
+        {
+            var sum = db.VRM_InwardStock.Where(wh => wh.ItemId == itemId).Sum(s => (int?)s.Quantity);
+            return sum ?? 0;
+        }
+    }
 }
+

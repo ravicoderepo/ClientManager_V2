@@ -62,7 +62,7 @@
                                         <div class="form-group">
                                             <label for="MaterialId">Material Type Name</label>
                                             @Html.HiddenFor(model => model.MaterialId, new { htmlAttributes = new { @id = "hdnMaterialId" } })
-                                            @Html.DropDownList("MaterialId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlMaterialId", @onChange = "fnValueChange()" })
+                                            @Html.DropDownList("MaterialId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlMaterialId", @onChange = "fnValueChange('material')" })
                                         </div>
                                     </div>
                                 </div>
@@ -71,7 +71,7 @@
                                         <div class="form-group">
                                             <label for="status">Product Master Name</label>
                                             @Html.HiddenFor(model => model.TypeId, new { htmlAttributes = new { @id = "hdnTypeId" } })
-                                            @Html.DropDownList("TypeId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlTypeId", @onChange = "fnValueChange()" })
+                                            @Html.DropDownList("TypeId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlTypeId", @onChange = "fnValueChange('type')" })
                                         </div>
                                     </div>
                                 </div>
@@ -122,7 +122,6 @@
     </section>
     <!-- /.content -->
 </div>
-
 <script>
     $(window).on('load', function () {
 
@@ -188,12 +187,15 @@
     function fnStatusChange() {
         debugger;
         $("input[name=IsActive]").val($('#ddlStatus').val());
+       
     }
-    function fnValueChange() {
+    function fnValueChange(evntFrom) {
         debugger;
         $("input[name=TypeId]").val($('#ddlTypeId').val());
-        $("input[name=MaterialId]").val($('#ddlMaterialId').val())
-        
+        $("input[name=MaterialId]").val($('#ddlMaterialId').val());
+        if (evntFrom == "material") {
+            fnBindDropdown($("input[name=MaterialId]").val());
+        }
     }
     function fnSubmitItemDetails() {
         debugger;
@@ -237,4 +239,25 @@
         debugger;
         $(this).attr("style", "display:block");
     });
+
+    function fnBindDropdown(id) {
+        $.ajax({
+            url: "/types/GetProductMaster?materialId=" + id,
+            type: "Get",
+            success: function (data) {
+                debugger;
+                $('#ddlTypeId').empty();
+                for (var i = 0; i < data.length; i++) {
+                    var opt = new Option(data[i].Text, data[i].Value);
+                    $('#ddlTypeId').append(opt);
+
+                }
+
+            }
+
+        });
+
+        $("input[name=TypeId]").val($('#ddlTypeId').val());
+    }
+
 </script>

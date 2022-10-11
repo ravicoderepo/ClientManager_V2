@@ -29,7 +29,7 @@ namespace ClientManager.Controllers
         public ActionResult Create()
         {
             ViewBag.MaterialId = new SelectList(db.Materials, "MaterialId", "MaterialName", 1).ToList<SelectListItem>();
-            ViewBag.TypeId = new SelectList(db.Types, "TypeId", "TypeName", 1).ToList<SelectListItem>();
+            ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.MaterialId == 1), "TypeId", "TypeName", 1).ToList<SelectListItem>();
             ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", 1).ToList<SelectListItem>();
             return View();
         }
@@ -47,7 +47,7 @@ namespace ClientManager.Controllers
             try
             {
                 int num = 0;
-                if (string.IsNullOrEmpty(itemData.ItemName) || string.IsNullOrEmpty(itemData.Description))
+                if (itemData.TypeId <= 0 || string.IsNullOrEmpty(itemData.ItemName) || string.IsNullOrEmpty(itemData.Description))
                 {
                     data = new JsonReponse()
                     {
@@ -114,7 +114,7 @@ namespace ClientManager.Controllers
             }
 
             ViewBag.MaterialId = new SelectList(db.Materials, "MaterialId", "MaterialName", item.MaterialId).ToList<SelectListItem>();
-            ViewBag.TypeId = new SelectList(db.Types, "TypeId", "TypeName", item.TypeId).ToList<SelectListItem>();
+            ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.MaterialId == item.MaterialId), "TypeId", "TypeName", item.TypeId).ToList<SelectListItem>();
             ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", item.IsActive ? 1: 0).ToList<SelectListItem>();
             return View(item);
         }
@@ -136,7 +136,7 @@ namespace ClientManager.Controllers
                         status = "Failed",
                         redirectURL = ""
                     };
-                else if (string.IsNullOrEmpty(itemData.ItemName) || string.IsNullOrEmpty(itemData.Description))
+                else if (itemData.MaterialId <=0 || itemData.TypeId <=0 || string.IsNullOrEmpty(itemData.ItemName) || string.IsNullOrEmpty(itemData.Description))
                 {
                     data = new JsonReponse()
                     {
@@ -307,6 +307,15 @@ namespace ClientManager.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
+        public ActionResult GetProducts(int prodMasterId = 1)
+        {
+            var list = new SelectList(db.Items.Where(wh=> wh.TypeId == prodMasterId), "ItemId", "ItemName", 0).ToList<SelectListItem>();
+            list.Insert(0,new SelectListItem { Text = "Select", Value = "", Selected=true });
+            return Json(list.ToList(), JsonRequestBehavior.AllowGet);
+
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
