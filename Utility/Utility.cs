@@ -221,6 +221,27 @@ namespace Utility
 
             return items;
         }
+        public static List<SelectListItem> GetInvoiceStatusList()
+        {
+            List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
+            items.Insert(0, new SelectListItem()
+            {
+                Text = "New",
+                Value = "New"
+            });
+            items.Insert(1, new SelectListItem()
+            {
+                Text = "Partial Delivered",
+                Value = "Partial Delivered"
+            });
+            items.Insert(2, new SelectListItem()
+            {
+                Text = "Closed",
+                Value = "Closed"
+            });
+
+            return items;
+        }
 
         public static List<SelectListItem> GetMonthList()
         {
@@ -526,8 +547,10 @@ namespace Utility
         private static readonly ClientManagerEntities db = new ClientManagerEntities();
         public static int GetAvailableQuantity(int itemId = 0)
         {
-            var sum = db.VRM_InwardStock.Where(wh => wh.ItemId == itemId).Sum(s => (int?)s.Quantity);
-            return sum ?? 0;
+            var iSum = db.VRM_InwardStock.Where(wh => wh.ItemId == itemId).Sum(s => (int?)s.Quantity);
+            //var oSum = db.VRM_OutwardStock.Where(wh => wh.ItemId == itemId).Sum(s => (int?)s.Quantity);
+            //return (iSum-iSum) ?? 0;
+            return iSum ?? 0;
         }
     }
 }

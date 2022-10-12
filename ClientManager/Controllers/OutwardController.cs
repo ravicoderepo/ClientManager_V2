@@ -11,7 +11,7 @@ using System.Web.Mvc;
 
 namespace ClientManager.Controllers
 {
-    public class InwardController : Controller
+    public class OutwardController : Controller
     {
         private ClientManagerEntities db = new ClientManagerEntities();
         // GET: Inward
@@ -19,29 +19,24 @@ namespace ClientManager.Controllers
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult List()
         {
-            var inwardList = (from iTrans in db.VRM_InwardStockTransaction
-                              join iStock in db.VRM_InwardStock on iTrans.StockId equals iStock.StockId
-                              orderby iTrans.ReceivedDate descending
-                              select new InwardData 
-                              { 
-                                  StockId=iStock.StockId,
-                                  InwardStockTransactionId=iTrans.InwardStockTransactionId,
-                                  MaterialId = iStock.MaterialId, 
-                                  MaterialName = iStock.Material.MaterialName,
-                                  TypeId = iStock.TypeId, 
-                                  TypeName = iStock.Type.TypeName,
-                                  ItemId = iStock.TypeId, 
-                                  ItemName = iStock.Item.ItemName,
-                                  AvailableQuantity = iStock.AvailableQuantity, 
-                                  Quantity = iStock.Quantity, 
-                                  PONumber = iTrans.PONumber, 
-                                  GRNnumber = iTrans.GRNnumber, 
-                                  ReceivedBy = iTrans.ReceivedBy, 
-                                  ReceivedDate = iTrans.ReceivedDate, 
-                                  Description = iTrans.Description 
+            var outwardList = (from outwards in db.Outwards
+                              join outwarditems in db.OutwardItems on outwards.Id equals outwarditems.OutwardId
+                              orderby outwards.InvoiceDate descending
+                              select new OutwardData 
+                              {   
+                                  Id = outwards.Id,
+                                  InvoiceNumber = outwards.InvoiceNumber,
+                                  InvoiceDate=outwards.InvoiceDate,
+                                  LRNumber=outwards.LRNumber,
+                                  CustomerName = outwards.CustomerName,
+                                  CreatedBy = outwards.CreatedBy,
+                                  CreatedOn = outwards.CreatedOn,
+                                  ModifiedBy = outwards.ModifiedBy,
+                                  ModifiedOn = outwards.ModifiedOn,
+                                  Comments = outwards.Comments
                               }).ToList();
 
-            return View(inwardList);
+            return View(outwardList);
         }
 
         [HttpGet]
@@ -57,11 +52,9 @@ namespace ClientManager.Controllers
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
 
-            ViewBag.MaterialId = new SelectList(db.Materials, "MaterialId", "MaterialName", 1).ToList<SelectListItem>();
-            ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == 1), "TypeId", "TypeName", 1).ToList<SelectListItem>();
-            ViewBag.ItemId = new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == 1), "ItemId", "ItemName", 1).ToList<SelectListItem>();
-            ViewBag.CompanyId = new SelectList(db.Companies.Where(wh => wh.IsActive == true && wh.IsActive == true), "CompanyId", "Name", 1).ToList<SelectListItem>();
-            return View();
+            ViewBag.Status = Utility.DefaultList.GetInvoiceStatusList();
+            
+            return View(new OutwardData());
         }
 
         [HttpPost]

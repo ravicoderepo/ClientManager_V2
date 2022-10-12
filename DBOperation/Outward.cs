@@ -12,31 +12,29 @@ namespace DBOperation
     using System;
     using System.Collections.Generic;
     
-    public partial class Item
+    public partial class Outward
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Item()
+        public Outward()
         {
-            this.VRM_InwardStock = new HashSet<VRM_InwardStock>();
             this.OutwardItems = new HashSet<OutwardItem>();
         }
     
-        public int ItemId { get; set; }
-        public int MaterialId { get; set; }
-        public int TypeId { get; set; }
-        public string ItemName { get; set; }
-        public string Description { get; set; }
-        public bool IsActive { get; set; }
-        public Nullable<int> MinimumAvailableQuantity { get; set; }
+        public int Id { get; set; }
+        public string InvoiceNumber { get; set; }
+        public string LRNumber { get; set; }
+        public System.DateTime InvoiceDate { get; set; }
+        public string CustomerName { get; set; }
+        public string CustomerAddress { get; set; }
+        public string CustomerPhoneNumber { get; set; }
+        public string CustomerEmailId { get; set; }
+        public string Status { get; set; }
+        public string Comments { get; set; }
         public System.DateTime CreatedOn { get; set; }
         public int CreatedBy { get; set; }
         public Nullable<System.DateTime> ModifiedOn { get; set; }
         public Nullable<int> ModifiedBy { get; set; }
     
-        public virtual Material Material { get; set; }
-        public virtual Type Type { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<VRM_InwardStock> VRM_InwardStock { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OutwardItem> OutwardItems { get; set; }
     }

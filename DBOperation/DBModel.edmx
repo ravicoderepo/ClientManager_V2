@@ -181,6 +181,34 @@
           <Property Name="ModifiedOn" Type="datetime" />
           <Property Name="ModifiedBy" Type="int" />
         </EntityType>
+        <EntityType Name="Outward">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InvoiceNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LRNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="InvoiceDate" Type="date" Nullable="false" />
+          <Property Name="CustomerName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="CustomerAddress" Type="nvarchar" MaxLength="500" />
+          <Property Name="CustomerPhoneNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="CustomerEmailId" Type="nvarchar" MaxLength="50" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Comments" Type="nvarchar" MaxLength="500" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="ModifiedOn" Type="datetime" />
+          <Property Name="ModifiedBy" Type="int" />
+        </EntityType>
+        <EntityType Name="OutwardItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="OutwardId" Type="int" Nullable="false" />
+          <Property Name="ItemId" Type="int" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="PettyCash">
           <Key>
             <PropertyRef Name="Id" />
@@ -690,6 +718,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_OutwardItem_Items">
+          <End Role="Items" Type="Self.Items" Multiplicity="1" />
+          <End Role="OutwardItem" Type="Self.OutwardItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Items">
+              <PropertyRef Name="ItemId" />
+            </Principal>
+            <Dependent Role="OutwardItem">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OutwardItem_Outward">
+          <End Role="Outward" Type="Self.Outward" Multiplicity="1" />
+          <End Role="OutwardItem" Type="Self.OutwardItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Outward">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OutwardItem">
+              <PropertyRef Name="OutwardId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PettyCash_Users">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="PettyCash" Type="Self.PettyCash" Multiplicity="*" />
@@ -1127,6 +1179,8 @@
           <EntitySet Name="Inward" EntityType="Self.Inward" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Items" EntityType="Self.Items" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Materials" EntityType="Self.Materials" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Outward" EntityType="Self.Outward" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OutwardItem" EntityType="Self.OutwardItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PettyCash" EntityType="Self.PettyCash" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectClient" EntityType="Self.ProjectClient" Schema="dbo" store:Type="Tables" />
@@ -1215,6 +1269,14 @@
           <AssociationSet Name="FK_Items_Types" Association="Self.FK_Items_Types">
             <End Role="Types" EntitySet="Types" />
             <End Role="Items" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OutwardItem_Items" Association="Self.FK_OutwardItem_Items">
+            <End Role="Items" EntitySet="Items" />
+            <End Role="OutwardItem" EntitySet="OutwardItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OutwardItem_Outward" Association="Self.FK_OutwardItem_Outward">
+            <End Role="Outward" EntitySet="Outward" />
+            <End Role="OutwardItem" EntitySet="OutwardItem" />
           </AssociationSet>
           <AssociationSet Name="FK_PettyCash_Users" Association="Self.FK_PettyCash_Users">
             <End Role="Users" EntitySet="Users" />
@@ -1607,6 +1669,16 @@
             <End Role="User" EntitySet="Users" />
             <End Role="User1" EntitySet="Users" />
           </AssociationSet>
+          <EntitySet Name="OutwardItems" EntityType="ClientManagerModel.OutwardItem" />
+          <AssociationSet Name="FK_OutwardItem_Items" Association="ClientManagerModel.FK_OutwardItem_Items">
+            <End Role="Item" EntitySet="Items" />
+            <End Role="OutwardItem" EntitySet="OutwardItems" />
+          </AssociationSet>
+          <EntitySet Name="Outwards" EntityType="ClientManagerModel.Outward" />
+          <AssociationSet Name="FK_OutwardItem_Outward" Association="ClientManagerModel.FK_OutwardItem_Outward">
+            <End Role="Outward" EntitySet="Outwards" />
+            <End Role="OutwardItem" EntitySet="OutwardItems" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="GetMonthlySalesReport_Result" >
           <Property Type="Int32" Name="mname" Nullable="true" />
@@ -1798,6 +1870,7 @@
           <NavigationProperty Name="Material" Relationship="ClientManagerModel.FK_Items_Materials" FromRole="Item" ToRole="Material" />
           <NavigationProperty Name="Type" Relationship="ClientManagerModel.FK_Items_Types" FromRole="Item" ToRole="Type" />
           <NavigationProperty Name="VRM_InwardStock" Relationship="ClientManagerModel.FK_VRM_InwardStock_Items" FromRole="Item" ToRole="VRM_InwardStock" />
+          <NavigationProperty Name="OutwardItems" Relationship="ClientManagerModel.FK_OutwardItem_Items" FromRole="Item" ToRole="OutwardItem" />
         </EntityType>
         <EntityType Name="Material">
           <Key>
@@ -2823,6 +2896,61 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="OutwardItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="OutwardId" Type="Int32" Nullable="false" />
+          <Property Name="ItemId" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Item" Relationship="ClientManagerModel.FK_OutwardItem_Items" FromRole="OutwardItem" ToRole="Item" />
+          <NavigationProperty Name="Outward" Relationship="ClientManagerModel.FK_OutwardItem_Outward" FromRole="OutwardItem" ToRole="Outward" />
+        </EntityType>
+        <Association Name="FK_OutwardItem_Items">
+          <End Type="ClientManagerModel.Item" Role="Item" Multiplicity="1" />
+          <End Type="ClientManagerModel.OutwardItem" Role="OutwardItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="ItemId" />
+            </Principal>
+            <Dependent Role="OutwardItem">
+              <PropertyRef Name="ItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Outward">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InvoiceNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LRNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="InvoiceDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CustomerName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerAddress" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerPhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerEmailId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Comments" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <NavigationProperty Name="OutwardItems" Relationship="ClientManagerModel.FK_OutwardItem_Outward" FromRole="Outward" ToRole="OutwardItem" />
+        </EntityType>
+        <Association Name="FK_OutwardItem_Outward">
+          <End Type="ClientManagerModel.Outward" Role="Outward" Multiplicity="1" />
+          <End Type="ClientManagerModel.OutwardItem" Role="OutwardItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Outward">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OutwardItem">
+              <PropertyRef Name="OutwardId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3349,6 +3477,36 @@
                 <ScalarProperty Name="StockId" ColumnName="StockId" />
                 <ScalarProperty Name="OutwardId" ColumnName="OutwardId" />
                 <ScalarProperty Name="OutwardStackDetailId" ColumnName="OutwardStackDetailId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OutwardItems">
+            <EntityTypeMapping TypeName="ClientManagerModel.OutwardItem">
+              <MappingFragment StoreEntitySet="OutwardItem">
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+                <ScalarProperty Name="OutwardId" ColumnName="OutwardId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Outwards">
+            <EntityTypeMapping TypeName="ClientManagerModel.Outward">
+              <MappingFragment StoreEntitySet="Outward">
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CustomerEmailId" ColumnName="CustomerEmailId" />
+                <ScalarProperty Name="CustomerPhoneNumber" ColumnName="CustomerPhoneNumber" />
+                <ScalarProperty Name="CustomerAddress" ColumnName="CustomerAddress" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="InvoiceDate" ColumnName="InvoiceDate" />
+                <ScalarProperty Name="LRNumber" ColumnName="LRNumber" />
+                <ScalarProperty Name="InvoiceNumber" ColumnName="InvoiceNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

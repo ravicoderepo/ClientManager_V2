@@ -89,6 +89,10 @@
         <AssociationConnector Association="ClientManagerModel.FK_Users_Users" />
         <AssociationConnector Association="ClientManagerModel.FK_Users_Users1" />
         <AssociationConnector Association="ClientManagerModel.FK_Users_Users2" />
+        <EntityTypeShape EntityType="ClientManagerModel.OutwardItem" Width="1.5" PointX="12.5" PointY="5.875" />
+        <AssociationConnector Association="ClientManagerModel.FK_OutwardItem_Items" />
+        <EntityTypeShape EntityType="ClientManagerModel.Outward" Width="1.5" PointX="12.375" PointY="10" />
+        <AssociationConnector Association="ClientManagerModel.FK_OutwardItem_Outward" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -1,5 +1,6 @@
 ﻿@model ClientManager.Models.InwardData
 @{
+    var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -14,18 +15,18 @@
     }
     fieldset {
         background-color: #fff;
-        border: 1px solid #ced4da;
+        border: 1px solid #351ded;
         padding: 5px 10px;
     }
 
     legend {
-        background-color: #a0b5c9;
-        color: white;
-        padding: 5px 10px;
+        background-color: #fff;
+        color: #351ded;
+        padding: 2px 5px;
         border-radius: .25rem !important;
-        width: 50%;
+        width: auto;
         font-size: 1.1rem;
-        font-weight: 400;
+        font-weight: bold;
     }
 </style>
 <div class="content-wrapper">
@@ -140,7 +141,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="ReceivedBy">Received By</label>
-                                                @Html.EditorFor(model => model.ReceivedBy, new { htmlAttributes = new { @class = "form-control", @id = "txtReceivedBy", @name = "ReceivedBy" } })
+                                                @Html.EditorFor(model => model.ReceivedBy, new { htmlAttributes = new { @class = "form-control", @id = "txtReceivedBy", @name = "ReceivedBy", @readonly = "readonly"} })
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -193,9 +194,9 @@
 
         if ('@ViewBag.AccessLevel' == "View") {
             $('#quickForm :input').each(function () {
-                debugger;
+
                 if ($(this).attr('Id') != 'btnBack') {
-                    debugger;
+
                     $(this).prop('disabled', true);
                 }
             });
@@ -206,17 +207,17 @@
     });
 
     $(function () {
-        //debugger;
+        //
         $.validator.setDefaults({
             submitHandler: function () {
-                debugger;
+
                 // alert("Form successful submitted!");
                 $("input[name=IsActive]").val($('#ddlStatus').val());
                 $("input[name=TypeId]").val($('#ddlTypeId').val());
-                $("input[name=ItemId]").val($('#ddlItemId').val());                
+                $("input[name=ItemId]").val($('#ddlItemId').val());
                 $("input[name=MaterialId]").val($('#ddlMaterialId').val());
                 $("input[name=ReceivedFrom]").val($('#ddlCompanyId').val());
-                $("input[name=ItemId]").val($('#ddlItemId').val());
+
 
                 fnSubmitItemDetails();
             }
@@ -255,12 +256,12 @@
 
 
     function fnStatusChange() {
-        debugger;
+
         $("input[name=IsActive]").val($('#ddlStatus').val());
 
     }
     function fnValueChange(evntFrom) {
-        debugger;
+
         $("input[name=TypeId]").val($('#ddlTypeId').val());
         $("input[name=MaterialId]").val($('#ddlMaterialId').val());
         $("input[name=ItemId]").val($('#ddlItemId').val());
@@ -269,14 +270,18 @@
             fnBindTypesDropdown($("input[name=MaterialId]").val());
         }
         else if (evntFrom == "type") {
+
             fnBindItemsDropDown($("input[name=TypeId]").val());
+            $("input[name=ItemId]").val($('#ddlItemId').val());
+            //fnValueChange('item');
+            //fnGetAvailableQuantity($("input[name=ItemId]").val());
         }
         else if (evntFrom == "item") {
-            fnGetAvailableQuantity($("input[name=ddlItemId]").val());
+            debugger;
+            fnGetAvailableQuantity($("input[name=ItemId]").val());
         }
     }
     function fnSubmitItemDetails() {
-        debugger;
 
         var inwardData = {
 
@@ -292,7 +297,7 @@
             //IsActive: ($("input[name=IsActive]").val()=='1') ? true: false,
             Description: $('#txtDescription').val()
         };
-        debugger;
+
         $.ajax({
             type: "POST",
             url: "/Inward/Create",
@@ -315,10 +320,10 @@
     }
     $("#mnuInwardList").addClass("active");
     var parentMenu = $("#mnuInwardList").parent().parent().parent();
-    debugger;
+
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        debugger;
+
         $(this).attr("style", "display:block");
     });
 
@@ -327,61 +332,49 @@
             url: "/types/GetProductMaster?materialId=" + id,
             type: "Get",
             success: function (data) {
-                debugger;
+
                 $('#ddlTypeId').empty();
                 for (var i = 0; i < data.length; i++) {
                     var opt = new Option(data[i].Text, data[i].Value);
                     $('#ddlTypeId').append(opt);
-
                 }
-
             }
-
         });
 
         $("input[name=TypeId]").val($('#ddlTypeId').val());
     }
 
     function fnBindItemsDropDown(id) {
+
         $.ajax({
             url: "/items/GetProducts?prodMasterId=" + id,
             type: "Get",
             success: function (data) {
-                debugger;
+
                 $('#ddlItemId').empty();
                 for (var i = 0; i < data.length; i++) {
                     var opt = new Option(data[i].Text, data[i].Value);
                     $('#ddlItemId').append(opt);
-
                 }
-
             }
-
         });
-
+        $('#txtAvailableQuantity').val('0');
         $("input[name=ItemId]").val($('#ddlItemId').val());
+        //$("input[name=ItemId]").val($('#ddlItemId').val());
+        //fnGetAvailableQuantity($("input[name=ItemId]").val());
     }
-    function fnGetAvailableQuantity() {
+    function fnGetAvailableQuantity(id) {
+
         $.ajax({
-            url: "/stocks/GetAvailableQuantity?itemId=" + $("input[name=ItemId]").val(),
+            url: "/stocks/GetAvailableQuantity?itemId=" + id,
             type: "Get",
             success: function (data) {
-                debugger;
-                $('#txtAvailableQuantity').val(data);
+                    $('#txtAvailableQuantity').val(data);
             }
-
         });
     }
 
-
-    $("input[name=IsActive]").val($('#ddlStatus').val());
-    $("input[name=TypeId]").val($('#ddlTypeId').val());
-    $("input[name=ItemId]").val($('#ddlItemId').val());
-    $("input[name=MaterialId]").val($('#ddlMaterialId').val());
-    $("input[name=ReceivedFrom]").val($('#ddlCompanyId').val());
-    $("input[name=ItemId]").val($('#ddlItemId').val());
-
-    fnGetAvailableQuantity();
+     $("input[name=ReceivedBy]").val('@currentUser.FullName');
 </script>
 
 

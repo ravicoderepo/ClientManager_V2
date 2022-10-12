@@ -59,6 +59,8 @@ namespace DBOperation
         public virtual DbSet<VRM_InwardStockTransaction> VRM_InwardStockTransaction { get; set; }
         public virtual DbSet<VRM_OutwardStock> VRM_OutwardStock { get; set; }
         public virtual DbSet<VRM_OutwardStockTransaction> VRM_OutwardStockTransaction { get; set; }
+        public virtual DbSet<OutwardItem> OutwardItems { get; set; }
+        public virtual DbSet<Outward> Outwards { get; set; }
     
         public virtual ObjectResult<GetMonthlySalesReport_Result> GetMonthlySalesReport(string userType, Nullable<int> currentUserId, Nullable<int> userManagerId)
         {

@@ -148,6 +148,7 @@
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\DocumentsController.cs" />
     <Compile Include="Controllers\CompanyController.cs" />
+    <Compile Include="Controllers\OutwardController.cs" />
     <Compile Include="Controllers\InwardController.cs" />
     <Compile Include="Controllers\ItemsController.cs" />
     <Compile Include="Controllers\CompaniesController.cs" />
@@ -171,6 +172,7 @@
     </Compile>
     <Compile Include="Infrastructure\CustomAuthorizeAttribute.cs" />
     <Compile Include="Infrastructure\CustomAuthenticationFilter.cs" />
+    <Compile Include="Models\OutwardItemsData.cs" />
     <Compile Include="Models\OutwardData.cs" />
     <Compile Include="Models\InwardData.cs" />
     <Compile Include="Models\ItemData.cs" />
@@ -2844,6 +2846,10 @@
     <Content Include="Views\Inward\List.cshtml" />
     <Content Include="Views\Inward\Edit.cshtml" />
     <Content Include="Views\Inward\ListView.cshtml" />
+    <Content Include="Views\Outward\Create.cshtml" />
+    <Content Include="Views\Outward\Edit.cshtml" />
+    <Content Include="Views\Outward\List.cshtml" />
+    <Content Include="Views\Outward\ListView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

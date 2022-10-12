@@ -101,6 +101,12 @@
     <Compile Include="Material.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Outward.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OutwardItem.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="PettyCash.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
