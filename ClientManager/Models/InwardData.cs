@@ -24,4 +24,6 @@ namespace ClientManager.Models
         public bool IsActive { get; set; }
         public string GRNnumber { get; set; }
     }
+
+    
 }

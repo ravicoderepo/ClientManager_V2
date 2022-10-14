@@ -20,21 +20,21 @@ namespace ClientManager.Controllers
         public ActionResult List()
         {
             var outwardList = (from outwards in db.Outwards
-                              join outwarditems in db.OutwardItems on outwards.Id equals outwarditems.OutwardId
-                              orderby outwards.InvoiceDate descending
-                              select new OutwardData 
-                              {   
-                                  Id = outwards.Id,
-                                  InvoiceNumber = outwards.InvoiceNumber,
-                                  InvoiceDate=outwards.InvoiceDate,
-                                  LRNumber=outwards.LRNumber,
-                                  CustomerName = outwards.CustomerName,
-                                  CreatedBy = outwards.CreatedBy,
-                                  CreatedOn = outwards.CreatedOn,
-                                  ModifiedBy = outwards.ModifiedBy,
-                                  ModifiedOn = outwards.ModifiedOn,
-                                  Comments = outwards.Comments
-                              }).ToList();
+                               join outwarditems in db.OutwardItems on outwards.Id equals outwarditems.OutwardId
+                               orderby outwards.InvoiceDate descending
+                               select new OutwardData
+                               {
+                                   Id = outwards.Id,
+                                   InvoiceNumber = outwards.InvoiceNumber,
+                                   InvoiceDate = outwards.InvoiceDate,
+                                   LRNumber = outwards.LRNumber,
+                                   CustomerName = outwards.CustomerName,
+                                   CreatedBy = outwards.CreatedBy,
+                                   CreatedOn = outwards.CreatedOn,
+                                   ModifiedBy = outwards.ModifiedBy,
+                                   ModifiedOn = outwards.ModifiedOn,
+                                   Comments = outwards.Comments
+                               }).ToList();
 
             return View(outwardList);
         }
@@ -53,94 +53,25 @@ namespace ClientManager.Controllers
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
 
             ViewBag.Status = Utility.DefaultList.GetInvoiceStatusList();
-            
-            return View(new OutwardData());
+            ViewBag.MaterialId = new SelectList(db.Materials, "MaterialId", "MaterialName", 1).ToList<SelectListItem>();
+            ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == 1), "TypeId", "TypeName", 1).ToList<SelectListItem>();
+            ViewBag.ItemId = new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == 1), "ItemId", "ItemName", 1).ToList<SelectListItem>();
+            var outwardData = new OutwardData() { OutwardItemData = new OutwardItemData() };
+
+            return View(outwardData);
         }
 
         [HttpPost]
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
-        public ActionResult Create(InwardData inwardData)
+        public ActionResult Create(OutwardData outwardData)
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
-            JsonReponse data;
+            JsonReponse data = null;
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
                 try
                 {
-                    if (inwardData.MaterialId <= 0 || inwardData.TypeId <= 0 || inwardData.ItemId <= 0 || inwardData.Quantity <= 0 || inwardData.ReceivedFrom <= 0 || string.IsNullOrEmpty(inwardData.PONumber) || string.IsNullOrEmpty(inwardData.GRNnumber) || inwardData.ReceivedDate == null)
-                    {
-                        data = new JsonReponse()
-                        {
-                            message = "Enter all required fields.",
-                            status = "Failed",
-                            redirectURL = ""
-                        };
-                    }
-                    else
-                    {
-                        //Stock
-                        var stock = new DBOperation.VRM_InwardStock()
-                        {
-                            MaterialId = inwardData.MaterialId,
-                            TypeId = inwardData.TypeId,
-                            ItemId = inwardData.ItemId,
-                            Quantity = inwardData.Quantity,
-                            AvailableQuantity = Utility.CommonFunctions.GetAvailableQuantity(inwardData.ItemId) + inwardData.Quantity,
-                            IsActive = true,
 
-                        };
-
-                        this.db.VRM_InwardStock.Add(stock);
-
-                        var stockId = this.db.SaveChanges();
-                        //Inward Transaction
-                        if (stockId > 0)
-                        {
-                            //var rcvdDate = DateTime.ParseExact(inwardData.ReceivedDate.ToString().Substring(0, 10).Replace('-', '/'), "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                            this.db.VRM_InwardStockTransaction.Add(new DBOperation.VRM_InwardStockTransaction()
-                            {
-                                PONumber = inwardData.PONumber,
-                                GRNnumber = inwardData.GRNnumber,
-                                ReceivedFrom = inwardData.ReceivedFrom,
-                                ReceivedBy = userData.FullName,
-                                ReceivedDate = DateTime.Now,
-                                CreatedDate = DateTime.Now,
-                                IsActive = true,
-                                Description = inwardData.Description,
-                                StockId = stock.StockId,
-                            });
-                        }
-                        var iTransId = this.db.SaveChanges();
-
-                        ////Available Quantity Update
-                        //var tempStock = db.VRM_InwardStock.Where(wh => wh.ItemId == inwardData.ItemId);
-                        //var currAvlQty = Utility.CommonFunctions.GetAvailableQuantity(inwardData.ItemId);
-
-                        //var iStockUpdate = tempStock.Where(wh=> wh.StockId == stockId).FirstOrDefault();
-                        //iStockUpdate.AvailableQuantity = currAvlQty + inwardData.Quantity;
-
-                        //this.db.VRM_InwardStock.Attach(iStockUpdate);
-                        //this.db.Entry(iStockUpdate).State = EntityState.Modified;
-                        //this.db.SaveChanges();
-
-                        transaction.Commit();
-
-                        
-                        if (iTransId > 0)
-                            data = new JsonReponse()
-                            {
-                                message = "Inward & Stock saved successfully!",
-                                status = "Success",
-                                redirectURL = "/Inward/List"
-                            };
-                        else
-                            data = new JsonReponse()
-                            {
-                                message = "Inward entry not completed, try again after sometime.",
-                                status = "Failed",
-                                redirectURL = ""
-                            };
-                    }
                 }
                 catch (Exception ex)
                 {
@@ -162,36 +93,36 @@ namespace ClientManager.Controllers
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
 
-            var inward= (from iTrans in db.VRM_InwardStockTransaction
-                              join iStock in db.VRM_InwardStock on iTrans.StockId equals iStock.StockId
-                              where iTrans.InwardStockTransactionId == Id
-                              orderby iTrans.ReceivedDate descending
-                              select new InwardData
-                              {
-                                  StockId = iStock.StockId,
-                                  MaterialId = iStock.MaterialId,                                  
-                                  MaterialName = iStock.Material.MaterialName,
-                                  TypeId = iStock.TypeId,
-                                  TypeName = iStock.Type.TypeName,
-                                  ItemId = iStock.ItemId,
-                                  ItemName = iStock.Item.ItemName,
-                                  AvailableQuantity = iStock.AvailableQuantity,
-                                  Quantity = iStock.Quantity,
-                                  InwardStockTransactionId = iTrans.InwardStockTransactionId,
-                                  PONumber = iTrans.PONumber,
-                                  GRNnumber = iTrans.GRNnumber,
-                                  ReceivedBy = iTrans.ReceivedBy,
-                                  ReceivedDate = iTrans.ReceivedDate,
-                                  ReceivedFrom = iTrans.ReceivedFrom,
-                                  Description = iTrans.Description
-                              }).FirstOrDefault();
+            var inward = (from iTrans in db.VRM_InwardStockTransaction
+                          join iStock in db.VRM_InwardStock on iTrans.StockId equals iStock.StockId
+                          where iTrans.InwardStockTransactionId == Id
+                          orderby iTrans.ReceivedDate descending
+                          select new InwardData
+                          {
+                              StockId = iStock.StockId,
+                              MaterialId = iStock.MaterialId,
+                              MaterialName = iStock.Material.MaterialName,
+                              TypeId = iStock.TypeId,
+                              TypeName = iStock.Type.TypeName,
+                              ItemId = iStock.ItemId,
+                              ItemName = iStock.Item.ItemName,
+                              AvailableQuantity = iStock.AvailableQuantity,
+                              Quantity = iStock.Quantity,
+                              InwardStockTransactionId = iTrans.InwardStockTransactionId,
+                              PONumber = iTrans.PONumber,
+                              GRNnumber = iTrans.GRNnumber,
+                              ReceivedBy = iTrans.ReceivedBy,
+                              ReceivedDate = iTrans.ReceivedDate,
+                              ReceivedFrom = iTrans.ReceivedFrom,
+                              Description = iTrans.Description
+                          }).FirstOrDefault();
 
 
             ViewBag.MaterialId = new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", inward.MaterialId).ToList<SelectListItem>();
             ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == inward.MaterialId), "TypeId", "TypeName", inward.TypeId).ToList<SelectListItem>();
             ViewBag.ItemId = new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == inward.TypeId), "ItemId", "ItemName", inward.ItemId).ToList<SelectListItem>();
             ViewBag.CompanyId = new SelectList(db.Companies.Where(wh => wh.IsActive == true), "CompanyId", "Name", inward.ReceivedFrom).ToList<SelectListItem>();
-            
+
             return View(inward);
         }
 
@@ -272,5 +203,22 @@ namespace ClientManager.Controllers
             }
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpGet]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
+        public ActionResult OutwardItemPartial()
+        {
+
+            return View(new OutwardItemData());
+        }
+
+        [HttpGet]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
+        public ActionResult OutwardItemListPartial()
+        {
+            List<OutwardItemData> lstOutwardItems = new List<OutwardItemData>();
+            return View(lstOutwardItems);
+        }
     }
+
 }

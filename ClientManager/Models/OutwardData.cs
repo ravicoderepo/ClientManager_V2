@@ -19,6 +19,8 @@ namespace ClientManager.Models
         public Nullable<System.DateTime> ModifiedOn { get; set; }
         public Nullable<int> ModifiedBy { get; set; }
         public string Comments { get; set; }
-        public List<OutwardItemData> OutwardItems { get; set; }
+
+        public OutwardItemData OutwardItemData { get; set; }
+    //public List<OutwardItemData> OutwardItems { get; set; }
     }
 }

@@ -78,7 +78,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="MaterialId">Invoice Number</label>
+                                                <label for="InvoiceNumber">Invoice Number</label>
                                                 <div class="input-group date" data-target-input="nearest">
 
                                                     @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "hdnId" } })
@@ -87,8 +87,8 @@
                                                         <div class="input-group-text"><i class="fa fa-magic"></i></div>
                                                     </div>
                                                 </div>
-                                                </div>
                                             </div>
+                                        </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="CustomerName">Customer Name</label>
@@ -137,56 +137,8 @@
                                 </fieldset>
                                 <br />
                                 <fieldset>
-                                    <legend>Invoice Items</legend>
-                                    @*<div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="status">Received From</label>
-                                                    @Html.HiddenFor(model => model.ReceivedFrom, new { htmlAttributes = new { @id = "hdnCompanyId" } })
-                                                    @Html.DropDownList("CompanyId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlCompanyId", @onChange = "fnValueChange('company')" })
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="PONumber">PO Number</label>
-                                                    @Html.EditorFor(model => model.PONumber, new { htmlAttributes = new { @class = "form-control", @id = "txtPONumber", @name = "PONumber" } })
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="GRNnumber">GRN Number</label>
-                                                    @Html.EditorFor(model => model.GRNnumber, new { htmlAttributes = new { @class = "form-control", @id = "txtGRNnumber", @name = "GRNnumber" } })
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="ReceivedBy">Received By</label>
-                                                    @Html.EditorFor(model => model.ReceivedBy, new { htmlAttributes = new { @class = "form-control", @id = "txtReceivedBy", @name = "ReceivedBy", @readonly = "readonly" } })
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="ReceivedDate">Received Date</label>
-                                                    <div class="input-group date" data-target-input="nearest">
-                                                        @Html.EditorFor(model => model.ReceivedDate, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtReceivedDate", @name = "ReceivedDate" } })
-                                                        <div class="input-group-append" data-target="#txtReceivedDate" data-toggle="datetimepicker">
-                                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="Description">Description</label>
-                                                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @id = "txtDescription", @name = "Description" } })
-                                                </div>
-                                            </div>
-                                        </div>*@
+                                    <legend>Invoice Products</legend>
+                                    @Html.Partial("OutwardItemPartial", (ClientManager.Models.OutwardItemData)Model.OutwardItemData)
                                 </fieldset>
                             </div>
                             <div class="card-footer">
@@ -239,8 +191,6 @@
                 $("input[name=ItemId]").val($('#ddlItemId').val());
                 $("input[name=MaterialId]").val($('#ddlMaterialId').val());
                 $("input[name=ReceivedFrom]").val($('#ddlCompanyId').val());
-
-
                 fnSubmitItemDetails();
             }
         });
@@ -276,33 +226,16 @@
         });
     });
 
-
+    
     function fnStatusChange() {
 
         $("input[name=IsActive]").val($('#ddlStatus').val());
 
     }
-    function fnValueChange(evntFrom) {
+    
 
-        $("input[name=TypeId]").val($('#ddlTypeId').val());
-        $("input[name=MaterialId]").val($('#ddlMaterialId').val());
-        $("input[name=ItemId]").val($('#ddlItemId').val());
-        $("input[name=ReceivedFrom]").val($('#ddlCompanyId').val());
-        if (evntFrom == "material") {
-            fnBindTypesDropdown($("input[name=MaterialId]").val());
-        }
-        else if (evntFrom == "type") {
 
-            fnBindItemsDropDown($("input[name=TypeId]").val());
-            $("input[name=ItemId]").val($('#ddlItemId').val());
-            //fnValueChange('item');
-            //fnGetAvailableQuantity($("input[name=ItemId]").val());
-        }
-        else if (evntFrom == "item") {
-            debugger;
-            fnGetAvailableQuantity($("input[name=ItemId]").val());
-        }
-    }
+
     function fnSubmitItemDetails() {
 
         var OutwardData = {
@@ -340,6 +273,7 @@
             }
         });
     }
+
     $("#mnuOutwardList").addClass("active");
     var parentMenu = $("#mnuOutwardList").parent().parent().parent();
 
@@ -347,52 +281,7 @@
     parentMenu.find("ul").each(function () {
 
         $(this).attr("style", "display:block");
+
     });
-
-    function fnBindTypesDropdown(id) {
-        $.ajax({
-            url: "/types/GetProductMaster?materialId=" + id,
-            type: "Get",
-            success: function (data) {
-
-                $('#ddlTypeId').empty();
-                for (var i = 0; i < data.length; i++) {
-                    var opt = new Option(data[i].Text, data[i].Value);
-                    $('#ddlTypeId').append(opt);
-                }
-            }
-        });
-
-        $("input[name=TypeId]").val($('#ddlTypeId').val());
-    }
-
-    function fnBindItemsDropDown(id) {
-
-        $.ajax({
-            url: "/items/GetProducts?prodMasterId=" + id,
-            type: "Get",
-            success: function (data) {
-
-                $('#ddlItemId').empty();
-                for (var i = 0; i < data.length; i++) {
-                    var opt = new Option(data[i].Text, data[i].Value);
-                    $('#ddlItemId').append(opt);
-                }
-            }
-        });
-        $('#txtAvailableQuantity').val('0');
-        $("input[name=ItemId]").val($('#ddlItemId').val());
-        //$("input[name=ItemId]").val($('#ddlItemId').val());
-        //fnGetAvailableQuantity($("input[name=ItemId]").val());
-    }
-    function fnGetAvailableQuantity(id) {
-
-        $.ajax({
-            url: "/stocks/GetAvailableQuantity?itemId=" + id,
-            type: "Get",
-            success: function (data) {
-                    $('#txtAvailableQuantity').val(data);
-            }
-        });
-    }
-</script>
+   
+    </script>

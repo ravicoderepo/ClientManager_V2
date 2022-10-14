@@ -74,21 +74,29 @@
                                         </div>
                                     </div>*@
                                 <fieldset>
-                                    <legend>Stock Details</legend>
+                                    <legend>Invoice Details</legend>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="MaterialId">Invoice Number</label>
-                                                @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "hdnId" } })
-                                                @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control", @id = "txtInvoiceNumber", @name = "InvoiceNumber" } })
+                                                <div class="input-group date" data-target-input="nearest">
+
+                                                    @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "hdnId" } })
+                                                    @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control", @id = "txtInvoiceNumber", @name = "InvoiceNumber" } })
+                                                    <div class="input-group-append" data-target="#txtInvoiceNumber" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="fa fa-magic"></i></div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="status">Invoice Date</label>
-                                                @Html.EditorFor(model => model.InvoiceDate, new { htmlAttributes = new { @class = "form-control", @id = "txtInvoiceNumber", @name = "InvoiceNumber" } })
+                                                <label for="CustomerName">Customer Name</label>
+                                                @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { @class = "form-control", @id = "txtCustomerName", @name = "CustomerName" } })
                                             </div>
                                         </div>
+
+
                                     </div>
                                     <div class="row">
                                         <div class="col-md-4">
@@ -108,17 +116,15 @@
                                                 @Html.EditorFor(model => model.LRNumber, new { htmlAttributes = new { @class = "form-control", @id = "txtLRNumber", @name = "LRNumber" } })
                                             </div>
                                         </div>
+
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="CustomerName">CustomerName</label>
-                                                @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { @class = "form-control", @id = "txtCustomerName", @name = "CustomerName" } })
+                                                <label for="status">Status</label>
+                                                @Html.HiddenFor(model => model.Status, new { htmlAttributes = new { @id = "hdnStatus" } })
+                                                @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnValueChange('status')" })
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="status">Status</label>
-                                            @Html.HiddenFor(model => model.Status, new { htmlAttributes = new { @id = "hdnStatus" } })
-                                            @Html.DropDownList("CompanyId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnValueChange('status')" })
-                                        </div>
+
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
@@ -131,48 +137,56 @@
                                 </fieldset>
                                 <br />
                                 <fieldset>
-                                    <legend>Transation Details</legend>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="status">Received From</label>
-                                                @Html.HiddenFor(model => model.ReceivedFrom, new { htmlAttributes = new { @id = "hdnCompanyId" } })
-                                                @Html.DropDownList("CompanyId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlCompanyId", @onChange = "fnValueChange('company')" })
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="PONumber">PO Number</label>
-                                                @Html.EditorFor(model => model.PONumber, new { htmlAttributes = new { @class = "form-control", @id = "txtPONumber", @name = "PONumber" } })
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="GRNnumber">GRN Number</label>
-                                                @Html.EditorFor(model => model.GRNnumber, new { htmlAttributes = new { @class = "form-control", @id = "txtGRNnumber", @name = "GRNnumber" } })
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <legend>Invoice Items</legend>
                                     @*<div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="ReceivedBy">Received By</label>
-                                                @Html.EditorFor(model => model.ReceivedBy, new { htmlAttributes = new { @class = "form-control", @id = "txtReceivedBy", @name = "ReceivedBy", @readonly="readonly" } })
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="status">Received From</label>
+                                                    @Html.HiddenFor(model => model.ReceivedFrom, new { htmlAttributes = new { @id = "hdnCompanyId" } })
+                                                    @Html.DropDownList("CompanyId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlCompanyId", @onChange = "fnValueChange('company')" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="PONumber">PO Number</label>
+                                                    @Html.EditorFor(model => model.PONumber, new { htmlAttributes = new { @class = "form-control", @id = "txtPONumber", @name = "PONumber" } })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="GRNnumber">GRN Number</label>
+                                                    @Html.EditorFor(model => model.GRNnumber, new { htmlAttributes = new { @class = "form-control", @id = "txtGRNnumber", @name = "GRNnumber" } })
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="ReceivedDate">Received Date</label>
-                                                <div class="input-group date" data-target-input="nearest">
-                                                    @Html.EditorFor(model => model.ReceivedDate, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtReceivedDate", @name = "ReceivedDate" } })
-                                                    <div class="input-group-append" data-target="#txtReceivedDate" data-toggle="datetimepicker">
-                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="ReceivedBy">Received By</label>
+                                                    @Html.EditorFor(model => model.ReceivedBy, new { htmlAttributes = new { @class = "form-control", @id = "txtReceivedBy", @name = "ReceivedBy", @readonly = "readonly" } })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="ReceivedDate">Received Date</label>
+                                                    <div class="input-group date" data-target-input="nearest">
+                                                        @Html.EditorFor(model => model.ReceivedDate, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtReceivedDate", @name = "ReceivedDate" } })
+                                                        <div class="input-group-append" data-target="#txtReceivedDate" data-toggle="datetimepicker">
+                                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>*@
-                                   
+                                        <div class="row">
+
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="Description">Description</label>
+                                                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @id = "txtDescription", @name = "Description" } })
+                                                </div>
+                                            </div>
+                                        </div>*@
                                 </fieldset>
                             </div>
                             <div class="card-footer">
@@ -202,15 +216,15 @@
 
         if ('@ViewBag.AccessLevel' == "View") {
             $('#quickForm :input').each(function () {
-                
+
                 if ($(this).attr('Id') != 'btnBack') {
-                    
+
                     $(this).prop('disabled', true);
                 }
             });
         }
     });
-    $('#txtReceivedDate').datetimepicker({
+    $('#txtInvoiceDate').datetimepicker({
         format: 'DD/MM/YYYY'
     });
 
@@ -218,7 +232,7 @@
         //
         $.validator.setDefaults({
             submitHandler: function () {
-                
+
                 // alert("Form successful submitted!");
                 $("input[name=IsActive]").val($('#ddlStatus').val());
                 $("input[name=TypeId]").val($('#ddlTypeId').val());
@@ -264,12 +278,12 @@
 
 
     function fnStatusChange() {
-        
+
         $("input[name=IsActive]").val($('#ddlStatus').val());
 
     }
     function fnValueChange(evntFrom) {
-        
+
         $("input[name=TypeId]").val($('#ddlTypeId').val());
         $("input[name=MaterialId]").val($('#ddlMaterialId').val());
         $("input[name=ItemId]").val($('#ddlItemId').val());
@@ -278,8 +292,8 @@
             fnBindTypesDropdown($("input[name=MaterialId]").val());
         }
         else if (evntFrom == "type") {
-            
-            fnBindItemsDropDown($("input[name=TypeId]").val());          
+
+            fnBindItemsDropDown($("input[name=TypeId]").val());
             $("input[name=ItemId]").val($('#ddlItemId').val());
             //fnValueChange('item');
             //fnGetAvailableQuantity($("input[name=ItemId]").val());
@@ -290,7 +304,7 @@
         }
     }
     function fnSubmitItemDetails() {
-        
+
         var OutwardData = {
 
             ItemId: $('input[name=ItemId]').val(),
@@ -305,7 +319,7 @@
             //IsActive: ($("input[name=IsActive]").val()=='1') ? true: false,
             Description: $('#txtDescription').val()
         };
-        
+
         $.ajax({
             type: "POST",
             url: "/Outward/Create",
@@ -328,10 +342,10 @@
     }
     $("#mnuOutwardList").addClass("active");
     var parentMenu = $("#mnuOutwardList").parent().parent().parent();
-    
+
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        
+
         $(this).attr("style", "display:block");
     });
 
@@ -340,7 +354,7 @@
             url: "/types/GetProductMaster?materialId=" + id,
             type: "Get",
             success: function (data) {
-                
+
                 $('#ddlTypeId').empty();
                 for (var i = 0; i < data.length; i++) {
                     var opt = new Option(data[i].Text, data[i].Value);
@@ -353,12 +367,12 @@
     }
 
     function fnBindItemsDropDown(id) {
-        
+
         $.ajax({
             url: "/items/GetProducts?prodMasterId=" + id,
             type: "Get",
             success: function (data) {
-                
+
                 $('#ddlItemId').empty();
                 for (var i = 0; i < data.length; i++) {
                     var opt = new Option(data[i].Text, data[i].Value);
@@ -372,12 +386,12 @@
         //fnGetAvailableQuantity($("input[name=ItemId]").val());
     }
     function fnGetAvailableQuantity(id) {
-        
+
         $.ajax({
             url: "/stocks/GetAvailableQuantity?itemId=" + id,
             type: "Get",
-            success: function (data) {             
-                    $('#txtAvailableQuantity').val(data);             
+            success: function (data) {
+                    $('#txtAvailableQuantity').val(data);
             }
         });
     }

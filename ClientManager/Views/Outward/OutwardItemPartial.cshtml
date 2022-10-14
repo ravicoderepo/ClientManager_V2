@@ -1,0 +1,229 @@
+﻿@model ClientManager.Models.OutwardItemData
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="status">Material</label>
+            @Html.HiddenFor(model => model.MaterialId, new { htmlAttributes = new { @id = "hdnMaterialId" } })
+            @Html.DropDownList("MaterialId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlMaterialId", @onChange = "fnValueChange('material')" })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="status">Product Master</label>
+            @Html.HiddenFor(model => model.TypeId, new { htmlAttributes = new { @id = "hdnTypeId" } })
+            @Html.DropDownList("TypeId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlTypeId", @onChange = "fnValueChange('type')" })
+        </div>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="status">Product</label>
+            @Html.HiddenFor(model => model.ItemId, new { htmlAttributes = new { @id = "hdnItemId" } })
+            @Html.DropDownList("ItemId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlItemId", @onChange = "fnValueChange('item')" })
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="Quantity">Quantity</label>
+            @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control", @id = "txtQuantity", @name = "Quantity" } })
+        </div>
+    </div>
+
+    @*<div class="col-md-4">
+            <div class="form-group">
+                <label for="Remarks">Remarks</label>
+                <input type="text" class="form-control" id="txtRemarks" name="Remarks" />
+            </div>
+        </div>*@
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="well clearfix">
+            <a style="float:right; width:150px" class="btn btn-block btn-primary btn-sm add-record" data-added="0"><i class="fa fa-plus"></i> Add Product</a>
+        </div>
+        <br />
+        <table class="table table-bordered" id="tbl_posts">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Material</th>
+                    <th>Product Master</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="tbl_posts_body">
+            </tbody>
+        </table>
+        <div style="display:none;">
+            <table id="sample_table">
+                <tr id="">
+                    <td><span class="sn"></span>.</td>
+                    <td class="Meterial" data-added="">
+                       
+                    </td>
+                    <td class="Type" data-added="">
+                      
+                    </td>
+                    <td class="Item" data-added="">
+                       
+                    </td>
+                    <td class="Quantity"></td>
+                    <td>
+                        <a class="btn btn-primary btn-xs edit-record" style="margin-left:5px" data-id="0"><i class="far fa-edit"></i></a><a class="btn btn-danger btn-xs delete-record" style="margin-left:5px" data-id="0"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    function fnValueChange(evntFrom) {
+        alert('das')
+        if (evntFrom == "material") {
+            $("input[name=MaterialId]").val($('#ddlMaterialId').val());
+            fnBindTypesDropdown($("input[name=MaterialId]").val());
+            fnBindItemsDropDown($("input[name=TypeId]").val());
+        }
+        else if (evntFrom == "type") {
+            $("input[name=TypeId]").val($('#ddlTypeId').val());
+            fnBindItemsDropDown($("input[name=TypeId]").val());
+        }
+        else if (evntFrom == "item") {
+            $("input[name=ItemId]").val($('#ddlItemId').val());
+        }
+    }
+    function fnBindTypesDropdown(id, selectedValue) {
+
+        $.ajax({
+            url: "/types/GetProductMaster?materialId=" + id,
+            type: "Get",
+            success: function (data) {
+
+                $('#ddlTypeId').empty();
+                for (var i = 0; i < data.length; i++) {
+                    var opt = new Option(data[i].Text, data[i].Value);
+                    $('#ddlTypeId').append(opt);
+                }
+
+                if (selectedValue != null) {
+                    $('#ddlTypeId').val(selectedValue);
+                }
+            }
+        });
+        
+    }
+    function fnBindItemsDropDown(id, selectedValue) {
+
+        $.ajax({
+            url: "/items/GetProducts?prodMasterId=" + id,
+            type: "Get",
+            success: function (data) {
+
+                $('#ddlItemId').empty();
+                for (var i = 0; i < data.length; i++) {
+                    var opt = new Option(data[i].Text, data[i].Value);
+                    $('#ddlItemId').append(opt);
+                }
+                if (selectedValue != null) {
+                    $('#ddlItemId').val(selectedValue);
+                }
+            }
+        });
+        
+        //$('#txtAvailableQuantity').val('0');
+        $("input[name=ItemId]").val($('#ddlItemId').val());
+    }
+    function fnGetAvailableQuantity(id) {
+
+        $.ajax({
+            url: "/stocks/GetAvailableQuantity?itemId=" + id,
+            type: "Get",
+            success: function (data) {
+                $('#txtAvailableQuantity').val(data);
+            }
+        });
+    }
+    $(document).delegate('a.add-record', 'click', function (e) {
+        e.preventDefault();
+
+        $("input[name=TypeId]").val($('#ddlTypeId').val());
+        $("input[name=MaterialId]").val($('#ddlMaterialId').val());
+        $("input[name=ItemId]").val($('#ddlItemId').val());
+
+        //fnAddOutwardItem();
+        var content = jQuery('#sample_table tr'),
+            size = jQuery('#tbl_posts >tbody >tr').length + 1,
+            element = null,
+            element = content.clone();
+        element.attr('id', 'rec-' + size);
+
+        if ($('#ddlMaterialId option:selected').text() == "Select" || $('#ddlTypeId option:selected').text() == "Select" || $('#ddlItemId option:selected').text() == "Select" || $('#txtQuantity').val() == "0") {
+            alert('Enter all mandatory fields.');
+            $('#txtQuantity').val("0");
+            return false;
+        }
+        else {
+            debugger;
+            element.find('.Meterial').text($('#ddlMaterialId option:selected').text());
+            element.find('.Meterial').attr('data-added', $('#ddlMaterialId option:selected').val());
+            element.find('.Type').text($('#ddlTypeId option:selected').text());
+            element.find('.Type').attr('data-added', $('#ddlTypeId option:selected').val());
+            element.find('.Item').text($('#ddlItemId option:selected').text());
+            element.find('.Item').attr('data-added', $('#ddlItemId option:selected').val());
+            element.find('.Quantity').text($('#txtQuantity').val());
+        }
+
+        element.find('.delete-record').attr('data-id', size);
+        element.find('.edit-record').attr('data-id', size);
+        element.appendTo('#tbl_posts_body');
+        element.find('.sn').html(size);
+    });
+    $(document).delegate('a.delete-record', 'click', function (e) {
+        e.preventDefault();
+        var didConfirm = confirm("Are you sure You want to delete?");
+        if (didConfirm == true) {
+            var id = jQuery(this).attr('data-id');
+            var targetDiv = jQuery(this).attr('targetDiv');
+            jQuery('#rec-' + id).remove();
+
+            //regnerate index number on table
+            $('#tbl_posts_body tr').each(function (index) {
+                //alert(index);
+                $(this).find('span.sn').html(index + 1);
+            });
+            return true;
+        } else {
+            return false;
+        }
+    });
+    //$(document).delegate('a.edit-record', 'click', function (e) {
+       
+    //    $('#ddlMaterialId').val($(this).parents('tr').find('.Meterial').attr('data-added'));
+
+    //    $("input[name=MaterialId]").val($(this).parents('tr').find('.Meterial').attr('data-added'));
+    //    $("input[name=TypeId]").val($(this).parents('tr').find('.Type').attr('data-added'));
+
+    //    fnBindTypesDropdown($("input[name=MaterialId]").val(), $(this).parents('tr').find('.Type').attr('data-added'));
+    //    fnBindItemsDropDown($("input[name=TypeId]").val(), $(this).parents('tr').find('.Item').attr('data-added'));
+    //    e.preventDefault();
+    //});
+   $(document).delegate('a.edit-record', 'click', function (e) {
+       debugger;
+       e.preventDefault();
+        $('#ddlMaterialId').val($(this).parents('tr').find('.Meterial').attr('data-added'));
+
+        $("input[name=MaterialId]").val($(this).parents('tr').find('.Meterial').attr('data-added'));
+        $("input[name=TypeId]").val($(this).parents('tr').find('.Type').attr('data-added'));
+
+        fnBindTypesDropdown($("input[name=MaterialId]").val(), $(this).parents('tr').find('.Type').attr('data-added'));
+       fnBindItemsDropDown($("input[name=TypeId]").val(), $(this).parents('tr').find('.Item').attr('data-added'));
+       $("input[name=Quantity]").val($(this).parents('tr').find('.Quantity').text());
+       return false;
+    });
+  /*  https://www.js-tutorials.com/jquery-tutorials/dynamically-add-remove-rows-table-using-jquery/*/
+</script>

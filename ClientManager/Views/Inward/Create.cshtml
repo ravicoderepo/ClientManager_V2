@@ -328,6 +328,7 @@
     });
 
     function fnBindTypesDropdown(id) {
+        debugger;
         $.ajax({
             url: "/types/GetProductMaster?materialId=" + id,
             type: "Get",
@@ -345,7 +346,7 @@
     }
 
     function fnBindItemsDropDown(id) {
-
+        debugger;
         $.ajax({
             url: "/items/GetProducts?prodMasterId=" + id,
             type: "Get",
