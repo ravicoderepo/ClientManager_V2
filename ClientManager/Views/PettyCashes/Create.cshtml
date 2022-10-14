@@ -115,16 +115,16 @@
 
 <script>
     $(".btn-danger").click(function () {
-        debugger;
+        
         window.location.href = window.location.href;
     });
     $(window).on('load', function () {
 
         if ('@ViewBag.AccessLevel' == "View") {
             $('#quickForm :input').each(function () {
-                debugger;
+                
                 if ($(this).attr('Id') != 'btnBack') {
-                    debugger;
+                    
                     $(this).prop('disabled', true);
                 }
             });
@@ -137,10 +137,10 @@
     });
 
     $(function () {
-        //debugger;
+        //
         $.validator.setDefaults({
             submitHandler: function () {
-                debugger;
+                
                 // alert("Form successful submitted!");
                 $("input[name=ModeOfPayment]").val($('#ddlModeOfPayment').val());
                 fnSubmitPettyCashDetails();
@@ -180,19 +180,19 @@
 
 
     function fnModeOfPaymentChange() {
-        debugger;
+        
         $("input[name=ModeOfPayment]").val($('#ddlModeOfPayment').val());
     }
 
     function fnSubmitPettyCashDetails() {
-        debugger;
+        
         var PettyCashData = {
             AmountReceived: $('#txtAmountReceived').val(),
             AmountRecivedDate: $('#txtAmountRecivedDate').val(),
             ModeOfPayment: $("input[name=ModeOfPayment]").val(),
             Description: $('#txtDescription').val()
         };
-        debugger;
+        
         $.ajax({
             type: "POST",
             url: "/PettyCashes/Create",
@@ -223,10 +223,10 @@
     });
     $("#mnuPettyCash").addClass("active");
     var parentMenu = $("#mnuPettyCash").parent().parent().parent();
-    debugger;
+    
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        debugger;
+        
         $(this).attr("style", "display:block");
     });
 </script>

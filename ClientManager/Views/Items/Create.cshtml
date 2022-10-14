@@ -127,9 +127,9 @@
 
         if ('@ViewBag.AccessLevel' == "View") {
             $('#quickForm :input').each(function () {
-                debugger;
+                
                 if ($(this).attr('Id') != 'btnBack') {
-                    debugger;
+                    
                     $(this).prop('disabled', true);
                 }
             });
@@ -138,10 +138,10 @@
 
 
     $(function () {
-        //debugger;
+        //
         $.validator.setDefaults({
             submitHandler: function () {
-                debugger;
+                
                 // alert("Form successful submitted!");
                 $("input[name=IsActive]").val($('#ddlStatus').val());
                 $("input[name=TypeId]").val($('#ddlTypeId').val());
@@ -185,12 +185,12 @@
 
 
     function fnStatusChange() {
-        debugger;
+        
         $("input[name=IsActive]").val($('#ddlStatus').val());
        
     }
     function fnValueChange(evntFrom) {
-        debugger;
+        
         $("input[name=TypeId]").val($('#ddlTypeId').val());
         $("input[name=MaterialId]").val($('#ddlMaterialId').val());
         if (evntFrom == "material") {
@@ -198,7 +198,7 @@
         }
     }
     function fnSubmitItemDetails() {
-        debugger;
+        
       
         var itemData = {
             
@@ -210,7 +210,7 @@
             Description: $('#txtDescription').val(),
             MinimumAvailableQuantity:$('#txtMinimumAvailableQuantity').val()
         };
-        debugger;
+        
         $.ajax({
             type: "POST",
             url: "/Items/Create",
@@ -233,10 +233,10 @@
     }
     $("#mnuItemList").addClass("active");
     var parentMenu = $("#mnuItemList").parent().parent().parent();
-    debugger;
+    
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        debugger;
+        
         $(this).attr("style", "display:block");
     });
 
@@ -245,7 +245,7 @@
             url: "/types/GetProductMaster?materialId=" + id,
             type: "Get",
             success: function (data) {
-                debugger;
+                
                 $('#ddlTypeId').empty();
                 for (var i = 0; i < data.length; i++) {
                     var opt = new Option(data[i].Text, data[i].Value);

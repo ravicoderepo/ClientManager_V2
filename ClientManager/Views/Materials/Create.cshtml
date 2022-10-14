@@ -102,9 +102,9 @@
 
         if ('@ViewBag.AccessLevel' == "View") {
             $('#quickForm :input').each(function () {
-                debugger;
+                
                 if ($(this).attr('Id') != 'btnBack') {
-                    debugger;
+                    
                     $(this).prop('disabled', true);
                 }
             });
@@ -113,10 +113,10 @@
 
 
     $(function () {
-        //debugger;
+        //
         $.validator.setDefaults({
             submitHandler: function () {
-                debugger;
+                
                 // alert("Form successful submitted!");
                 $("input[name=IsActive]").val($('#ddlStatus').val());
                 fnSubmitMaterialDetails();
@@ -156,19 +156,19 @@
 
 
     function fnStatusChange() {
-        debugger;
+        
         $("input[name=IsActive]").val($('#ddlStatus').val());
     }
 
     function fnSubmitMaterialDetails() {
-        debugger;
+        
         var materialData = {
             //MaterialId: $('#Id').val(),
             IsActive: ($("input[name=IsActive]").val()=='1') ? true: false,
             MaterialName: $('#txtMaterialName').val(),
             Description: $('#txtDescription').val()
         };
-        debugger;
+        
         $.ajax({
             type: "POST",
             url: "/Materials/Create",
@@ -191,10 +191,10 @@
     }
     $("#mnuMaterialList").addClass("active");
     var parentMenu = $("#mnuMaterialList").parent().parent().parent();
-    debugger;
+    
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        debugger;
+        
         $(this).attr("style", "display:block");
     });
 </script>

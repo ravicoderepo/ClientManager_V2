@@ -56,7 +56,7 @@ namespace ClientManager.Controllers
             ViewBag.MaterialId = new SelectList(db.Materials, "MaterialId", "MaterialName", 1).ToList<SelectListItem>();
             ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == 1), "TypeId", "TypeName", 1).ToList<SelectListItem>();
             ViewBag.ItemId = new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == 1), "ItemId", "ItemName", 1).ToList<SelectListItem>();
-            var outwardData = new OutwardData() { OutwardItemData = new OutwardItemData() };
+            var outwardData = new OutwardData();
 
             return View(outwardData);
         }
@@ -208,8 +208,11 @@ namespace ClientManager.Controllers
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult OutwardItemPartial()
         {
-
-            return View(new OutwardItemData());
+            ViewBag.Status = Utility.DefaultList.GetInvoiceStatusList();
+            ViewBag.MaterialId = new SelectList(db.Materials, "MaterialId", "MaterialName", 1).ToList<SelectListItem>();
+            ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == 1), "TypeId", "TypeName", 1).ToList<SelectListItem>();
+            ViewBag.ItemId = new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == 1), "ItemId", "ItemName", 1).ToList<SelectListItem>();
+            return PartialView(new List<ClientManager.Models.OutwardItemData>());
         }
 
         [HttpGet]

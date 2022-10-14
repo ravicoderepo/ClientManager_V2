@@ -257,9 +257,9 @@
 
         if ('@ViewBag.AccessLevel' == "View") {
             $('#quickForm :input').each(function () {
-                debugger;
+                
                 if ($(this).attr('Id') != 'btnBack') {
-                    debugger;
+                    
                     $(this).prop('disabled', true);
                 }
             });
@@ -267,7 +267,7 @@
     });
 
     $(document).ready(function () {
-        debugger;
+        
         if ($('#ddlStatus').val() == "6") {
             $('#pnlInvoice').show();
         }
@@ -277,10 +277,10 @@
     });
 
     $(function () {
-        //debugger;
+        //
         $.validator.setDefaults({
             submitHandler: function () {
-                debugger;
+                
                 // alert("Form successful submitted!");
 
                 fnSubmitSaleDetails();
@@ -321,7 +321,7 @@
 
 
     function fnToggleInvoiceFields() {
-        debugger;
+        
         //6-Closed
         if ($('#ddlStatus').val() == "6") {
             $('#pnlInvoice').show();
@@ -359,7 +359,7 @@
             DateOfClosing: $('#txtClosingDate').val(),
             Remarks: $('#Remarks').val()
         };
-        debugger;
+        
         $.ajax({
             type: "POST",
             url: "/SaleActivities/Edit",
@@ -402,15 +402,15 @@
         event.preventDefault();
     });
     function fnModeOfPaymentChange() {
-        debugger;
+        
         $("input[name=ModeOfPayment]").val($('#ddlModeOfPayment').val());
     }
     $("#mnuSalesList").addClass("active");
     var parentMenu = $("#mnuSalesList").parent().parent().parent();
-    debugger;
+    
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        debugger;
+        
         $(this).attr("style", "display:block");
     });
 </script>

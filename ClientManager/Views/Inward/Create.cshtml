@@ -257,7 +257,7 @@
 
     function fnStatusChange() {
 
-        $("input[name=IsActive]").val($('#ddlStatus').val());
+        $("input[name=Status]").val($('#ddlStatus').val());
 
     }
     function fnValueChange(evntFrom) {
@@ -277,7 +277,7 @@
             //fnGetAvailableQuantity($("input[name=ItemId]").val());
         }
         else if (evntFrom == "item") {
-            debugger;
+            
             fnGetAvailableQuantity($("input[name=ItemId]").val());
         }
     }
@@ -318,17 +318,10 @@
             }
         });
     }
-    $("#mnuInwardList").addClass("active");
-    var parentMenu = $("#mnuInwardList").parent().parent().parent();
 
-    parentMenu.attr("class", "nav-item menu-is-opening menu-open");
-    parentMenu.find("ul").each(function () {
-
-        $(this).attr("style", "display:block");
-    });
 
     function fnBindTypesDropdown(id) {
-        debugger;
+        
         $.ajax({
             url: "/types/GetProductMaster?materialId=" + id,
             type: "Get",
@@ -346,7 +339,7 @@
     }
 
     function fnBindItemsDropDown(id) {
-        debugger;
+        
         $.ajax({
             url: "/items/GetProducts?prodMasterId=" + id,
             type: "Get",
@@ -375,7 +368,16 @@
         });
     }
 
-     $("input[name=ReceivedBy]").val('@currentUser.FullName');
+    $("input[name=ReceivedBy]").val('@currentUser.FullName');
+    //Menu Selected
+    $("#mnuInwardList").addClass("active");
+    var parentMenu = $("#mnuInwardList").parent().parent().parent();
+
+    parentMenu.attr("class", "nav-item menu-is-opening menu-open");
+    parentMenu.find("ul").each(function () {
+
+        $(this).attr("style", "display:block");
+    });
 </script>
 
 

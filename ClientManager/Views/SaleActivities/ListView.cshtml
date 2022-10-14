@@ -225,9 +225,9 @@
     });
 
     function fnSubmitSaleDetails(id) {
-        debugger;
+        
         if (confirm("do you wish to delete this record?") == true) {
-            debugger;
+            
             $.ajax({
                 type: "POST",
                 url: "/SaleActivities/Delete/" + id,

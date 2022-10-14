@@ -112,9 +112,9 @@
 
         if ('@ViewBag.AccessLevel' == "View") {
             $('#quickForm :input').each(function () {
-                debugger;
+                
                 if ($(this).attr('Id') != 'btnBack') {
-                    debugger;
+                    
                     $(this).prop('disabled', true);
                 }
             });
@@ -123,10 +123,10 @@
 
 
     $(function () {
-        //debugger;
+        //
         $.validator.setDefaults({
             submitHandler: function () {
-                debugger;
+                
                 // alert("Form successful submitted!");
                 $("input[name=IsActive]").val($('#ddlStatus').val());
                 $("input[name=MaterialId]").val($('#ddlMaterialId').val());
@@ -167,16 +167,16 @@
 
 
     function fnStatusChange() {
-        debugger;
+        
         $("input[name=IsActive]").val($('#ddlStatus').val());
     }
     function fnValueChange() {
-        debugger;
+        
         $("input[name=MaterialId]").val($('#ddlMaterialId').val());
         
     }
     function fnSubmitItemDetails() {
-        debugger;
+        
       
         var typeData = {
             
@@ -186,7 +186,7 @@
             TypeName: $('#txtTypeName').val(),
             Description: $('#txtDescription').val()
         };
-        debugger;
+        
         $.ajax({
             type: "POST",
             url: "/Types/Create",
@@ -209,10 +209,10 @@
     }
     $("#mnuTypeList").addClass("active");
     var parentMenu = $("#mnuTypeList").parent().parent().parent();
-    debugger;
+    
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        debugger;
+        
         $(this).attr("style", "display:block");
     });
 </script>

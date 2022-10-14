@@ -143,7 +143,7 @@
 <script>
     $('#pnlAdvSearch').hide();
     function fnSearch() {
-        debugger;
+        
         var actionUrl = "/SaleActivities/ListView?" + "callDateFrom=" + $('#txtCallDateFrom').val().replace(/\//g, '-') + "&callDateTo=" + $('#txtCallDateTo').val().replace(/\//g, '-') + "&status=" + $("input[name=hdnStatus]").val() + "&productName=" + $('#txtProductName').val() + "&customerName=" + $('#txtCustomerName').val() + "&salesPerson=" + $("input[name=hdnSalesPerson]").val();
         $('#gridView').html('');
         $.ajax({
@@ -153,7 +153,7 @@
             dataType: 'html',
             success: function (result) {
                 $('#gridView').html(result);
-                debugger;
+                
                 //$('#lblSalesPersonName').text(' for ' + $('#ddlSalesPerson option:selected').text() + ' : ' + '@ViewBag.TotalSalesBySalesPerson');
                // @ViewBag.SelectedSalesPerson = $('#ddlSalesPerson option:selected').text();
             },
@@ -164,12 +164,12 @@
     }
 
     function fnSalesPersonChange() {
-        debugger;
+        
         $("input[name=hdnSalesPerson]").val($('#ddlSalesPerson').val());
     }
 
     function fnStatusChange() {
-        debugger;
+        
         $("input[name=hdnStatus]").val($('#ddlStatus').val());
     }
 
@@ -191,7 +191,7 @@
     });
 
     function fnClearSearch() {
-        debugger;
+        
         $('#txtCallDateTo').val('');
         $('#txtCallDateFrom').val('');
         $('#txtProductName').val('');
@@ -204,7 +204,7 @@
 
     $(window).on('load', function () {
         const params = new URLSearchParams(window.location.search)
-        debugger;
+        
         var searchQuery = "status="
 
         if (params.has('status')) {
@@ -231,7 +231,7 @@
 
     //$(window).load(function () {
     //    const params = new URLSearchParams(window.location.search)
-    //    debugger;
+    //    
     //    var searchQuery = "status="
 
     //    if (params.has('status')) {
@@ -261,10 +261,10 @@
     //$('#lblSalesPersonName').html(' for ' + '<span style="font-weight:bold; color:green; font-size:15px !important">' + $('#ddlSalesPerson option:selected').text() + ' : ' + '@ViewBag.TotalSalesBySalesPerson' + '</span>');
     $("#mnuSalesList").addClass("active");
     var parentMenu = $("#mnuSalesList").parent().parent().parent();
-    debugger;
+    
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        debugger;
+        
         $(this).attr("style", "display:block");
     });
 </script>

@@ -1,89 +1,93 @@
-﻿@model ClientManager.Models.OutwardItemData
-<div class="row">
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="status">Material</label>
-            @Html.HiddenFor(model => model.MaterialId, new { htmlAttributes = new { @id = "hdnMaterialId" } })
-            @Html.DropDownList("MaterialId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlMaterialId", @onChange = "fnValueChange('material')" })
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="status">Product Master</label>
-            @Html.HiddenFor(model => model.TypeId, new { htmlAttributes = new { @id = "hdnTypeId" } })
-            @Html.DropDownList("TypeId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlTypeId", @onChange = "fnValueChange('type')" })
-        </div>
-    </div>
+﻿@model List<ClientManager.Models.OutwardItemData>
+<fieldset>
+    <legend>Invoice Products</legend>
 
-</div>
-<div class="row">
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="status">Product</label>
-            @Html.HiddenFor(model => model.ItemId, new { htmlAttributes = new { @id = "hdnItemId" } })
-            @Html.DropDownList("ItemId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlItemId", @onChange = "fnValueChange('item')" })
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="Quantity">Quantity</label>
-            @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control", @id = "txtQuantity", @name = "Quantity" } })
-        </div>
-    </div>
-
-    @*<div class="col-md-4">
+    <div class="row">
+        <div class="col-md-6">
             <div class="form-group">
-                <label for="Remarks">Remarks</label>
-                <input type="text" class="form-control" id="txtRemarks" name="Remarks" />
+                <label for="status">Material</label>
+                <input type="hidden" id="hdnId" />
+                @Html.DropDownList("MaterialId", ViewBag.MaterialId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlMaterialId", @onChange = "fnValueChange('material')" })
+
             </div>
-        </div>*@
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="well clearfix">
-            <a style="float:right; width:150px" class="btn btn-block btn-primary btn-sm add-record" data-added="0"><i class="fa fa-plus"></i> Add Product</a>
         </div>
-        <br />
-        <table class="table table-bordered" id="tbl_posts">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Material</th>
-                    <th>Product Master</th>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="tbl_posts_body">
-            </tbody>
-        </table>
-        <div style="display:none;">
-            <table id="sample_table">
-                <tr id="">
-                    <td><span class="sn"></span>.</td>
-                    <td class="Meterial" data-added="">
-                       
-                    </td>
-                    <td class="Type" data-added="">
-                      
-                    </td>
-                    <td class="Item" data-added="">
-                       
-                    </td>
-                    <td class="Quantity"></td>
-                    <td>
-                        <a class="btn btn-primary btn-xs edit-record" style="margin-left:5px" data-id="0"><i class="far fa-edit"></i></a><a class="btn btn-danger btn-xs delete-record" style="margin-left:5px" data-id="0"><i class="far fa-trash-alt"></i></a>
-                    </td>
-                </tr>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="status">Product Master</label>
+                <input type="hidden" id="TypeId" />
+                @Html.DropDownList("TypeId", ViewBag.TypeId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlTypeId", @onChange = "fnValueChange('type')" })
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="status">Product</label>
+                <input type="hidden" id="ItemId" />
+                @Html.DropDownList("ItemId", ViewBag.TypeId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlItemId", @onChange = "fnValueChange('item')" })
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Quantity">Quantity</label>
+                @Html.Editor("Quantity", new { htmlAttributes = new { @class = "form-control", @id = "txtQuantity", @name = "Quantity" } })
+            </div>
+        </div>
+
+        @*<div class="col-md-4">
+                <div class="form-group">
+                    <label for="Remarks">Remarks</label>
+                    <input type="text" class="form-control" id="txtRemarks" name="Remarks" />
+                </div>
+            </div>*@
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well clearfix">
+                <a style="float:right; width:150px" class="btn btn-block btn-primary btn-sm add-record" data-added="0"><i class="fa fa-plus"></i> Add Product</a>
+            </div>
+            <br />
+            <table class="table table-bordered" id="tbl_posts">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Material</th>
+                        <th>Product Master</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tbl_posts_body">
+                </tbody>
             </table>
+            <div style="display:none;">
+                <input type="hidden" id="itemRowId" />
+                <table id="sample_table">
+                    <tr id="" data-added="">
+                        <td><span class="sn"></span>.</td>
+                        <td class="Meterial" data-added="">
+                        </td>
+                        <td class="Type" data-added="">
+                        </td>
+                        <td class="Item" data-added="">
+                        </td>
+                        <td class="Quantity"></td>
+                        <td>
+                            <a class="btn btn-primary btn-xs edit-record" style="margin-left:5px" data-id="0"><i class="far fa-edit"></i></a><a class="btn btn-danger btn-xs delete-record" style="margin-left:5px" data-id="0"><i class="far fa-trash-alt"></i></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+   
+</fieldset>
 <script>
     function fnValueChange(evntFrom) {
-        alert('das')
+
         if (evntFrom == "material") {
             $("input[name=MaterialId]").val($('#ddlMaterialId').val());
             fnBindTypesDropdown($("input[name=MaterialId]").val());
@@ -115,7 +119,7 @@
                 }
             }
         });
-        
+
     }
     function fnBindItemsDropDown(id, selectedValue) {
 
@@ -134,7 +138,7 @@
                 }
             }
         });
-        
+
         //$('#txtAvailableQuantity').val('0');
         $("input[name=ItemId]").val($('#ddlItemId').val());
     }
@@ -148,27 +152,17 @@
             }
         });
     }
+
+    //Add
     $(document).delegate('a.add-record', 'click', function (e) {
         e.preventDefault();
+        if ($('#itemRowId').val() != '' && $('#itemRowId').val() != null) {
 
-        $("input[name=TypeId]").val($('#ddlTypeId').val());
-        $("input[name=MaterialId]").val($('#ddlMaterialId').val());
-        $("input[name=ItemId]").val($('#ddlItemId').val());
+            var currRowId = $('#itemRowId').val();
+            var element = $('tr#' + currRowId);
 
-        //fnAddOutwardItem();
-        var content = jQuery('#sample_table tr'),
-            size = jQuery('#tbl_posts >tbody >tr').length + 1,
-            element = null,
-            element = content.clone();
-        element.attr('id', 'rec-' + size);
 
-        if ($('#ddlMaterialId option:selected').text() == "Select" || $('#ddlTypeId option:selected').text() == "Select" || $('#ddlItemId option:selected').text() == "Select" || $('#txtQuantity').val() == "0") {
-            alert('Enter all mandatory fields.');
-            $('#txtQuantity').val("0");
-            return false;
-        }
-        else {
-            debugger;
+            // $('#' + $('#itemRowId').val()).find('td.Material').text();
             element.find('.Meterial').text($('#ddlMaterialId option:selected').text());
             element.find('.Meterial').attr('data-added', $('#ddlMaterialId option:selected').val());
             element.find('.Type').text($('#ddlTypeId option:selected').text());
@@ -177,12 +171,47 @@
             element.find('.Item').attr('data-added', $('#ddlItemId option:selected').val());
             element.find('.Quantity').text($('#txtQuantity').val());
         }
+        else {
 
-        element.find('.delete-record').attr('data-id', size);
-        element.find('.edit-record').attr('data-id', size);
-        element.appendTo('#tbl_posts_body');
-        element.find('.sn').html(size);
+            $("input[name=TypeId]").val($('#ddlTypeId').val());
+            $("input[name=MaterialId]").val($('#ddlMaterialId').val());
+            $("input[name=ItemId]").val($('#ddlItemId').val());
+
+            //fnAddOutwardItem();
+            var content = jQuery('#sample_table tr'),
+                size = jQuery('#tbl_posts >tbody >tr').length + 1,
+                element = null,
+                element = content.clone();
+            element.attr('id', 'rec-' + size);
+
+            if ($('#ddlMaterialId option:selected').text() == "Select" || $('#ddlTypeId option:selected').text() == "Select" || $('#ddlItemId option:selected').text() == "Select" || $('#txtQuantity').val() == "0") {
+                alert('Enter all mandatory fields.');
+                $('#txtQuantity').val("0");
+                return false;
+            }
+            else {
+
+                element.find('.Meterial').text($('#ddlMaterialId option:selected').text());
+                element.find('.Meterial').attr('data-added', $('#ddlMaterialId option:selected').val());
+                element.find('.Type').text($('#ddlTypeId option:selected').text());
+                element.find('.Type').attr('data-added', $('#ddlTypeId option:selected').val());
+                element.find('.Item').text($('#ddlItemId option:selected').text());
+                element.find('.Item').attr('data-added', $('#ddlItemId option:selected').val());
+                element.find('.Quantity').text($('#txtQuantity').val());
+            }
+
+            element.find('.delete-record').attr('data-id', size);
+            element.find('.edit-record').attr('data-id', size);
+            element.appendTo('#tbl_posts_body');
+            element.find('.sn').html(size);
+        }
+
+        //cleardata
+        $('#txtQuantity').val(0);
+        fnValueChange('material');
     });
+
+    //Edit
     $(document).delegate('a.delete-record', 'click', function (e) {
         e.preventDefault();
         var didConfirm = confirm("Are you sure You want to delete?");
@@ -201,29 +230,69 @@
             return false;
         }
     });
-    //$(document).delegate('a.edit-record', 'click', function (e) {
-       
-    //    $('#ddlMaterialId').val($(this).parents('tr').find('.Meterial').attr('data-added'));
 
-    //    $("input[name=MaterialId]").val($(this).parents('tr').find('.Meterial').attr('data-added'));
-    //    $("input[name=TypeId]").val($(this).parents('tr').find('.Type').attr('data-added'));
+    //Delete
+    $(document).delegate('a.edit-record', 'click', function (e) {
 
-    //    fnBindTypesDropdown($("input[name=MaterialId]").val(), $(this).parents('tr').find('.Type').attr('data-added'));
-    //    fnBindItemsDropDown($("input[name=TypeId]").val(), $(this).parents('tr').find('.Item').attr('data-added'));
-    //    e.preventDefault();
-    //});
-   $(document).delegate('a.edit-record', 'click', function (e) {
-       debugger;
-       e.preventDefault();
+        e.preventDefault();
+        // $(this).parents('tr').attr("style", "background-color:#fafa0066");
+
         $('#ddlMaterialId').val($(this).parents('tr').find('.Meterial').attr('data-added'));
-
+        $('#itemRowId').val($(this).parents('tr').attr('Id'));
         $("input[name=MaterialId]").val($(this).parents('tr').find('.Meterial').attr('data-added'));
         $("input[name=TypeId]").val($(this).parents('tr').find('.Type').attr('data-added'));
 
         fnBindTypesDropdown($("input[name=MaterialId]").val(), $(this).parents('tr').find('.Type').attr('data-added'));
-       fnBindItemsDropDown($("input[name=TypeId]").val(), $(this).parents('tr').find('.Item').attr('data-added'));
-       $("input[name=Quantity]").val($(this).parents('tr').find('.Quantity').text());
-       return false;
+        fnBindItemsDropDown($("input[name=TypeId]").val(), $(this).parents('tr').find('.Item').attr('data-added'));
+        $("input[name=Quantity]").val($(this).parents('tr').find('.Quantity').text());
+        return false;
     });
-  /*  https://www.js-tutorials.com/jquery-tutorials/dynamically-add-remove-rows-table-using-jquery/*/
+
+    function fnSubmitOutwardDetails() {
+        debugger;
+        let items = [];
+        debugger;
+        $('#tbl_posts_body tr').each(function () {
+            debugger;
+            items.push({
+                Id: $(this).attr('data-added'),
+                OutwardId: $('#hdnId').val(),
+                MaterialId: $(this).find('td').find('.Meterial').attr('data-added'),
+                TypeId: $(this).find('.Type').attr('data-added'),
+                ItemId: $(this).find('.Item').attr('data-added'),
+                Quantity: $("#txtQuantity").val(),
+            });
+        });
+
+        var outwardData = {
+
+            Id: $('#hdnId').val(),
+            InvoiceNumber: $("#txtInvoiceNumber").val(),
+            InvoiceDate: $("#xtInvoiceDate").val(),
+            LRNumber: $("#txtLRNumber").val(),
+            CustomerName: $("#txtCustomerName").val(),
+            Comments: $("#txtComments").val(),
+            OutwardItemData: items
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/Outward/Create",
+            data: JSON.stringify(outwardData),
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data.status == "Success") {
+                    alert(data.message);
+                    window.location.href = data.redirectURL;
+                }
+                else {
+                    alert(data.message);
+                }
+            },
+            error: function () {
+                alert("Error occured!!  " + data.message)
+            }
+        });
+    }
 </script>

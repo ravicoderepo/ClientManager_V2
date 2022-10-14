@@ -189,16 +189,16 @@
 
         $("#lstBox2").on('change', function () {
             selectedRoles.splice(0, arr.length);
-            debugger;
+            
             $("#lstBox2 option").each(function (i) {
                 selectedRoles.push($(this).val());
             });
-            debugger;
+            
         })
     });
    
     function fnUserChange() {
-        debugger;
+        
         fnLoadUserRoles($('#ddlUsers').val());
     }
 
@@ -206,9 +206,9 @@
 
         if ('@ViewBag.AccessLevel' == "View") {
             $('#quickForm :input').each(function () {
-                debugger;
+                
                 if ($(this).attr('Id') != 'btnBack') {
-                    debugger;
+                    
                     $(this).prop('disabled', true);
                 }
             });
@@ -217,10 +217,10 @@
 
 
     $(function () {
-        //debugger;
+        //
         $.validator.setDefaults({
             submitHandler: function () {
-                debugger;
+                
               
                 fnSubmitUserRoleDetails();
             }
@@ -261,16 +261,16 @@
     function fnSubmitUserRoleDetails() {
 
         selectedRoles.splice(0, selectedRoles.length);
-        debugger;
+        
         $("#lstBox2 option").each(function (i) {
             selectedRoles.push($(this).val());
         });
-        debugger;
+        
         var UserRoleData = {
             UserId: $('#ddlUsers').val(),
             SelectedRoles: selectedRoles
         };
-        debugger;
+        
         $.ajax({
             type: "POST",
             url: "/Admin/UserRoles/Create",
@@ -297,10 +297,10 @@
     }
     $("#mnuRoleMapping").addClass("active");
     var parentMenu = $("#mnuRoleMapping").parent().parent().parent();
-    debugger;
+    
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        debugger;
+        
         $(this).attr("style", "display:block");
     });
 </script>

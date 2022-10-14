@@ -65,14 +65,14 @@
                         <form id="quickForm">
                             <div class="card-body">
                                 @*<div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="status">Status</label>
-                                                @Html.HiddenFor(model => model.IsActive, new { htmlAttributes = new { @id = "hdnUserStatus" } })
-                                                @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
-                                            </div>
-                                        </div>
-                                    </div>*@
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        @Html.HiddenFor(model => model.IsActive, new { htmlAttributes = new { @id = "hdnUserStatus" } })
+                        @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
+                    </div>
+                </div>
+            </div>*@
                                 <fieldset>
                                     <legend>Invoice Details</legend>
                                     <div class="row">
@@ -80,7 +80,6 @@
                                             <div class="form-group">
                                                 <label for="InvoiceNumber">Invoice Number</label>
                                                 <div class="input-group date" data-target-input="nearest">
-
                                                     @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "hdnId" } })
                                                     @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control", @id = "txtInvoiceNumber", @name = "InvoiceNumber" } })
                                                     <div class="input-group-append" data-target="#txtInvoiceNumber" data-toggle="datetimepicker">
@@ -136,10 +135,9 @@
                                     </div>
                                 </fieldset>
                                 <br />
-                                <fieldset>
-                                    <legend>Invoice Products</legend>
-                                    @Html.Partial("OutwardItemPartial", (ClientManager.Models.OutwardItemData)Model.OutwardItemData)
-                                </fieldset>
+                            
+                                        <div id="outwardItemsDiv"></div>
+                              
                             </div>
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
@@ -148,6 +146,7 @@
                             <!-- /.card-body -->
                         </form>
                     </div>
+                 
                 </div>
                 <!-- /.card -->
             </div>
@@ -164,6 +163,7 @@
     <!-- /.content -->
 </div>
 <script>
+  
     $(window).on('load', function () {
 
         if ('@ViewBag.AccessLevel' == "View") {
@@ -175,27 +175,24 @@
                 }
             });
         }
+
+       
     });
-    $('#txtInvoiceDate').datetimepicker({
+
+    $('#txtReceivedDate').datetimepicker({
         format: 'DD/MM/YYYY'
     });
 
     $(function () {
-        //
+        debugger;
         $.validator.setDefaults({
             submitHandler: function () {
-
-                // alert("Form successful submitted!");
-                $("input[name=IsActive]").val($('#ddlStatus').val());
-                $("input[name=TypeId]").val($('#ddlTypeId').val());
-                $("input[name=ItemId]").val($('#ddlItemId').val());
-                $("input[name=MaterialId]").val($('#ddlMaterialId').val());
-                $("input[name=ReceivedFrom]").val($('#ddlCompanyId').val());
-                fnSubmitItemDetails();
+                debugger;
+                //fnSubmitOutwardDetails();
             }
         });
         $('#quickForm').validate({
-
+           
             rules: {
                 saleDate: {
                     required: true,
@@ -222,41 +219,51 @@
             },
             unhighlight: function (element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
+            },
+            submitHandler: function () {
+                debugger;
+                fnSubmitOutwardDetails();
             }
+
         });
     });
 
-    
+
     function fnStatusChange() {
-
-        $("input[name=IsActive]").val($('#ddlStatus').val());
-
+        $("input[name=hdnStatus]").val($('#ddlStatus').val());
     }
-    
 
+    function fnSubmitOutwardDetails() {
+        debugger;
+        let outwardItemDataList = [];
 
+        $('#tbl_posts_body tr').each(function () {
+            debugger;
+            items.push({
+                Id: $(this).attr('data-added'),
+                OutwardId: $('#hdnId').val(),
+                MaterialId: $(this).find('.Meterial').attr('data-added'),
+                TypeId: $(this).find('.Type').attr('data-added'),
+                ItemId: $(this).find('.Item').attr('data-added'),
+                Quantity: $(this).find('.Quantity').text(),
+            });
+        });
 
-    function fnSubmitItemDetails() {
+        var outwardData = {
 
-        var OutwardData = {
-
-            ItemId: $('input[name=ItemId]').val(),
-            TypeId: $("input[name=TypeId]").val() ,
-            MaterialId: $("input[name=MaterialId]").val(),
-            Quantity: $("#txtAddQuantity").val(),
-            PONumber: $("#txtPONumber").val(),
-            ReceivedFrom: $("input[name=ReceivedFrom]").val(),
-            ReceivedBy: $("#txtReceivedBy").val(),
-            ReceivedDate: $("#txtReceivedDate").val(),
-            GRNnumber: $("#txtGRNnumber").val(),
-            //IsActive: ($("input[name=IsActive]").val()=='1') ? true: false,
-            Description: $('#txtDescription').val()
+            Id: $('#hdnId').val(),
+            InvoiceNumber: $("#txtInvoiceNumber").val(),
+            InvoiceDate: $("#xtInvoiceDate").val(),
+            LRNumber: $("#txtLRNumber").val(),
+            CustomerName: $("#txtCustomerName").val(),
+            Comments: $("#txtComments").val(),
+            OutwardItems: items
         };
 
         $.ajax({
             type: "POST",
             url: "/Outward/Create",
-            data: JSON.stringify(OutwardData),
+            data: JSON.stringify(outwardData),
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
@@ -283,5 +290,9 @@
         $(this).attr("style", "display:block");
 
     });
-   
-    </script>
+
+    $('#txtInvoiceDate').datetimepicker({
+        format: 'DD/MM/YYYY'
+    });
+    $('#outwardItemsDiv').load("OutwardItemPartial");
+</script>

@@ -118,16 +118,16 @@
 </div>
 <script>
     $(".btn-danger").click(function () {
-        debugger;
+        
         window.location.href = window.location.href;
     });
     $(window).on('load', function () {
 
         if ('@ViewBag.AccessLevel' == "View") {
             $('#quickForm :input').each(function () {
-                debugger;
+                
                 if ($(this).attr('Id') != 'btnBack') {
-                    debugger;
+                    
                     $(this).prop('disabled', true);
                 }
             });
@@ -141,10 +141,10 @@
 
 
     $(function () {
-        //debugger;
+        //
         $.validator.setDefaults({
             submitHandler: function () {
-                debugger;
+                
                 // alert("Form successful submitted!");
                 $("input[name=Status]").val($('#ddlStatus').val());
                 $("input[name=ExpenseCategory]").val($('#ddlExpenseCategory').val());
@@ -185,17 +185,17 @@
 
 
     function fnStatusChange() {
-        debugger;
+        
         $("input[name=Status]").val($('#ddlStatus').val());
     }
 
     function fnExpenseCategoryChange() {
-        debugger;
+        
         //$("input[name=ExpenseCategory]").val($('#ddlExpenseCategory')[0].selectedIndex);
     }
 
     function fnSubmitExpenseTrackerDetails() {
-        debugger;
+        
         var expenseTrackerData = {
             ExpenseAmount: $('#txtExpenseAmount').val(),
             ExpenseDate: $('#txtExpenseDate').val(),
@@ -203,7 +203,7 @@
             Status: $("input[name=Status]").val(),
             Description: $('#txtDescription').val()
         };
-        debugger;
+        
         $.ajax({
             type: "POST",
             url: "/ExpenseTrackers/Create",
@@ -234,10 +234,10 @@
     });
     $("#mnuExpenceTracker").addClass("active");
     var parentMenu = $("#mnuExpenceTracker").parent().parent().parent();
-    debugger;
+    
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        debugger;
+        
         $(this).attr("style", "display:block");
     });
 </script>

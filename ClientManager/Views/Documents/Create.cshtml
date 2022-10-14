@@ -122,9 +122,9 @@
 
         if ('@ViewBag.AccessLevel' == "View") {
             $('#quickForm :input').each(function () {
-                debugger;
+                
                 if ($(this).attr('Id') != 'btnBack') {
-                    debugger;
+                    
                     $(this).prop('disabled', true);
                 }
             });
@@ -132,10 +132,10 @@
     });
 
     $(function () {
-        //debugger;
+        //
         $.validator.setDefaults({
             submitHandler: function () {
-                debugger;
+                
                 // alert("Form successful submitted!");
                 $("input[name=ModeOfPayment]").val($('#ddlModeOfPayment').val());
                 fnDocumentDetails();
@@ -175,12 +175,12 @@
 
 
     function fnModeOfPaymentChange() {
-        debugger;
+        
         $("input[name=ModeOfPayment]").val($('#ddlModeOfPayment').val());
     }
 
     function fnDocumentDetails() {
-        debugger;
+        
         if (document.getElementById("uploadFiles").files.length == 0) {
             alert("please select file to upload.");
             return false;
@@ -194,7 +194,7 @@
                 Status: $("hdnStatus").val(),
                 Description: $('#txtDescription').val()
             };
-            debugger;
+            
             $.ajax({
                 type: "POST",
                 url: "/Documents/Create",
@@ -218,10 +218,10 @@
     }
     $("#mnuDocumentCreate").addClass("active");
     var parentMenu = $("#mnuDocumentCreate").parent().parent().parent();
-    debugger;
+    
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        debugger;
+        
         $(this).attr("style", "display:block");
     });
 </script>

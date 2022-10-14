@@ -247,7 +247,7 @@
 </div>
 <script>
     $(function () {
-        debugger;
+        
         var sortCol = ('@currentUser.UserRoles.Any(wh => wh.RoleName == "Super User")' == 'False' && '@currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager")' == 'False') ? 4 : 5;
         //var sortDateCol = ('@currentUser.UserRoles.Any(wh => wh.RoleName == "Super User")' == 'False') ? 2 : 3;
          var sortAttachCol = ('@currentUser.UserRoles.Any(wh => wh.RoleName == "Super User")' == 'False' && '@currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager")' == 'False') ? 0 : 1;
@@ -268,7 +268,7 @@
     });
 
     function fnDelete(id) {
-        debugger;
+        
         if (confirm("do you want to delete?")) {
             $.ajax({
                 type: "GET",
@@ -294,7 +294,7 @@
     }
 
     function fnApprove(id, status) {
-        debugger;
+        
         if (confirm("do you want to approve this record ?")) {
             $.ajax({
                 type: "GET",
@@ -323,7 +323,7 @@
         }
     }
     function fnApprove(id, status) {
-        debugger;
+        
         if (confirm("do you want to approve this record ?")) {
             $.ajax({
                 type: "GET",
@@ -362,7 +362,7 @@
 
             var inputData = { 'id': id, 'status': 'Approved' };
             if (confirm("do you want to bulk approve selected records?")) {
-                debugger;
+                
                 $.ajax({
                     type: "POST",
                     url: "/ExpenseTrackers/ExpenceEntryApproval",
@@ -400,9 +400,9 @@
             });
 
             var inputData = { 'id': id, 'status': 'Verified' };
-            debugger;
+            
             if (confirm("do you want to bulk verify selected records?")) {
-                debugger;
+                
                 $.ajax({
                     type: "POST",
                     url: "/ExpenseTrackers/ExpenceEntryVerify",
@@ -431,7 +431,7 @@
         }
     }
     function fnVerify(id, status) {
-        debugger;
+        
         if (confirm("do you want to verify this record ?")) {
             $.ajax({
                 type: "GET",
@@ -458,10 +458,10 @@
     }
     $("#mnuExpenceTracker").addClass("active");
     var parentMenu = $("#mnuExpenceTracker").parent().parent().parent();
-    debugger;
+    
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        debugger;
+        
         $(this).attr("style", "display:block");
     });
 </script>

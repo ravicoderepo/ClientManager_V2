@@ -175,7 +175,7 @@
 
     function fnDasboardFilter(status) {
         if (status != null) {
-            debugger;
+            
             var actionUrl = "/ExpenseTrackers/ListView?" + "expenseDateFrom=&expenseDateTo=&status=" + status + "&year=&month=&expenseCat=";
             $('#gridView').html('');
             $.ajax({
@@ -194,7 +194,7 @@
         }
     }
     function fnSearch() {
-        debugger;
+        
         var actionUrl = "/ExpenseTrackers/ListView?" + "expenseDateFrom=" + $('#txtexpenseDateFrom').val().replace(/\//g, '-') + "&expenseDateTo=" + $('#txtexpenseDateTo').val().replace(/\//g, '-') + "&status=" + $('#ddlStatus').val() + "&year=" + $('#ddlYears').val() + "&month=" + $('#ddlMonths').val() + "&expenseCat=" + $('#ddlExpenseCategory').val();
         $('#gridView').html('');
         $.ajax({
@@ -217,7 +217,7 @@
         fnSearch();
     }
     function fnViewDocuments(recId) {
-        debugger;
+        
         var left = ($(window).width() / 2) - (900 / 2),
             top = ($(window).height() / 2) - (700 / 2),
             popup = window.open("/Documents/ImageViewer?docSource=Expense Tracker&recRefId=" + recId, "Image Viewer", "width=900, height=700, top=" + top + ", left=" + left)
@@ -239,7 +239,7 @@
     });
 
     function fnClearSearch() {
-        debugger;
+        
         $('#txtexpenseDateTo').val('');
         $('#txtexpenseDateFrom').val('');
         $('#ddlStatus').val(0);

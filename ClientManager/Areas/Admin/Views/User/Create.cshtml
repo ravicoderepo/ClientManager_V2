@@ -197,9 +197,9 @@
 
         if ('@ViewBag.AccessLevel' == "View") {
             $('#quickForm :input').each(function () {
-                debugger;
+                
                 if ($(this).attr('Id') != 'btnBack') {
-                    debugger;
+                    
                     $(this).prop('disabled', true);
                 }
             });
@@ -208,10 +208,10 @@
 
 
     $(function () {
-        //debugger;
+        //
         $.validator.setDefaults({
             submitHandler: function () {
-                debugger;
+                
                 // alert("Form successful submitted!");
                 $("input[name=IsActive]").val($('#ddlStatus').val());
                 fnSubmitUserDetails();
@@ -259,12 +259,12 @@
 
 
     function fnStatusChange() {
-        debugger;
+        
         $("input[name=IsActive]").val($('#ddlStatus').val());
     }
 
     function fnSubmitUserDetails() {
-        debugger;
+        
         var UserData = {
             Id: $('#Id').val(),
             IsActive: ($("input[name=IsActive]").val()=='1') ? true: false,
@@ -282,7 +282,7 @@
             PinCode: $('#txtPincode').val(),
             SaleTarget: $('#txtSaleTarget').val()
         };
-        debugger;
+        
         $.ajax({
             type: "POST",
             url: "/Admin/User/Create",
@@ -305,10 +305,10 @@
     }
     $("#mnuUsers").addClass("active");
     var parentMenu = $("#mnuUsers").parent().parent().parent();
-    debugger;
+    
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        debugger;
+        
         $(this).attr("style", "display:block");
     });
 </script>

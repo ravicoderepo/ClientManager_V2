@@ -202,7 +202,7 @@
     $(window).on('load', function () {
         $('#pnlInvoice').hide();
         fnSaleDateChange();
-        //debugger;
+        //
         //if ($('#ddlStatus').val() == "6") {
         //    $('#pnlInvoice').show();
         //    //$("#quickForm :input").prop("disabled", true);
@@ -235,10 +235,10 @@
   /*  });*/
 
     $(function () {
-        //debugger;
+        //
         $.validator.setDefaults({
             submitHandler: function () {
-                debugger;
+                
                 // alert("Form successful submitted!");
                 fnSubmitSaleDetails();
             }
@@ -283,7 +283,7 @@
     });
 
     function fnToggleInvoiceFields() {
-        debugger;
+        
         //6-Closed
         if ($('#ddlStatus').val() == "6") {
             $('#pnlInvoice').show();
@@ -333,7 +333,7 @@
                     window.location.href = data.redirectURL;
                 }
                 else {
-                    debugger;
+                    
                     alert(data.message);
                     return false;
                 }
@@ -403,10 +403,10 @@
     //$('#txtSaleDate').val(new date());
     $("#mnuSalesList").addClass("active");
     var parentMenu = $("#mnuSalesList").parent().parent().parent();
-    debugger;
+    
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        debugger;
+        
         $(this).attr("style", "display:block");
     });
 </script>

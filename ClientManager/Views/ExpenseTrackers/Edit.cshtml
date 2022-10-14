@@ -139,17 +139,17 @@
 
 <script>
     $(".btn-danger").click(function () {
-                                        debugger;
+                                        
                                         window.location.href = window.location.href;
                                     });
     $(window).on('load', function () {
-                                        debugger;
+                                        
                                         if ('@IsStoreAdmin' == 'true') {
             $('#quickForm :input').each(function () {
-                                                debugger;
+                                                
                 $(this).prop('disabled', true);
                                                 if ($(this).attr('Id') == 'btnBack' || $(this).attr('Id') == 'ddlStatus' || $(this).attr('Id') == 'btnSubmit' || $(this).attr('Id') == 'btnCancel' || $(this).attr('Id') == 'imageViewer') {
-                                                    debugger;
+                                                    
                   
                     $(this).prop('disabled', false);
                                                 }
@@ -168,10 +168,10 @@
     });
 
     $(function () {
-        //debugger;
+        //
         $.validator.setDefaults({
             submitHandler: function () {
-                debugger;
+                
                 // alert("Form successful submitted!");
                 fnSubmitExpenseTrakerDetails();
             }
@@ -208,17 +208,17 @@
         });
     });
     function fnStatusChange() {
-        debugger;
+        
         $("input[name=Status]").val($('#ddlStatus').val());
     }
 
     function fnExpenseCategoryChange() {
-        debugger;
+        
         $("input[name=ExpenseCategory]").val($('#ddlExpenseCategory').val());
     }
 
     function fnSubmitExpenseTrakerDetails() {
-        debugger;
+        
         var ExpenseTrakerData = {
             Id: $('#Id').val(),
             ExpenseAmount: $('#txtExpenseAmount').val(),
@@ -227,7 +227,7 @@
             Status: $("input[name=Status]").val(),
             Description: $('#txtDescription').val()
         };
-        debugger;
+        
         $.ajax({
             type: "POST",
             url: "/ExpenseTrackers/Edit",
@@ -266,10 +266,10 @@
     });
     $("#mnuExpenceTracker").addClass("active");
     var parentMenu = $("#mnuExpenceTracker").parent().parent().parent();
-    debugger;
+    
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        debugger;
+        
         $(this).attr("style", "display:block");
     });
 

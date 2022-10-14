@@ -93,9 +93,9 @@
 
         if ('@ViewBag.AccessLevel' == "View") {
             $('#quickForm :input').each(function () {
-                debugger;
+                
                 if ($(this).attr('Id') != 'btnBack') {
-                    debugger;
+                    
                     $(this).prop('disabled', true);
                 }
             });
@@ -104,10 +104,10 @@
 
 
     $(function () {
-        //debugger;
+        //
         $.validator.setDefaults({
             submitHandler: function () {
-                debugger;
+                
                 // alert("Form successful submitted!");
                 $("input[name=IsActive]").val($('#ddlStatus').val());
                 fnSubmitRoleDetails();
@@ -147,18 +147,18 @@
 
 
     function fnStatusChange() {
-        debugger;
+        
         $("input[name=IsActive]").val($('#ddlStatus').val());
     }
 
     function fnSubmitRoleDetails() {
-        debugger;
+        
         var RoleData = {
             Id: $('#Id').val(),
             IsActive: ($("input[name=IsActive]").val()=='1') ? true: false,
             RoleName: $('#txtRoleName').val()           
         };
-        debugger;
+        
         $.ajax({
             type: "POST",
             url: "/Admin/Roles/Create",
@@ -181,10 +181,10 @@
     }
     $("#mnuRoles").addClass("active");
     var parentMenu = $("#mnuRoles").parent().parent().parent();
-    debugger;
+    
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        debugger;
+        
         $(this).attr("style", "display:block");
     });
 </script>

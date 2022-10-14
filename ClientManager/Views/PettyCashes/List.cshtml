@@ -154,7 +154,7 @@
 
     $('#pnlAdvSearch').hide();
     function fnSearch() {
-        debugger;
+        
         var actionUrl = "/PettyCashes/ListView?" + "AmountReceivedDateFrom=" + $('#txtAmountReceivedDateFrom').val().replace(/\//g, '-') + "&AmountReceivedDateTo=" + $('#txtAmountReceivedDateTo').val().replace(/\//g, '-') + "&ModeOfPayment=" + $('#ddlModeOfPayment').val();
         $('#gridView').html('');
         $.ajax({
@@ -196,7 +196,7 @@
     });
 
     function fnClearSearch() {
-        debugger;
+        
         $('#txtAmountReceivedDateTo').val('');
         $('#txtAmountReceivedDateFrom').val('');
         $('#ddlModeOfPayment').val('');
@@ -204,7 +204,7 @@
 
     $(window).on('load', function () {
         const params = new URLSearchParams(window.location.search)
-        debugger;
+        
         var searchQuery = "ModeOfPayment="
 
         if (params.has('ModeOfPayment')) {
@@ -231,10 +231,10 @@
 
     $("#mnuPettyCash").addClass("active");
     var parentMenu = $("#mnuPettyCash").parent().parent().parent();
-    debugger;
+    
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        debugger;
+        
         $(this).attr("style", "display:block");
     });
 </script>
