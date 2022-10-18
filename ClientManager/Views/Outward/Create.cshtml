@@ -15,7 +15,7 @@
 
     fieldset {
         background-color: #fff;
-        border: 1px solid #351ded;
+        border: 1px solid #ced4da;
         padding: 5px 10px;
     }
 
@@ -64,15 +64,6 @@
                         <!-- form start -->
                         <form id="quickForm">
                             <div class="card-body">
-                                @*<div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="status">Status</label>
-                        @Html.HiddenFor(model => model.IsActive, new { htmlAttributes = new { @id = "hdnUserStatus" } })
-                        @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
-                    </div>
-                </div>
-            </div>*@
                                 <fieldset>
                                     <legend>Invoice Details</legend>
                                     <div class="row">
@@ -111,22 +102,12 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="LRNumber">LR Number</label>
-                                                @Html.EditorFor(model => model.LRNumber, new { htmlAttributes = new { @class = "form-control", @id = "txtLRNumber", @name = "LRNumber" } })
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="form-group">
                                                 <label for="status">Status</label>
                                                 @Html.HiddenFor(model => model.Status, new { htmlAttributes = new { @id = "hdnStatus" } })
-                                                @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnValueChange('status')" })
+                                                @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
                                             </div>
                                         </div>
-
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="Comments">Comments</label>
                                                 @Html.EditorFor(model => model.Comments, new { htmlAttributes = new { @class = "form-control", @id = "txtComments", @name = "Comments" } })
@@ -135,9 +116,145 @@
                                     </div>
                                 </fieldset>
                                 <br />
-                            
-                                        <div id="outwardItemsDiv"></div>
-                              
+                                <fieldset>
+                                    <legend>Despatch Details</legend>                                  
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="DespatchNo">Despatch No</label>
+                                                @Html.EditorFor(model => model.DespatchData.FirstOrDefault().DespatchNo, new { htmlAttributes = new { @class = "form-control", @id = "txtDespatchNo", @name = "DespatchNo" } })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="DespatchDate">Despatch Date</label>
+                                                <div class="input-group date" data-target-input="nearest">
+                                                    @Html.EditorFor(model => model.DespatchData.FirstOrDefault().DespatchDate, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtDespatchDate", @name = "DespatchDate" } })
+                                                    <div class="input-group-append" data-target="#txtDespatchDate" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                    </div>
+                                                </div>
+                                            </div>                                            
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="LRNumber">LR Number</label>
+                                                @Html.EditorFor(model => model.DespatchData.FirstOrDefault().LRNumber, new { htmlAttributes = new { @class = "form-control", @id = "txtLRNumber", @name = "LRNumber" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Comments">Transport By</label>
+                                                @Html.EditorFor(model => model.DespatchData.FirstOrDefault().TransportBy, new { htmlAttributes = new { @class = "form-control", @id = "txtTransportBy", @name = "TransportBy" } })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Comments">Ship To</label>
+                                                @Html.EditorFor(model => model.DespatchData.FirstOrDefault().ShipToCity, new { htmlAttributes = new { @class = "form-control", @id = "txtShipToCity", @name = "ShipToCity" } })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="PaymentStatus">Payment Status</label>
+                                                @Html.HiddenFor(model => model.DespatchData.FirstOrDefault().PaymentStatus, new { htmlAttributes = new { @id = "hdnPaymentStatus" } })
+                                                @Html.DropDownList("PaymentStatus", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlPaymentStatus", @onChange = "fnStatusChange()" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">                                         
+                                            <fieldset>
+                                                <legend>Products</legend>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="status">Material</label>
+                                                            <input type="hidden" name="MaterialId" id="hdnMaterialId" />
+                                                            @Html.DropDownList("MaterialId", ViewBag.MaterialId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlMaterialId", @onChange = "fnValueChange('material')" })
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="status">Product Master</label>
+                                                            <input type="hidden" name="TypeId"  id="hdnTypeId" />
+                                                            @Html.DropDownList("TypeId", ViewBag.TypeId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlTypeId", @onChange = "fnValueChange('type')" })
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="status">Product</label>
+                                                            <input type="hidden" name="ItemId" id="hdnItemId" />
+                                                            @Html.DropDownList("ItemId", ViewBag.TypeId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlItemId", @onChange = "fnValueChange('item')" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="Quantity">Quantity</label>
+                                                            @Html.Editor("Quantity", new { htmlAttributes = new { @class = "form-control", @id = "txtQuantity", @name = "Quantity" } })
+                                                        </div>
+                                                    </div>
+
+                                                    @*<div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label for="Remarks">Remarks</label>
+                                                                <input type="text" class="form-control" id="txtRemarks" name="Remarks" />
+                                                            </div>
+                                                        </div>*@
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="well clearfix">
+                                                            <a style="float:right; width:150px" class="btn btn-block btn-primary btn-sm add-record" data-added="0"><i class="fa fa-plus"></i> Add Product</a>
+                                                        </div>
+                                                        <br />
+                                                        <table class="table table-bordered" id="tbl_posts">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Material</th>
+                                                                    <th>Product Master</th>
+                                                                    <th>Product</th>
+                                                                    <th>Quantity</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="tbl_posts_body">
+                                                            </tbody>
+                                                        </table>
+                                                        <div style="display:none;">
+                                                            <input type="hidden" id="itemRowId" />
+                                                            <table id="sample_table">
+                                                                <tr id="" data-added="">
+                                                                    <td><span class="sn"></span>.</td>
+                                                                    <td class="Meterial" data-added="">
+                                                                    </td>
+                                                                    <td class="Type" data-added="">
+                                                                    </td>
+                                                                    <td class="Item" data-added="">
+                                                                    </td>
+                                                                    <td class="Quantity"></td>
+                                                                    <td>
+                                                                        <a class="btn btn-primary btn-xs edit-record" style="margin-left:5px" data-id="0"><i class="far fa-edit"></i></a><a class="btn btn-danger btn-xs delete-record" style="margin-left:5px" data-id="0"><i class="far fa-trash-alt"></i></a>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </fieldset>
                             </div>
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
@@ -146,7 +263,7 @@
                             <!-- /.card-body -->
                         </form>
                     </div>
-                 
+
                 </div>
                 <!-- /.card -->
             </div>
@@ -163,7 +280,7 @@
     <!-- /.content -->
 </div>
 <script>
-  
+
     $(window).on('load', function () {
 
         if ('@ViewBag.AccessLevel' == "View") {
@@ -175,13 +292,15 @@
                 }
             });
         }
-
-       
+        $('#txtInvoiceDate').val('');
+        $('#txtInvoiceDate').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+        $('#txtDespatchDate').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
     });
 
-    $('#txtReceivedDate').datetimepicker({
-        format: 'DD/MM/YYYY'
-    });
 
     $(function () {
         debugger;
@@ -192,7 +311,7 @@
             }
         });
         $('#quickForm').validate({
-           
+
             rules: {
                 saleDate: {
                     required: true,
@@ -230,16 +349,180 @@
 
 
     function fnStatusChange() {
-        $("input[name=hdnStatus]").val($('#ddlStatus').val());
+        $("input[name=PaymentStatus]").val($('#ddlPaymentStatus').val());
+        $("input[name=Status]").val($('#ddlStatus').val());
     }
+
+    function fnValueChange(evntFrom) {
+
+        if (evntFrom == "material") {
+            $("input[name=MaterialId]").val($('#ddlMaterialId').val());
+            fnBindTypesDropdown($("input[name=MaterialId]").val());
+            fnBindItemsDropDown($("input[name=TypeId]").val());
+        }
+        else if (evntFrom == "type") {
+            $("input[name=TypeId]").val($('#ddlTypeId').val());
+            fnBindItemsDropDown($("input[name=TypeId]").val());
+        }
+        else if (evntFrom == "item") {
+            $("input[name=ItemId]").val($('#ddlItemId').val());
+        }
+    }
+    function fnBindTypesDropdown(id, selectedValue) {
+        debugger;
+        $.ajax({
+            url: "/types/GetProductMaster?materialId=" + id,
+            type: "Get",
+            success: function (data) {
+
+                $('#ddlTypeId').empty();
+                for (var i = 0; i < data.length; i++) {
+                    var opt = new Option(data[i].Text, data[i].Value);
+                    $('#ddlTypeId').append(opt);
+                }
+
+                if (selectedValue != null) {
+                    $('#ddlTypeId').val(selectedValue);
+                }
+            }
+        });
+
+    }
+    function fnBindItemsDropDown(id, selectedValue) {
+        debugger;
+        $.ajax({
+            url: "/items/GetProducts?prodMasterId=" + id,
+            type: "Get",
+            success: function (data) {
+
+                $('#ddlItemId').empty();
+                for (var i = 0; i < data.length; i++) {
+                    var opt = new Option(data[i].Text, data[i].Value);
+                    $('#ddlItemId').append(opt);
+                }
+                if (selectedValue != null) {
+                    $('#ddlItemId').val(selectedValue);
+                }
+            }
+        });
+
+        //$('#txtAvailableQuantity').val('0');
+        $("input[name=ItemId]").val($('#ddlItemId').val());
+    }
+    function fnGetAvailableQuantity(id) {
+        debugger;
+        $.ajax({
+            url: "/stocks/GetAvailableQuantity?itemId=" + id,
+            type: "Get",
+            success: function (data) {
+                $('#txtAvailableQuantity').val(data);
+            }
+        });
+    }
+
+    //Add
+    $(document).delegate('a.add-record', 'click', function (e) {
+        e.preventDefault();
+        if ($('#itemRowId').val() != '' && $('#itemRowId').val() != null) {
+
+            var currRowId = $('#itemRowId').val();
+            var element = $('tr#' + currRowId);
+
+
+            // $('#' + $('#itemRowId').val()).find('td.Material').text();
+            element.find('.Meterial').text($('#ddlMaterialId option:selected').text());
+            element.find('.Meterial').attr('data-added', $('#ddlMaterialId option:selected').val());
+            element.find('.Type').text($('#ddlTypeId option:selected').text());
+            element.find('.Type').attr('data-added', $('#ddlTypeId option:selected').val());
+            element.find('.Item').text($('#ddlItemId option:selected').text());
+            element.find('.Item').attr('data-added', $('#ddlItemId option:selected').val());
+            element.find('.Quantity').text($('#txtQuantity').val());
+        }
+        else {
+
+            $("input[name=TypeId]").val($('#ddlTypeId').val());
+            $("input[name=MaterialId]").val($('#ddlMaterialId').val());
+            $("input[name=ItemId]").val($('#ddlItemId').val());
+
+            //fnAddOutwardItem();
+            var content = jQuery('#sample_table tr'),
+                size = jQuery('#tbl_posts >tbody >tr').length + 1,
+                element = null,
+                element = content.clone();
+            element.attr('id', 'rec-' + size);
+
+            if ($('#ddlMaterialId option:selected').text() == "Select" || $('#ddlTypeId option:selected').text() == "Select" || $('#ddlItemId option:selected').text() == "Select" || $('#txtQuantity').val() == "0") {
+                alert('Enter all product details.');
+                $('#txtQuantity').val("0");
+                return false;
+            }
+            else {
+
+                element.find('.Meterial').text($('#ddlMaterialId option:selected').text());
+                element.find('.Meterial').attr('data-added', $('#ddlMaterialId option:selected').val());
+                element.find('.Type').text($('#ddlTypeId option:selected').text());
+                element.find('.Type').attr('data-added', $('#ddlTypeId option:selected').val());
+                element.find('.Item').text($('#ddlItemId option:selected').text());
+                element.find('.Item').attr('data-added', $('#ddlItemId option:selected').val());
+                element.find('.Quantity').text($('#txtQuantity').val());
+            }
+
+            element.find('.delete-record').attr('data-id', size);
+            element.find('.edit-record').attr('data-id', size);
+            element.appendTo('#tbl_posts_body');
+            element.find('.sn').html(size);
+        }
+
+        //cleardata
+        $('#txtQuantity').val(0);
+        fnValueChange('material');
+    });
+
+    //Edit
+    $(document).delegate('a.delete-record', 'click', function (e) {
+        e.preventDefault();
+        var didConfirm = confirm("Are you sure You want to delete?");
+        if (didConfirm == true) {
+            var id = jQuery(this).attr('data-id');
+            var targetDiv = jQuery(this).attr('targetDiv');
+            jQuery('#rec-' + id).remove();
+
+            //regnerate index number on table
+            $('#tbl_posts_body tr').each(function (index) {
+                //alert(index);
+                $(this).find('span.sn').html(index + 1);
+            });
+            return true;
+        } else {
+            return false;
+        }
+    });
+
+    //Delete
+    $(document).delegate('a.edit-record', 'click', function (e) {
+
+        e.preventDefault();
+        // $(this).parents('tr').attr("style", "background-color:#fafa0066");
+
+        $('#ddlMaterialId').val($(this).parents('tr').find('.Meterial').attr('data-added'));
+        $('#itemRowId').val($(this).parents('tr').attr('Id'));
+        $("input[name=MaterialId]").val($(this).parents('tr').find('.Meterial').attr('data-added'));
+        $("input[name=TypeId]").val($(this).parents('tr').find('.Type').attr('data-added'));
+
+        fnBindTypesDropdown($("input[name=MaterialId]").val(), $(this).parents('tr').find('.Type').attr('data-added'));
+        fnBindItemsDropDown($("input[name=TypeId]").val(), $(this).parents('tr').find('.Item').attr('data-added'));
+        $("input[name=Quantity]").val($(this).parents('tr').find('.Quantity').text());
+        return false;
+    });
 
     function fnSubmitOutwardDetails() {
         debugger;
-        let outwardItemDataList = [];
-
+        let desItems = [];
+        let desData = [];
+        debugger;
         $('#tbl_posts_body tr').each(function () {
             debugger;
-            items.push({
+            desItems.push({
                 Id: $(this).attr('data-added'),
                 OutwardId: $('#hdnId').val(),
                 MaterialId: $(this).find('.Meterial').attr('data-added'),
@@ -248,16 +531,28 @@
                 Quantity: $(this).find('.Quantity').text(),
             });
         });
+        fnStatusChange();
+        desData.push({
+            Id: "",
+            OutwardId: "",
+            DespatchNo: $("#txtDespatchNo").val(),
+            DespatchDate: $("#txtDespatchDate").val(),
+            LRNumber: $("#txtLRNumber").val(),
+            PaymentStatus: $("input[name=PaymentStatus]").val(),
+            TransportBy: $("#txtTransportBy").val(),
+            ShipToCity: $("#txtShipToCity").val(),
+            DespatchItems: desItems
+        });       
 
         var outwardData = {
 
             Id: $('#hdnId').val(),
             InvoiceNumber: $("#txtInvoiceNumber").val(),
-            InvoiceDate: $("#xtInvoiceDate").val(),
-            LRNumber: $("#txtLRNumber").val(),
+            InvoiceDate: $("#txtInvoiceDate").val(),
             CustomerName: $("#txtCustomerName").val(),
             Comments: $("#txtComments").val(),
-            OutwardItems: items
+            Status: $("input[name=Status]").val(),
+            DespatchData: desData
         };
 
         $.ajax({
@@ -281,6 +576,8 @@
         });
     }
 
+    
+
     $("#mnuOutwardList").addClass("active");
     var parentMenu = $("#mnuOutwardList").parent().parent().parent();
 
@@ -291,8 +588,5 @@
 
     });
 
-    $('#txtInvoiceDate').datetimepicker({
-        format: 'DD/MM/YYYY'
-    });
-    $('#outwardItemsDiv').load("OutwardItemPartial");
+
 </script>

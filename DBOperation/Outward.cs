@@ -17,7 +17,7 @@ namespace DBOperation
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Outward()
         {
-            this.OutwardItems = new HashSet<OutwardItem>();
+            this.Despatches = new HashSet<Despatch>();
         }
     
         public int Id { get; set; }
@@ -36,6 +36,8 @@ namespace DBOperation
         public Nullable<int> ModifiedBy { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OutwardItem> OutwardItems { get; set; }
+        public virtual ICollection<Despatch> Despatches { get; set; }
+        public virtual User User { get; set; }
+        public virtual User User1 { get; set; }
     }
 }

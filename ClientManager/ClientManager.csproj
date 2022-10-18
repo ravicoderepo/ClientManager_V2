@@ -172,7 +172,8 @@
     </Compile>
     <Compile Include="Infrastructure\CustomAuthorizeAttribute.cs" />
     <Compile Include="Infrastructure\CustomAuthenticationFilter.cs" />
-    <Compile Include="Models\OutwardItemsData.cs" />
+    <Compile Include="Models\DespatchData.cs" />
+    <Compile Include="Models\DespatchItemData.cs" />
     <Compile Include="Models\OutwardData.cs" />
     <Compile Include="Models\InwardData.cs" />
     <Compile Include="Models\ItemData.cs" />

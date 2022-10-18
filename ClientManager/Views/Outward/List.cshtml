@@ -68,14 +68,15 @@
                                         <th>
                                             Invoice Date
                                         </th>
-                                        <th>
-                                            LR Number
-                                        </th>
+
                                         <th>
                                             Customer Name
                                         </th>
                                         <th>
                                             Status
+                                        </th>
+                                        <th>
+                                            Description
                                         </th>
                                         <th>
                                             Created On
@@ -89,104 +90,101 @@
                                         <th>
                                             Modified By
                                         </th>
-                                        <th>
-                                            Description
-                                        </th>
+
                                         @*<th>
-                                                                                Is Active?
-                                                                            </th>
-                                                                            <th>
-                                                Created On
-                                            </th>
-                                            <th>
-                                                Created By
-                                            </th>
-                                            <th>
-                                                Modified On
-                                            </th>
-                                            <th>
-                                                Modified By
-                                            </th>*@
+                                            Is Active?
+                                        </th>
+                                        <th>
+            Created On
+        </th>
+        <th>
+            Created By
+        </th>
+        <th>
+            Modified On
+        </th>
+        <th>
+            Modified By
+        </th>*@
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in Model)
                                     {
-                                        <tr>
-                                            <td>
+                                    <tr>
+                                        <td>
 
-                                                <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/Outward/Edit/@item.Id'"><i class="far fa-edit"></i></button>
-                                                @*<button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/Admin/User/Details/@item.Id'"><i class="fas fa-eye"></i></button>*@
+                                            <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/Outward/Edit/@item.Id'"><i class="far fa-edit"></i></button>
+                                            @*<button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/Admin/User/Details/@item.Id'"><i class="fas fa-eye"></i></button>*@
 
 
-                                                @*@if (item.IsActive == true)
-                                                    {
+                                            @*@if (item.IsActive == true)
+            {
 
-                                                        <button type="button" class="btn btn-danger btn-xs" title="De-ctivate" onclick="fnDeActivate(@item.ItemId)"><i class="far fa-trash-alt"></i></button>
+                <button type="button" class="btn btn-danger btn-xs" title="De-ctivate" onclick="fnDeActivate(@item.ItemId)"><i class="far fa-trash-alt"></i></button>
 
-                                                    }
-                                                    else
-                                                    {
-                                                        <button type="button" class="btn btn-danger btn-xs" title="Activate" onclick="fnActivate(@item.ItemId)"><i class="far fa-trash-alt"></i></button>
+            }
+            else
+            {
+                <button type="button" class="btn btn-danger btn-xs" title="Activate" onclick="fnActivate(@item.ItemId)"><i class="far fa-trash-alt"></i></button>
 
-                                                    }*@
+            }*@
 
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.InvoiceNumber)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.InvoiceDate)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.LRNumber)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.CustomerName)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Status)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.CreatedOn)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.CreatedBy)
-                                            </td>
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InvoiceNumber)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InvoiceDate)
+                                        </td>
 
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.ModifiedOn)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.ModifiedBy)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Comments)
-                                            </td>
-                                            @*<td>
-                                                    @if (item.IsActive)
-                                                    {
-                                                        <span>Active</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span>De-Active</span>
-                                                    }
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CustomerName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Status)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Comments)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CreatedOn)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CreatedBy)
+                                        </td>
 
-                                                </td>*@
-                                            @*<td>
-                                                    @Html.DisplayFor(modelItem => item.CreatedOn)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.User.FullName)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.ModifiedOn)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.User1.FullName)
-                                                </td>*@
-                                        </tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ModifiedOn)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ModifiedBy)
+                                        </td>
+
+                                        @*<td>
+            @if (item.IsActive)
+            {
+                <span>Active</span>
+            }
+            else
+            {
+                <span>De-Active</span>
+            }
+
+        </td>*@
+                                        @*<td>
+            @Html.DisplayFor(modelItem => item.CreatedOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.User.FullName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ModifiedOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.User1.FullName)
+        </td>*@
+                                    </tr>
                                     }
                                 </tbody>
                             </table>

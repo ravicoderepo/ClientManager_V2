@@ -257,10 +257,10 @@
             items.push({
                 Id: $(this).attr('data-added'),
                 OutwardId: $('#hdnId').val(),
-                MaterialId: $(this).find('td').find('.Meterial').attr('data-added'),
+                MaterialId: $(this).find('.Meterial').attr('data-added'),
                 TypeId: $(this).find('.Type').attr('data-added'),
                 ItemId: $(this).find('.Item').attr('data-added'),
-                Quantity: $("#txtQuantity").val(),
+                Quantity: $(this).find('.Quantity').text(),
             });
         });
 
@@ -272,7 +272,7 @@
             LRNumber: $("#txtLRNumber").val(),
             CustomerName: $("#txtCustomerName").val(),
             Comments: $("#txtComments").val(),
-            OutwardItemData: items
+            OutwardItems: items
         };
 
         $.ajax({

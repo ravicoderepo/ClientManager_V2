@@ -29,6 +29,8 @@ namespace DBOperation
             this.ExpenceCategories1 = new HashSet<ExpenceCategory>();
             this.ExpenseTrackers = new HashSet<ExpenseTracker>();
             this.ExpenseTrackers1 = new HashSet<ExpenseTracker>();
+            this.Outwards = new HashSet<Outward>();
+            this.Outwards1 = new HashSet<Outward>();
             this.PettyCashes = new HashSet<PettyCash>();
             this.PettyCashes1 = new HashSet<PettyCash>();
             this.Projects = new HashSet<Project>();
@@ -97,6 +99,10 @@ namespace DBOperation
         public virtual ICollection<ExpenseTracker> ExpenseTrackers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ExpenseTracker> ExpenseTrackers1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Outward> Outwards { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Outward> Outwards1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PettyCash> PettyCashes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

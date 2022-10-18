@@ -200,25 +200,41 @@ namespace Utility
             return items;
         }
 
-        public static List<SelectListItem> GetPaymentStatusList()
+        public static List<SelectListItem> GetPaymentStatusList(string entity = "")
         {
             List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
-            items.Insert(0, new SelectListItem()
-            {
-                Text = "Approved",
-                Value = "Approved"
-            });
-            items.Insert(1, new SelectListItem()
-            {
-                Text = "Pending",
-                Value = "Pending"
-            });
-            items.Insert(2, new SelectListItem()
-            {
-                Text = "Verified",
-                Value = "Verified"
-            });
 
+            if (entity.ToUpper() == "INVOICE")
+            {
+                items.Insert(0, new SelectListItem()
+                {
+                    Text = "To Pay",
+                    Value = "To Pay"
+                });
+                items.Insert(1, new SelectListItem()
+                {
+                    Text = "Paid",
+                    Value = "Paid"
+                });
+            }
+            else
+            {
+                items.Insert(0, new SelectListItem()
+                {
+                    Text = "Approved",
+                    Value = "Approved"
+                });
+                items.Insert(1, new SelectListItem()
+                {
+                    Text = "Pending",
+                    Value = "Pending"
+                });
+                items.Insert(2, new SelectListItem()
+                {
+                    Text = "Verified",
+                    Value = "Verified"
+                });
+            }
             return items;
         }
         public static List<SelectListItem> GetInvoiceStatusList()
