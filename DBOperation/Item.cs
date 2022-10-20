@@ -17,10 +17,12 @@ namespace DBOperation
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Item()
         {
+            this.DespatchItems = new HashSet<DespatchItem>();
             this.VRM_InwardStock = new HashSet<VRM_InwardStock>();
         }
     
         public int ItemId { get; set; }
+        public Nullable<int> ParentId { get; set; }
         public int MaterialId { get; set; }
         public int TypeId { get; set; }
         public string ItemName { get; set; }
@@ -32,6 +34,8 @@ namespace DBOperation
         public Nullable<System.DateTime> ModifiedOn { get; set; }
         public Nullable<int> ModifiedBy { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DespatchItem> DespatchItems { get; set; }
         public virtual Material Material { get; set; }
         public virtual Type Type { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

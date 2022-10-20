@@ -79,6 +79,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="MaterialId">Material Type Name</label>
+                                                @Html.HiddenFor(model => model.StockId, new { htmlAttributes = new { @id = "hdnStockId" } })
+                                                @Html.HiddenFor(model => model.InwardStockTransactionId, new { htmlAttributes = new { @id = "hdnInwardStockTransactionId" } })
                                                 @Html.HiddenFor(model => model.MaterialId, new { htmlAttributes = new { @id = "hdnMaterialId" } })
                                                 @Html.DropDownList("MaterialId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlMaterialId", @onChange = "fnValueChange('material')" })
                                             </div>
@@ -169,7 +171,7 @@
                             </div>
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
-                                <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='List'" id="btnBack">Back to List</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='../List'" id="btnBack">Back to List</button>
                             </div>
                             <!-- /.card-body -->
                         </form>
@@ -219,7 +221,7 @@
                 $("input[name=ReceivedFrom]").val($('#ddlCompanyId').val());
 
 
-                fnSubmitItemDetails();
+                fnSubmitInwardDetails();
             }
         });
         $('#quickForm').validate({
@@ -281,10 +283,11 @@
             fnGetAvailableQuantity($("input[name=ItemId]").val());
         }
     }
-    function fnSubmitItemDetails() {
+    function fnSubmitInwardDetails() {
         
         var inwardData = {
-
+            StockId: $('input[name=StockId]').val(),
+            InwardStockTransactionId: $('input[name=InwardStockTransactionId]').val(),
             ItemId: $('input[name=ItemId]').val(),
             TypeId: $("input[name=TypeId]").val() ,
             MaterialId: $("input[name=MaterialId]").val(),
@@ -294,13 +297,13 @@
             ReceivedBy: $("#txtReceivedBy").val(),
             ReceivedDate: $("#txtReceivedDate").val(),
             GRNnumber: $("#txtGRNnumber").val(),
-            //IsActive: ($("input[name=IsActive]").val()=='1') ? true: false,
+            IsActive: ($("input[name=IsActive]").val()=='1') ? true: false,
             Description: $('#txtDescription').val()
         };
         
         $.ajax({
             type: "POST",
-            url: "/Inward/Create",
+            url: "/Inward/Edit",
             data: JSON.stringify(inwardData),
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
@@ -318,15 +321,7 @@
             }
         });
     }
-    $("#mnuInwardList").addClass("active");
-    var parentMenu = $("#mnuInwardList").parent().parent().parent();
-    
-    parentMenu.attr("class", "nav-item menu-is-opening menu-open");
-    parentMenu.find("ul").each(function () {
-        
-        $(this).attr("style", "display:block");
-    });
-
+   
     function fnBindTypesDropdown(id) {
         $.ajax({
             url: "/types/GetProductMaster?materialId=" + id,
@@ -360,8 +355,6 @@
         });
         $('#txtAvailableQuantity').val('0');
         $("input[name=ItemId]").val($('#ddlItemId').val());
-        //$("input[name=ItemId]").val($('#ddlItemId').val());
-        //fnGetAvailableQuantity($("input[name=ItemId]").val());
     }
     function fnGetAvailableQuantity(id) {
         
@@ -373,4 +366,15 @@
             }
         });
     }
+
+    fnValueChange('item');
+
+    $("#mnuInwardList").addClass("active");
+    var parentMenu = $("#mnuInwardList").parent().parent().parent();
+
+    parentMenu.attr("class", "nav-item menu-is-opening menu-open");
+    parentMenu.find("ul").each(function () {
+
+        $(this).attr("style", "display:block");
+    });
 </script>

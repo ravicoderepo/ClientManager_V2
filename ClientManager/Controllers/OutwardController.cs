@@ -52,9 +52,10 @@ namespace ClientManager.Controllers
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
 
             ViewBag.Status = Utility.DefaultList.GetInvoiceStatusList();
-            ViewBag.MaterialId = new SelectList(db.Materials, "MaterialId", "MaterialName", 1).ToList<SelectListItem>();
-            ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == 1), "TypeId", "TypeName", 1).ToList<SelectListItem>();
-            ViewBag.ItemId = new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == 1), "ItemId", "ItemName", 1).ToList<SelectListItem>();
+
+            ViewBag.MaterialId = Utility.DefaultList.BindList(new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", 1).ToList<SelectListItem>(), true);
+            ViewBag.TypeId = Utility.DefaultList.BindList(new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == 0), "TypeId", "TypeName", 1).ToList<SelectListItem>(), true);
+            ViewBag.ItemId = Utility.DefaultList.BindList(new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == 0), "ItemId", "ItemName", 1).ToList<SelectListItem>(), true);
             ViewBag.PaymentStatus = Utility.DefaultList.GetPaymentStatusList("INVOICE");
             var outwardData = new OutwardData();
             outwardData.DespatchData = new List<DespatchData>();
@@ -111,7 +112,7 @@ namespace ClientManager.Controllers
                                     redirectURL = ""
                                 };
                                 transaction.Rollback();
-                                return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);                               
+                                return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
 
                             }
                             else
@@ -165,7 +166,7 @@ namespace ClientManager.Controllers
                                         return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
                                     }
                                 }
-                                
+
                             }
                         }
 
@@ -207,120 +208,335 @@ namespace ClientManager.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpGet]
-        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
-        public ActionResult Edit(int Id)
-        {
-            UserDetails userData = (UserDetails)this.Session["UserDetails"];
-
-            var inward = (from iTrans in db.VRM_InwardStockTransaction
-                          join iStock in db.VRM_InwardStock on iTrans.StockId equals iStock.StockId
-                          where iTrans.InwardStockTransactionId == Id
-                          orderby iTrans.ReceivedDate descending
-                          select new InwardData
-                          {
-                              StockId = iStock.StockId,
-                              MaterialId = iStock.MaterialId,
-                              MaterialName = iStock.Material.MaterialName,
-                              TypeId = iStock.TypeId,
-                              TypeName = iStock.Type.TypeName,
-                              ItemId = iStock.ItemId,
-                              ItemName = iStock.Item.ItemName,
-                              AvailableQuantity = iStock.AvailableQuantity,
-                              Quantity = iStock.Quantity,
-                              InwardStockTransactionId = iTrans.InwardStockTransactionId,
-                              PONumber = iTrans.PONumber,
-                              GRNnumber = iTrans.GRNnumber,
-                              ReceivedBy = iTrans.ReceivedBy,
-                              ReceivedDate = iTrans.ReceivedDate,
-                              ReceivedFrom = iTrans.ReceivedFrom,
-                              Description = iTrans.Description
-                          }).FirstOrDefault();
-
-
-            ViewBag.MaterialId = new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", inward.MaterialId).ToList<SelectListItem>();
-            ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == inward.MaterialId), "TypeId", "TypeName", inward.TypeId).ToList<SelectListItem>();
-            ViewBag.ItemId = new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == inward.TypeId), "ItemId", "ItemName", inward.ItemId).ToList<SelectListItem>();
-            ViewBag.CompanyId = new SelectList(db.Companies.Where(wh => wh.IsActive == true), "CompanyId", "Name", inward.ReceivedFrom).ToList<SelectListItem>();
-
-            return View(inward);
-        }
-
         [HttpPost]
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
-        public ActionResult Edit(InwardData inwardData)
+        public ActionResult Edit(OutwardData outwardData)
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
-            JsonReponse data;
-            using (DbContextTransaction transaction = db.Database.BeginTransaction())
-            {
-                try
-                {
+            JsonReponse data = null;
 
-                    if (inwardData.MaterialId > 0 || inwardData.TypeId > 0 || inwardData.ItemId > 0 || inwardData.Quantity > 0 || inwardData.ReceivedFrom > 0 || string.IsNullOrEmpty(inwardData.PONumber) || string.IsNullOrEmpty(inwardData.GRNnumber) || inwardData.ReceivedDate != null)
+            try
+            {
+                if (string.IsNullOrEmpty(outwardData.CustomerName) || string.IsNullOrEmpty(outwardData.InvoiceNumber) || string.IsNullOrEmpty(outwardData.InvoiceNumber) || outwardData.InvoiceDate == null || string.IsNullOrEmpty(outwardData.Comments) || string.IsNullOrEmpty(outwardData.Status))
+                {
+                    data = new JsonReponse()
+                    {
+                        message = "Enter all required fields of Invoice.",
+                        status = "Failed",
+                        redirectURL = ""
+                    };
+                }
+                else
+                {
+                    DBOperation.Outward entity = db.Outwards.Where(wh => wh.Id == outwardData.Id).FirstOrDefault();
+
+                    if (entity == null)
                     {
                         data = new JsonReponse()
                         {
-                            message = "Enter all required fields.",
+                            message = "There is no record for given Id",
                             status = "Failed",
                             redirectURL = ""
                         };
                     }
                     else
                     {
+                        //Outward/Invoice
 
+                        entity.Status = outwardData.Status;
+                        entity.Comments = outwardData.Comments;
+                        entity.InvoiceDate = outwardData.InvoiceDate;
+                        entity.LRNumber = "";
+                        entity.InvoiceNumber = outwardData.InvoiceNumber;
+                        entity.CustomerName = outwardData.CustomerName;
 
-                        this.db.VRM_InwardStock.Add(new DBOperation.VRM_InwardStock()
+                        entity.ModifiedBy = new int?(userData.Id);
+                        entity.ModifiedOn = new DateTime?(DateTime.Now);
+                        this.db.Entry<DBOperation.Outward>(entity).State = EntityState.Modified;
+
+                        if (this.db.SaveChanges() > 0)
                         {
-                            MaterialId = inwardData.MaterialId,
-                            TypeId = inwardData.TypeId,
-                            ItemId = inwardData.ItemId,
-                            Quantity = inwardData.Quantity,
-                            AvailableQuantity = 0,
-                            IsActive = inwardData.IsActive,
-
-                        });
-                        var stockId = this.db.SaveChanges();
-
-                        this.db.VRM_InwardStockTransaction.Add(new DBOperation.VRM_InwardStockTransaction()
-                        {
-                            PONumber = inwardData.PONumber,
-                            GRNnumber = inwardData.GRNnumber,
-                            ReceivedFrom = inwardData.ReceivedFrom,
-                            ReceivedBy = userData.FullName,
-                            ReceivedDate = inwardData.ReceivedDate,
-                            Description = inwardData.Description,
-                            StockId = stockId,
-                        });
-                        var iTransId = this.db.SaveChanges();
-                        transaction.Commit();
-                        if (iTransId > 0)
                             data = new JsonReponse()
                             {
-                                message = "Inward & Stock saved successfully!",
+                                message = "Outward/Invoice details Updated successfully!",
                                 status = "Success",
-                                redirectURL = "/Inward/List"
+                                redirectURL = "/Outward/List"
                             };
+                        }
                         else
+                        {
                             data = new JsonReponse()
                             {
-                                message = "Inward entry not completed, try again after sometime.",
+                                message = "Not completed, try again after sometime.",
                                 status = "Failed",
                                 redirectURL = ""
                             };
+                        }
                     }
                 }
-                catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                data = new JsonReponse()
                 {
-                    transaction.Commit();
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
+            }
+
+            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
+        public ActionResult Edit(int Id)
+        {
+            UserDetails userData = (UserDetails)this.Session["UserDetails"];
+
+            var outward = (from oTrans in db.Outwards
+                           orderby oTrans.InvoiceDate descending
+                           where oTrans.Id == Id
+                           select new OutwardData
+                           {
+                               Id = Id,
+                               InvoiceNumber = oTrans.InvoiceNumber,
+                               InvoiceDate = oTrans.InvoiceDate,
+                               CustomerName = oTrans.CustomerName,
+                               Status = oTrans.Status,
+                               Comments = oTrans.Comments,
+                               CreatedOn = oTrans.CreatedOn,
+                               CreatedBy = oTrans.CreatedBy,
+                               ModifiedOn = oTrans.ModifiedOn,
+                               ModifiedBy = oTrans.ModifiedBy,
+                               DespatchData = oTrans.Despatches.Select(sel => new DespatchData
+                               {
+                                   DespatchDate = sel.DespatchDate,
+                                   DespatchNo = sel.DespatchNo,
+                                   Id = sel.Id,
+                                   LRNumber = sel.LRNumber,
+                                   PaymentStatus = sel.PaymentStatus,
+                                   TransportBy = sel.TransportBy,
+                                   ShipToCity = sel.ShipToCity,
+                                   CreatedBy = sel.CreatedBy,
+                                   CreatedOn = sel.CreatedOn,
+                                   ModifiedBy = sel.ModifiedBy,
+                                   ModifiedOn = sel.ModifiedOn
+                               }).ToList(),
+                           }).FirstOrDefault();
+
+            //ViewBag.PaymentStatus = Utility.DefaultList.GetPaymentStatusList("INVOICE");
+            ViewBag.Status = Utility.DefaultList.GetInvoiceStatusList(outward.Status);
+            return View(outward);
+        }
+
+        [HttpGet]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
+        public ActionResult EditDespatch(int Id)
+        {
+            UserDetails userData = (UserDetails)this.Session["UserDetails"];
+
+            var outward = (from oTrans in db.Outwards
+                           orderby oTrans.InvoiceDate descending
+                           where oTrans.Id == Id
+                           select new OutwardData
+                           {
+                               InvoiceNumber = oTrans.InvoiceNumber,
+                               InvoiceDate = oTrans.InvoiceDate,
+                               CustomerName = oTrans.CustomerName,
+                               Status = oTrans.Status,
+                               Comments = oTrans.Comments,
+                               CreatedOn = oTrans.CreatedOn,
+                               CreatedBy = oTrans.CreatedBy,
+                               ModifiedOn = oTrans.ModifiedOn,
+                               ModifiedBy = oTrans.ModifiedBy,
+                               DespatchData = oTrans.Despatches.Select(sel => new DespatchData
+                               {
+                                   DespatchDate = sel.DespatchDate,
+                                   DespatchNo = sel.DespatchNo,
+                                   Id = sel.Id,
+                                   LRNumber = sel.LRNumber,
+                                   PaymentStatus = sel.PaymentStatus,
+                                   TransportBy = sel.TransportBy,
+                                   ShipToCity = sel.ShipToCity,
+                                   CreatedBy = sel.CreatedBy,
+                                   CreatedOn = sel.CreatedOn,
+                                   ModifiedBy = sel.ModifiedBy,
+                                   ModifiedOn = sel.ModifiedOn,
+                                   DespatchItems = sel.DespatchItems.Select(desItems => new DespatchItemData
+                                   {
+                                       Id = desItems.Id,
+                                       DespatchId = desItems.DespatchId,
+                                       ItemId = desItems.ItemId,
+                                       ItemName = desItems.Item.ItemName,
+                                       MaterialId = desItems.Item.MaterialId,
+                                       MaterialName = desItems.Item.Material.MaterialName,
+                                       TypeId = desItems.Item.TypeId,
+                                       TypeName = desItems.Item.Type.TypeName,
+                                       Quantity = desItems.Quantity
+                                   }).ToList(),
+                               }).ToList(),
+                           }).FirstOrDefault();
+
+            ViewBag.MaterialId = new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", 1).ToList<SelectListItem>();
+            ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.IsActive == true), "TypeId", "TypeName", 1).ToList<SelectListItem>();
+            ViewBag.ItemId = new SelectList(db.Items.Where(wh => wh.IsActive == true), "ItemId", "ItemName", 1).ToList<SelectListItem>();
+            ViewBag.CompanyId = new SelectList(db.Companies.Where(wh => wh.IsActive == true), "CompanyId", "Name", 1).ToList<SelectListItem>();
+            ViewBag.PaymentStatus = Utility.DefaultList.GetPaymentStatusList("INVOICE");
+            ViewBag.Status = Utility.DefaultList.GetInvoiceStatusList(outward.Status);
+            return PartialView(outward);
+        }
+
+        [HttpPost]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
+        public ActionResult UpdateInvoice(OutwardData outwardData)
+        {
+            UserDetails userData = (UserDetails)this.Session["UserDetails"];
+            JsonReponse data;
+
+            try
+            {
+                if (string.IsNullOrEmpty(outwardData.InvoiceNumber) || string.IsNullOrEmpty(outwardData.CustomerName) || outwardData.InvoiceDate == null || string.IsNullOrEmpty(outwardData.Comments) || string.IsNullOrEmpty(outwardData.Status))
+                {
                     data = new JsonReponse()
                     {
-                        message = ex.Message,
-                        status = "Error",
+                        message = "Enter all required fields.",
+                        status = "Failed",
                         redirectURL = ""
                     };
                 }
+                else
+                {
+                    DBOperation.Outward entity = db.Outwards.Where(wh => wh.Id == outwardData.Id).FirstOrDefault();
+                    if (entity == null)
+                    {
+                        data = new JsonReponse()
+                        {
+                            message = "There is no record for given Id",
+                            status = "Failed",
+                            redirectURL = ""
+                        };
+                    }
+                    else
+                    {
+                        entity.Status = outwardData.Status;
+                        entity.Comments = outwardData.Comments;
+                        entity.InvoiceDate = outwardData.InvoiceDate;
+                        entity.InvoiceNumber = outwardData.InvoiceNumber;
+                        entity.CustomerName = outwardData.CustomerName;
+                        entity.ModifiedOn = DateTime.Now;
+                        entity.ModifiedBy = userData.Id;
+
+                        this.db.Entry<DBOperation.Outward>(entity).State = EntityState.Modified;
+
+                        if (this.db.SaveChanges() > 0)
+                        {
+                            data = new JsonReponse()
+                            {
+                                message = "Outward details Updated successfully!",
+                                status = "Success",
+                                redirectURL = "/Outward/List"
+                            };
+                        }
+                        else
+                        {
+                            data = new JsonReponse()
+                            {
+                                message = "Not completed, try again after sometime.",
+                                status = "Failed",
+                                redirectURL = ""
+                            };
+                        }
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                data = new JsonReponse()
+                {
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
+            }
+
+            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
+        public ActionResult EditDespatch(DespatchData despatchData)
+        {
+            UserDetails userData = (UserDetails)this.Session["UserDetails"];
+            JsonReponse data;
+
+            try
+            {
+                if (string.IsNullOrEmpty(despatchData.DespatchNo) || string.IsNullOrEmpty(despatchData.LRNumber) || despatchData.DespatchDate == null || string.IsNullOrEmpty(despatchData.PaymentStatus) || string.IsNullOrEmpty(despatchData.TransportBy) || string.IsNullOrEmpty(despatchData.ShipToCity))
+                {
+                    data = new JsonReponse()
+                    {
+                        message = "Enter all required fields.",
+                        status = "Failed",
+                        redirectURL = ""
+                    };
+                }
+                else
+                {
+                    DBOperation.Despatch entity = db.Despatches.Where(wh => wh.Id == despatchData.Id).FirstOrDefault();
+                    if (entity == null)
+                    {
+                        data = new JsonReponse()
+                        {
+                            message = "There is no record for given Id",
+                            status = "Failed",
+                            redirectURL = ""
+                        };
+                    }
+                    else
+                    {
+                        entity.PaymentStatus = despatchData.PaymentStatus;
+                        entity.LRNumber = despatchData.LRNumber;
+                        entity.DespatchDate = despatchData.DespatchDate;
+                        entity.DespatchNo = despatchData.DespatchNo;
+                        entity.TransportBy = despatchData.TransportBy;
+                        entity.ShipToCity = despatchData.ShipToCity;
+                        entity.ModifiedOn = DateTime.Now;
+                        entity.ModifiedBy = userData.Id;
+
+                        this.db.Entry<DBOperation.Despatch>(entity).State = EntityState.Modified;
+
+                        if (this.db.SaveChanges() > 0)
+                        {
+                            data = new JsonReponse()
+                            {
+                                message = "Despatch details Updated successfully!",
+                                status = "Success",
+                                redirectURL = "/Outward/List"
+                            };
+                        }
+                        else
+                        {
+                            data = new JsonReponse()
+                            {
+                                message = "Not completed, try again after sometime.",
+                                status = "Failed",
+                                redirectURL = ""
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new JsonReponse()
+                {
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
+            }
+
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 

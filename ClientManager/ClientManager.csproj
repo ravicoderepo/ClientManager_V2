@@ -2852,6 +2852,7 @@
     <Content Include="Views\Outward\List.cshtml" />
     <Content Include="Views\Outward\ListView.cshtml" />
     <Content Include="Views\Outward\OutwardItemPartial.cshtml" />
+    <Content Include="Views\Outward\EditDespatch.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

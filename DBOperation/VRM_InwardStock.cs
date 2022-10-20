@@ -22,8 +22,8 @@ namespace DBOperation
         public int Quantity { get; set; }
         public bool IsActive { get; set; }
     
-        public virtual Item Item { get; set; }
         public virtual Material Material { get; set; }
         public virtual Type Type { get; set; }
+        public virtual Item Item { get; set; }
     }
 }

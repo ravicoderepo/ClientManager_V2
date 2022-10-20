@@ -148,10 +148,10 @@ namespace ClientManager.Controllers
                 else
                 {
                     this.db.Entry<DBOperation.Item>(entity).State = EntityState.Modified;
-                    string str;
+                    string str = String.Empty;
                     //if (userDetails.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "super admin")))
                     //{
-                        entity.ItemName = itemData.ItemName;
+                    entity.ItemName = itemData.ItemName;
                         entity.TypeId = itemData.TypeId;
                         entity.MaterialId = itemData.MaterialId;
                         entity.Description = itemData.Description;

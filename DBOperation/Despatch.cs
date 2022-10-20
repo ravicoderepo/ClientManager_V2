@@ -14,6 +14,12 @@ namespace DBOperation
     
     public partial class Despatch
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Despatch()
+        {
+            this.DespatchItems = new HashSet<DespatchItem>();
+        }
+    
         public int Id { get; set; }
         public int OutwardId { get; set; }
         public string DespatchNo { get; set; }
@@ -28,5 +34,7 @@ namespace DBOperation
         public Nullable<int> ModifiedBy { get; set; }
     
         public virtual Outward Outward { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DespatchItem> DespatchItems { get; set; }
     }
 }

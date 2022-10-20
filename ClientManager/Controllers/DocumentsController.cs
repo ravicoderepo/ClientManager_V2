@@ -55,7 +55,6 @@ namespace ClientManager.Controllers
         public ActionResult Create(Models.DocumentData DocumentData)
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
-            JsonReponse jsonReponse = (JsonReponse)null;
             //byte[] imagebyte = null;
             //BinaryReader Reader = new BinaryReader(Image.InputStream);
             //imagebyte = Reader.ReadBytes((int)Image.ContentLength);

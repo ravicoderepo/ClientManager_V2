@@ -32,13 +32,11 @@ namespace DBOperation
         public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<Despatch> Despatches { get; set; }
-        public virtual DbSet<DespatchItem> DespatchItems { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<ExpenceCategory> ExpenceCategories { get; set; }
         public virtual DbSet<ExpenseTracker> ExpenseTrackers { get; set; }
         public virtual DbSet<Inward> Inwards { get; set; }
-        public virtual DbSet<Item> Items { get; set; }
         public virtual DbSet<Material> Materials { get; set; }
         public virtual DbSet<Outward> Outwards { get; set; }
         public virtual DbSet<PettyCash> PettyCashes { get; set; }
@@ -62,6 +60,8 @@ namespace DBOperation
         public virtual DbSet<VRM_InwardStockTransaction> VRM_InwardStockTransaction { get; set; }
         public virtual DbSet<VRM_OutwardStock> VRM_OutwardStock { get; set; }
         public virtual DbSet<VRM_OutwardStockTransaction> VRM_OutwardStockTransaction { get; set; }
+        public virtual DbSet<DespatchItem> DespatchItems { get; set; }
+        public virtual DbSet<Item> Items { get; set; }
     
         public virtual ObjectResult<GetMonthlySalesReport_Result> GetMonthlySalesReport(string userType, Nullable<int> currentUserId, Nullable<int> userManagerId)
         {

@@ -18,5 +18,8 @@ namespace DBOperation
         public int DespatchId { get; set; }
         public int ItemId { get; set; }
         public int Quantity { get; set; }
+    
+        public virtual Despatch Despatch { get; set; }
+        public virtual Item Item { get; set; }
     }
 }

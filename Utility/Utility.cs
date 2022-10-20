@@ -200,7 +200,7 @@ namespace Utility
             return items;
         }
 
-        public static List<SelectListItem> GetPaymentStatusList(string entity = "")
+        public static List<SelectListItem> GetPaymentStatusList(string entity = "", string selectedText="")
         {
             List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
 
@@ -235,9 +235,16 @@ namespace Utility
                     Value = "Verified"
                 });
             }
+
+            if (!string.IsNullOrEmpty(selectedText))
+            {
+                var selected = items.Where(x => x.Value == selectedText).First();
+                selected.Selected = true;
+            }
+
             return items;
         }
-        public static List<SelectListItem> GetInvoiceStatusList()
+        public static List<SelectListItem> GetInvoiceStatusList(string selectedText="")
         {
             List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
             items.Insert(0, new SelectListItem()
@@ -256,6 +263,11 @@ namespace Utility
                 Value = "Closed"
             });
 
+            if (!string.IsNullOrEmpty(selectedText))
+            {
+                var selected = items.Where(x => x.Value == selectedText).First();
+                selected.Selected = true;
+            }
             return items;
         }
 
@@ -356,6 +368,22 @@ namespace Utility
             });
 
             return items;
+        }
+
+        public static List<SelectListItem> BindList(List<SelectListItem> lstSelectListItem, bool addDefaultItem =false)
+        {
+            
+
+            if (addDefaultItem)
+            {
+                lstSelectListItem.Insert(0, new SelectListItem()
+                {
+                    Text = "Select",
+                    Value = "0"
+                });
+            }
+
+            return lstSelectListItem;
         }
     }
 
@@ -563,10 +591,9 @@ namespace Utility
         private static readonly ClientManagerEntities db = new ClientManagerEntities();
         public static int GetAvailableQuantity(int itemId = 0)
         {
-            var iSum = db.VRM_InwardStock.Where(wh => wh.ItemId == itemId).Sum(s => (int?)s.Quantity);
-            //var oSum = db.VRM_OutwardStock.Where(wh => wh.ItemId == itemId).Sum(s => (int?)s.Quantity);
-            //return (iSum-iSum) ?? 0;
-            return iSum ?? 0;
+            var iSum = Convert.ToInt16(db.VRM_InwardStock.Where(wh => wh.ItemId == itemId).Sum(s => (int?)s.Quantity));
+            var oSum = Convert.ToInt16(db.DespatchItems.Where(wh => wh.ItemId == itemId).Sum(s => (int?)s.Quantity));
+            return (iSum-oSum);
         }
     }
 }

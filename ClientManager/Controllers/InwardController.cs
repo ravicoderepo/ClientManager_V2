@@ -32,7 +32,7 @@ namespace ClientManager.Controllers
                                   TypeName = iStock.Type.TypeName,
                                   ItemId = iStock.TypeId, 
                                   ItemName = iStock.Item.ItemName,
-                                  AvailableQuantity = iStock.AvailableQuantity, 
+                                  //AvailableQuantity = iStock.AvailableQuantity, 
                                   Quantity = iStock.Quantity, 
                                   PONumber = iTrans.PONumber, 
                                   GRNnumber = iTrans.GRNnumber, 
@@ -56,11 +56,10 @@ namespace ClientManager.Controllers
         public ActionResult Create()
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
-
-            ViewBag.MaterialId = new SelectList(db.Materials, "MaterialId", "MaterialName", 1).ToList<SelectListItem>();
-            ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == 1), "TypeId", "TypeName", 1).ToList<SelectListItem>();
-            ViewBag.ItemId = new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == 1), "ItemId", "ItemName", 1).ToList<SelectListItem>();
-            ViewBag.CompanyId = new SelectList(db.Companies.Where(wh => wh.IsActive == true && wh.IsActive == true), "CompanyId", "Name", 1).ToList<SelectListItem>();
+            ViewBag.MaterialId = Utility.DefaultList.BindList(new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", 1).ToList<SelectListItem>(), true);
+            ViewBag.TypeId = Utility.DefaultList.BindList(new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == 0), "TypeId", "TypeName", 1).ToList<SelectListItem>(), true);
+            ViewBag.ItemId = Utility.DefaultList.BindList(new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == 0), "ItemId", "ItemName", 1).ToList<SelectListItem>(), true);
+            ViewBag.CompanyId = Utility.DefaultList.BindList(new SelectList(db.Companies.Where(wh => wh.IsActive == true && wh.IsActive == true), "CompanyId", "Name", 1).ToList<SelectListItem>(),true);
             return View();
         }
 
@@ -182,7 +181,7 @@ namespace ClientManager.Controllers
                                   TypeName = iStock.Type.TypeName,
                                   ItemId = iStock.ItemId,
                                   ItemName = iStock.Item.ItemName,
-                                  AvailableQuantity = iStock.AvailableQuantity,
+                                  //AvailableQuantity = 0,//Utility.CommonFunctions.GetAvailableQuantity(iStock.ItemId),
                                   Quantity = iStock.Quantity,
                                   InwardStockTransactionId = iTrans.InwardStockTransactionId,
                                   PONumber = iTrans.PONumber,
@@ -193,12 +192,11 @@ namespace ClientManager.Controllers
                                   Description = iTrans.Description
                               }).FirstOrDefault();
 
+            ViewBag.MaterialId = Utility.DefaultList.BindList(new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", inward.MaterialId).ToList<SelectListItem>(), true);
+            ViewBag.TypeId = Utility.DefaultList.BindList(new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == inward.MaterialId), "TypeId", "TypeName", inward.TypeId).ToList<SelectListItem>(), true);
+            ViewBag.ItemId = Utility.DefaultList.BindList(new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == inward.TypeId), "ItemId", "ItemName", inward.ItemId).ToList<SelectListItem>(), true);
+            ViewBag.CompanyId = Utility.DefaultList.BindList(new SelectList(db.Companies.Where(wh => wh.IsActive == true), "CompanyId", "Name", inward.ReceivedFrom).ToList<SelectListItem>(), true);
 
-            ViewBag.MaterialId = new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", inward.MaterialId).ToList<SelectListItem>();
-            ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == inward.MaterialId), "TypeId", "TypeName", inward.TypeId).ToList<SelectListItem>();
-            ViewBag.ItemId = new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == inward.TypeId), "ItemId", "ItemName", inward.ItemId).ToList<SelectListItem>();
-            ViewBag.CompanyId = new SelectList(db.Companies.Where(wh => wh.IsActive == true), "CompanyId", "Name", inward.ReceivedFrom).ToList<SelectListItem>();
-            
             return View(inward);
         }
 
@@ -212,8 +210,7 @@ namespace ClientManager.Controllers
             {
                 try
                 {
-
-                    if (inwardData.MaterialId > 0 || inwardData.TypeId > 0 || inwardData.ItemId > 0 || inwardData.Quantity > 0 || inwardData.ReceivedFrom > 0 || string.IsNullOrEmpty(inwardData.PONumber) || string.IsNullOrEmpty(inwardData.GRNnumber) || inwardData.ReceivedDate != null)
+                    if (inwardData.MaterialId <= 0 || inwardData.TypeId <= 0 || inwardData.ItemId <= 0 || inwardData.Quantity <= 0|| inwardData.ReceivedFrom <= 0|| string.IsNullOrEmpty(inwardData.PONumber) || string.IsNullOrEmpty(inwardData.GRNnumber) || inwardData.ReceivedDate == null)
                     {
                         data = new JsonReponse()
                         {
@@ -224,51 +221,63 @@ namespace ClientManager.Controllers
                     }
                     else
                     {
-
-
-                        this.db.VRM_InwardStock.Add(new DBOperation.VRM_InwardStock()
+                        DBOperation.VRM_InwardStock entityStock = db.VRM_InwardStock.Where(wh => wh.StockId == inwardData.StockId).FirstOrDefault();
+                        DBOperation.VRM_InwardStockTransaction entityTrans = db.VRM_InwardStockTransaction.Where(wh => wh.InwardStockTransactionId == inwardData.InwardStockTransactionId).FirstOrDefault();
+                        if (entityStock == null)
                         {
-                            MaterialId = inwardData.MaterialId,
-                            TypeId = inwardData.TypeId,
-                            ItemId = inwardData.ItemId,
-                            Quantity = inwardData.Quantity,
-                            AvailableQuantity = 0,
-                            IsActive = inwardData.IsActive,
-
-                        });
-                        var stockId = this.db.SaveChanges();
-
-                        this.db.VRM_InwardStockTransaction.Add(new DBOperation.VRM_InwardStockTransaction()
-                        {
-                            PONumber = inwardData.PONumber,
-                            GRNnumber = inwardData.GRNnumber,
-                            ReceivedFrom = inwardData.ReceivedFrom,
-                            ReceivedBy = userData.FullName,
-                            ReceivedDate = inwardData.ReceivedDate,
-                            Description = inwardData.Description,
-                            StockId = stockId,
-                        });
-                        var iTransId = this.db.SaveChanges();
-                        transaction.Commit();
-                        if (iTransId > 0)
                             data = new JsonReponse()
                             {
-                                message = "Inward & Stock saved successfully!",
-                                status = "Success",
-                                redirectURL = "/Inward/List"
-                            };
-                        else
-                            data = new JsonReponse()
-                            {
-                                message = "Inward entry not completed, try again after sometime.",
+                                message = "There is no record for given Id",
                                 status = "Failed",
                                 redirectURL = ""
                             };
+                        }
+                        else
+                        {
+                            //Stock
+                            entityStock.MaterialId = inwardData.MaterialId;
+                            entityStock.TypeId = inwardData.TypeId;
+                            entityStock.ItemId = inwardData.ItemId;
+                            entityStock.Quantity = inwardData.Quantity;
+                            entityStock.IsActive = inwardData.IsActive;
+
+                            //Transaction
+                            entityTrans.PONumber = inwardData.PONumber;
+                            entityTrans.GRNnumber = inwardData.GRNnumber;
+                            entityTrans.ReceivedFrom = inwardData.ReceivedFrom;
+                            entityTrans.ReceivedBy = userData.FullName;
+                            entityTrans.ReceivedDate = inwardData.ReceivedDate;
+                            entityTrans.Description = inwardData.Description;
+
+                            this.db.Entry<DBOperation.VRM_InwardStock>(entityStock).State = EntityState.Modified;
+                            this.db.Entry<DBOperation.VRM_InwardStockTransaction>(entityTrans).State = EntityState.Modified;
+
+                            if (this.db.SaveChanges() > 0)
+                            {
+                                transaction.Commit();
+                                data = new JsonReponse()
+                                {
+                                    message = "Inward details Updated successfully!",
+                                    status = "Success",
+                                    redirectURL = "/Inward/List"
+                                };
+                            }
+                            else
+                            {
+                                transaction.Rollback();
+                                data = new JsonReponse()
+                                {
+                                    message = "Not completed, try again after sometime.",
+                                    status = "Failed",
+                                    redirectURL = ""
+                                };
+                            }
+                        }
                     }
                 }
                 catch (Exception ex)
                 {
-                    transaction.Commit();
+                    transaction.Rollback();
                     data = new JsonReponse()
                     {
                         message = ex.Message,

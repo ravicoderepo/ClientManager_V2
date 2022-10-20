@@ -42,8 +42,6 @@ namespace ClientManager.Controllers
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
             
-            JsonReponse jsonReponse = (JsonReponse)null;
-
             JsonReponse data;
             try
             {
@@ -146,10 +144,10 @@ namespace ClientManager.Controllers
                 else
                 {
                     this.db.Entry<DBOperation.Type>(entity).State = EntityState.Modified;
-                    string str;
+                    string str = String.Empty;
                     //if (userDetails.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "super admin")))
                     //{
-                        entity.MaterialId = typesData.MaterialId;
+                    entity.MaterialId = typesData.MaterialId;
                         entity.TypeName = typesData.TypeName;
                         entity.Description = typesData.Description;
                         entity.IsActive = typesData.IsActive;                       
