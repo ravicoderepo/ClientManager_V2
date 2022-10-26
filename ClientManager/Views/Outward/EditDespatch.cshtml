@@ -45,7 +45,7 @@
                     <!-- /.card-header -->
                     <!-- form start -->
 
-                    <form id="quickForm">
+                    <form id="quickFormPopup">
                         <div class="card-body">
                             <div id="pnlInvoice" style="display:none">
                                 <fieldset>
@@ -55,7 +55,8 @@
                                             <div class="form-group">
                                                 <label for="InvoiceNumber">Invoice Number</label>
                                                 <div class="input-group date" data-target-input="nearest">
-                                                    @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "hdnId" } })
+                                                    <input type="hidden" id="hdnId" value="@Model.Id" />
+                                                    @*@Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "hdnId", @name= "hdnId" } })*@
                                                     @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control", @id = "txtInvoiceNumber", @name = "InvoiceNumber", @readonly = "readonly" } })
                                                     <div class="input-group-append" data-target="#txtInvoiceNumber" data-toggle="datetimepicker">
                                                         <div class="input-group-text"><i class="fa fa-magic"></i></div>
@@ -109,6 +110,8 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="DespatchNo">Despatch No</label>
+                                            <input type="hidden" id="hdnDespatchId" value="@Model.DespatchData.FirstOrDefault().Id" />
+                                            @*@Html.HiddenFor(model => model.DespatchData.FirstOrDefault().Id, new { htmlAttributes = new { @id = "hdnDespatchId", @name = "hdnDespatchId" } })*@
                                             @Html.EditorFor(model => model.DespatchData.FirstOrDefault().DespatchNo, new { htmlAttributes = new { @class = "form-control", @id = "txtDespatchNo", @name = "DespatchNo" } })
                                         </div>
                                     </div>
@@ -147,7 +150,7 @@
                                         <div class="form-group">
                                             <label for="PaymentStatus">Payment Status</label>
                                             @Html.HiddenFor(model => model.DespatchData.FirstOrDefault().PaymentStatus, new { htmlAttributes = new { @id = "hdnPaymentStatus" } })
-                                            @Html.DropDownList("PaymentStatus", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlPaymentStatus", @onChange = "fnStatusChange()" })
+                                            @Html.DropDownList("PaymentStatus", ViewBag.PaymentStatus as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlPaymentStatus", @onChange = "fnStatusChange()" })
                                         </div>
                                     </div>
                                 </div>
@@ -219,31 +222,34 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody id="tbl_posts_body">
-                                                            @if (Model.DespatchData.FirstOrDefault().DespatchItems.Count() > 0)
+                                                            @if (Model.DespatchData.FirstOrDefault() != null)
                                                             {
-                                                                int i = 1;
-                                                                foreach (var item in Model.DespatchData.FirstOrDefault().DespatchItems)
+                                                                if (Model.DespatchData.FirstOrDefault().DespatchItems != null && Model.DespatchData.FirstOrDefault().DespatchItems.Count() > 0)
                                                                 {
-                                                                    <tr id="rec-@item.Id" data-added="">
-                                                                        <td><span class="sn"></span>@i.</td>
-                                                                        <td class="Meterial" data-added="@item.MaterialId">
-                                                                            @item.MaterialName
-                                                                        </td>
-                                                                        <td class="Type" data-added="@item.TypeId">
-                                                                            @item.TypeName
-                                                                        </td>
-                                                                        <td class="Item" data-added="@item.ItemId">
-                                                                            @item.ItemName
-                                                                        </td>
-                                                                        <td class="Quantity">
-                                                                            @item.Quantity
-                                                                        </td>
-                                                                        <td>
-                                                                            <a class="btn btn-primary btn-xs edit-record" style="margin-left:5px" data-id="@item.Id"><i class="far fa-edit"></i></a><a class="btn btn-danger btn-xs delete-record" style="margin-left:5px" data-id="@item.Id"><i class="far fa-trash-alt"></i></a>
-                                                                        </td>
-                                                                    </tr>
+                                                                    int i = 1;
+                                                                    foreach (var item in Model.DespatchData.FirstOrDefault().DespatchItems)
+                                                                    {
+                                                            <tr id="rec-@item.Id" data-added="@item.Id">
+                                                                <td><span class="sn"></span>@i.</td>
+                                                                <td class="Meterial" data-added="@item.MaterialId">
+                                                                    @item.MaterialName
+                                                                </td>
+                                                                <td class="Type" data-added="@item.TypeId">
+                                                                    @item.TypeName
+                                                                </td>
+                                                                <td class="Item" data-added="@item.ItemId">
+                                                                    @item.ItemName
+                                                                </td>
+                                                                <td class="Quantity">
+                                                                    @item.Quantity
+                                                                </td>
+                                                                <td>
+                                                                    <a class="btn btn-primary btn-xs edit-record" style="margin-left:5px" data-id="@item.Id"><i class="far fa-edit"></i></a><a class="btn btn-danger btn-xs delete-record" style="margin-left:5px" data-id="@item.Id"><i class="far fa-trash-alt"></i></a>
+                                                                </td>
+                                                            </tr>
 
-                                                                    i++;
+                                                                        i++;
+                                                                    }
                                                                 }
                                                             }
                                                         </tbody>
@@ -300,7 +306,7 @@
     $(window).on('load', function () {
 
         if ('@ViewBag.AccessLevel' == "View") {
-            $('#quickForm :input').each(function () {
+            $('#quickFormPopup :input').each(function () {
 
                 if ($(this).attr('Id') != 'btnBack') {
 
@@ -329,7 +335,7 @@
                 //fnSubmitDespatchDetails();
             }
         });
-        $('#quickForm').validate({
+        $('#quickFormPopup').validate({
 
             rules: {
                 saleDate: {
@@ -432,7 +438,7 @@
     function fnGetAvailableQuantity(id) {
         debugger;
         $.ajax({
-            url: "/stocks/GetAvailableQuantity?itemId=" + id,
+            url: "/Outward/GetAvailableQuantity?itemId=" + id,
             type: "Get",
             success: function (data) {
                 $('#txtAvailableQuantity').val(data);
@@ -559,7 +565,7 @@
             debugger;
             desItems.push({
                 Id: $(this).attr('data-added'),
-                OutwardId: $('#hdnId').val(),
+                DespatchId: $("#hdnDespatchId").val(),
                 MaterialId: $(this).find('.Meterial').attr('data-added'),
                 TypeId: $(this).find('.Type').attr('data-added'),
                 ItemId: $(this).find('.Item').attr('data-added'),
@@ -568,8 +574,8 @@
         });
         fnStatusChange();
         var despatchData = {
-            Id: "",
-            OutwardId: "",
+            Id: $("#hdnDespatchId").val(),
+            OutwardId: $("#hdnId").val(),
             DespatchNo: $("#txtDespatchNo").val(),
             DespatchDate: $("#txtDespatchDate").val(),
             LRNumber: $("#txtLRNumber").val(),
@@ -620,5 +626,9 @@
 
     });
 
-
+    if ('@ViewBag.Mode'=='New') {
+        debugger;
+        $('#quickFormPopup > div.card-footer > button.btn.btn-primary').text('Save Despatch');
+        //$('#hdnDespatchId').val(0);
+    }
 </script>

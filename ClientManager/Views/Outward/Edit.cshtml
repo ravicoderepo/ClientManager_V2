@@ -117,7 +117,7 @@
                                 </fieldset>
                                 <br />
                                 <div class="card-tools">
-                                    <a style="float:right; width:120px" class="btn btn-block btn-primary btn-sm add-record" data-added="0"><i class="fa fa-plus"></i> Add Despatch</a>
+                                    <a style="float:right; width:120px" class="btn btn-block btn-primary btn-sm" data-added="0" data-toggle="modal" data-target="#modal-xl" onclick="javascript:fnEditDespatch('@Model.Id',true)"><i class="fa fa-plus"></i> Add Despatch</a>
                                 </div>
                                 <br />
                                 <br />
@@ -346,9 +346,10 @@
 
     });
 
-    function fnEditDespatch(dataId) {
-
+    function fnEditDespatch(dataId, isAddDispatch) {
+        debugger;
         $('#modal-xl').find(".modal-title").text('Despatch Details');
-        $('#modal-xl').find(".modal-body").load('/Outward/EditDespatch/' + dataId);
+        $('#modal-xl').find(".modal-body").load('/Outward/EditDespatch?Id=' + dataId + "&IsAddDeshpatch=" + isAddDispatch);
+        
     }
 </script>

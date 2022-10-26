@@ -299,7 +299,7 @@ namespace ClientManager.Controllers
                            where oTrans.Id == Id
                            select new OutwardData
                            {
-                               Id = Id,
+                               Id = oTrans.Id,
                                InvoiceNumber = oTrans.InvoiceNumber,
                                InvoiceDate = oTrans.InvoiceDate,
                                CustomerName = oTrans.CustomerName,
@@ -332,59 +332,158 @@ namespace ClientManager.Controllers
 
         [HttpGet]
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
-        public ActionResult EditDespatch(int Id)
+        public ActionResult EditDespatch(int Id, bool IsAddDeshpatch = false)
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
 
-            var outward = (from oTrans in db.Outwards
-                           orderby oTrans.InvoiceDate descending
-                           where oTrans.Id == Id
-                           select new OutwardData
-                           {
-                               InvoiceNumber = oTrans.InvoiceNumber,
-                               InvoiceDate = oTrans.InvoiceDate,
-                               CustomerName = oTrans.CustomerName,
-                               Status = oTrans.Status,
-                               Comments = oTrans.Comments,
-                               CreatedOn = oTrans.CreatedOn,
-                               CreatedBy = oTrans.CreatedBy,
-                               ModifiedOn = oTrans.ModifiedOn,
-                               ModifiedBy = oTrans.ModifiedBy,
-                               DespatchData = oTrans.Despatches.Select(sel => new DespatchData
+            OutwardData objOutward = new OutwardData();
+            if (!IsAddDeshpatch)
+            {
+                var outward = (from oTrans in db.Outwards
+                               orderby oTrans.InvoiceDate descending
+                               where oTrans.Id == Id
+                               select new OutwardData
                                {
-                                   DespatchDate = sel.DespatchDate,
-                                   DespatchNo = sel.DespatchNo,
-                                   Id = sel.Id,
-                                   LRNumber = sel.LRNumber,
-                                   PaymentStatus = sel.PaymentStatus,
-                                   TransportBy = sel.TransportBy,
-                                   ShipToCity = sel.ShipToCity,
-                                   CreatedBy = sel.CreatedBy,
-                                   CreatedOn = sel.CreatedOn,
-                                   ModifiedBy = sel.ModifiedBy,
-                                   ModifiedOn = sel.ModifiedOn,
-                                   DespatchItems = sel.DespatchItems.Select(desItems => new DespatchItemData
+                                   Id = oTrans.Id,
+                                   InvoiceNumber = oTrans.InvoiceNumber,
+                                   InvoiceDate = oTrans.InvoiceDate,
+                                   CustomerName = oTrans.CustomerName,
+                                   Status = oTrans.Status,
+                                   Comments = oTrans.Comments,
+                                   CreatedOn = oTrans.CreatedOn,
+                                   CreatedBy = oTrans.CreatedBy,
+                                   ModifiedOn = oTrans.ModifiedOn,
+                                   ModifiedBy = oTrans.ModifiedBy,
+                                   DespatchData = oTrans.Despatches.Select(sel => new DespatchData
                                    {
-                                       Id = desItems.Id,
-                                       DespatchId = desItems.DespatchId,
-                                       ItemId = desItems.ItemId,
-                                       ItemName = desItems.Item.ItemName,
-                                       MaterialId = desItems.Item.MaterialId,
-                                       MaterialName = desItems.Item.Material.MaterialName,
-                                       TypeId = desItems.Item.TypeId,
-                                       TypeName = desItems.Item.Type.TypeName,
-                                       Quantity = desItems.Quantity
+                                       DespatchDate = sel.DespatchDate,
+                                       DespatchNo = sel.DespatchNo,
+                                       Id = sel.Id,
+                                       LRNumber = sel.LRNumber,
+                                       PaymentStatus = sel.PaymentStatus,
+                                       TransportBy = sel.TransportBy,
+                                       ShipToCity = sel.ShipToCity,
+                                       CreatedBy = sel.CreatedBy,
+                                       CreatedOn = sel.CreatedOn,
+                                       ModifiedBy = sel.ModifiedBy,
+                                       ModifiedOn = sel.ModifiedOn,
+                                       DespatchItems = sel.DespatchItems.Select(desItems => new DespatchItemData
+                                       {
+                                           Id = desItems.Id,
+                                           DespatchId = desItems.DespatchId,
+                                           ItemId = desItems.ItemId,
+                                           ItemName = desItems.Item.ItemName,
+                                           MaterialId = desItems.Item.MaterialId,
+                                           MaterialName = desItems.Item.Material.MaterialName,
+                                           TypeId = desItems.Item.TypeId,
+                                           TypeName = desItems.Item.Type.TypeName,
+                                           Quantity = desItems.Quantity
+                                       }).ToList(),
                                    }).ToList(),
-                               }).ToList(),
-                           }).FirstOrDefault();
+                               }).FirstOrDefault();
 
-            ViewBag.MaterialId = new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", 1).ToList<SelectListItem>();
-            ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.IsActive == true), "TypeId", "TypeName", 1).ToList<SelectListItem>();
-            ViewBag.ItemId = new SelectList(db.Items.Where(wh => wh.IsActive == true), "ItemId", "ItemName", 1).ToList<SelectListItem>();
-            ViewBag.CompanyId = new SelectList(db.Companies.Where(wh => wh.IsActive == true), "CompanyId", "Name", 1).ToList<SelectListItem>();
-            ViewBag.PaymentStatus = Utility.DefaultList.GetPaymentStatusList("INVOICE");
-            ViewBag.Status = Utility.DefaultList.GetInvoiceStatusList(outward.Status);
-            return PartialView(outward);
+                objOutward = outward;
+                ViewBag.Status = Utility.DefaultList.GetInvoiceStatusList(objOutward.Status);
+                ViewBag.MaterialId = new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", 1).ToList<SelectListItem>();
+                ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.IsActive == true), "TypeId", "TypeName", 1).ToList<SelectListItem>();
+                ViewBag.ItemId = new SelectList(db.Items.Where(wh => wh.IsActive == true), "ItemId", "ItemName", 1).ToList<SelectListItem>();
+                ViewBag.CompanyId = new SelectList(db.Companies.Where(wh => wh.IsActive == true), "CompanyId", "Name", 1).ToList<SelectListItem>();
+                if (objOutward.DespatchData.FirstOrDefault() != null)
+                {
+                    ViewBag.PaymentStatus = Utility.DefaultList.GetPaymentStatusList("INVOICE", objOutward.DespatchData.FirstOrDefault().PaymentStatus);
+                }
+
+                ViewBag.Mode = "Edit";
+            }
+            else
+            {
+                //var despatch = new DespatchData() { DespatchItems = new List<DespatchItemData>() };
+                //var outward = (from oTrans in db.Outwards
+                //               orderby oTrans.InvoiceDate descending
+                //               where oTrans.Id == Id
+                //               select new OutwardData
+                //               {
+                //                   InvoiceNumber = oTrans.InvoiceNumber,
+                //                   InvoiceDate = oTrans.InvoiceDate,
+                //                   CustomerName = oTrans.CustomerName,
+                //                   Status = oTrans.Status,
+                //                   Comments = oTrans.Comments,
+                //                   CreatedOn = oTrans.CreatedOn,
+                //                   CreatedBy = oTrans.CreatedBy,
+                //                   ModifiedOn = oTrans.ModifiedOn,
+                //                   ModifiedBy = oTrans.ModifiedBy,
+                //                   DespatchData = despatch,
+                //                   oTrans.Despatches.Where(wh => wh.Id == 0).Select(sel => new DespatchData
+                //                   {
+                //                       DespatchDate = sel.DespatchDate,
+                //                       DespatchNo = sel.DespatchNo,
+                //                       Id = sel.Id,
+                //                       LRNumber = sel.LRNumber,
+                //                       PaymentStatus = sel.PaymentStatus,
+                //                       TransportBy = sel.TransportBy,
+                //                       ShipToCity = sel.ShipToCity,
+                //                       CreatedBy = sel.CreatedBy,
+                //                       CreatedOn = sel.CreatedOn,
+                //                       ModifiedBy = sel.ModifiedBy,
+                //                       ModifiedOn = sel.ModifiedOn,
+                //                       DespatchItems = sel.DespatchItems.Where(wh => wh.Id == 0).Select(desItems => new DespatchItemData
+                //                       {
+                //                           Id = desItems.Id,
+                //                           DespatchId = desItems.DespatchId,
+                //                           ItemId = desItems.ItemId,
+                //                           ItemName = desItems.Item.ItemName,
+                //                           MaterialId = desItems.Item.MaterialId,
+                //                           MaterialName = desItems.Item.Material.MaterialName,
+                //                           TypeId = desItems.Item.TypeId,
+                //                           TypeName = desItems.Item.Type.TypeName,
+                //                           Quantity = desItems.Quantity
+                //                       }).ToList(),
+                //                   }).ToList(),
+                //               }).FirstOrDefault();
+
+                var outwardData = new OutwardData();
+                
+
+                var invoiceDetails = (from oTrans in db.Outwards
+                                  orderby oTrans.InvoiceDate descending
+                                  where oTrans.Id == Id
+                                  select new OutwardData
+                                  {
+                                      InvoiceNumber = oTrans.InvoiceNumber,
+                                      InvoiceDate = oTrans.InvoiceDate,
+                                      CustomerName = oTrans.CustomerName,
+                                      Status = oTrans.Status,
+                                      Comments = oTrans.Comments,
+                                      CreatedOn = oTrans.CreatedOn,
+                                      CreatedBy = oTrans.CreatedBy,
+                                      ModifiedOn = oTrans.ModifiedOn,
+                                      ModifiedBy = oTrans.ModifiedBy
+                                  }).FirstOrDefault();
+                
+                outwardData.Id = invoiceDetails.Id;
+                outwardData.InvoiceNumber = invoiceDetails.InvoiceNumber;
+                outwardData.InvoiceDate = invoiceDetails.InvoiceDate;
+                outwardData.CustomerName = invoiceDetails.CustomerName;
+                outwardData.Comments = invoiceDetails.Comments;
+                outwardData.CreatedOn = invoiceDetails.CreatedOn;
+                outwardData.CreatedBy = invoiceDetails.CreatedBy;
+                outwardData.ModifiedOn = invoiceDetails.ModifiedOn;
+                outwardData.ModifiedBy = invoiceDetails.ModifiedBy;
+                outwardData.Status = invoiceDetails.Status;
+                outwardData.DespatchData = new List<DespatchData>();
+
+                ViewBag.Status = Utility.DefaultList.GetInvoiceStatusList();
+                ViewBag.Mode = "New";
+
+                ViewBag.MaterialId = new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", 1).ToList<SelectListItem>();
+                ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.IsActive == true), "TypeId", "TypeName", 1).ToList<SelectListItem>();
+                ViewBag.ItemId = new SelectList(db.Items.Where(wh => wh.IsActive == true), "ItemId", "ItemName", 1).ToList<SelectListItem>();
+                ViewBag.CompanyId = new SelectList(db.Companies.Where(wh => wh.IsActive == true), "CompanyId", "Name", 1).ToList<SelectListItem>();
+                ViewBag.PaymentStatus = Utility.DefaultList.GetPaymentStatusList("INVOICE");
+                return PartialView(outwardData);
+
+            }
+            return PartialView(objOutward);
         }
 
         [HttpPost]
@@ -468,75 +567,163 @@ namespace ClientManager.Controllers
         public ActionResult EditDespatch(DespatchData despatchData)
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
-            JsonReponse data;
-
-            try
+            JsonReponse data = new JsonReponse();
+            using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
-                if (string.IsNullOrEmpty(despatchData.DespatchNo) || string.IsNullOrEmpty(despatchData.LRNumber) || despatchData.DespatchDate == null || string.IsNullOrEmpty(despatchData.PaymentStatus) || string.IsNullOrEmpty(despatchData.TransportBy) || string.IsNullOrEmpty(despatchData.ShipToCity))
+                try
                 {
-                    data = new JsonReponse()
-                    {
-                        message = "Enter all required fields.",
-                        status = "Failed",
-                        redirectURL = ""
-                    };
-                }
-                else
-                {
-                    DBOperation.Despatch entity = db.Despatches.Where(wh => wh.Id == despatchData.Id).FirstOrDefault();
-                    if (entity == null)
+                    if (string.IsNullOrEmpty(despatchData.DespatchNo) || string.IsNullOrEmpty(despatchData.LRNumber) || despatchData.DespatchDate == null || string.IsNullOrEmpty(despatchData.PaymentStatus) || string.IsNullOrEmpty(despatchData.TransportBy) || string.IsNullOrEmpty(despatchData.ShipToCity))
                     {
                         data = new JsonReponse()
                         {
-                            message = "There is no record for given Id",
+                            message = "Enter all required fields.",
                             status = "Failed",
                             redirectURL = ""
                         };
                     }
                     else
                     {
-                        entity.PaymentStatus = despatchData.PaymentStatus;
-                        entity.LRNumber = despatchData.LRNumber;
-                        entity.DespatchDate = despatchData.DespatchDate;
-                        entity.DespatchNo = despatchData.DespatchNo;
-                        entity.TransportBy = despatchData.TransportBy;
-                        entity.ShipToCity = despatchData.ShipToCity;
-                        entity.ModifiedOn = DateTime.Now;
-                        entity.ModifiedBy = userData.Id;
-
-                        this.db.Entry<DBOperation.Despatch>(entity).State = EntityState.Modified;
-
-                        if (this.db.SaveChanges() > 0)
+                        DBOperation.Despatch entity = db.Despatches.Where(wh => wh.Id == despatchData.Id).FirstOrDefault();
+                        if (entity == null && (despatchData.Id == 0))
                         {
-                            data = new JsonReponse()
+                            DBOperation.Despatch objDespatch = new Despatch();
+                            objDespatch.OutwardId = despatchData.OutwardId;
+                            objDespatch.PaymentStatus = despatchData.PaymentStatus;
+                            objDespatch.LRNumber = despatchData.LRNumber;
+                            objDespatch.DespatchDate = despatchData.DespatchDate;
+                            objDespatch.DespatchNo = despatchData.DespatchNo;
+                            objDespatch.TransportBy = despatchData.TransportBy;
+                            objDespatch.ShipToCity = despatchData.ShipToCity;
+                            objDespatch.CreatedOn = DateTime.Now;
+                            objDespatch.CreatedBy = userData.Id;
+
+                            this.db.Despatches.Add(objDespatch);
+                            var despatchId = this.db.SaveChanges();
+
+                            if (despatchId > 0)
                             {
-                                message = "Despatch details Updated successfully!",
-                                status = "Success",
-                                redirectURL = "/Outward/List"
-                            };
+                                if (despatchData.DespatchItems != null && despatchData.DespatchItems.Count() > 0)
+                                {
+                                    var despatchItem = new DBOperation.DespatchItem();
+                                    foreach (var item in despatchData.DespatchItems)
+                                    {
+                                        var despatchItemData = new DespatchItem
+                                        {
+                                            ItemId = item.ItemId,
+                                            DespatchId = objDespatch.Id,
+                                            Quantity = item.Quantity,
+                                        };
+
+                                        this.db.DespatchItems.Add(despatchItemData);
+                                    }
+
+                                    if (this.db.SaveChanges() > 0)
+                                    {
+                                        data = new JsonReponse()
+                                        {
+                                            message = "Despatch details Updated successfully!",
+                                            status = "Success",
+                                            redirectURL = "/Outward/List"
+                                        };
+                                    }
+                                }
+                                else
+                                {
+                                    data = new JsonReponse()
+                                    {
+                                        message = "Add atlease one product details.",
+                                        status = "Failed",
+                                        redirectURL = ""
+                                    };
+                                    transaction.Rollback();
+                                    return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+                                }
+
+                            }
+                            else
+                            {
+                                data = new JsonReponse()
+                                {
+                                    message = "Not completed, try again after sometime.",
+                                    status = "Failed",
+                                    redirectURL = ""
+                                };
+                            }
                         }
                         else
                         {
-                            data = new JsonReponse()
+                            entity.PaymentStatus = despatchData.PaymentStatus;
+                            entity.LRNumber = despatchData.LRNumber;
+                            entity.DespatchDate = despatchData.DespatchDate;
+                            entity.DespatchNo = despatchData.DespatchNo;
+                            entity.TransportBy = despatchData.TransportBy;
+                            entity.ShipToCity = despatchData.ShipToCity;
+                            entity.ModifiedOn = DateTime.Now;
+                            entity.ModifiedBy = userData.Id;
+
+                            this.db.Entry<DBOperation.Despatch>(entity).State = EntityState.Modified;
+                            var despatchId = this.db.SaveChanges();
+                            if (despatchId > 0)
                             {
-                                message = "Not completed, try again after sometime.",
-                                status = "Failed",
-                                redirectURL = ""
-                            };
+                                if (entity.DespatchItems != null && entity.DespatchItems.Count() > 0)
+                                {
+                                    //Remove old entries
+                                    foreach (var item in db.DespatchItems.Where(wh => wh.DespatchId == entity.Id))
+                                    {
+                                        this.db.Entry<DBOperation.DespatchItem>(item).State = EntityState.Deleted;
+                                        this.db.SaveChanges();
+                                    }
+
+                                    var despatchItem = new DBOperation.DespatchItem();
+
+                                    //Add new entries
+                                    foreach (var item in despatchData.DespatchItems)
+                                    {
+                                        var despatchItemData = new DespatchItem
+                                        {
+                                            ItemId = item.ItemId,
+                                            DespatchId = entity.Id,
+                                            Quantity = item.Quantity,
+                                        };
+
+                                        this.db.DespatchItems.Add(despatchItemData);
+                                    }
+                                }
+                            }
+
+                            if (this.db.SaveChanges() > 0)
+                            {
+                                data = new JsonReponse()
+                                {
+                                    message = "Despatch details Updated successfully!",
+                                    status = "Success",
+                                    redirectURL = "/Outward/List"
+                                };
+                            }
+                            else
+                            {
+                                data = new JsonReponse()
+                                {
+                                    message = "Not completed, try again after sometime.",
+                                    status = "Failed",
+                                    redirectURL = ""
+                                };
+                            }
                         }
                     }
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    data = new JsonReponse()
+                    {
+                        message = ex.Message,
+                        status = "Error",
+                        redirectURL = ""
+                    };
                 }
             }
-            catch (Exception ex)
-            {
-                data = new JsonReponse()
-                {
-                    message = ex.Message,
-                    status = "Error",
-                    redirectURL = ""
-                };
-            }
-
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
@@ -549,6 +736,13 @@ namespace ClientManager.Controllers
             ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == 1), "TypeId", "TypeName", 1).ToList<SelectListItem>();
             ViewBag.ItemId = new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == 1), "ItemId", "ItemName", 1).ToList<SelectListItem>();
             return PartialView(new List<ClientManager.Models.DespatchItemData>());
+        }
+
+        [HttpGet]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
+        public int GetAvailableQuantity(int itemId = 0)
+        {
+            return Utility.CommonFunctions.GetAvailableQuantity(itemId);
         }
     }
 

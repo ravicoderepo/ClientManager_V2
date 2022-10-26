@@ -359,7 +359,7 @@
     function fnGetAvailableQuantity(id) {
         
         $.ajax({
-            url: "/stocks/GetAvailableQuantity?itemId=" + id,
+            url: "/Outward/GetAvailableQuantity?itemId=" + id,
             type: "Get",
             success: function (data) {             
                     $('#txtAvailableQuantity').val(data);             
