@@ -30,7 +30,6 @@
     }
 </style>
 
-
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
@@ -58,9 +57,6 @@
                                                     <input type="hidden" id="hdnId" value="@Model.Id" />
                                                     @*@Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "hdnId", @name= "hdnId" } })*@
                                                     @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control", @id = "txtInvoiceNumber", @name = "InvoiceNumber", @readonly = "readonly" } })
-                                                    <div class="input-group-append" data-target="#txtInvoiceNumber" data-toggle="datetimepicker">
-                                                        <div class="input-group-text"><i class="fa fa-magic"></i></div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -112,7 +108,7 @@
                                             <label for="DespatchNo">Despatch No</label>
                                             <input type="hidden" id="hdnDespatchId" value="@Model.DespatchData.FirstOrDefault().Id" />
                                             @*@Html.HiddenFor(model => model.DespatchData.FirstOrDefault().Id, new { htmlAttributes = new { @id = "hdnDespatchId", @name = "hdnDespatchId" } })*@
-                                            @Html.EditorFor(model => model.DespatchData.FirstOrDefault().DespatchNo, new { htmlAttributes = new { @class = "form-control", @id = "txtDespatchNo", @name = "DespatchNo" } })
+                                            @Html.EditorFor(model => model.DespatchData.FirstOrDefault().DespatchNo, new { htmlAttributes = new { @class = "form-control", @id = "txtDespatchNo", @name = "DespatchNo", @readonly="readonly" } })
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -197,12 +193,12 @@
                                                         @Html.Editor("Quantity", new { htmlAttributes = new { @class = "form-control", @id = "txtQuantity", @name = "Quantity" } })
                                                     </div>
                                                 </div>
-                                                <div class="col-md-12">
+                                                @*<div class="col-md-12">
                                                     <div class="form-group">
                                                         <label for="Remarks">Remarks</label>
                                                         <input type="text" class="form-control" id="txtRemarks" name="Remarks" />
                                                     </div>
-                                                </div>
+                                                </div>*@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12">
@@ -229,26 +225,29 @@
                                                                     int i = 1;
                                                                     foreach (var item in Model.DespatchData.FirstOrDefault().DespatchItems)
                                                                     {
-                                                            <tr id="rec-@item.Id" data-added="@item.Id">
-                                                                <td><span class="sn"></span>@i.</td>
-                                                                <td class="Meterial" data-added="@item.MaterialId">
-                                                                    @item.MaterialName
-                                                                </td>
-                                                                <td class="Type" data-added="@item.TypeId">
-                                                                    @item.TypeName
-                                                                </td>
-                                                                <td class="Item" data-added="@item.ItemId">
-                                                                    @item.ItemName
-                                                                </td>
-                                                                <td class="Quantity">
-                                                                    @item.Quantity
-                                                                </td>
-                                                                <td>
-                                                                    <a class="btn btn-primary btn-xs edit-record" style="margin-left:5px" data-id="@item.Id"><i class="far fa-edit"></i></a><a class="btn btn-danger btn-xs delete-record" style="margin-left:5px" data-id="@item.Id"><i class="far fa-trash-alt"></i></a>
-                                                                </td>
-                                                            </tr>
+                                                                        if (item.Id > 0)
+                                                                        {
+                                                                            <tr id="rec-@item.Id" data-added="@item.Id">
+                                                                                <td><span class="sn"></span>@i.</td>
+                                                                                <td class="Meterial" data-added="@item.MaterialId">
+                                                                                    @item.MaterialName
+                                                                                </td>
+                                                                                <td class="Type" data-added="@item.TypeId">
+                                                                                    @item.TypeName
+                                                                                </td>
+                                                                                <td class="Item" data-added="@item.ItemId">
+                                                                                    @item.ItemName
+                                                                                </td>
+                                                                                <td class="Quantity">
+                                                                                    @item.Quantity
+                                                                                </td>
+                                                                                <td>
+                                                                                    <a class="btn btn-primary btn-xs edit-record" style="margin-left:5px" data-id="@item.Id"><i class="far fa-edit"></i></a><a class="btn btn-danger btn-xs delete-record" style="margin-left:5px" data-id="@item.Id"><i class="far fa-trash-alt"></i></a>
+                                                                                </td>
+                                                                            </tr>
 
-                                                                        i++;
+                                                                            i++;
+                                                                        }
                                                                     }
                                                                 }
                                                             }
@@ -280,7 +279,8 @@
                             </fieldset>
                         </div>
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Update Despatch</button> <button type="button" class="btn btn-danger">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Update Despatch</button>
+                            @*<button type="button" class="btn btn-danger">Cancel</button>*@
                         </div>
                         <!-- /.card-body -->
                     </form>
@@ -315,23 +315,20 @@
             });
         }
 
+        
+
         //$('#txtInvoiceDate').val('');
         $('#txtQuantity').val(0);
         $('#txtAvailableQuantity').val(0);
-        $('#txtInvoiceDate').datetimepicker({
-            format: 'DD/MM/YYYY'
-        });
-        $('#txtDespatchDate').datetimepicker({
-            format: 'DD/MM/YYYY'
-        });
+        
     });
 
 
     $(function () {
-        debugger;
+       
         $.validator.setDefaults({
             submitHandler: function () {
-                debugger;
+               
                 //fnSubmitDespatchDetails();
             }
         });
@@ -365,7 +362,7 @@
                 $(element).removeClass('is-invalid');
             },
             submitHandler: function () {
-                debugger;
+               
                 fnSubmitDespatchDetails();
             }
 
@@ -395,7 +392,7 @@
         }
     }
     function fnBindTypesDropdown(id, selectedValue) {
-        debugger;
+       
         $.ajax({
             url: "/types/GetProductMaster?materialId=" + id,
             type: "Get",
@@ -415,7 +412,7 @@
 
     }
     function fnBindItemsDropDown(id, selectedValue) {
-        debugger;
+       
         $.ajax({
             url: "/items/GetProducts?prodMasterId=" + id,
             type: "Get",
@@ -436,7 +433,7 @@
         $("input[name=ItemId]").val($('#ddlItemId').val());
     }
     function fnGetAvailableQuantity(id) {
-        debugger;
+       
         $.ajax({
             url: "/Outward/GetAvailableQuantity?itemId=" + id,
             type: "Get",
@@ -505,7 +502,7 @@
                 }
             }
 
-
+            //$(".add-record").text().replace("Update","Add");
         }
 
         //cleardata
@@ -530,6 +527,7 @@
 
         $("#txtQuantity").val($(this).parents('tr').find('.Quantity').text().trim());
         $("input[name=ItemId]").val($('#ddlItemId').val());
+        //$(".add-record").text().replace("Add", "Update");
         fnGetAvailableQuantity($(this).parents('tr').find('.Item').attr('data-added'));
         return false;
     });
@@ -537,7 +535,7 @@
     //Delete
     $(document).delegate('a.delete-record', 'click', function (e) {
         e.preventDefault();
-        debugger;
+       
         var didConfirm = confirm("Are you sure You want to delete?");
         if (didConfirm == true) {
             var id = jQuery(this).attr('data-id');
@@ -557,12 +555,12 @@
 
 
     function fnSubmitDespatchDetails() {
-        debugger;
+       
         let desItems = [];
         let desData = [];
-        debugger;
+       
         $('#tbl_posts_body tr').each(function () {
-            debugger;
+           
             desItems.push({
                 Id: $(this).attr('data-added'),
                 DespatchId: $("#hdnDespatchId").val(),
@@ -627,8 +625,30 @@
     });
 
     if ('@ViewBag.Mode'=='New') {
-        debugger;
+       
         $('#quickFormPopup > div.card-footer > button.btn.btn-primary').text('Save Despatch');
-        //$('#hdnDespatchId').val(0);
+       // $('#txtDespatchDate').val('');
+        $('#txtDespatchDate').val('');
+        $('#txtDespatchNo').val('@ViewBag.UniqueId');
     }
+
+    $(function () {
+        $('#txtInvoiceDate').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+        $('#txtDespatchDate').datetimepicker({
+            format: 'DD/MM/YYYY'
+        })
+    });
+
+    //$('#modal-xl button.close').click(function () {
+
+    //    alert();
+    //    location.href = location.href
+    //});
+    $('#modal-xl').on('hide.bs.modal', function () {
+        location.href = location.href
+    });
 </script>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

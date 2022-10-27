@@ -3435,9 +3435,10 @@ var TempusDominusBootstrap4 = function ($) {
       return;
     }
 
-    if (config._options.allowInputToggle && $originalTarget.is('input[data-toggle="datetimepicker"]')) {
-      return;
-    }
+      if (config._options.allowInputToggle && $originalTarget.is('input[data-toggle="datetimepicker"]')) {
+          debugger;
+          return;
+      }
 
     TempusDominusBootstrap4._jQueryInterface.call($target, 'toggle');
   }).on(DateTimePicker.Event.CHANGE, "." + DateTimePicker.ClassName.INPUT, function (event) {

@@ -74,9 +74,7 @@
                                                 <div class="input-group date" data-target-input="nearest">
                                                     @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "hdnId" } })
                                                     @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control", @id = "txtInvoiceNumber", @name = "InvoiceNumber" } })
-                                                    <div class="input-group-append" data-target="#txtInvoiceNumber" data-toggle="datetimepicker">
-                                                        <div class="input-group-text"><i class="fa fa-magic"></i></div>
-                                                    </div>
+                                                   
                                                 </div>
                                             </div>
                                         </div>
@@ -249,10 +247,10 @@
 
 
     $(function () {
-        debugger;
+       
         $.validator.setDefaults({
             submitHandler: function () {
-                debugger;
+               
                 //fnSubmitOutwardDetails();
             }
         });
@@ -286,7 +284,7 @@
                 $(element).removeClass('is-invalid');
             },
             submitHandler: function () {
-                debugger;
+               
                 fnSubmitOutwardDetails();
             }
 
@@ -301,7 +299,7 @@
     
 
     function fnSubmitOutwardDetails() {
-        debugger;
+       
         $("input[name=Status]").val($('#ddlStatus').val());
         var outwardData = {
 
@@ -347,9 +345,11 @@
     });
 
     function fnEditDespatch(dataId, isAddDispatch) {
-        debugger;
+       
         $('#modal-xl').find(".modal-title").text('Despatch Details');
         $('#modal-xl').find(".modal-body").load('/Outward/EditDespatch?Id=' + dataId + "&IsAddDeshpatch=" + isAddDispatch);
         
     }
+   
+   
 </script>

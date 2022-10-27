@@ -595,6 +595,12 @@ namespace Utility
             var oSum = Convert.ToInt16(db.DespatchItems.Where(wh => wh.ItemId == itemId).Sum(s => (int?)s.Quantity));
             return (iSum-oSum);
         }
+
+        public static string GenerateUniqueNumber(string entityCode)
+        {
+            int value = (new Random()).Next(3, 100);      
+            return entityCode + "-" + DateTime.Now.ToString("yyyyMMdd") + "-" + value.ToString();
+        }
     }
 }
 

@@ -56,10 +56,10 @@ namespace ClientManager.Controllers
         public ActionResult Create()
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
-            ViewBag.MaterialId = Utility.DefaultList.BindList(new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", 1).ToList<SelectListItem>(), true);
-            ViewBag.TypeId = Utility.DefaultList.BindList(new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == 0), "TypeId", "TypeName", 1).ToList<SelectListItem>(), true);
-            ViewBag.ItemId = Utility.DefaultList.BindList(new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == 0), "ItemId", "ItemName", 1).ToList<SelectListItem>(), true);
-            ViewBag.CompanyId = Utility.DefaultList.BindList(new SelectList(db.Companies.Where(wh => wh.IsActive == true && wh.IsActive == true), "CompanyId", "Name", 1).ToList<SelectListItem>(),true);
+            ViewBag.MaterialId = Utility.DefaultList.BindList(new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", 0).ToList<SelectListItem>(), true);
+            ViewBag.TypeId = Utility.DefaultList.BindList(new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == 0), "TypeId", "TypeName", 0).ToList<SelectListItem>(), true);
+            ViewBag.ItemId = Utility.DefaultList.BindList(new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == 0), "ItemId", "ItemName", 0).ToList<SelectListItem>(), true);
+            ViewBag.CompanyId = Utility.DefaultList.BindList(new SelectList(db.Companies.Where(wh => wh.IsActive == true && wh.IsActive == true), "CompanyId", "Name", 0).ToList<SelectListItem>(),true);
             return View();
         }
 

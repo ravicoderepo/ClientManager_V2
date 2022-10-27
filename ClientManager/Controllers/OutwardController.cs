@@ -341,7 +341,6 @@ namespace ClientManager.Controllers
             {
                 var outward = (from oTrans in db.Outwards
                                orderby oTrans.InvoiceDate descending
-                               where oTrans.Id == Id
                                select new OutwardData
                                {
                                    Id = oTrans.Id,
@@ -354,7 +353,7 @@ namespace ClientManager.Controllers
                                    CreatedBy = oTrans.CreatedBy,
                                    ModifiedOn = oTrans.ModifiedOn,
                                    ModifiedBy = oTrans.ModifiedBy,
-                                   DespatchData = oTrans.Despatches.Select(sel => new DespatchData
+                                   DespatchData = oTrans.Despatches.Where(wh=> wh.Id== Id).Select(sel => new DespatchData
                                    {
                                        DespatchDate = sel.DespatchDate,
                                        DespatchNo = sel.DespatchNo,
@@ -384,10 +383,9 @@ namespace ClientManager.Controllers
 
                 objOutward = outward;
                 ViewBag.Status = Utility.DefaultList.GetInvoiceStatusList(objOutward.Status);
-                ViewBag.MaterialId = new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", 1).ToList<SelectListItem>();
-                ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.IsActive == true), "TypeId", "TypeName", 1).ToList<SelectListItem>();
-                ViewBag.ItemId = new SelectList(db.Items.Where(wh => wh.IsActive == true), "ItemId", "ItemName", 1).ToList<SelectListItem>();
-                ViewBag.CompanyId = new SelectList(db.Companies.Where(wh => wh.IsActive == true), "CompanyId", "Name", 1).ToList<SelectListItem>();
+
+             
+
                 if (objOutward.DespatchData.FirstOrDefault() != null)
                 {
                     ViewBag.PaymentStatus = Utility.DefaultList.GetPaymentStatusList("INVOICE", objOutward.DespatchData.FirstOrDefault().PaymentStatus);
@@ -397,92 +395,41 @@ namespace ClientManager.Controllers
             }
             else
             {
-                //var despatch = new DespatchData() { DespatchItems = new List<DespatchItemData>() };
-                //var outward = (from oTrans in db.Outwards
-                //               orderby oTrans.InvoiceDate descending
-                //               where oTrans.Id == Id
-                //               select new OutwardData
-                //               {
-                //                   InvoiceNumber = oTrans.InvoiceNumber,
-                //                   InvoiceDate = oTrans.InvoiceDate,
-                //                   CustomerName = oTrans.CustomerName,
-                //                   Status = oTrans.Status,
-                //                   Comments = oTrans.Comments,
-                //                   CreatedOn = oTrans.CreatedOn,
-                //                   CreatedBy = oTrans.CreatedBy,
-                //                   ModifiedOn = oTrans.ModifiedOn,
-                //                   ModifiedBy = oTrans.ModifiedBy,
-                //                   DespatchData = despatch,
-                //                   oTrans.Despatches.Where(wh => wh.Id == 0).Select(sel => new DespatchData
-                //                   {
-                //                       DespatchDate = sel.DespatchDate,
-                //                       DespatchNo = sel.DespatchNo,
-                //                       Id = sel.Id,
-                //                       LRNumber = sel.LRNumber,
-                //                       PaymentStatus = sel.PaymentStatus,
-                //                       TransportBy = sel.TransportBy,
-                //                       ShipToCity = sel.ShipToCity,
-                //                       CreatedBy = sel.CreatedBy,
-                //                       CreatedOn = sel.CreatedOn,
-                //                       ModifiedBy = sel.ModifiedBy,
-                //                       ModifiedOn = sel.ModifiedOn,
-                //                       DespatchItems = sel.DespatchItems.Where(wh => wh.Id == 0).Select(desItems => new DespatchItemData
-                //                       {
-                //                           Id = desItems.Id,
-                //                           DespatchId = desItems.DespatchId,
-                //                           ItemId = desItems.ItemId,
-                //                           ItemName = desItems.Item.ItemName,
-                //                           MaterialId = desItems.Item.MaterialId,
-                //                           MaterialName = desItems.Item.Material.MaterialName,
-                //                           TypeId = desItems.Item.TypeId,
-                //                           TypeName = desItems.Item.Type.TypeName,
-                //                           Quantity = desItems.Quantity
-                //                       }).ToList(),
-                //                   }).ToList(),
-                //               }).FirstOrDefault();
+                var outward = (from oTrans in db.Outwards
+                               orderby oTrans.InvoiceDate descending
+                               where oTrans.Id == Id
+                               select new OutwardData
+                               {
+                                   Id = oTrans.Id,
+                                   InvoiceNumber = oTrans.InvoiceNumber,
+                                   InvoiceDate = oTrans.InvoiceDate,
+                                   CustomerName = oTrans.CustomerName,
+                                   Status = oTrans.Status,
+                                   Comments = oTrans.Comments,
+                                   CreatedOn = oTrans.CreatedOn,
+                                   CreatedBy = oTrans.CreatedBy,
+                                   ModifiedOn = oTrans.ModifiedOn,
+                                   ModifiedBy = oTrans.ModifiedBy,
+                                   DespatchData = oTrans.Despatches.Select(sel => new DespatchData
+                                   {
+                                       //DespatchDate = DateTime.Now,
+                                       DespatchItems = sel.DespatchItems.Select(desItems => new DespatchItemData
+                                       {
+                                       }).ToList(),
+                                   }).ToList(),
+                               }).FirstOrDefault();
 
-                var outwardData = new OutwardData();
-                
+                objOutward = outward;
 
-                var invoiceDetails = (from oTrans in db.Outwards
-                                  orderby oTrans.InvoiceDate descending
-                                  where oTrans.Id == Id
-                                  select new OutwardData
-                                  {
-                                      InvoiceNumber = oTrans.InvoiceNumber,
-                                      InvoiceDate = oTrans.InvoiceDate,
-                                      CustomerName = oTrans.CustomerName,
-                                      Status = oTrans.Status,
-                                      Comments = oTrans.Comments,
-                                      CreatedOn = oTrans.CreatedOn,
-                                      CreatedBy = oTrans.CreatedBy,
-                                      ModifiedOn = oTrans.ModifiedOn,
-                                      ModifiedBy = oTrans.ModifiedBy
-                                  }).FirstOrDefault();
-                
-                outwardData.Id = invoiceDetails.Id;
-                outwardData.InvoiceNumber = invoiceDetails.InvoiceNumber;
-                outwardData.InvoiceDate = invoiceDetails.InvoiceDate;
-                outwardData.CustomerName = invoiceDetails.CustomerName;
-                outwardData.Comments = invoiceDetails.Comments;
-                outwardData.CreatedOn = invoiceDetails.CreatedOn;
-                outwardData.CreatedBy = invoiceDetails.CreatedBy;
-                outwardData.ModifiedOn = invoiceDetails.ModifiedOn;
-                outwardData.ModifiedBy = invoiceDetails.ModifiedBy;
-                outwardData.Status = invoiceDetails.Status;
-                outwardData.DespatchData = new List<DespatchData>();
-
-                ViewBag.Status = Utility.DefaultList.GetInvoiceStatusList();
+                ViewBag.Status = Utility.DefaultList.GetInvoiceStatusList(objOutward.Status);
                 ViewBag.Mode = "New";
-
-                ViewBag.MaterialId = new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", 1).ToList<SelectListItem>();
-                ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.IsActive == true), "TypeId", "TypeName", 1).ToList<SelectListItem>();
-                ViewBag.ItemId = new SelectList(db.Items.Where(wh => wh.IsActive == true), "ItemId", "ItemName", 1).ToList<SelectListItem>();
-                ViewBag.CompanyId = new SelectList(db.Companies.Where(wh => wh.IsActive == true), "CompanyId", "Name", 1).ToList<SelectListItem>();
-                ViewBag.PaymentStatus = Utility.DefaultList.GetPaymentStatusList("INVOICE");
-                return PartialView(outwardData);
-
+                ViewBag.UniqueId = Utility.CommonFunctions.GenerateUniqueNumber("DES");
+                ViewBag.PaymentStatus = Utility.DefaultList.GetPaymentStatusList("INVOICE");    
             }
+            ViewBag.MaterialId = Utility.DefaultList.BindList(new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", 0).ToList<SelectListItem>(), true);
+            ViewBag.TypeId = Utility.DefaultList.BindList(new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == 0), "TypeId", "TypeName", 0).ToList<SelectListItem>(), true);
+            ViewBag.ItemId = Utility.DefaultList.BindList(new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == 0), "ItemId", "ItemName", 0).ToList<SelectListItem>(), true);
+            ViewBag.CompanyId = Utility.DefaultList.BindList(new SelectList(db.Companies.Where(wh => wh.IsActive == true), "CompanyId", "Name", 1).ToList<SelectListItem>(), true);
             return PartialView(objOutward);
         }
 

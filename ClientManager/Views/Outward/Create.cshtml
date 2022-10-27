@@ -310,10 +310,10 @@
 
 
     $(function () {
-        debugger;
+       
         $.validator.setDefaults({
             submitHandler: function () {
-                debugger;
+               
                 //fnSubmitOutwardDetails();
             }
         });
@@ -347,7 +347,7 @@
                 $(element).removeClass('is-invalid');
             },
             submitHandler: function () {
-                debugger;
+               
                 fnSubmitOutwardDetails();
             }
 
@@ -377,7 +377,7 @@
         }
     }
     function fnBindTypesDropdown(id, selectedValue) {
-        debugger;
+       
         $.ajax({
             url: "/types/GetProductMaster?materialId=" + id,
             type: "Get",
@@ -397,7 +397,7 @@
 
     }
     function fnBindItemsDropDown(id, selectedValue) {
-        debugger;
+       
         $.ajax({
             url: "/items/GetProducts?prodMasterId=" + id,
             type: "Get",
@@ -418,7 +418,7 @@
         $("input[name=ItemId]").val($('#ddlItemId').val());
     }
     function fnGetAvailableQuantity(id) {
-        debugger;
+       
         $.ajax({
             url: "/Outward/GetAvailableQuantity?itemId=" + id,
             type: "Get",
@@ -535,12 +535,12 @@
     });
 
     function fnSubmitOutwardDetails() {
-        debugger;
+       
         let desItems = [];
         let desData = [];
-        debugger;
+       
         $('#tbl_posts_body tr').each(function () {
-            debugger;
+           
             desItems.push({
                 Id: $(this).attr('data-added'),
                 OutwardId: $('#hdnId').val(),
