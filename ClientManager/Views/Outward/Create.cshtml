@@ -122,7 +122,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="DespatchNo">Despatch No</label>
-                                                @Html.EditorFor(model => model.DespatchData.FirstOrDefault().DespatchNo, new { htmlAttributes = new { @class = "form-control", @id = "txtDespatchNo", @name = "DespatchNo" } })
+                                                @Html.EditorFor(model => model.DespatchData.FirstOrDefault().DespatchNo, new { htmlAttributes = new { @class = "form-control", @id = "txtDespatchNo", @name = "DespatchNo", @readonly="readonly" } })
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -310,10 +310,10 @@
 
 
     $(function () {
-       
+
         $.validator.setDefaults({
             submitHandler: function () {
-               
+
                 //fnSubmitOutwardDetails();
             }
         });
@@ -347,7 +347,7 @@
                 $(element).removeClass('is-invalid');
             },
             submitHandler: function () {
-               
+
                 fnSubmitOutwardDetails();
             }
 
@@ -377,7 +377,7 @@
         }
     }
     function fnBindTypesDropdown(id, selectedValue) {
-       
+
         $.ajax({
             url: "/types/GetProductMaster?materialId=" + id,
             type: "Get",
@@ -397,7 +397,7 @@
 
     }
     function fnBindItemsDropDown(id, selectedValue) {
-       
+
         $.ajax({
             url: "/items/GetProducts?prodMasterId=" + id,
             type: "Get",
@@ -418,7 +418,7 @@
         $("input[name=ItemId]").val($('#ddlItemId').val());
     }
     function fnGetAvailableQuantity(id) {
-       
+
         $.ajax({
             url: "/Outward/GetAvailableQuantity?itemId=" + id,
             type: "Get",
@@ -487,7 +487,7 @@
                 }
             }
 
-           
+
         }
 
         //cleardata
@@ -535,12 +535,12 @@
     });
 
     function fnSubmitOutwardDetails() {
-       
+
         let desItems = [];
         let desData = [];
-       
+
         $('#tbl_posts_body tr').each(function () {
-           
+
             desItems.push({
                 Id: $(this).attr('data-added'),
                 OutwardId: $('#hdnId').val(),
@@ -561,7 +561,7 @@
             TransportBy: $("#txtTransportBy").val(),
             ShipToCity: $("#txtShipToCity").val(),
             DespatchItems: desItems
-        });       
+        });
 
         var outwardData = {
 
@@ -595,7 +595,7 @@
         });
     }
 
-    
+    $('#txtDespatchNo').val('@ViewBag.UniqueId');
 
     $("#mnuOutwardList").addClass("active");
     var parentMenu = $("#mnuOutwardList").parent().parent().parent();

@@ -59,7 +59,7 @@ namespace ClientManager.Controllers
             ViewBag.PaymentStatus = Utility.DefaultList.GetPaymentStatusList("INVOICE");
             var outwardData = new OutwardData();
             outwardData.DespatchData = new List<DespatchData>();
-
+            ViewBag.UniqueId = Utility.CommonFunctions.GenerateUniqueNumber("DES");
             return View(outwardData);
         }
 
@@ -117,6 +117,19 @@ namespace ClientManager.Controllers
                             }
                             else
                             {
+                                //var count = db.Outwards.Where(wh => wh.InvoiceNumber.Equals(outwardData.InvoiceNumber)).Count();
+                                //if (count > 0)
+                                //{
+                                //    data = new JsonReponse()
+                                //    {
+                                //        message = "Given Invoice number already exisit.",
+                                //        status = "Failed",
+                                //        redirectURL = ""
+                                //    };
+                                //    transaction.Rollback();
+                                //    return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+                                //}
+
                                 var despatch = new DBOperation.Despatch();
 
                                 var dispatchData = outwardData.DespatchData.FirstOrDefault();
