@@ -16,4 +16,14 @@ namespace ClientManager.Models
         public DateTime? ModifiedOn { get; set; }
         public int? ModifiedBy { get; set; }
     }
+
+    public class ItemSummaryData
+    {
+        public int ItemId { get; set; }
+        public string ItemName { get; set; }
+        public string MaterialName { get; set; }
+        public string TypeName { get; set; }
+        public int TotalQuantity { get; set; }
+        public int AvailableQuantity { get; set; }
+    }
 }

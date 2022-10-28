@@ -171,7 +171,8 @@
                                                         @Html.DisplayFor(modelItem => item.DespatchNo)
                                                     </td>
                                                     <td>
-                                                        @Html.DisplayFor(modelItem => item.DespatchDate)
+                                                        @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.DespatchDate))
+                                                        @*@Html.DisplayFor(modelItem => item.DespatchDate)*@
                                                     </td>
 
                                                     <td>

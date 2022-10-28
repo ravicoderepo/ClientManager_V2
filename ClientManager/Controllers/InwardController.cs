@@ -44,7 +44,7 @@ namespace ClientManager.Controllers
             return View(inwardList);
         }
 
-        [HttpGet]
+        [HttpGet]        
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult ListView()
         {
@@ -287,6 +287,57 @@ namespace ClientManager.Controllers
                 }
             }
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        [HttpGet]
+        [CustomAuthorize(new string[] { "Super User", "Super Admin", "Sales Manager", "Sales Engineer", "Store Admin" })]
+        public ActionResult GetStocks()
+        {
+            var stocks = (from stock in db.VRM_InwardStock.AsEnumerable()
+                          group stock by stock.ItemId into itemGroup
+                          select new ItemSummaryData
+                          {
+                              ItemId = itemGroup.FirstOrDefault().ItemId,
+                              ItemName = itemGroup.FirstOrDefault().Item.ItemName,
+                              MaterialName = itemGroup.FirstOrDefault().Material.MaterialName,
+                              TypeName = itemGroup.FirstOrDefault().Type.TypeName,
+                              TotalQuantity = itemGroup.Sum(s => s.Quantity),
+                              AvailableQuantity = Utility.CommonFunctions.GetAvailableQuantity(itemGroup.FirstOrDefault().ItemId),
+                          }).ToList();
+
+
+            return View(stocks);
+        }
+
+        [HttpGet]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
+        public ActionResult GetStockDetails(int Id)
+        {
+            var inwardList = (from iTrans in db.VRM_InwardStockTransaction
+                              join iStock in db.VRM_InwardStock on iTrans.StockId equals iStock.StockId
+                              where iStock.ItemId == Id
+                              orderby iTrans.ReceivedDate descending
+                              select new InwardData
+                              {
+                                  StockId = iStock.StockId,
+                                  InwardStockTransactionId = iTrans.InwardStockTransactionId,
+                                  MaterialId = iStock.MaterialId,
+                                  MaterialName = iStock.Material.MaterialName,
+                                  TypeId = iStock.TypeId,
+                                  TypeName = iStock.Type.TypeName,
+                                  ItemId = iStock.TypeId,
+                                  ItemName = iStock.Item.ItemName,
+                                  Quantity = iStock.Quantity,
+                                  PONumber = iTrans.PONumber,
+                                  GRNnumber = iTrans.GRNnumber,
+                                  ReceivedBy = iTrans.ReceivedBy,
+                                  ReceivedDate = iTrans.ReceivedDate,
+                                  Description = iTrans.Description
+                              }).ToList();
+
+            return PartialView(inwardList);
         }
     }
 }

@@ -148,14 +148,16 @@
                                             @Html.DisplayFor(modelItem => item.Comments)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.CreatedOn)
+                                            @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
+                                            @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.CreatedBy)
                                         </td>
 
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.ModifiedOn)
+                                            @*@Html.DisplayFor(modelItem => item.ModifiedOn)*@
+                                            @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.ModifiedBy)

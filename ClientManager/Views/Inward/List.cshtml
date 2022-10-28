@@ -154,7 +154,8 @@
                                         </td>
 
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.ReceivedDate)
+                                            @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ReceivedDate))
+                                            @*@Html.DisplayFor(modelItem => item.ReceivedDate)*@
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.ReceivedBy)

@@ -1,0 +1,255 @@
+﻿@model IEnumerable<ClientManager.Models.ItemSummaryData>
+@using System.Linq;
+@{
+    ViewBag.Title = "GetStocks";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+}
+<style>
+    table tr td:first-child {
+        white-space: nowrap;
+    }
+</style>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Stock</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Stocks</a></li>
+                        <li class="breadcrumb-item"><a href="#">Products</a></li>
+                        <li class="breadcrumb-item active">List</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- BAR CHART -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Stock Summary Chart</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                @*<button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>*@
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart">
+                                <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-4 col-sm-8">
+                                    <h3 class="card-title">Stock Summary List</h3>
+                                </div>
+                                <div class="col-4 col-sm-2">
+                                </div>
+                                @*<div class="col-4 col-sm-2">
+                                        <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Adv. Search</button>
+                                    </div>*@
+
+                            </div>
+
+                        </div>
+
+                        <!-- /.card -->
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="example1" class="table table-bordered table-striped" data-page-length='50'>
+                                <thead>
+                                    <tr>
+                                        @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Super User") || currentUser.UserRoles.Any(wh => wh.RoleName == "Super Admin"))
+                                        {
+                                            <th>Action</th>
+                                        }
+                                        <th>
+                                            Product Name
+                                        </th>
+                                        <th>
+                                            Product Master Name
+                                        </th>
+                                        <th>
+                                            Material Type Name
+                                        </th>
+                                        <th>
+                                            Total Qty.
+                                        </th>
+                                        <th>
+                                            Available Qty.
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Super User") || currentUser.UserRoles.Any(wh => wh.RoleName == "Super Admin"))
+                                            {
+                                                <td>
+
+                                                    <button type="button" class="btn btn-primary btn-xs" title="View" data-toggle="modal" data-target="#modal-xl" onclick="fnViewStockDetail('@item.ItemId')"><i class="far fa-eye"></i></button>
+
+                                                </td>
+                                            }
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ItemName)
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.MaterialName)
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.TypeName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.TotalQuantity)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.AvailableQuantity)
+                                            </td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+<script>
+
+    var prodNames = [@Html.Raw(string.Join(",", Model.Select(sel => "'" + sel.ItemName + "'").ToArray()))];
+    var avail = [@String.Join(",", Model.Select(sel => sel.AvailableQuantity).ToArray())];
+     var total =[@String.Join(",", Model.Select(sel => sel.TotalQuantity).ToArray())];
+    debugger;
+    var areaChartData = {
+        labels: prodNames,
+        datasets: [
+            {
+                label: 'Available',
+                backgroundColor: 'rgba(60,141,188,0.9)',
+                borderColor: 'rgba(60,141,188,0.8)',
+                pointRadius: false,
+                pointColor: '#3b8bba',
+                pointStrokeColor: 'rgba(60,141,188,1)',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(60,141,188,1)',
+                data: avail
+            },
+            {
+                label: 'Total',
+                backgroundColor: 'rgba(210, 214, 222, 1)',
+                borderColor: 'rgba(210, 214, 222, 1)',
+                pointRadius: false,
+                pointColor: 'rgba(210, 214, 222, 1)',
+                pointStrokeColor: '#c1c7d1',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(220,220,220,1)',
+                data: total
+            },
+        ]
+    }
+
+    var areaChartOptions = {
+        maintainAspectRatio: false,
+        responsive: true,
+        legend: {
+            display: false
+        },
+        scales: {
+            xAxes: [{
+                gridLines: {
+                    display: false,
+                }
+            }],
+            yAxes: [{
+                gridLines: {
+                    display: false,
+                }
+            }]
+        }
+    }
+    //-------------
+    //- BAR CHART -
+    //-------------
+    var barChartCanvas = $('#barChart').get(0).getContext('2d')
+    var barChartData = $.extend(true, {}, areaChartData)
+    var temp0 = areaChartData.datasets[0]
+    var temp1 = areaChartData.datasets[1]
+    barChartData.datasets[0] = temp1
+    barChartData.datasets[1] = temp0
+
+    var barChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        datasetFill: false
+    }
+
+    new Chart(barChartCanvas, {
+        type: 'bar',
+        data: barChartData,
+        options: barChartOptions
+    })
+
+    $(function () {
+        $("#example1").DataTable({
+            "responsive": true, "lengthChange": true, "autoWidth": false,
+            // "buttons": ["excel", "pdf", "print", "colvis"]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    });
+
+
+
+    $("#mnuStocks").addClass("active");
+    var parentMenu = $("#mnuStocks").parent().parent().parent();
+
+    parentMenu.attr("class", "nav-item menu-is-opening menu-open");
+    parentMenu.find("ul").each(function () {
+
+        $(this).attr("style", "display:block");
+    });
+
+    function fnViewStockDetail(id) {
+        debugger;
+        $('#modal-xl').find(".modal-title").text('Stock Details');
+        $('#modal-xl').find(".modal-body").load('/Inward/GetStockDetails?Id=' + id);
+
+    }
+</script>
