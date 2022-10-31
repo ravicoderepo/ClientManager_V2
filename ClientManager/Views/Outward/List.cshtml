@@ -4,7 +4,9 @@
     ViewBag.Title = "Outward";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@{
+    var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+}
 <style>
     table tr td:first-child {
         white-space: nowrap;
@@ -50,10 +52,14 @@
                                 @*<div class="col-4 col-sm-2">
                                         <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Adv. Search</button>
                                     </div>*@
-                                <div class="col-4 col-sm-2">
-                                    <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:location.href='/Outward/Create'"><i class="fa fa-plus"></i> New</button>
-                                </div>
+                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                {
+                                    <div class="col-4 col-sm-2">
+                                        <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:location.href='/Outward/Create'"><i class="fa fa-plus"></i> New</button>
+                                    </div>
+                                }
                             </div>
+
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -92,101 +98,110 @@
                                         </th>
 
                                         @*<th>
-                                            Is Active?
-                                        </th>
-                                        <th>
-            Created On
-        </th>
-        <th>
-            Created By
-        </th>
-        <th>
-            Modified On
-        </th>
-        <th>
-            Modified By
-        </th>*@
+                                                                                Is Active?
+                                                                            </th>
+                                                                            <th>
+                                                Created On
+                                            </th>
+                                            <th>
+                                                Created By
+                                            </th>
+                                            <th>
+                                                Modified On
+                                            </th>
+                                            <th>
+                                                Modified By
+                                            </th>*@
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in Model)
                                     {
-                                    <tr>
-                                        <td>
+                                        <tr>
+                                            <td>
 
-                                            <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/Outward/Edit/@item.Id'"><i class="far fa-edit"></i></button>
-                                            @*<button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/Admin/User/Details/@item.Id'"><i class="fas fa-eye"></i></button>*@
+                                                <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/Outward/Edit/@item.Id'">
+                                                    @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                                    {
+                                                        <i class="far fa-edit"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="far fa-eye"></i>
+                                                    }
+                                                </button>
+                                                @*<button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/Admin/User/Details/@item.Id'"><i class="fas fa-eye"></i></button>*@
 
 
-                                            @*@if (item.IsActive == true)
-            {
+                                                @*@if (item.IsActive == true)
+                                                    {
 
-                <button type="button" class="btn btn-danger btn-xs" title="De-ctivate" onclick="fnDeActivate(@item.ItemId)"><i class="far fa-trash-alt"></i></button>
+                                                        <button type="button" class="btn btn-danger btn-xs" title="De-ctivate" onclick="fnDeActivate(@item.ItemId)"><i class="far fa-trash-alt"></i></button>
 
-            }
-            else
-            {
-                <button type="button" class="btn btn-danger btn-xs" title="Activate" onclick="fnActivate(@item.ItemId)"><i class="far fa-trash-alt"></i></button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button type="button" class="btn btn-danger btn-xs" title="Activate" onclick="fnActivate(@item.ItemId)"><i class="far fa-trash-alt"></i></button>
 
-            }*@
+                                                    }*@
 
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.InvoiceNumber)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.InvoiceDate)
-                                        </td>
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.InvoiceNumber)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.InvoiceDate)
+                                            </td>
 
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.CustomerName)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Status)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Comments)
-                                        </td>
-                                        <td>
-                                            @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
-                                            @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.CreatedBy)
-                                        </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CustomerName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Status)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Comments)
+                                            </td>
+                                            <td>
+                                                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
+                                                @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CreatedBy)
+                                            </td>
 
-                                        <td>
-                                            @*@Html.DisplayFor(modelItem => item.ModifiedOn)*@
-                                            @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.ModifiedBy)
-                                        </td>
+                                            <td>
+                                                @*@Html.DisplayFor(modelItem => item.ModifiedOn)*@
+                                                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ModifiedBy)
+                                            </td>
 
-                                        @*<td>
-            @if (item.IsActive)
-            {
-                <span>Active</span>
-            }
-            else
-            {
-                <span>De-Active</span>
-            }
+                                            @*<td>
+                                                    @if (item.IsActive)
+                                                    {
+                                                        <span>Active</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>De-Active</span>
+                                                    }
 
-        </td>*@
-                                        @*<td>
-            @Html.DisplayFor(modelItem => item.CreatedOn)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.User.FullName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ModifiedOn)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.User1.FullName)
-        </td>*@
-                                    </tr>
+                                                </td>*@
+                                            @*<td>
+                                                    @Html.DisplayFor(modelItem => item.CreatedOn)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.User.FullName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.ModifiedOn)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.User1.FullName)
+                                                </td>*@
+                                        </tr>
                                     }
                                 </tbody>
                             </table>
@@ -263,10 +278,10 @@
 
     $("#mnuOutwardList").addClass("active");
     var parentMenu = $("#mnuOutwardList").parent().parent().parent();
-    
+
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        
+
         $(this).attr("style", "display:block");
     });
 </script>

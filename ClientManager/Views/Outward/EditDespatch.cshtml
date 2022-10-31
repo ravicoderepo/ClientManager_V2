@@ -4,7 +4,9 @@
     //Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
+@{
+    var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+}
 <style>
     textarea {
         width: 100% !important;
@@ -108,7 +110,7 @@
                                             <label for="DespatchNo">Despatch No</label>
                                             <input type="hidden" id="hdnDespatchId" value="@Model.DespatchData.FirstOrDefault().Id" />
                                             @*@Html.HiddenFor(model => model.DespatchData.FirstOrDefault().Id, new { htmlAttributes = new { @id = "hdnDespatchId", @name = "hdnDespatchId" } })*@
-                                            @Html.EditorFor(model => model.DespatchData.FirstOrDefault().DespatchNo, new { htmlAttributes = new { @class = "form-control", @id = "txtDespatchNo", @name = "DespatchNo", @readonly="readonly" } })
+                                            @Html.EditorFor(model => model.DespatchData.FirstOrDefault().DespatchNo, new { htmlAttributes = new { @class = "form-control", @id = "txtDespatchNo", @name = "DespatchNo", @readonly = "readonly" } })
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -154,132 +156,146 @@
                                     <div class="col-md-12">
                                         <fieldset>
                                             <legend>Products</legend>
+                                            @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                            {
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="status">Material</label>
+                                                            <input type="hidden" name="MaterialId" id="hdnMaterialId" />
+                                                            @Html.DropDownList("MaterialId", ViewBag.MaterialId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlMaterialId", @onChange = "fnValueChange('material')" })
 
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="status">Material</label>
-                                                        <input type="hidden" name="MaterialId" id="hdnMaterialId" />
-                                                        @Html.DropDownList("MaterialId", ViewBag.MaterialId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlMaterialId", @onChange = "fnValueChange('material')" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="status">Product Master</label>
+                                                            <input type="hidden" name="TypeId" id="hdnTypeId" />
+                                                            @Html.DropDownList("TypeId", ViewBag.TypeId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlTypeId", @onChange = "fnValueChange('type')" })
+                                                        </div>
+                                                    </div>
 
-                                                    </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="status">Product Master</label>
-                                                        <input type="hidden" name="TypeId" id="hdnTypeId" />
-                                                        @Html.DropDownList("TypeId", ViewBag.TypeId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlTypeId", @onChange = "fnValueChange('type')" })
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="status">Product</label>
+                                                            <input type="hidden" name="ItemId" id="hdnItemId" />
+                                                            @Html.DropDownList("ItemId", ViewBag.TypeId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlItemId", @onChange = "fnValueChange('item')" })
+                                                        </div>
                                                     </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="AvailableQuantity">Available Quantity</label>
+                                                            @Html.Editor("AvailableQuantity", new { htmlAttributes = new { @class = "form-control", @id = "txtAvailableQuantity", @name = "txtAvailableQuantity", @readonly = "readonly" } })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="Quantity">Quantity</label>
+                                                            @Html.Editor("Quantity", new { htmlAttributes = new { @class = "form-control", @id = "txtQuantity", @name = "Quantity" } })
+                                                        </div>
+                                                    </div>
+                                                    @*<div class="col-md-12">
+                    <div class="form-group">
+                        <label for="Remarks">Remarks</label>
+                        <input type="text" class="form-control" id="txtRemarks" name="Remarks" />
+                    </div>
+                </div>*@
                                                 </div>
-
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="status">Product</label>
-                                                        <input type="hidden" name="ItemId" id="hdnItemId" />
-                                                        @Html.DropDownList("ItemId", ViewBag.TypeId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlItemId", @onChange = "fnValueChange('item')" })
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label for="AvailableQuantity">Available Quantity</label>
-                                                        @Html.Editor("AvailableQuantity", new { htmlAttributes = new { @class = "form-control", @id = "txtAvailableQuantity", @name = "txtAvailableQuantity", @readonly = "readonly" } })
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label for="Quantity">Quantity</label>
-                                                        @Html.Editor("Quantity", new { htmlAttributes = new { @class = "form-control", @id = "txtQuantity", @name = "Quantity" } })
-                                                    </div>
-                                                </div>
-                                                @*<div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <label for="Remarks">Remarks</label>
-                                                        <input type="text" class="form-control" id="txtRemarks" name="Remarks" />
-                                                    </div>
-                                                </div>*@
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="well clearfix">
-                                                        <a style="float:right; width:150px" class="btn btn-block btn-primary btn-sm add-record" data-added="0"><i class="fa fa-plus"></i> Add Product</a>
-                                                    </div>
-                                                    <br />
-                                                    <table class="table table-bordered" id="tbl_posts">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Material</th>
-                                                                <th>Product Master</th>
-                                                                <th>Product</th>
-                                                                <th>Quantity</th>
-                                                                <th>Action</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="tbl_posts_body">
-                                                            @if (Model.DespatchData.FirstOrDefault() != null)
-                                                            {
-                                                                if (Model.DespatchData.FirstOrDefault().DespatchItems != null && Model.DespatchData.FirstOrDefault().DespatchItems.Count() > 0)
-                                                                {
-                                                                    int i = 1;
-                                                                    foreach (var item in Model.DespatchData.FirstOrDefault().DespatchItems)
+                                            }
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                                        {
+                                                            <div class="well clearfix">
+                                                                <a style="float:right; width:150px" class="btn btn-block btn-primary btn-sm add-record" data-added="0"><i class="fa fa-plus"></i> Add Product</a>
+                                                            </div>
+                                                        }
+                                                        <br />
+                                                        <table class="table table-bordered" id="tbl_posts">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Material</th>
+                                                                    <th>Product Master</th>
+                                                                    <th>Product</th>
+                                                                    <th>Quantity</th>
+                                                                    @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
                                                                     {
-                                                                        if (item.Id > 0)
+                                                                        <th>Action</th>
+                                                                    }
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="tbl_posts_body">
+                                                                @if (Model.DespatchData.FirstOrDefault() != null)
+                                                                {
+                                                                    if (Model.DespatchData.FirstOrDefault().DespatchItems != null && Model.DespatchData.FirstOrDefault().DespatchItems.Count() > 0)
+                                                                    {
+                                                                        int i = 1;
+                                                                        foreach (var item in Model.DespatchData.FirstOrDefault().DespatchItems)
                                                                         {
-                                                                            <tr id="rec-@item.Id" data-added="@item.Id">
-                                                                                <td><span class="sn"></span>@i.</td>
-                                                                                <td class="Meterial" data-added="@item.MaterialId">
-                                                                                    @item.MaterialName
-                                                                                </td>
-                                                                                <td class="Type" data-added="@item.TypeId">
-                                                                                    @item.TypeName
-                                                                                </td>
-                                                                                <td class="Item" data-added="@item.ItemId">
-                                                                                    @item.ItemName
-                                                                                </td>
-                                                                                <td class="Quantity">
-                                                                                    @item.Quantity
-                                                                                </td>
-                                                                                <td>
-                                                                                    <a class="btn btn-primary btn-xs edit-record" style="margin-left:5px" data-id="@item.Id"><i class="far fa-edit"></i></a><a class="btn btn-danger btn-xs delete-record" style="margin-left:5px" data-id="@item.Id"><i class="far fa-trash-alt"></i></a>
-                                                                                </td>
-                                                                            </tr>
+                                                                            if (item.Id > 0)
+                                                                            {
+                                                                                <tr id="rec-@item.Id" data-added="@item.Id">
+                                                                                    <td><span class="sn"></span>@i.</td>
+                                                                                    <td class="Meterial" data-added="@item.MaterialId">
+                                                                                        @item.MaterialName
+                                                                                    </td>
+                                                                                    <td class="Type" data-added="@item.TypeId">
+                                                                                        @item.TypeName
+                                                                                    </td>
+                                                                                    <td class="Item" data-added="@item.ItemId">
+                                                                                        @item.ItemName
+                                                                                    </td>
+                                                                                    <td class="Quantity">
+                                                                                        @item.Quantity
+                                                                                    </td>
+                                                                                    @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                                                                    {
+                                                                                        <td>
+                                                                                            <a class="btn btn-primary btn-xs edit-record" style="margin-left:5px" data-id="@item.Id"><i class="far fa-edit"></i></a><a class="btn btn-danger btn-xs delete-record" style="margin-left:5px" data-id="@item.Id"><i class="far fa-trash-alt"></i></a>
+                                                                                        </td>
+                                                                                    }
+                                                                                </tr>
 
-                                                                            i++;
+                                                                                i++;
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
-                                                            }
-                                                        </tbody>
-                                                    </table>
-                                                    <div style="display:none;">
-                                                        <input type="hidden" id="itemRowId" />
-                                                        <table id="sample_table">
-                                                            <tr id="" data-added="">
-                                                                <td><span class="sn"></span>.</td>
-                                                                <td class="Meterial" data-added="">
-                                                                </td>
-                                                                <td class="Type" data-added="">
-                                                                </td>
-                                                                <td class="Item" data-added="">
-                                                                </td>
-                                                                <td class="Quantity"></td>
-                                                                <td>
-                                                                    <a class="btn btn-primary btn-xs edit-record" style="margin-left:5px" data-id="0"><i class="far fa-edit"></i></a><a class="btn btn-danger btn-xs delete-record" style="margin-left:5px" data-id="0"><i class="far fa-trash-alt"></i></a>
-                                                                </td>
-                                                            </tr>
+                                                            </tbody>
                                                         </table>
+                                                        <div style="display:none;">
+                                                            <input type="hidden" id="itemRowId" />
+                                                            <table id="sample_table">
+                                                                <tr id="" data-added="">
+                                                                    <td><span class="sn"></span>.</td>
+                                                                    <td class="Meterial" data-added="">
+                                                                    </td>
+                                                                    <td class="Type" data-added="">
+                                                                    </td>
+                                                                    <td class="Item" data-added="">
+                                                                    </td>
+                                                                    <td class="Quantity"></td>
+                                                                    <td>
+                                                                        <a class="btn btn-primary btn-xs edit-record" style="margin-left:5px" data-id="0"><i class="far fa-edit"></i></a><a class="btn btn-danger btn-xs delete-record" style="margin-left:5px" data-id="0"><i class="far fa-trash-alt"></i></a>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </fieldset>
+                                            </fieldset>
                                     </div>
                                 </div>
                             </fieldset>
                         </div>
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Update Despatch</button>
+                            @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                            {
+                                <button type="submit" class="btn btn-primary">Update Despatch</button>
+                            }
                             @*<button type="button" class="btn btn-danger">Cancel</button>*@
                         </div>
                         <!-- /.card-body -->
@@ -307,7 +323,7 @@
 
         if ('@ViewBag.AccessLevel' == "View") {
             $('#quickFormPopup :input').each(function () {
-
+                debugger;
                 if ($(this).attr('Id') != 'btnBack') {
 
                     $(this).prop('disabled', true);
@@ -315,20 +331,20 @@
             });
         }
 
-        
+
 
         //$('#txtInvoiceDate').val('');
         $('#txtQuantity').val(0);
         $('#txtAvailableQuantity').val(0);
-        
+
     });
 
 
     $(function () {
-       
+
         $.validator.setDefaults({
             submitHandler: function () {
-               
+
                 //fnSubmitDespatchDetails();
             }
         });
@@ -362,7 +378,7 @@
                 $(element).removeClass('is-invalid');
             },
             submitHandler: function () {
-               
+
                 fnSubmitDespatchDetails();
             }
 
@@ -392,7 +408,7 @@
         }
     }
     function fnBindTypesDropdown(id, selectedValue) {
-       
+
         $.ajax({
             url: "/types/GetProductMaster?materialId=" + id,
             type: "Get",
@@ -412,7 +428,7 @@
 
     }
     function fnBindItemsDropDown(id, selectedValue) {
-       
+
         $.ajax({
             url: "/items/GetProducts?prodMasterId=" + id,
             type: "Get",
@@ -433,7 +449,7 @@
         $("input[name=ItemId]").val($('#ddlItemId').val());
     }
     function fnGetAvailableQuantity(id) {
-       
+
         $.ajax({
             url: "/Outward/GetAvailableQuantity?itemId=" + id,
             type: "Get",
@@ -535,7 +551,7 @@
     //Delete
     $(document).delegate('a.delete-record', 'click', function (e) {
         e.preventDefault();
-       
+
         var didConfirm = confirm("Are you sure You want to delete?");
         if (didConfirm == true) {
             var id = jQuery(this).attr('data-id');
@@ -555,12 +571,12 @@
 
 
     function fnSubmitDespatchDetails() {
-       
+
         let desItems = [];
         let desData = [];
-       
+
         $('#tbl_posts_body tr').each(function () {
-           
+
             desItems.push({
                 Id: $(this).attr('data-added'),
                 DespatchId: $("#hdnDespatchId").val(),
@@ -625,7 +641,7 @@
     });
 
     if ('@ViewBag.Mode'=='New') {
-       
+
         $('#quickFormPopup > div.card-footer > button.btn.btn-primary').text('Save Despatch');
        // $('#txtDespatchDate').val('');
         $('#txtDespatchDate').val('');

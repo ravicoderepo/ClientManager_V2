@@ -591,6 +591,11 @@ namespace Utility
         private static readonly ClientManagerEntities db = new ClientManagerEntities();
         public static int GetAvailableQuantity(int itemId = 0)
         {
+            var prodId = db.Items.Where(wh => wh.ItemId == itemId).FirstOrDefault().ParentId.Value;
+
+            if (prodId > 0)
+                itemId = prodId;
+
             var iSum = Convert.ToInt16(db.VRM_InwardStock.Where(wh => wh.ItemId == itemId).Sum(s => (int?)s.Quantity));
             var oSum = Convert.ToInt16(db.DespatchItems.Where(wh => wh.ItemId == itemId).Sum(s => (int?)s.Quantity));
             return (iSum-oSum);

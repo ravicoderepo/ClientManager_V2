@@ -3,7 +3,9 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@{
+    var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+}
 
 <style>
     textarea {
@@ -74,7 +76,7 @@
                                                 <div class="input-group date" data-target-input="nearest">
                                                     @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "hdnId" } })
                                                     @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control", @id = "txtInvoiceNumber", @name = "InvoiceNumber" } })
-                                                   
+
                                                 </div>
                                             </div>
                                         </div>
@@ -114,10 +116,13 @@
                                     </div>
                                 </fieldset>
                                 <br />
-                                <div class="card-tools">
-                                    <a style="float:right; width:120px" class="btn btn-block btn-primary btn-sm" data-added="0" data-toggle="modal" data-target="#modal-xl" onclick="javascript:fnEditDespatch('@Model.Id',true)"><i class="fa fa-plus"></i> Add Despatch</a>
-                                </div>
-                                <br />
+                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                {
+                                    <div class="card-tools">
+                                        <a style="float:right; width:120px" class="btn btn-block btn-primary btn-sm" data-added="0" data-toggle="modal" data-target="#modal-xl" onclick="javascript:fnEditDespatch('@Model.Id',true)"><i class="fa fa-plus"></i> Add Despatch</a>
+                                    </div>
+                                    <br />
+                                }
                                 <br />
                                 <fieldset>
                                     <legend>Despatch List</legend>
@@ -164,8 +169,17 @@
                                             @foreach (var item in Model.DespatchData)
                                             {
                                                 <tr>
-                                                    <td>                                                       
-                                                        <button type="button" class="btn btn-primary btn-xs" title="Edit" data-toggle="modal" data-target="#modal-xl" onclick="javascript:fnEditDespatch('@item.Id')" ><i class="far fa-edit"></i></button>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary btn-xs" title="Edit" data-toggle="modal" data-target="#modal-xl" onclick="javascript:fnEditDespatch('@item.Id')">
+                                                            @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                                            {
+                                                                <i class="far fa-edit"></i>
+                                                            }
+                                                            else
+                                                            {
+                                                                <i class="far fa-eye"></i>
+                                                            }
+                                                        </button>
                                                     </td>
                                                     <td>
                                                         @Html.DisplayFor(modelItem => item.DespatchNo)
@@ -203,10 +217,13 @@
                                             }
                                         </tbody>
                                     </table>
-                                </fieldset>                              
+                                </fieldset>
                             </div>
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Update Invoice</button> <button type="button" class="btn btn-danger">Cancel</button>
+                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                {
+                                    <button type="submit" class="btn btn-primary">Update Invoice</button> <button type="button" class="btn btn-danger">Cancel</button>
+                                }
                                 <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='../List'" id="btnBack">Back to List</button>
                             </div>
                             <!-- /.card-body -->
@@ -239,6 +256,16 @@
 
                     $(this).prop('disabled', true);
                 }
+                if ($(this).attr('class') == "btn btn-primary btn-xs") {
+                    $(this).prop('disabled', false);
+                }
+            });
+            $('#quickFormPopup :input').each(function () {
+                debugger;
+                if ($(this).attr('class') != 'btn btn-default') {
+
+                    $(this).prop('disabled', true);
+                }
             });
         }
         $('#txtInvoiceDate').datetimepicker({
@@ -248,10 +275,10 @@
 
 
     $(function () {
-       
+
         $.validator.setDefaults({
             submitHandler: function () {
-               
+
                 //fnSubmitOutwardDetails();
             }
         });
@@ -285,7 +312,7 @@
                 $(element).removeClass('is-invalid');
             },
             submitHandler: function () {
-               
+
                 fnSubmitOutwardDetails();
             }
 
@@ -297,10 +324,10 @@
         $("input[name=Status]").val($('#ddlStatus').val());
     }
 
-    
+
 
     function fnSubmitOutwardDetails() {
-       
+
         $("input[name=Status]").val($('#ddlStatus').val());
         var outwardData = {
 
@@ -346,11 +373,11 @@
     });
 
     function fnEditDespatch(dataId, isAddDispatch) {
-       
+
         $('#modal-xl').find(".modal-title").text('Despatch Details');
         $('#modal-xl').find(".modal-body").load('/Outward/EditDespatch?Id=' + dataId + "&IsAddDeshpatch=" + isAddDispatch);
-        
+
     }
-   
-   
+
+
 </script>

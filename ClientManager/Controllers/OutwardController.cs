@@ -340,6 +340,10 @@ namespace ClientManager.Controllers
 
             //ViewBag.PaymentStatus = Utility.DefaultList.GetPaymentStatusList("INVOICE");
             ViewBag.Status = Utility.DefaultList.GetInvoiceStatusList(outward.Status);
+            if (userData.UserRoles.Any(wh => wh.RoleName != "Store Admin"))
+            {
+                ViewBag.AccessLevel = "View";
+            }
             return View(outward);
         }
 
@@ -352,52 +356,96 @@ namespace ClientManager.Controllers
             OutwardData objOutward = new OutwardData();
             if (!IsAddDeshpatch)
             {
-                var outward = (from oTrans in db.Outwards
-                               orderby oTrans.InvoiceDate descending
-                               select new OutwardData
-                               {
-                                   Id = oTrans.Id,
-                                   InvoiceNumber = oTrans.InvoiceNumber,
-                                   InvoiceDate = oTrans.InvoiceDate,
-                                   CustomerName = oTrans.CustomerName,
-                                   Status = oTrans.Status,
-                                   Comments = oTrans.Comments,
-                                   CreatedOn = oTrans.CreatedOn,
-                                   CreatedBy = oTrans.CreatedBy,
-                                   ModifiedOn = oTrans.ModifiedOn,
-                                   ModifiedBy = oTrans.ModifiedBy,
-                                   DespatchData = oTrans.Despatches.Where(wh=> wh.Id== Id).Select(sel => new DespatchData
-                                   {
-                                       DespatchDate = sel.DespatchDate,
-                                       DespatchNo = sel.DespatchNo,
-                                       Id = sel.Id,
-                                       LRNumber = sel.LRNumber,
-                                       PaymentStatus = sel.PaymentStatus,
-                                       TransportBy = sel.TransportBy,
-                                       ShipToCity = sel.ShipToCity,
-                                       CreatedBy = sel.CreatedBy,
-                                       CreatedOn = sel.CreatedOn,
-                                       ModifiedBy = sel.ModifiedBy,
-                                       ModifiedOn = sel.ModifiedOn,
-                                       DespatchItems = sel.DespatchItems.Select(desItems => new DespatchItemData
-                                       {
-                                           Id = desItems.Id,
-                                           DespatchId = desItems.DespatchId,
-                                           ItemId = desItems.ItemId,
-                                           ItemName = desItems.Item.ItemName,
-                                           MaterialId = desItems.Item.MaterialId,
-                                           MaterialName = desItems.Item.Material.MaterialName,
-                                           TypeId = desItems.Item.TypeId,
-                                           TypeName = desItems.Item.Type.TypeName,
-                                           Quantity = desItems.Quantity
-                                       }).ToList(),
-                                   }).ToList(),
-                               }).FirstOrDefault();
+                var despatch = (from des in db.Despatches
+                                where des.Id.Equals(Id)
+                                select des);
 
-                objOutward = outward;
+                var despatchOut = new OutwardData
+                {
+                    Id = despatch.FirstOrDefault().Outward.Id,
+                    InvoiceNumber = despatch.FirstOrDefault().Outward.InvoiceNumber,
+                    InvoiceDate = despatch.FirstOrDefault().Outward.InvoiceDate,
+                    CustomerName = despatch.FirstOrDefault().Outward.CustomerName,
+                    Status = despatch.FirstOrDefault().Outward.Status,
+                    Comments = despatch.FirstOrDefault().Outward.Comments,
+                    CreatedOn = despatch.FirstOrDefault().Outward.CreatedOn,
+                    CreatedBy = despatch.FirstOrDefault().Outward.CreatedBy,
+                    ModifiedOn = despatch.FirstOrDefault().Outward.ModifiedOn,
+                    ModifiedBy = despatch.FirstOrDefault().Outward.ModifiedBy,
+                    DespatchData = despatch.Select(sel => new DespatchData
+                    {
+                        DespatchDate = sel.DespatchDate,
+                        DespatchNo = sel.DespatchNo,
+                        Id = sel.Id,
+                        LRNumber = sel.LRNumber,
+                        PaymentStatus = sel.PaymentStatus,
+                        TransportBy = sel.TransportBy,
+                        ShipToCity = sel.ShipToCity,
+                        CreatedBy = sel.CreatedBy,
+                        CreatedOn = sel.CreatedOn,
+                        ModifiedBy = sel.ModifiedBy,
+                        ModifiedOn = sel.ModifiedOn,
+                        DespatchItems = sel.DespatchItems.Select(desItems => new DespatchItemData
+                        {
+                            Id = desItems.Id,
+                            DespatchId = desItems.DespatchId,
+                            ItemId = desItems.ItemId,
+                            ItemName = desItems.Item.ItemName,
+                            MaterialId = desItems.Item.MaterialId,
+                            MaterialName = desItems.Item.Material.MaterialName,
+                            TypeId = desItems.Item.TypeId,
+                            TypeName = desItems.Item.Type.TypeName,
+                            Quantity = desItems.Quantity
+                        }).ToList(),
+                    }).ToList()
+                };
+
+                //var outward = (from oTrans in db.Outwards
+                //               orderby oTrans.InvoiceDate descending
+                //               select new OutwardData
+                //               {
+                //                   Id = oTrans.Id,
+                //                   InvoiceNumber = oTrans.InvoiceNumber,
+                //                   InvoiceDate = oTrans.InvoiceDate,
+                //                   CustomerName = oTrans.CustomerName,
+                //                   Status = oTrans.Status,
+                //                   Comments = oTrans.Comments,
+                //                   CreatedOn = oTrans.CreatedOn,
+                //                   CreatedBy = oTrans.CreatedBy,
+                //                   ModifiedOn = oTrans.ModifiedOn,
+                //                   ModifiedBy = oTrans.ModifiedBy,
+                //                   DespatchData = oTrans.Despatches.Where(wh => wh.Id == Id).Select(sel => new DespatchData
+                //                   {
+                //                       DespatchDate = sel.DespatchDate,
+                //                       DespatchNo = sel.DespatchNo,
+                //                       Id = sel.Id,
+                //                       LRNumber = sel.LRNumber,
+                //                       PaymentStatus = sel.PaymentStatus,
+                //                       TransportBy = sel.TransportBy,
+                //                       ShipToCity = sel.ShipToCity,
+                //                       CreatedBy = sel.CreatedBy,
+                //                       CreatedOn = sel.CreatedOn,
+                //                       ModifiedBy = sel.ModifiedBy,
+                //                       ModifiedOn = sel.ModifiedOn,
+                //                       DespatchItems = sel.DespatchItems.Select(desItems => new DespatchItemData
+                //                       {
+                //                           Id = desItems.Id,
+                //                           DespatchId = desItems.DespatchId,
+                //                           ItemId = desItems.ItemId,
+                //                           ItemName = desItems.Item.ItemName,
+                //                           MaterialId = desItems.Item.MaterialId,
+                //                           MaterialName = desItems.Item.Material.MaterialName,
+                //                           TypeId = desItems.Item.TypeId,
+                //                           TypeName = desItems.Item.Type.TypeName,
+                //                           Quantity = desItems.Quantity
+                //                       }).ToList(),
+                //                   }).ToList(),
+                //               }).FirstOrDefault();
+
+                objOutward = despatchOut;
                 ViewBag.Status = Utility.DefaultList.GetInvoiceStatusList(objOutward.Status);
 
-             
+
 
                 if (objOutward.DespatchData.FirstOrDefault() != null)
                 {
@@ -405,6 +453,10 @@ namespace ClientManager.Controllers
                 }
 
                 ViewBag.Mode = "Edit";
+                if (userData.UserRoles.Any(wh => wh.RoleName != "Store Admin"))
+                {
+                    ViewBag.AccessLevel = "View";
+                }
             }
             else
             {
@@ -437,7 +489,7 @@ namespace ClientManager.Controllers
                 ViewBag.Status = Utility.DefaultList.GetInvoiceStatusList(objOutward.Status);
                 ViewBag.Mode = "New";
                 ViewBag.UniqueId = Utility.CommonFunctions.GenerateUniqueNumber("DES");
-                ViewBag.PaymentStatus = Utility.DefaultList.GetPaymentStatusList("INVOICE");    
+                ViewBag.PaymentStatus = Utility.DefaultList.GetPaymentStatusList("INVOICE");
             }
             ViewBag.MaterialId = Utility.DefaultList.BindList(new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", 0).ToList<SelectListItem>(), true);
             ViewBag.TypeId = Utility.DefaultList.BindList(new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == 0), "TypeId", "TypeName", 0).ToList<SelectListItem>(), true);

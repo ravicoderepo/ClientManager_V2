@@ -3,7 +3,9 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@{
+    var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+}
 
 <style>
     textarea {
@@ -143,7 +145,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="ReceivedBy">Received By</label>
-                                                @Html.EditorFor(model => model.ReceivedBy, new { htmlAttributes = new { @class = "form-control", @id = "txtReceivedBy", @name = "ReceivedBy", @readonly="readonly" } })
+                                                @Html.EditorFor(model => model.ReceivedBy, new { htmlAttributes = new { @class = "form-control", @id = "txtReceivedBy", @name = "ReceivedBy", @readonly = "readonly" } })
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -170,7 +172,10 @@
                                 </fieldset>
                             </div>
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
+                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                {
+                                    <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
+                                }
                                 <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='../List'" id="btnBack">Back to List</button>
                             </div>
                             <!-- /.card-body -->
@@ -196,9 +201,9 @@
 
         if ('@ViewBag.AccessLevel' == "View") {
             $('#quickForm :input').each(function () {
-                
+
                 if ($(this).attr('Id') != 'btnBack') {
-                    
+
                     $(this).prop('disabled', true);
                 }
             });
@@ -212,7 +217,7 @@
         //
         $.validator.setDefaults({
             submitHandler: function () {
-                
+
                 // alert("Form successful submitted!");
                 $("input[name=IsActive]").val($('#ddlStatus').val());
                 $("input[name=TypeId]").val($('#ddlTypeId').val());
@@ -258,33 +263,34 @@
 
 
     function fnStatusChange() {
-        
+
         $("input[name=IsActive]").val($('#ddlStatus').val());
 
     }
     function fnValueChange(evntFrom) {
-        
+        debugger;
         $("input[name=TypeId]").val($('#ddlTypeId').val());
         $("input[name=MaterialId]").val($('#ddlMaterialId').val());
         $("input[name=ItemId]").val($('#ddlItemId').val());
         $("input[name=ReceivedFrom]").val($('#ddlCompanyId').val());
         if (evntFrom == "material") {
             fnBindTypesDropdown($("input[name=MaterialId]").val());
+            fnBindItemsDropDown(0);
         }
         else if (evntFrom == "type") {
-            
-            fnBindItemsDropDown($("input[name=TypeId]").val());          
+
+            fnBindItemsDropDown($("input[name=TypeId]").val());
             $("input[name=ItemId]").val($('#ddlItemId').val());
             //fnValueChange('item');
             //fnGetAvailableQuantity($("input[name=ItemId]").val());
         }
         else if (evntFrom == "item") {
-            
+
             fnGetAvailableQuantity($("input[name=ItemId]").val());
         }
     }
     function fnSubmitInwardDetails() {
-        
+
         var inwardData = {
             StockId: $('input[name=StockId]').val(),
             InwardStockTransactionId: $('input[name=InwardStockTransactionId]').val(),
@@ -300,7 +306,7 @@
             IsActive: ($("input[name=IsActive]").val()=='1') ? true: false,
             Description: $('#txtDescription').val()
         };
-        
+
         $.ajax({
             type: "POST",
             url: "/Inward/Edit",
@@ -321,13 +327,14 @@
             }
         });
     }
-   
+
     function fnBindTypesDropdown(id) {
         $.ajax({
-            url: "/types/GetProductMaster?materialId=" + id,
+            url: "/items/GetProducts?prodMasterId=" + id + "&isInward=true",
+            //url: "/types/GetProductMaster?materialId=" + id,
             type: "Get",
             success: function (data) {
-                
+
                 $('#ddlTypeId').empty();
                 for (var i = 0; i < data.length; i++) {
                     var opt = new Option(data[i].Text, data[i].Value);
@@ -340,12 +347,12 @@
     }
 
     function fnBindItemsDropDown(id) {
-        
+
         $.ajax({
             url: "/items/GetProducts?prodMasterId=" + id,
             type: "Get",
             success: function (data) {
-                
+
                 $('#ddlItemId').empty();
                 for (var i = 0; i < data.length; i++) {
                     var opt = new Option(data[i].Text, data[i].Value);
@@ -357,12 +364,12 @@
         $("input[name=ItemId]").val($('#ddlItemId').val());
     }
     function fnGetAvailableQuantity(id) {
-        
+
         $.ajax({
             url: "/Outward/GetAvailableQuantity?itemId=" + id,
             type: "Get",
-            success: function (data) {             
-                    $('#txtAvailableQuantity').val(data);             
+            success: function (data) {
+                    $('#txtAvailableQuantity').val(data);
             }
         });
     }

@@ -77,6 +77,7 @@ namespace ClientManager.Controllers
             var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
             var expenceTracker1 = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
+            ViewBag.TotalFilteredExpense = (expenceTracker.Count() > 0) ? expenceTracker.Sum(w => w.ExpenseAmount).ToString("#,##0.00") : "0.00";
 
             if (!string.IsNullOrEmpty(expenseDateTo) && !string.IsNullOrEmpty(expenseDateFrom))
             {
@@ -122,6 +123,7 @@ namespace ClientManager.Controllers
                 expenceTracker = expenceTracker.Where(wh => wh.ExpenseCategoryId == expenseCat);
 
             var TotalPettyCashAmount = db.PettyCashes.ToList();
+
             var TotalApprovedExpenceAmount = expenceTracker1.Where(wh => wh.Status == "Verified").ToList();
             var TotalUnApprovedExpenceAmount = expenceTracker1.Where(wh => wh.Status == "Pending").ToList();
             var TotalUnVerifiedExpenceAmount = expenceTracker1.Where(wh => wh.Status == "Approved").ToList();
@@ -130,17 +132,18 @@ namespace ClientManager.Controllers
             //var TotalUnApprovedExpenceAmount = expenceTracker1.Where(wh => wh.ExpenseDate.Month == month && wh.ExpenseDate.Year == year && wh.Status == "Pending").ToList();
             //var TotalUnVerifiedExpenceAmount = expenceTracker1.Where(wh => wh.ExpenseDate.Month == month && wh.ExpenseDate.Year == year && wh.Status == "Approved").ToList();
             decimal? TotalPettyCash = (TotalPettyCashAmount != null && TotalPettyCashAmount.Count > 0) ? TotalPettyCashAmount.Sum(S => S.AmountReceived) : 0;
+            decimal? TotalExpenceCash = (expenceTracker1 != null && expenceTracker1.ToList().Count > 0) ? expenceTracker1.Sum(S => S.ExpenseAmount) : 0;
             decimal? TotalApprovedExpence = (TotalApprovedExpenceAmount != null && TotalApprovedExpenceAmount.Count > 0) ? TotalApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
             decimal? TotalUnApprovedExpence = (TotalUnApprovedExpenceAmount != null && TotalUnApprovedExpenceAmount.Count > 0) ? TotalUnApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
             decimal? TotalUnVerifiedExpence = (TotalUnVerifiedExpenceAmount != null && TotalUnVerifiedExpenceAmount.Count > 0) ? TotalUnVerifiedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
 
             ViewBag.TotalPettyCash = TotalPettyCash.Value.ToString("#,##0.00");
-            ViewBag.TotalFilteredExpense = (expenceTracker.Count() > 0) ? expenceTracker.Sum(w => w.ExpenseAmount).ToString("#,##0.00") : "0.00";
+            //ViewBag.TotalFilteredExpense = (expenceTracker.Count() > 0) ? expenceTracker.Sum(w => w.ExpenseAmount).ToString("#,##0.00") : "0.00";
             ViewBag.TotalApprovedExpence = TotalApprovedExpence.Value.ToString("#,##0.00");
             ViewBag.TotalUnApprovedExpence = TotalUnApprovedExpence.Value.ToString("#,##0.00");
             ViewBag.TotalUnVerifiedExpence = TotalUnVerifiedExpence.Value.ToString("#,##0.00");
-            ViewBag.PendingPettyCash = (TotalPettyCash.Value - TotalApprovedExpence.Value).ToString("#,##0.00");
-            ViewBag.AvailablePettyCash = (TotalPettyCash.Value - (TotalUnApprovedExpence.Value + TotalUnVerifiedExpence.Value)).ToString("#,##0.00");
+            ViewBag.PendingPettyCash = (TotalUnApprovedExpence.Value + TotalUnVerifiedExpence.Value).ToString("#,##0.00");
+            ViewBag.AvailablePettyCash = (TotalPettyCash.Value - TotalExpenceCash.Value).ToString("#,##0.00"); 
             ViewBag.CurrentMonthAndYear = month + "/" + year;
 
             //List<SelectListItem> statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", "").ToList();

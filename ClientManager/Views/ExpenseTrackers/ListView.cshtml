@@ -38,6 +38,9 @@
     .cashTableAmounCol {
         width: 80px;
     }
+    td > i{
+        padding-left:10px;
+    }
 </style>
 <div class="row" id="pettyCashSummary">
     <div class="col-12 col-sm-6"><span style="font-weight:bold; font-size:15px"> PettyCash Summary </span> </div>
@@ -49,12 +52,14 @@
                 <td>:</td>
                 <td style="text-align:right; color:blue; font-weight:bold"> <a href="/PettyCashes/List"> &#8377;@ViewBag.TotalPettyCash </a>  </td>
                 <td>[Click to PettyCash Details]</td>
+                <td><i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Total Petty Cash Recived"></i> </td>
             </tr>
             <tr>
                 <td class="cashTableHeader">Available PettyCash</td>
                 <td>:</td>
                 <td style="text-align: right; color: green; font-weight: bold" class="cashTableAmounCol">&#8377;@ViewBag.AvailablePettyCash</td>
                 <td></td>
+                <td><i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Total Petty Cash - Total Expense"></i> </td>
                 @*[Total PettyCash - Total Approved & Verified]*@
             </tr>
             <tr>
@@ -62,6 +67,7 @@
                 <td>:</td>
                 <td style="text-align: right; color: red !important; font-weight: bold" class="cashTableAmounCol">&#8377;@ViewBag.PendingPettyCash</td>
                 <td></td>
+                <td><i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Total Petty Cash - (Total UnApproved Expense + Total UnVerified Expense)"></i> </td>
                 @*[Total PettyCash - Total Approved & Verified]*@
             </tr>
             <tr>
@@ -69,15 +75,18 @@
                 <td>:</td>
                 <td style="text-align: right; color: orange !important; font-weight: bold " class="cashTableAmounCol"><a style="color: orange !important;" href="javascript:FilterPettyCash('Pending')"> &#8377;@ViewBag.TotalUnApprovedExpence </a></td>
                 <td></td>
+                <td><i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Total UnApproved Expense"></i> </td>
             </tr>
             <tr>
                 <td class="cashTableHeader">Expense To Verify   </td>
                 <td>:</td>
                 <td style="text-align: right; color: orange !important; font-weight: bold" class="cashTableAmounCol"><a style="color: orange !important;" href="javascript:FilterPettyCash('Approved')">&#8377;@ViewBag.TotalUnVerifiedExpence</a></td>
                 <td></td>
+                <td><i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Total UnVerified Expense, but Apporved"></i> </td>
             </tr>
             <tr>
                 <td class="cashTableHeader"><a href="javascript:FilterPettyCash('')">Clear all filter</a>   </td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -94,10 +103,13 @@
     <div class="col-12 col-sm-6">
         <table>
             <tr>
-                <td class="cashTableHeader" style="font-size:25px;color:green; font-weight:bold">Total Expense (Based on Filter)  </td>
+                <td class="cashTableHeader" style=" text-align: center; font-size: 25px; color: green; font-weight: bold">Total Expense</td>
+                <td></td>
             </tr>
             <tr>
-                <td style="text-align: center; font-size: 25px; color: blue; font-weight: bold"> &#8377;@ViewBag.TotalFilteredExpense </tr>
+                <td style="text-align: center; font-size: 25px; color: blue; font-weight: bold"> &#8377;@ViewBag.TotalFilteredExpense
+                    <td><i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Total Expense witout any filter"></i></td>
+                    </tr>
         </table>
     </div>
 </div>
@@ -464,4 +476,7 @@
         
         $(this).attr("style", "display:block");
     });
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 </script>

@@ -4,11 +4,14 @@
     ViewBag.Title = "Inward";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@{
+    var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+}
 <style>
     table tr td:first-child {
         white-space: nowrap;
     }
+
     th {
         white-space: nowrap;
     }
@@ -49,9 +52,12 @@
                                 @*<div class="col-4 col-sm-2">
                                         <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Adv. Search</button>
                                     </div>*@
-                                <div class="col-4 col-sm-2">
-                                    <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:location.href='/Inward/Create'"><i class="fa fa-plus"></i> New</button>
-                                </div>
+                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                {
+                                    <div class="col-4 col-sm-2">
+                                        <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:location.href='/Inward/Create'"><i class="fa fa-plus"></i> New</button>
+                                    </div>
+                                }
                             </div>
                         </div>
                         <!-- /.card-header -->
@@ -71,8 +77,8 @@
                                             Product
                                         </th>
                                         @*<th>
-                                            Available Qty.
-                                        </th>*@
+                                                Available Qty.
+                                            </th>*@
                                         <th>
                                             Add Qty.
                                         </th>
@@ -114,7 +120,16 @@
                                     <tr>
                                         <td>
 
-                                            <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/Inward/Edit/@item.InwardStockTransactionId'"><i class="far fa-edit"></i></button>
+                                            <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/Inward/Edit/@item.InwardStockTransactionId'">
+                                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                                {
+                                                    <i class="far fa-edit"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="far fa-eye"></i>
+                                                }
+                                            </button>
                                             @*<button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/Admin/User/Details/@item.Id'"><i class="fas fa-eye"></i></button>*@
 
 
@@ -131,36 +146,36 @@
             }*@
 
                                         </td>
-                                        <td>
+                                        <td style="white-space:nowrap">
                                             @Html.DisplayFor(modelItem => item.MaterialName)
                                         </td>
-                                        <td>
+                                        <td style="white-space:nowrap">
                                             @Html.DisplayFor(modelItem => item.TypeName)
                                         </td>
-                                        <td>
+                                        <td style="white-space:nowrap">
                                             @Html.DisplayFor(modelItem => item.ItemName)
                                         </td>
                                         @*<td>
-                                            @Html.DisplayFor(modelItem => item.AvailableQuantity)
-                                        </td>*@
-                                        <td>
+            @Html.DisplayFor(modelItem => item.AvailableQuantity)
+        </td>*@
+                                        <td style="white-space:nowrap; text-align:right">
                                             @Html.DisplayFor(modelItem => item.Quantity)
                                         </td>
-                                        <td>
+                                        <td style="white-space:nowrap">
                                             @Html.DisplayFor(modelItem => item.PONumber)
                                         </td>
-                                        <td>
+                                        <td style="white-space:nowrap">
                                             @Html.DisplayFor(modelItem => item.GRNnumber)
                                         </td>
 
-                                        <td>
+                                        <td style="white-space:nowrap">
                                             @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ReceivedDate))
                                             @*@Html.DisplayFor(modelItem => item.ReceivedDate)*@
                                         </td>
-                                        <td>
+                                        <td style="white-space:nowrap">
                                             @Html.DisplayFor(modelItem => item.ReceivedBy)
                                         </td>
-                                        <td>
+                                        <td style="white-space:nowrap">
                                             @Html.DisplayFor(modelItem => item.Description)
                                         </td>
                                         @*<td>
@@ -210,7 +225,7 @@
             "responsive": true, "lengthChange": true, "autoWidth": false,
             // "buttons": ["excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-       
+
     });
 
 
@@ -264,10 +279,10 @@
 
     $("#mnuInwardList").addClass("active");
     var parentMenu = $("#mnuInwardList").parent().parent().parent();
-    
+
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        
+
         $(this).attr("style", "display:block");
     });
 </script>

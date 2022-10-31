@@ -221,13 +221,13 @@
             "order": [[2, 'desc']]
             //"buttons": ["excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-       
+
     });
 
     function fnSubmitSaleDetails(id) {
-        
+
         if (confirm("do you wish to delete this record?") == true) {
-            
+
             $.ajax({
                 type: "POST",
                 url: "/SaleActivities/Delete/" + id,
@@ -249,6 +249,11 @@
             });
         }
     }
+    if ($('#ddlSalesPerson option:selected').val() == '-1') {
+         $('#lblSalesPersonName').html(' of all users - ' + ' <span style="font-weight:bold; color:green; font-size:20px !important">' + $('#ddlSalesPerson option:selected').text() + ' : ' + '@ViewBag.TotalSalesBySalesPerson' + '</span>');
 
-    $('#lblSalesPersonName').html(' for ' +'<span style="font-weight:bold; color:green; font-size:20px !important">'+ $('#ddlSalesPerson option:selected').text() + ' : ' + '@ViewBag.TotalSalesBySalesPerson' + '</span>');
+    }
+    else {
+         $('#lblSalesPersonName').html(' of - ' + ' <span style="font-weight:bold; color:green; font-size:20px !important">' + $('#ddlSalesPerson option:selected').text() + ' : ' + '@ViewBag.TotalSalesBySalesPerson' + '</span>');
+    }
 </script>

@@ -29,19 +29,23 @@ namespace ClientManager.Controllers
             string[] superroles = { "Super Admin", "Super User" };
             if (salesPerson == 0)
             {
-                if (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName)))
-                {
-                    salesPerson = 0; 
-                }
-                else
-                {
+                //if (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName)))
+                //{
+                //    salesPerson = 0; 
+                //}
+                //else
+                //{
                     salesPerson = currentUser.Id;
-                }
-                ViewBag.SelectedSalesPerson = "of " + currentUser.FullName;
+                //}
+                ViewBag.SelectedSalesPerson = currentUser.FullName;
+            }
+            else if(salesPerson == -1)
+            {
+                ViewBag.SelectedSalesPerson = " all sales user";
             }
             else
             {
-                ViewBag.SelectedSalesPerson = "of " + db.Users.FirstOrDefault(n => n.Id == salesPerson).FullName;
+                ViewBag.SelectedSalesPerson = db.Users.FirstOrDefault(n => n.Id == salesPerson).FullName;
             }
             //var saleActivities = db.SaleActivities.Include(s => s.SalesStatu);
             var saleActivities = (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName))) ? db.SaleActivities.Include(s => s.SalesStatu) : (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "sales manager")) ? db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id || currentUser.ReportingToMe.Contains(wh.CreatedBy)) : db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id);
@@ -109,6 +113,8 @@ namespace ClientManager.Controllers
 
             if (status > 0)
                 saleActivities = saleActivities.Where(wh => wh.Status == status);
+            else
+                saleActivities = saleActivities.Where(wh => wh.Status != 6);
 
             statusList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
             ViewBag.Status = statusList;
@@ -156,7 +162,7 @@ namespace ClientManager.Controllers
 
 
             statusList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
-            selesPersonList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
+            selesPersonList.Insert(0, (new SelectListItem { Text = "", Value = "-1" }));
 
             ViewBag.SalesPerson = selesPersonList;
             ViewBag.Status = statusList;

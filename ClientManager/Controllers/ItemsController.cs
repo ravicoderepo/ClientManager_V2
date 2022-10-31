@@ -17,7 +17,7 @@ namespace ClientManager.Controllers
         private ClientManagerEntities db = new ClientManagerEntities();
 
         // GET: ExpenceCategories
-       [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult List()
         {
             var items = db.Items;
@@ -85,7 +85,7 @@ namespace ClientManager.Controllers
                             redirectURL = ""
                         };
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -115,7 +115,7 @@ namespace ClientManager.Controllers
 
             ViewBag.MaterialId = new SelectList(db.Materials, "MaterialId", "MaterialName", item.MaterialId).ToList<SelectListItem>();
             ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.MaterialId == item.MaterialId), "TypeId", "TypeName", item.TypeId).ToList<SelectListItem>();
-            ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", item.IsActive ? 1: 0).ToList<SelectListItem>();
+            ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", item.IsActive ? 1 : 0).ToList<SelectListItem>();
             return View(item);
         }
 
@@ -136,7 +136,7 @@ namespace ClientManager.Controllers
                         status = "Failed",
                         redirectURL = ""
                     };
-                else if (itemData.MaterialId <=0 || itemData.TypeId <=0 || string.IsNullOrEmpty(itemData.ItemName) || string.IsNullOrEmpty(itemData.Description))
+                else if (itemData.MaterialId <= 0 || itemData.TypeId <= 0 || string.IsNullOrEmpty(itemData.ItemName) || string.IsNullOrEmpty(itemData.Description))
                 {
                     data = new JsonReponse()
                     {
@@ -152,12 +152,12 @@ namespace ClientManager.Controllers
                     //if (userDetails.UserRoles.Any<ClientManager.Models.UserRole>((Func<ClientManager.Models.UserRole, bool>)(wh => wh.RoleName.ToLower() == "super admin")))
                     //{
                     entity.ItemName = itemData.ItemName;
-                        entity.TypeId = itemData.TypeId;
-                        entity.MaterialId = itemData.MaterialId;
-                        entity.Description = itemData.Description;
-                        entity.IsActive = itemData.IsActive;  
-                        entity.MinimumAvailableQuantity = itemData.MinimumAvailableQuantity;
-                        //str = "Item details Updated";
+                    entity.TypeId = itemData.TypeId;
+                    entity.MaterialId = itemData.MaterialId;
+                    entity.Description = itemData.Description;
+                    entity.IsActive = itemData.IsActive;
+                    entity.MinimumAvailableQuantity = itemData.MinimumAvailableQuantity;
+                    //str = "Item details Updated";
                     //}
 
                     entity.ModifiedBy = new int?(userDetails.Id);
@@ -309,10 +309,16 @@ namespace ClientManager.Controllers
 
         [HttpGet]
         [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
-        public ActionResult GetProducts(int prodMasterId = 1)
+        public ActionResult GetProducts(int prodMasterId = 1, bool isInward = false)
         {
-            var list = new SelectList(db.Items.Where(wh=> wh.TypeId == prodMasterId), "ItemId", "ItemName", 0).ToList<SelectListItem>();
-            list.Insert(0,new SelectListItem { Text = "Select", Value = "", Selected=true });
+            var data = db.Items.Where(wh => wh.TypeId == prodMasterId);
+            if(isInward)
+            {
+                data = data.Where(wh => wh.ParentId == 0);
+            }
+
+            var list = new SelectList(data, "ItemId", "ItemName", 0).ToList<SelectListItem>();
+            list.Insert(0, new SelectListItem { Text = "Select", Value = "", Selected = true });
             return Json(list.ToList(), JsonRequestBehavior.AllowGet);
 
         }

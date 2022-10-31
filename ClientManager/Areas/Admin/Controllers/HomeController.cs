@@ -34,7 +34,6 @@ namespace ClientManager.Areas.Admin.Controllers
             return View();
         }
 
-        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer", "Store Admin")]
         public ActionResult NotAuthorized()
         {
             return View();

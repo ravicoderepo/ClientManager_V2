@@ -144,7 +144,7 @@
                                                 @Html.EditorFor(model => model.ReceivedBy, new { htmlAttributes = new { @class = "form-control", @id = "txtReceivedBy", @name = "ReceivedBy", @readonly = "readonly"} })
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6" style="display:none">
                                             <div class="form-group">
                                                 <label for="ReceivedDate">Received Date</label>
                                                 <div class="input-group date" data-target-input="nearest">
@@ -268,6 +268,7 @@
         $("input[name=ReceivedFrom]").val($('#ddlCompanyId').val());
         if (evntFrom == "material") {
             fnBindTypesDropdown($("input[name=MaterialId]").val());
+            fnBindItemsDropDown(0);
         }
         else if (evntFrom == "type") {
 
@@ -341,7 +342,7 @@
     function fnBindItemsDropDown(id) {
         
         $.ajax({
-            url: "/items/GetProducts?prodMasterId=" + id,
+            url: "/items/GetProducts?prodMasterId=" + id + "&isInward=true",
             type: "Get",
             success: function (data) {
 

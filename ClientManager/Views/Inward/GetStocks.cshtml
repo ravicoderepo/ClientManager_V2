@@ -84,10 +84,9 @@
                             <table id="example1" class="table table-bordered table-striped" data-page-length='50'>
                                 <thead>
                                     <tr>
-                                        @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Super User") || currentUser.UserRoles.Any(wh => wh.RoleName == "Super Admin"))
-                                        {
+                                       
                                             <th>Action</th>
-                                        }
+                                      
                                         <th>
                                             Product Name
                                         </th>
@@ -109,14 +108,14 @@
                                     @foreach (var item in Model)
                                     {
                                         <tr>
-                                            @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Super User") || currentUser.UserRoles.Any(wh => wh.RoleName == "Super Admin"))
-                                            {
+                                            @*@if (currentUser.UserRoles.Any(wh => wh.RoleName == "Super User") || currentUser.UserRoles.Any(wh => wh.RoleName == "Super Admin") || currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                            {*@
                                                 <td>
 
                                                     <button type="button" class="btn btn-primary btn-xs" title="View" data-toggle="modal" data-target="#modal-xl" onclick="fnViewStockDetail('@item.ItemId')"><i class="far fa-eye"></i></button>
 
                                                 </td>
-                                            }
+                                            @*}*@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.ItemName)
                                             </td>

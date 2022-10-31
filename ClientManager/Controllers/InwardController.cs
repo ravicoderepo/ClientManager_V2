@@ -21,7 +21,7 @@ namespace ClientManager.Controllers
         {
             var inwardList = (from iTrans in db.VRM_InwardStockTransaction
                               join iStock in db.VRM_InwardStock on iTrans.StockId equals iStock.StockId
-                              orderby iTrans.ReceivedDate descending
+                              orderby iTrans.CreatedDate descending
                               select new InwardData 
                               { 
                                   StockId=iStock.StockId,
@@ -58,7 +58,7 @@ namespace ClientManager.Controllers
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
             ViewBag.MaterialId = Utility.DefaultList.BindList(new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", 0).ToList<SelectListItem>(), true);
             ViewBag.TypeId = Utility.DefaultList.BindList(new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == 0), "TypeId", "TypeName", 0).ToList<SelectListItem>(), true);
-            ViewBag.ItemId = Utility.DefaultList.BindList(new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == 0), "ItemId", "ItemName", 0).ToList<SelectListItem>(), true);
+            ViewBag.ItemId = Utility.DefaultList.BindList(new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == 0 && wh.ParentId == 0), "ItemId", "ItemName", 0).ToList<SelectListItem>(), true);
             ViewBag.CompanyId = Utility.DefaultList.BindList(new SelectList(db.Companies.Where(wh => wh.IsActive == true && wh.IsActive == true), "CompanyId", "Name", 0).ToList<SelectListItem>(),true);
             return View();
         }
@@ -73,7 +73,7 @@ namespace ClientManager.Controllers
             {
                 try
                 {
-                    if (inwardData.MaterialId <= 0 || inwardData.TypeId <= 0 || inwardData.ItemId <= 0 || inwardData.Quantity <= 0 || inwardData.ReceivedFrom <= 0 || string.IsNullOrEmpty(inwardData.PONumber) || string.IsNullOrEmpty(inwardData.GRNnumber) || inwardData.ReceivedDate == null)
+                    if (inwardData.MaterialId <= 0 || inwardData.TypeId <= 0 || inwardData.ItemId <= 0 || inwardData.Quantity <= 0 || inwardData.ReceivedFrom <= 0 || string.IsNullOrEmpty(inwardData.PONumber) || string.IsNullOrEmpty(inwardData.GRNnumber))
                     {
                         data = new JsonReponse()
                         {
@@ -194,9 +194,12 @@ namespace ClientManager.Controllers
 
             ViewBag.MaterialId = Utility.DefaultList.BindList(new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", inward.MaterialId).ToList<SelectListItem>(), true);
             ViewBag.TypeId = Utility.DefaultList.BindList(new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == inward.MaterialId), "TypeId", "TypeName", inward.TypeId).ToList<SelectListItem>(), true);
-            ViewBag.ItemId = Utility.DefaultList.BindList(new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == inward.TypeId), "ItemId", "ItemName", inward.ItemId).ToList<SelectListItem>(), true);
+            ViewBag.ItemId = Utility.DefaultList.BindList(new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == inward.TypeId && wh.ParentId == 0), "ItemId", "ItemName", inward.ItemId).ToList<SelectListItem>(), true);
             ViewBag.CompanyId = Utility.DefaultList.BindList(new SelectList(db.Companies.Where(wh => wh.IsActive == true), "CompanyId", "Name", inward.ReceivedFrom).ToList<SelectListItem>(), true);
-
+            if (userData.UserRoles.Any(wh => wh.RoleName != "Store Admin"))
+            {
+                ViewBag.AccessLevel = "View";
+            }
             return View(inward);
         }
 
@@ -210,7 +213,7 @@ namespace ClientManager.Controllers
             {
                 try
                 {
-                    if (inwardData.MaterialId <= 0 || inwardData.TypeId <= 0 || inwardData.ItemId <= 0 || inwardData.Quantity <= 0|| inwardData.ReceivedFrom <= 0|| string.IsNullOrEmpty(inwardData.PONumber) || string.IsNullOrEmpty(inwardData.GRNnumber) || inwardData.ReceivedDate == null)
+                    if (inwardData.MaterialId <= 0 || inwardData.TypeId <= 0 || inwardData.ItemId <= 0 || inwardData.Quantity <= 0|| inwardData.ReceivedFrom <= 0|| string.IsNullOrEmpty(inwardData.PONumber) || string.IsNullOrEmpty(inwardData.GRNnumber))
                     {
                         data = new JsonReponse()
                         {
@@ -312,7 +315,7 @@ namespace ClientManager.Controllers
         }
 
         [HttpGet]
-        [CustomAuthorize(new string[] { "Super Admin", "Super User" })]
+        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin" })]
         public ActionResult GetStockDetails(int Id)
         {
             var inwardList = (from iTrans in db.VRM_InwardStockTransaction
