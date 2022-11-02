@@ -3470,10 +3470,10 @@ var Debugger = function (_Extension) {
     }
   }]);
 
-  return Debugger;
+  return 
 }(_Extension3.default);
 
-exports.default = Debugger;
+exports.default = 
 module.exports = exports.default;
 
 /***/ }),

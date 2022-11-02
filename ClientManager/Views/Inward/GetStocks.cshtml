@@ -157,7 +157,7 @@
     var prodNames = [@Html.Raw(string.Join(",", Model.Select(sel => "'" + sel.ItemName + "'").ToArray()))];
     var avail = [@String.Join(",", Model.Select(sel => sel.AvailableQuantity).ToArray())];
      var total =[@String.Join(",", Model.Select(sel => sel.TotalQuantity).ToArray())];
-    debugger;
+    
     var areaChartData = {
         labels: prodNames,
         datasets: [
@@ -246,7 +246,7 @@
     });
 
     function fnViewStockDetail(id) {
-        debugger;
+        
         $('#modal-xl').find(".modal-title").text('Stock Details');
         $('#modal-xl').find(".modal-body").load('/Inward/GetStockDetails?Id=' + id);
 

@@ -13,6 +13,7 @@ namespace ClientManager.Models
         //Finance
         public decimal MonthlyTotalPettyCash { get; set; }
         public decimal MonthlyAvailablePettyCash { get; set; }
+        public decimal MonthlyTotalExpenses { get; set; }
         public decimal MonthlyUnApprovedExpenses { get; set; }
         public decimal MonthlyVerifiedExpenses { get; set; }
         public decimal MonthlyUnVerifiedExpenses { get; set; }

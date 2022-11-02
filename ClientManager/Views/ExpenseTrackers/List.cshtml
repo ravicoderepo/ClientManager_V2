@@ -58,10 +58,10 @@
                                     </div>
                                 }
                                 @*<div class="col-4 col-sm-2">
-            <button type="button"  <div class="col-4 col-sm-2">
-            <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Search</button>
-        </div>="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Adv. Search</button>
-        </div>*@
+                                        <button type="button"  <div class="col-4 col-sm-2">
+                                        <button type="button" style="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Search</button>
+                                    </div>="float:right" class="btn btn-block btn-primary btn-sm " onclick="javascript:fnToggleAdvSearch('1')"><i class="fa fa-search"></i> Adv. Search</button>
+                                    </div>*@
                                 @if (!currentUser.UserRoles.Any(wh => wh.RoleName == "Super User") || currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager"))
                                 {
                                     <div class="col-4 col-sm-2">
@@ -173,29 +173,25 @@
 <script>
     $('#pnlAdvSearch').hide();
 
-    function fnDasboardFilter(status) {
-        if (status != null) {
-            
-            var actionUrl = "/ExpenseTrackers/ListView?" + "expenseDateFrom=&expenseDateTo=&status=" + status + "&year=&month=&expenseCat=";
-            $('#gridView').html('');
-            $.ajax({
-                url: actionUrl,
-                contentType: 'application/html; charset=utf-8',
-                type: 'GET',
-                dataType: 'html',
-                success: function (result) {
-                    $('#gridView').html(result);
-                    $('#pettyCashSummary').css("display", "none");
-                },
-                error: function (xhr, status) {
-                    alert(status);
-                }
-            })
+    function fnDasboardFilter(input) {
+        debugger;
+        var actionUrl = "";
+        var searchInput = input.split(":");
+        var status = searchInput[0];
+
+        if (searchInput.length == 1) {
+            actionUrl = "/ExpenseTrackers/ListView?" + "expenseDateFrom=&expenseDateTo=&status=" + status + "&year=&month=&expenseCat=";
         }
-    }
-    function fnSearch() {
-        
-        var actionUrl = "/ExpenseTrackers/ListView?" + "expenseDateFrom=" + $('#txtexpenseDateFrom').val().replace(/\//g, '-') + "&expenseDateTo=" + $('#txtexpenseDateTo').val().replace(/\//g, '-') + "&status=" + $('#ddlStatus').val() + "&year=" + $('#ddlYears').val() + "&month=" + $('#ddlMonths').val() + "&expenseCat=" + $('#ddlExpenseCategory').val();
+
+        if (searchInput.length > 1 && searchInput[1] == 'CurrMonth')
+        {
+            var dateObj = new Date();
+            var month = dateObj.getUTCMonth() + 1; //months from 1-12
+            var day = dateObj.getUTCDate();
+            var year = dateObj.getUTCFullYear();
+            actionUrl = "/ExpenseTrackers/ListView?" + "expenseDateFrom=&expenseDateTo=&status=" + status + "&year=" + year + "&month=" + month + "&expenseCat=";
+        }
+
         $('#gridView').html('');
         $.ajax({
             url: actionUrl,
@@ -210,6 +206,48 @@
                 alert(status);
             }
         })
+        $('#filterCon').val('');
+    }
+    //function fnDasboardFilterForCurrentMonth(status) {
+    //    if (currDate != null) {
+    //        var dateObj = new Date();
+    //        var month = dateObj.getUTCMonth() + 1; //months from 1-12
+    //        var day = dateObj.getUTCDate();
+    //        var year = dateObj.getUTCFullYear();
+    //        var actionUrl = "/ExpenseTrackers/ListView?" + "expenseDateFrom=&expenseDateTo=&status=" + status +"&year="+year+"&month="+month+"&expenseCat=";
+    //        $('#gridView').html('');
+    //        $.ajax({
+    //            url: actionUrl,
+    //            contentType: 'application/html; charset=utf-8',
+    //            type: 'GET',
+    //            dataType: 'html',
+    //            success: function (result) {
+    //                $('#gridView').html(result);
+    //                $('#pettyCashSummary').css("display", "none");
+    //            },
+    //            error: function (xhr, status) {
+    //                alert(status);
+    //            }
+    //        })
+    //    }
+    //}
+    function fnSearch() {
+
+        var actionUrl = "/ExpenseTrackers/ListView?" + "expenseDateFrom=" + $('#txtexpenseDateFrom').val().replace(/\//g, '-') + "&expenseDateTo=" + $('#txtexpenseDateTo').val().replace(/\//g, '-') + "&status=" + $('#ddlStatus').val() + "&year=" + $('#ddlYears').val() + "&month=" + $('#ddlMonths').val() + "&expenseCat=" + $('#ddlExpenseCategory').val();
+        $('#gridView').html('');
+        $.ajax({
+            url: actionUrl,
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            success: function (result) {
+                $('#gridView').html(result);
+                $('#pettyCashSummary').css("display", "none");
+            },
+            error: function (xhr, status) {
+                alert(status);
+            }
+        });
     }
 
     function FilterPettyCash(status) {
@@ -217,7 +255,7 @@
         fnSearch();
     }
     function fnViewDocuments(recId) {
-        
+
         var left = ($(window).width() / 2) - (900 / 2),
             top = ($(window).height() / 2) - (700 / 2),
             popup = window.open("/Documents/ImageViewer?docSource=Expense Tracker&recRefId=" + recId, "Image Viewer", "width=900, height=700, top=" + top + ", left=" + left)
@@ -239,7 +277,7 @@
     });
 
     function fnClearSearch() {
-        
+
         $('#txtexpenseDateTo').val('');
         $('#txtexpenseDateFrom').val('');
         $('#ddlStatus').val(0);
@@ -248,6 +286,14 @@
         $('#ddlYears').val(0);
     }
 
-    fnDasboardFilter($('#filterCon').val());
+    if ($('#filterCon').val() != "") {
+        debugger; alert($('#filterCon').val());
+        fnDasboardFilter($('#filterCon').val());
+    }
+
+    if ($('#filterCon').val() = "NoFilter") {
+        
+        fnDasboardFilter();
+    }
 
 </script>

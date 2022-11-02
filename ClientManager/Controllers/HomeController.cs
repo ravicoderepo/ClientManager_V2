@@ -74,11 +74,12 @@ namespace ClientManager.Controllers
             decimal? MonthlyTotalUnVerifiedExpence = (MonthlyTotalUnVerifiedExpenceAmount != null && MonthlyTotalUnVerifiedExpenceAmount.Count > 0) ? MonthlyTotalUnVerifiedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
                        
             Dashboard dashboard = new Dashboard();
+            dashboard.MonthlyTotalExpenses = (MonthlyTotalApprovedExpence.Value + MonthlyTotalUnApprovedExpence.Value + MonthlyTotalUnVerifiedExpence.Value);
             dashboard.MonthlyTotalPettyCash = MonthlyTotalPettyCash.Value;
             dashboard.MonthlyUnApprovedExpenses = MonthlyTotalUnApprovedExpence.Value;
             dashboard.MonthlyVerifiedExpenses = MonthlyTotalApprovedExpence.Value;
             dashboard.MonthlyUnVerifiedExpenses = MonthlyTotalUnVerifiedExpence.Value;
-            dashboard.MonthlyPendingPettyCash = (MonthlyTotalPettyCash.Value - MonthlyTotalApprovedExpence.Value);
+            dashboard.MonthlyPendingPettyCash = (MonthlyTotalUnApprovedExpence.Value + MonthlyTotalApprovedExpence.Value);
             dashboard.MonthlyAvailablePettyCash = (MonthlyTotalPettyCash.Value - (MonthlyTotalUnApprovedExpence.Value + MonthlyTotalUnVerifiedExpence.Value));
             dashboard.CurrentMonthAndYear = Utility.ConstantData.ToShortMonthName(DateTime.Now) + "/" + DateTime.Now.Year;
             

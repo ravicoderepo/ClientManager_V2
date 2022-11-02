@@ -52,7 +52,7 @@ namespace ClientManager.Controllers
             List<SelectListItem> expenseCategory = new SelectList(db.ExpenceCategories, "Id", "CategoryName", "").ToList();
             expenseCategory.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
             ViewBag.ExpenseCategory = expenseCategory;
-            ViewBag.DashboardFilter = string.IsNullOrEmpty(dashboardFilter) ? "" : dashboardFilter;
+            ViewBag.DashboardFilter = string.IsNullOrEmpty(dashboardFilter) ? "NoFilter" : dashboardFilter;
 
             if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "approver"))
             {
@@ -65,7 +65,7 @@ namespace ClientManager.Controllers
 
             return View(expenceTracker.ToList().OrderByDescending(ord => ord.CreatedOn));
         }
-        [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
+       // [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         public ActionResult ListView(string expenseDateFrom = "", string expenseDateTo = "", string status = "", int month = 0, int year = 0, int expenseCat = 0)
         {
             DateTime dtExpenseDateFrom = new DateTime();
@@ -77,7 +77,7 @@ namespace ClientManager.Controllers
             var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
             var expenceTracker1 = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
-            ViewBag.TotalFilteredExpense = (expenceTracker.Count() > 0) ? expenceTracker.Sum(w => w.ExpenseAmount).ToString("#,##0.00") : "0.00";
+            
 
             if (!string.IsNullOrEmpty(expenseDateTo) && !string.IsNullOrEmpty(expenseDateFrom))
             {
@@ -100,8 +100,11 @@ namespace ClientManager.Controllers
                 }
             }
 
-            if (!string.IsNullOrEmpty(status))
-                expenceTracker = expenceTracker.Where(wh => wh.Status == status);
+            if (!string.IsNullOrEmpty(status) && status != "NoFilter")
+            {
+                string [] statuses = status.Split('~');
+                expenceTracker = expenceTracker.Where(wh => statuses.Contains(wh.Status));
+            }                    
             else
             {
                 if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "approver"))
@@ -138,7 +141,7 @@ namespace ClientManager.Controllers
             decimal? TotalUnVerifiedExpence = (TotalUnVerifiedExpenceAmount != null && TotalUnVerifiedExpenceAmount.Count > 0) ? TotalUnVerifiedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
 
             ViewBag.TotalPettyCash = TotalPettyCash.Value.ToString("#,##0.00");
-            //ViewBag.TotalFilteredExpense = (expenceTracker.Count() > 0) ? expenceTracker.Sum(w => w.ExpenseAmount).ToString("#,##0.00") : "0.00";
+            ViewBag.TotalFilteredExpense = (expenceTracker.Count() > 0) ? expenceTracker.Sum(w => w.ExpenseAmount).ToString("#,##0.00") : "0.00";
             ViewBag.TotalApprovedExpence = TotalApprovedExpence.Value.ToString("#,##0.00");
             ViewBag.TotalUnApprovedExpence = TotalUnApprovedExpence.Value.ToString("#,##0.00");
             ViewBag.TotalUnVerifiedExpence = TotalUnVerifiedExpence.Value.ToString("#,##0.00");

@@ -3436,7 +3436,7 @@ var TempusDominusBootstrap4 = function ($) {
     }
 
       if (config._options.allowInputToggle && $originalTarget.is('input[data-toggle="datetimepicker"]')) {
-          debugger;
+          
           return;
       }
 
