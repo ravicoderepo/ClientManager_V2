@@ -221,15 +221,20 @@ namespace Utility
             {
                 items.Insert(0, new SelectListItem()
                 {
+                    Text = "All",
+                    Value = "0"
+                });
+                items.Insert(1, new SelectListItem()
+                {
                     Text = "Approved",
                     Value = "Approved"
                 });
-                items.Insert(1, new SelectListItem()
+                items.Insert(2, new SelectListItem()
                 {
                     Text = "Pending",
                     Value = "Pending"
                 });
-                items.Insert(2, new SelectListItem()
+                items.Insert(3, new SelectListItem()
                 {
                     Text = "Verified",
                     Value = "Verified"

@@ -7,7 +7,7 @@
 
 @{
     var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
-    string[] superroles = { "Super User", "Sales Engineer","Sales Manager" };
+    string[] superroles = { "Super User", "Sales Engineer", "Sales Manager" };
 }
 
 <div class="content-wrapper">
@@ -63,26 +63,38 @@
                             <div id="pnlAdvSearch">
                                 <div class="card-body" style="background-color:whitesmoke">
                                     <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="callDateFrom">Call Date From</label>
-                                                <div class="input-group date" data-target-input="nearest">
-                                                    <input type="text" class="form-control datetimepicker-input" data-target="#txtCallDateFrom" name="callDateFrom" id="txtCallDateFrom">
-                                                    <div class="input-group-append" data-target="#txtCallDateFrom" data-toggle="datetimepicker">
-                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        @*<div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="callDateFrom">Call Date From</label>
+                                                    <div class="input-group date" data-target-input="nearest">
+                                                        <input type="text" class="form-control datetimepicker-input" data-target="#txtCallDateFrom" name="callDateFrom" id="txtCallDateFrom">
+                                                        <div class="input-group-append" data-target="#txtCallDateFrom" data-toggle="datetimepicker">
+                                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="callDateTo">Call Date To</label>
+                                                    <div class="input-group date" data-target-input="nearest">
+                                                        <input type="text" class="form-control datetimepicker-input" data-target="#txtCallDateTo" name="callDateTo" id="txtCallDateTo">
+                                                        <div class="input-group-append" data-target="#txtCallDateTo" data-toggle="datetimepicker">
+                                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>*@
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Month">Month</label>
+                                                @Html.DropDownList("Months", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlMonths" })
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="callDateTo">Call Date To</label>
-                                                <div class="input-group date" data-target-input="nearest">
-                                                    <input type="text" class="form-control datetimepicker-input" data-target="#txtCallDateTo" name="callDateTo" id="txtCallDateTo">
-                                                    <div class="input-group-append" data-target="#txtCallDateTo" data-toggle="datetimepicker">
-                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                    </div>
-                                                </div>
+                                                <label for="Year">Year</label>
+                                                @Html.DropDownList("Years", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlYears" })
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -109,7 +121,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="SalesPerson">Sales Person</label>
-                                               <input type="hidden" name="hdnSalesPerson" />
+                                                <input type="hidden" name="hdnSalesPerson" />
                                                 @Html.DropDownList("SalesPerson", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlSalesPerson", @onChange = "fnSalesPersonChange()" })
                                             </div>
                                         </div>
@@ -143,8 +155,8 @@
 <script>
     $('#pnlAdvSearch').hide();
     function fnSearch() {
-        
-        var actionUrl = "/SaleActivities/ListView?" + "callDateFrom=" + $('#txtCallDateFrom').val().replace(/\//g, '-') + "&callDateTo=" + $('#txtCallDateTo').val().replace(/\//g, '-') + "&status=" + $("input[name=hdnStatus]").val() + "&productName=" + $('#txtProductName').val() + "&customerName=" + $('#txtCustomerName').val() + "&salesPerson=" + $("input[name=hdnSalesPerson]").val();
+
+        var actionUrl = "/SaleActivities/ListView?&status=" + $("input[name=hdnStatus]").val() + "&year=" + $('#ddlYears').val() + "&month=" + $('#ddlMonths').val() + "&productName=" + $('#txtProductName').val() + "&customerName=" + $('#txtCustomerName').val() + "&salesPerson=" + $("input[name=hdnSalesPerson]").val();
         $('#gridView').html('');
         $.ajax({
             url: actionUrl,
@@ -153,7 +165,7 @@
             dataType: 'html',
             success: function (result) {
                 $('#gridView').html(result);
-                
+
                 //$('#lblSalesPersonName').text(' for ' + $('#ddlSalesPerson option:selected').text() + ' : ' + '@ViewBag.TotalSalesBySalesPerson');
                // @ViewBag.SelectedSalesPerson = $('#ddlSalesPerson option:selected').text();
             },
@@ -164,12 +176,12 @@
     }
 
     function fnSalesPersonChange() {
-        
+
         $("input[name=hdnSalesPerson]").val($('#ddlSalesPerson').val());
     }
 
     function fnStatusChange() {
-        
+
         $("input[name=hdnStatus]").val($('#ddlStatus').val());
     }
 
@@ -191,7 +203,7 @@
     });
 
     function fnClearSearch() {
-        
+
         $('#txtCallDateTo').val('');
         $('#txtCallDateFrom').val('');
         $('#txtProductName').val('');
@@ -204,7 +216,7 @@
 
     $(window).on('load', function () {
         const params = new URLSearchParams(window.location.search)
-        
+
         var searchQuery = "status="
 
         if (params.has('status')) {
@@ -231,7 +243,7 @@
 
     //$(window).load(function () {
     //    const params = new URLSearchParams(window.location.search)
-    //    
+    //
     //    var searchQuery = "status="
 
     //    if (params.has('status')) {
@@ -261,10 +273,10 @@
     //$('#lblSalesPersonName').html(' for ' + '<span style="font-weight:bold; color:green; font-size:15px !important">' + $('#ddlSalesPerson option:selected').text() + ' : ' + '@ViewBag.TotalSalesBySalesPerson' + '</span>');
     $("#mnuSalesList").addClass("active");
     var parentMenu = $("#mnuSalesList").parent().parent().parent();
-    
+
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        
+
         $(this).attr("style", "display:block");
     });
 </script>

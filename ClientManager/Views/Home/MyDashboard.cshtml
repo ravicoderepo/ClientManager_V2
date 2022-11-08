@@ -36,7 +36,7 @@
                         <div class="inner">
                             <h3>@Model.TotalSales</h3>
 
-                            <p>Total Sale</p>
+                            <p>Total Calls Made</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-bag"></i>
@@ -45,20 +45,20 @@
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-4 col-12">
-                    <!-- small box -->
-                    <div class="small-box bg-success">
-                        <div class="inner">
-                            <h3>@Model.TotalOrders</h3>
+                <!--<div class="col-lg-4 col-12">-->
+                <!-- small box -->
+                <!--<div class="small-box bg-success">
+            <div class="inner">
+                <h3>@Model.TotalOrders</h3>
 
-                            <p>Total Orders</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-bag"></i>
-                        </div>
-                        <a href="#" onclick="javascript:location.href='@Url.Action("List", "SaleActivities")'" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
+                <p>Total Orders</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-bag"></i>
+            </div>
+            <a href="#" onclick="javascript:location.href='@Url.Action("List", "SaleActivities")'" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>-->
                 <!-- ./col -->
                 <div class="col-lg-4 col-12">
                     <!-- small box -->
@@ -66,7 +66,7 @@
                         <div class="inner">
                             <h3>@Model.TotalCalls</h3>
 
-                            <p>Total Calls</p>
+                            <p>Active Calls</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-pie-graph"></i>
@@ -76,8 +76,6 @@
                 </div>
 
                 <!-- ./col -->
-            </div>
-            <div class="row">
                 <div class="col-lg-4 col-12">
                     <!-- small box -->
                     <div class="small-box bg-gradient-teal">
@@ -92,6 +90,8 @@
                         <a href="#" onclick="javascript:location.href='@Url.Action("List", "SaleActivities")'+'?status=1'" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <!-- ./col -->
                 <div class="col-lg-4 col-12">
                     <!-- small box -->
@@ -123,9 +123,6 @@
                     </div>
                 </div>
                 <!-- ./col -->
-
-            </div>
-            <div class="row">
                 <div class="col-lg-4 col-12">
                     <!-- small box -->
                     <div class="small-box bg-gradient-green">
@@ -140,6 +137,9 @@
                         <a href="#" onclick="javascript:location.href='@Url.Action("List", "SaleActivities")'+'?status=5'" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
+            </div>
+            <div class="row">
+              
                 <!-- ./col -->
                 <div class="col-lg-4 col-12">
                     <!-- small box -->

@@ -20,11 +20,11 @@ namespace ClientManager.Controllers
 
         [CustomAuthorize(new string[] { "Super User", "Super Admin", "Sales Manager", "Sales Engineer" })]
         // GET: SaleActivities
-        public ActionResult ListView(string callDateFrom = "", string callDateTo = "", int status = 0, string productName = "", string customerName = "", int salesPerson = 0)
+        public ActionResult ListView(int status = -0, int month = 0, int year = 0, string productName = "", string customerName = "", int salesPerson = 0)
         {
+            month = (month > 0) ? month : 0;
+            year = (year > 0) ? year : 0;
 
-            DateTime dtcallDateFrom = new DateTime();
-            DateTime dtcallDateTo = new DateTime();
             var currentUser = (UserDetails)Session["UserDetails"];
             string[] superroles = { "Super Admin", "Super User" };
             if (salesPerson == 0)
@@ -72,23 +72,11 @@ namespace ClientManager.Controllers
             //db.UserRoles.Where(rl => rl.Role.RoleName.ToLower() == "Sales Engineer").Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName });            
 
 
-            statusList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
+            statusList.Insert(0, (new SelectListItem { Text = "", Value = "-1" }));
             selesPersonList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
 
             ViewBag.SalesPerson = selesPersonList;
             ViewBag.Status = statusList;
-
-            if (!string.IsNullOrEmpty(callDateFrom))
-            {
-                dtcallDateFrom = DateTime.Parse(callDateFrom);
-                saleActivities = saleActivities.Where(wh => wh.SaleDate >= dtcallDateFrom);
-            }
-
-            if (!string.IsNullOrEmpty(callDateTo))
-            {
-                dtcallDateTo = DateTime.Parse(callDateTo);
-                saleActivities = saleActivities.Where(wh => wh.SaleDate <= dtcallDateTo);
-            }
 
             if (!string.IsNullOrEmpty(productName))
             {
@@ -99,9 +87,19 @@ namespace ClientManager.Controllers
                 saleActivities = saleActivities.Where(wh => wh.ClientName.Contains(customerName.Trim()));
             }
 
+            if (year > 0)
+                saleActivities = saleActivities.Where(wh => wh.SaleDate.Year == year);
+
+            if (month > 0)
+                saleActivities = saleActivities.Where(wh => wh.SaleDate.Month == month);
+
             if (salesPerson > 0)
             {
-                saleActivities = saleActivities.Where(wh => wh.CreatedBy == salesPerson);
+                if(status == 4)
+                    saleActivities = saleActivities.Where(wh => wh.CreatedBy == salesPerson);
+                else
+                    saleActivities = saleActivities.Where(wh => wh.CreatedBy == salesPerson && wh.SaleDate.Month == DateTime.Now.Month && wh.SaleDate.Year == DateTime.Now.Year);
+
                 var output = saleActivities.Where(wh => wh.Status == 6 && wh.CreatedBy == salesPerson && wh.InvoiceAmount != null).Select(sel => (sel.InvoiceAmount.HasValue) ? sel.InvoiceAmount.Value : 0).ToList();
                 ViewBag.TotalSalesBySalesPerson = " Rs." + output.Sum(s => s).ToString("#,##0.00");
             }
@@ -110,14 +108,13 @@ namespace ClientManager.Controllers
                 var output = saleActivities.Where(wh => wh.Status == 6 && wh.InvoiceAmount != null).Select(sel => (sel.InvoiceAmount.HasValue) ? sel.InvoiceAmount.Value : 0).ToList();
                 ViewBag.TotalSalesBySalesPerson = " Rs." + output.Sum(s => s).ToString("#,##0.00");
             }
-
-            if (status > 0)
-                saleActivities = saleActivities.Where(wh => wh.Status == status);
-            else
-                saleActivities = saleActivities.Where(wh => wh.Status != 6);
-
-            statusList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
-            ViewBag.Status = statusList;
+            if (status != -1)
+            {
+                if (status > 0)
+                    saleActivities = saleActivities.Where(wh => wh.Status == status);
+                else
+                    saleActivities = saleActivities.Where(wh => wh.Status != 6);
+            }
 
             var result = saleActivities.OrderBy(wh => wh.Status).ToList();
             //from sale in saleActivities orderby sale.Status ascending select sale;
@@ -131,6 +128,7 @@ namespace ClientManager.Controllers
         {
             var currentUser = (UserDetails)Session["UserDetails"];
             string[] superroles = { "Super Admin", "Super User" };
+
             //var saleActivities = db.SaleActivities.Include(s => s.SalesStatu);
             var saleActivities = (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName))) ? db.SaleActivities.Include(s => s.SalesStatu) : (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "sales manager")) ? db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id || currentUser.ReportingToMe.Contains(wh.CreatedBy)) : db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id);
 
@@ -140,17 +138,17 @@ namespace ClientManager.Controllers
             if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "super admin" || wh.RoleName.ToLower() == "super user"))
             {
                 string[] roleNames = { "Super User", "Sales Manager", "Sales Engineer" };
-                selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName)).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName", currentUser.Id).ToList();
+                selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName) && rl.User1.IsActive == true).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName", currentUser.Id).ToList();
             }
             else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "sales manager"))
             {
                 string[] roleNames = { "Sales Manager", "Sales Engineer" };
-                selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName) && currentUser.ReportingToMe.Contains(rl.UserId) || rl.UserId == currentUser.Id).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName", currentUser.Id).ToList();
+                selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName) && currentUser.ReportingToMe.Contains(rl.UserId) && rl.User1.IsActive == true || rl.UserId == currentUser.Id).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName", currentUser.Id).ToList();
             }
             else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "sales engineer"))
             {
                 string[] roleNames = { "Sales Engineer" };
-                selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName) && rl.UserId == currentUser.Id).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName", currentUser.Id).ToList();
+                selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName) && rl.UserId == currentUser.Id && rl.User1.IsActive == true).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName", currentUser.Id).ToList();
             }
 
             //ViewBag.SelectedSalesPerson = " of " + currentUser.FullName;
@@ -161,12 +159,13 @@ namespace ClientManager.Controllers
             ViewBag.TotalSalesBySalesPerson = "Rs." + output.Sum(s => s).ToString("#,##0.00");
 
 
-            statusList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
-            selesPersonList.Insert(0, (new SelectListItem { Text = "", Value = "-1" }));
+            statusList.Insert(0, (new SelectListItem { Text = "All", Value = "-1" }));
+            selesPersonList.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
 
             ViewBag.SalesPerson = selesPersonList;
             ViewBag.Status = statusList;
-
+            ViewBag.Years = new SelectList(Utility.DefaultList.GetYearList(), "Value", "Text", "").ToList();
+            ViewBag.Months = new SelectList(Utility.DefaultList.GetMonthList(), "Value", "Text", "").ToList();
 
             var result = from sale in saleActivities orderby sale.Status ascending select sale;
 

@@ -45,7 +45,7 @@ namespace ClientManager.Controllers
             //{
             //    statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList().Where(w=> w.Text=="Pending").ToList(), "Value", "Text", "").ToList();
             //}
-            statusList.Insert(0, (new SelectListItem { Text = "", Value = "" }));
+            //statusList.Insert(0, (new SelectListItem { Text = "", Value = "" }));
             ViewBag.Status = statusList;
             ViewBag.Years = new SelectList(Utility.DefaultList.GetYearList(), "Value", "Text", "").ToList();
             ViewBag.Months = new SelectList(Utility.DefaultList.GetMonthList(), "Value", "Text", "").ToList();
@@ -65,7 +65,7 @@ namespace ClientManager.Controllers
 
             return View(expenceTracker.ToList().OrderByDescending(ord => ord.CreatedOn));
         }
-       // [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
+        // [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         public ActionResult ListView(string expenseDateFrom = "", string expenseDateTo = "", string status = "", int month = 0, int year = 0, int expenseCat = 0)
         {
             DateTime dtExpenseDateFrom = new DateTime();
@@ -77,7 +77,7 @@ namespace ClientManager.Controllers
             var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
             var expenceTracker1 = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
-            
+
 
             if (!string.IsNullOrEmpty(expenseDateTo) && !string.IsNullOrEmpty(expenseDateFrom))
             {
@@ -100,20 +100,23 @@ namespace ClientManager.Controllers
                 }
             }
 
-            if (!string.IsNullOrEmpty(status) && status != "NoFilter")
+            if (!string.IsNullOrEmpty(status) && status != "NoFilter" && status != "0")
             {
-                string [] statuses = status.Split('~');
+                string[] statuses = status.Split('~');
                 expenceTracker = expenceTracker.Where(wh => statuses.Contains(wh.Status));
-            }                    
+            }
             else
             {
-                if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "approver"))
+                if (status != "0")
                 {
-                    expenceTracker = expenceTracker.Where(wh => wh.Status == "Pending");
-                }
-                else if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "verifier"))
-                {
-                    expenceTracker = expenceTracker.Where(wh => wh.Status == "Approved");
+                    if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "approver"))
+                    {
+                        expenceTracker = expenceTracker.Where(wh => wh.Status == "Pending");
+                    }
+                    else if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "verifier"))
+                    {
+                        expenceTracker = expenceTracker.Where(wh => wh.Status == "Approved");
+                    }
                 }
             }
             if (year > 0)
@@ -146,7 +149,7 @@ namespace ClientManager.Controllers
             ViewBag.TotalUnApprovedExpence = TotalUnApprovedExpence.Value.ToString("#,##0.00");
             ViewBag.TotalUnVerifiedExpence = TotalUnVerifiedExpence.Value.ToString("#,##0.00");
             ViewBag.PendingPettyCash = (TotalUnApprovedExpence.Value + TotalUnVerifiedExpence.Value).ToString("#,##0.00");
-            ViewBag.AvailablePettyCash = (TotalPettyCash.Value - TotalExpenceCash.Value).ToString("#,##0.00"); 
+            ViewBag.AvailablePettyCash = (TotalPettyCash.Value - TotalExpenceCash.Value).ToString("#,##0.00");
             ViewBag.CurrentMonthAndYear = month + "/" + year;
 
             //List<SelectListItem> statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", "").ToList();
@@ -542,51 +545,51 @@ namespace ClientManager.Controllers
             return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
 
-    [HttpGet]
-    [CustomAuthorize(new string[] { "Store Admin" })]
-    public ActionResult Delete(int id)
-    {
-        UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
-
-        JsonReponse data;
-        try
+        [HttpGet]
+        [CustomAuthorize(new string[] { "Store Admin" })]
+        public ActionResult Delete(int id)
         {
-            if (id <= 0)
-                return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
 
-            ExpenseTracker entity = this.db.ExpenseTrackers.Find(id);
-
-            if (entity == null)
-                return (ActionResult)this.HttpNotFound();
-
-            this.db.ExpenseTrackers.Remove(entity);
-            this.db.SaveChanges();
-
-            data = new JsonReponse()
+            JsonReponse data;
+            try
             {
-                message = "Expence Entry Deleted.",
-                status = "Success",
-                redirectURL = "/ExpenseTrackers/List?" + DateTime.Now.Ticks.ToString()
-            };
-        }
-        catch (Exception ex)
-        {
-            data = new JsonReponse()
+                if (id <= 0)
+                    return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+                ExpenseTracker entity = this.db.ExpenseTrackers.Find(id);
+
+                if (entity == null)
+                    return (ActionResult)this.HttpNotFound();
+
+                this.db.ExpenseTrackers.Remove(entity);
+                this.db.SaveChanges();
+
+                data = new JsonReponse()
+                {
+                    message = "Expence Entry Deleted.",
+                    status = "Success",
+                    redirectURL = "/ExpenseTrackers/List?" + DateTime.Now.Ticks.ToString()
+                };
+            }
+            catch (Exception ex)
             {
-                message = ex.Message,
-                status = "Error",
-                redirectURL = ""
-            };
+                data = new JsonReponse()
+                {
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
+            }
+            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
         }
-        return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
-    }
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
+        protected override void Dispose(bool disposing)
         {
-            db.Dispose();
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
-        base.Dispose(disposing);
     }
-}
 }
