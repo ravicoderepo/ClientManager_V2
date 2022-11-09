@@ -131,9 +131,9 @@
 
         if ('@ViewBag.AccessLevel' == "View") {
             $('#quickForm :input').each(function () {
-                
+
                 if ($(this).attr('Id') != 'btnBack') {
-                    
+
                     $(this).prop('disabled', true);
                 }
             });
@@ -144,7 +144,7 @@
         //
         $.validator.setDefaults({
             submitHandler: function () {
-                
+
                 // alert("Form successful submitted!");
                 $("input[name=IsActive]").val(($('#ddlStatus').val() == '1' ? true : false));
                 $("input[name=TypeId]").val($('#ddlTypeId').val());
@@ -188,7 +188,7 @@
         $("input[name=IsActive]").val(($('#ddlStatus').val()=='1' ? true: false));
     }
     function fnValueChange(evntFrom) {
-        
+
         $("input[name=TypeId]").val($('#ddlTypeId').val());
         $("input[name=MaterialId]").val($('#ddlMaterialId').val())
 
@@ -196,18 +196,18 @@
             fnBindDropdown($("input[name=MaterialId]").val());
         }
     }
-        function fnSubmitItemDetails() {
-        
+    function fnSubmitItemDetails() {
+       
         var ItemsData = {
             ItemId: $('#ItemId').val(),
             TypeId: $("input[name=TypeId]").val(),
             MaterialId: $("input[name=MaterialId]").val(),
-            IsActive: ($("input[name=IsActive]").val() == '1') ? true : false,
+            IsActive: $("input[name=IsActive]").val(),
             ItemName: $('#txtItemName').val(),
             Description: $('#txtDescription').val(),
             MinimumAvailableQuantity: $('#txtMinimumAvailableQuantity').val()
         };
-        
+
         $.ajax({
             type: "POST",
             url: "/Items/Edit",
@@ -230,10 +230,10 @@
     }
     $("#mnuItemList").addClass("active");
     var parentMenu = $("#mnuItemList").parent().parent().parent();
-    
+
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        
+
         $(this).attr("style", "display:block");
     });
     function fnBindDropdown(id) {
@@ -241,7 +241,7 @@
             url: "/types/GetProductMaster?materialId=" + id,
             type: "Get",
             success: function (data) {
-                
+
                 $('#ddlTypeId').empty();
                 for (var i = 0; i < data.length; i++) {
                     var opt = new Option(data[i].Text, data[i].Value);

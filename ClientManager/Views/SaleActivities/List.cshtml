@@ -155,8 +155,11 @@
 <script>
     $('#pnlAdvSearch').hide();
     function fnSearch() {
+        var selPerson = "-1";
+        if ($("input[name=hdnSalesPerson]").val() > 0)
+            selPerson = $("input[name=hdnSalesPerson]").val();
 
-        var actionUrl = "/SaleActivities/ListView?&status=" + $("input[name=hdnStatus]").val() + "&year=" + $('#ddlYears').val() + "&month=" + $('#ddlMonths').val() + "&productName=" + $('#txtProductName').val() + "&customerName=" + $('#txtCustomerName').val() + "&salesPerson=" + $("input[name=hdnSalesPerson]").val();
+        var actionUrl = "/SaleActivities/ListView?&status=" + $("input[name=hdnStatus]").val() + "&year=" + $('#ddlYears').val() + "&month=" + $('#ddlMonths').val() + "&productName=" + $('#txtProductName').val() + "&customerName=" + $('#txtCustomerName').val() + "&salesPerson=" + selPerson;
         $('#gridView').html('');
         $.ajax({
             url: actionUrl,

@@ -89,18 +89,20 @@ namespace ClientManager.Controllers
 
             if (year > 0)
                 saleActivities = saleActivities.Where(wh => wh.SaleDate.Year == year);
+            else
+                saleActivities = saleActivities.Where(wh => wh.SaleDate.Year == DateTime.Now.Year);
 
             if (month > 0)
                 saleActivities = saleActivities.Where(wh => wh.SaleDate.Month == month);
+            else
+                saleActivities = saleActivities.Where(wh => wh.SaleDate.Month == DateTime.Now.Month);
+            
 
             if (salesPerson > 0)
             {
-                if(status == 4)
-                    saleActivities = saleActivities.Where(wh => wh.CreatedBy == salesPerson);
-                else
-                    saleActivities = saleActivities.Where(wh => wh.CreatedBy == salesPerson && wh.SaleDate.Month == DateTime.Now.Month && wh.SaleDate.Year == DateTime.Now.Year);
+                saleActivities = saleActivities.Where(wh => wh.CreatedBy == salesPerson);
 
-                var output = saleActivities.Where(wh => wh.Status == 6 && wh.CreatedBy == salesPerson && wh.InvoiceAmount != null).Select(sel => (sel.InvoiceAmount.HasValue) ? sel.InvoiceAmount.Value : 0).ToList();
+                var output = saleActivities.Where(wh => wh.Status == 6 && wh.InvoiceAmount != null).Select(sel => (sel.InvoiceAmount.HasValue) ? sel.InvoiceAmount.Value : 0).ToList();
                 ViewBag.TotalSalesBySalesPerson = " Rs." + output.Sum(s => s).ToString("#,##0.00");
             }
             else
