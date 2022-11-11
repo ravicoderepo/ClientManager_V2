@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -48,11 +49,12 @@ namespace ClientManager.Controllers
                 num2 = source.Sum<SaleActivity>((Expression<Func<SaleActivity, int?>>)(su => su.NoOfFollowUps)).Value;
             int? nullable = new int?(num2);
             dashboard.TotalCalls = nullable;
-            dashboard.Closed = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 6)).Count<SaleActivity>();
-            dashboard.InDiscussion = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 2)).Count<SaleActivity>();
-            dashboard.InitialCall = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 1)).Count<SaleActivity>();
-            dashboard.PendingfromCustomer = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 3)).Count<SaleActivity>();
-            dashboard.POReceivedWIP = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 5)).Count<SaleActivity>();
+            var source1 = source.Where(wh => wh.SaleDate.Month == DateTime.Now.Month && wh.SaleDate.Year == DateTime.Now.Year);
+            dashboard.Closed = source1.Where(wh => wh.Status == 6).Count<SaleActivity>();
+            dashboard.InDiscussion = source1.Where(wh => wh.Status == 2).Count<SaleActivity>();
+            dashboard.InitialCall = source1.Where(wh => wh.Status == 1).Count<SaleActivity>();
+            dashboard.PendingfromCustomer = source1.Where(wh => wh.Status == 3).Count<SaleActivity>();
+            dashboard.POReceivedWIP = source1.Where(wh => wh.Status == 5).Count<SaleActivity>();
             dashboard.MonthlySalesReport = monthlySalesReport;
             return (ActionResult)this.View(dashboard);
         }
@@ -140,11 +142,17 @@ namespace ClientManager.Controllers
             }
             int? nullable2 = new int?(num2);
             dashboard2.TotalCalls = nullable2;
-            model.Closed = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 6)).Count<SaleActivity>();
-            model.InDiscussion = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 2)).Count<SaleActivity>();
-            model.InitialCall = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 1)).Count<SaleActivity>();
-            model.PendingfromCustomer = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 3)).Count<SaleActivity>();
-            model.POReceivedWIP = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 5)).Count<SaleActivity>();
+            ////model.Closed = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 6)).Count<SaleActivity>();
+            ////model.InDiscussion = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 2)).Count<SaleActivity>();
+            ////model.InitialCall = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 1)).Count<SaleActivity>();
+            ////model.PendingfromCustomer = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 3)).Count<SaleActivity>();
+            ////model.POReceivedWIP = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 5)).Count<SaleActivity>();
+            var source1 = source.Where(wh => wh.SaleDate.Month == DateTime.Now.Month && wh.SaleDate.Year == DateTime.Now.Year);
+            model.Closed = source1.Where(wh => wh.Status == 6).Count<SaleActivity>();
+            model.InDiscussion = source1.Where(wh => wh.Status == 2).Count<SaleActivity>();
+            model.InitialCall = source1.Where(wh => wh.Status == 1).Count<SaleActivity>();
+            model.PendingfromCustomer = source1.Where(wh => wh.Status == 3).Count<SaleActivity>();
+            model.POReceivedWIP = source1.Where(wh => wh.Status == 5).Count<SaleActivity>();
             model.MonthlySalesReport = monthlySalesReport;
             return (ActionResult)this.View((object)model);
         }
@@ -194,11 +202,17 @@ namespace ClientManager.Controllers
             }
             int? nullable2 = new int?(num2);
             dashboard2.TotalCalls = nullable2;
-            model.Closed = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 6)).Count<SaleActivity>();
-            model.InDiscussion = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 2)).Count<SaleActivity>();
-            model.InitialCall = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 1)).Count<SaleActivity>();
-            model.PendingfromCustomer = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 3)).Count<SaleActivity>();
-            model.POReceivedWIP = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 5)).Count<SaleActivity>();
+            //model.Closed = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 6)).Count<SaleActivity>();
+            //model.InDiscussion = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 2)).Count<SaleActivity>();
+            //model.InitialCall = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 1)).Count<SaleActivity>();
+            //model.PendingfromCustomer = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 3)).Count<SaleActivity>();
+            //model.POReceivedWIP = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 5)).Count<SaleActivity>();
+            var source1 = source.Where(wh => wh.SaleDate.Month == DateTime.Now.Month && wh.SaleDate.Year == DateTime.Now.Year);
+            model.Closed = source1.Where(wh => wh.Status == 6).Count<SaleActivity>();
+            model.InDiscussion = source1.Where(wh => wh.Status == 2).Count<SaleActivity>();
+            model.InitialCall = source1.Where(wh => wh.Status == 1).Count<SaleActivity>();
+            model.PendingfromCustomer = source1.Where(wh => wh.Status == 3).Count<SaleActivity>();
+            model.POReceivedWIP = source1.Where(wh => wh.Status == 5).Count<SaleActivity>();
             model.MonthlySalesReport = monthlySalesReport;
             return (ActionResult)this.View((object)model);
         }

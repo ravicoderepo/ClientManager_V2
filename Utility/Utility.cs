@@ -281,8 +281,8 @@ namespace Utility
             List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
             items.Insert(0, new SelectListItem()
             {
-                Text = "",
-                Value = ""
+                Text = "All",
+                Value = "0"
             });
             items.Insert(1, new SelectListItem()
             {
@@ -353,8 +353,8 @@ namespace Utility
             List<SelectListItem> items = new System.Collections.Generic.List<SelectListItem>();
             items.Insert(0, new SelectListItem()
             {
-                Text = "",
-                Value = ""
+                Text = "All",
+                Value = "0"
             });
             items.Insert(1, new SelectListItem()
             {

@@ -37,7 +37,7 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-4 col-sm-8">
-                                    <h3 class="card-title">List of sales record <span id="lblSalesPersonName"> </span></h3>
+                                    <h3 class="card-title">List of sales record <a href="javascript:fnSearch('link')"> <span id="lblSalesPersonName"> </span> </a> (Closed Total)</h3>
                                 </div>
                                 @if (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName)))
                                 {
@@ -128,7 +128,7 @@
                                     </div>
                                     <!-- /.card-body -->
                                     <div class="card-footer">
-                                        <button type="submit" class="btn btn-primary btn-sm" onclick="javascript:fnSearch()"> <i class="fa fa-search"></i> Search</button>
+                                        <button type="submit" class="btn btn-primary btn-sm" onclick="javascript:fnSearch('')"> <i class="fa fa-search"></i> Search</button>
                                         <button type="button" onclick="javascript:fnClearSearch()" class="btn btn-danger btn-sm">Clear</button>
                                         <button type="button" class="btn btn-outline-secondary btn-sm" onclick="javascript:fnToggleAdvSearch('0')">Hide</button>
                                     </div>
@@ -154,12 +154,19 @@
 
 <script>
     $('#pnlAdvSearch').hide();
-    function fnSearch() {
+    function fnSearch(searchFrom) {
+        fnSalesPersonChange();
         var selPerson = "-1";
         if ($("input[name=hdnSalesPerson]").val() > 0)
             selPerson = $("input[name=hdnSalesPerson]").val();
+        var actionUrl = "";
+        if (searchFrom == "" && searchFrom != undefined) {
+            actionUrl = "/SaleActivities/ListView?&status=" + $("input[name=hdnStatus]").val() + "&year=" + $('#ddlYears').val() + "&month=" + $('#ddlMonths').val() + "&productName=" + $('#txtProductName').val() + "&customerName=" + $('#txtCustomerName').val() + "&salesPerson=" + selPerson + "&searchFrom=advSearch";
+        }
+        else {
+            actionUrl = "/SaleActivities/ListView?&status=6&searchFrom=" + searchFrom;
+        }
 
-        var actionUrl = "/SaleActivities/ListView?&status=" + $("input[name=hdnStatus]").val() + "&year=" + $('#ddlYears').val() + "&month=" + $('#ddlMonths').val() + "&productName=" + $('#txtProductName').val() + "&customerName=" + $('#txtCustomerName').val() + "&salesPerson=" + selPerson;
         $('#gridView').html('');
         $.ajax({
             url: actionUrl,
@@ -179,7 +186,7 @@
     }
 
     function fnSalesPersonChange() {
-
+        debugger;
         $("input[name=hdnSalesPerson]").val($('#ddlSalesPerson').val());
     }
 
@@ -207,8 +214,8 @@
 
     function fnClearSearch() {
 
-        $('#txtCallDateTo').val('');
-        $('#txtCallDateFrom').val('');
+        $('#ddlYears').val('0');
+        $('#ddlMonths').val('0');
         $('#txtProductName').val('');
         $('#txtCustomerName').val('');
         $('#ddlSalesPerson').val(0);
@@ -219,13 +226,15 @@
 
     $(window).on('load', function () {
         const params = new URLSearchParams(window.location.search)
-
+        debugger;
         var searchQuery = "status="
 
         if (params.has('status')) {
             searchQuery += params.get('status');
         }
-
+        if (params.has('searchFrom')) {
+            searchQuery += "&searchFrom=" + params.get('searchFrom');
+        }
         var actionUrl = "/SaleActivities/ListView?" + searchQuery;
 
         $('#gridView').html('');
