@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Services.Description;
 using ClientManager.Infrastructure;
 using ClientManager.Models;
 using DBOperation;
@@ -103,17 +104,27 @@ namespace ClientManager.Controllers
                 //ViewBag.TotalSalesBySalesPerson = " Rs." + output.Sum(s => s).ToString("#,##0.00");
             }
 
-            if(status > 0)
+            //1   Initial Call
+            //2   In Discussion
+            //3   Pending from Customer
+            //4   Cancelled
+            //5   PO Received – WIP
+            //6   Closed
+            if (status > 0 && status !=1235)
             {
                 saleActivities = saleActivities.Where(wh => wh.Status == status);
             }
-
+            else if (status == 1235)
+            {
+                saleActivities = saleActivities.Where(wh => wh.Status != 4 && wh.Status != 6);
+            }
             var output = saleActivities.Where(wh => wh.Status == 6 && wh.InvoiceAmount != null).Select(sel => (sel.InvoiceAmount.HasValue) ? sel.InvoiceAmount.Value : 0).ToList();
             ViewBag.TotalSalesBySalesPerson = " Rs." + output.Sum(s => s).ToString("#,##0.00");
 
-            if (string.IsNullOrEmpty(searchFrom))
+            if (searchFrom == "Link")
             {
-                saleActivities = saleActivities.Where(wh => wh.Status != 6);
+                //4-Cancelled, 6-Closed
+                saleActivities = saleActivities.Where(wh => wh.Status != 6 && wh.Status !=4);
             }
 
             var result = saleActivities.OrderBy(wh => wh.Status).ToList();

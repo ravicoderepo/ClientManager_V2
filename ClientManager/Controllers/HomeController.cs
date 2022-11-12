@@ -32,7 +32,7 @@ namespace ClientManager.Controllers
             monthlySalesReport.Orders = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.orders.Value)).ToArray<int>();
             monthlySalesReport.Cancels = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.cancels.Value)).ToArray<int>();
             Dashboard dashboard = new Dashboard();
-            dashboard.TotalSales = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 6)).Count<SaleActivity>();
+            dashboard.TotalSales = source.Count();
             dashboard.TotalOrders = 0;
             //Dashboard dashboard1 = model;
             int num1;
@@ -119,40 +119,26 @@ namespace ClientManager.Controllers
             monthlySalesReport.Orders = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.orders.Value)).ToArray<int>();
             monthlySalesReport.Cancels = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.cancels.Value)).ToArray<int>();
             Dashboard model = new Dashboard();
-            model.TotalSales = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 6)).Count<SaleActivity>();
+         
             model.TotalOrders = 0;
-            Dashboard dashboard1 = model;
-            int num1;
-            if (source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 4)).Count<SaleActivity>() <= 0)
-                num1 = 0;
-            else
-                num1 = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 4)).Count<SaleActivity>() * 100 / source.Count<SaleActivity>();
-            dashboard1.CancelledRate = num1;
-            Dashboard dashboard2 = model;
-            int? nullable1 = source.Sum<SaleActivity>((Expression<Func<SaleActivity, int?>>)(su => su.NoOfFollowUps));
-            int num2;
-            if (!nullable1.HasValue)
-            {
-                num2 = 0;
-            }
-            else
-            {
-                nullable1 = source.Sum<SaleActivity>((Expression<Func<SaleActivity, int?>>)(su => su.NoOfFollowUps));
-                num2 = nullable1.Value;
-            }
-            int? nullable2 = new int?(num2);
-            dashboard2.TotalCalls = nullable2;
-            ////model.Closed = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 6)).Count<SaleActivity>();
-            ////model.InDiscussion = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 2)).Count<SaleActivity>();
-            ////model.InitialCall = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 1)).Count<SaleActivity>();
-            ////model.PendingfromCustomer = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 3)).Count<SaleActivity>();
-            ////model.POReceivedWIP = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 5)).Count<SaleActivity>();
+            //Dashboard dashboard1 = model;
+         
+            
             var source1 = source.Where(wh => wh.SaleDate.Month == DateTime.Now.Month && wh.SaleDate.Year == DateTime.Now.Year);
             model.Closed = source1.Where(wh => wh.Status == 6).Count<SaleActivity>();
             model.InDiscussion = source1.Where(wh => wh.Status == 2).Count<SaleActivity>();
             model.InitialCall = source1.Where(wh => wh.Status == 1).Count<SaleActivity>();
             model.PendingfromCustomer = source1.Where(wh => wh.Status == 3).Count<SaleActivity>();
             model.POReceivedWIP = source1.Where(wh => wh.Status == 5).Count<SaleActivity>();
+            model.TotalCalls = source1.Where(wh => wh.Status != 4 && wh.Status != 6).Count();
+            model.TotalSales = source1.Count();
+            int icancelledRate;
+            if (source1.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 4)).Count<SaleActivity>() <= 0)
+                icancelledRate = 0;
+            else
+                icancelledRate = source1.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 4)).Count<SaleActivity>() * 100 / source.Count<SaleActivity>();
+
+            model.CancelledRate = icancelledRate;
             model.MonthlySalesReport = monthlySalesReport;
             return (ActionResult)this.View((object)model);
         }
