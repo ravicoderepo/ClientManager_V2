@@ -23,8 +23,11 @@ namespace ClientManager.Controllers
         [CustomAuthorize("Super Admin", "Super User")]
         public ActionResult AdminDashboard()
         {
+            var currentUser = (UserDetails)Session["UserDetails"];
+            string[] superroles = { "Super Admin", "Super User" };
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
-            IQueryable<SaleActivity> source = this.db.SaleActivities.Include<SaleActivity, SalesStatu>((Expression<Func<SaleActivity, SalesStatu>>)(s => s.SalesStatu));
+            var source = (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName))) ? db.SaleActivities.Include(s => s.SalesStatu) : (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "sales manager")) ? db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id || currentUser.ReportingToMe.Contains(wh.CreatedBy)) : db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id);
+            
             List<GetMonthlySalesReport_Result> list = this.db.GetMonthlySalesReport("Super Admin", new int?(1), new int?(1)).ToList<GetMonthlySalesReport_Result>();
             MonthlySalesReport monthlySalesReport = new MonthlySalesReport();
             monthlySalesReport.Mname = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.mname.Value)).ToArray<int>();
@@ -32,29 +35,25 @@ namespace ClientManager.Controllers
             monthlySalesReport.Orders = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.orders.Value)).ToArray<int>();
             monthlySalesReport.Cancels = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.cancels.Value)).ToArray<int>();
             Dashboard dashboard = new Dashboard();
-            dashboard.TotalSales = source.Count();
-            dashboard.TotalOrders = 0;
+            
             //Dashboard dashboard1 = model;
-            int num1;
-            if (source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 4)).Count<SaleActivity>() <= 0)
-                num1 = 0;
-            else
-                num1 = source.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 4)).Count<SaleActivity>() * 100 / source.Count<SaleActivity>();
-            dashboard.CancelledRate = num1;
-            //Dashboard dashboard2 = model;
-            int num2;
-            if (!source.Sum<SaleActivity>((Expression<Func<SaleActivity, int?>>)(su => su.NoOfFollowUps)).HasValue)
-                num2 = 0;
-            else
-                num2 = source.Sum<SaleActivity>((Expression<Func<SaleActivity, int?>>)(su => su.NoOfFollowUps)).Value;
-            int? nullable = new int?(num2);
-            dashboard.TotalCalls = nullable;
+           
             var source1 = source.Where(wh => wh.SaleDate.Month == DateTime.Now.Month && wh.SaleDate.Year == DateTime.Now.Year);
             dashboard.Closed = source1.Where(wh => wh.Status == 6).Count<SaleActivity>();
             dashboard.InDiscussion = source1.Where(wh => wh.Status == 2).Count<SaleActivity>();
             dashboard.InitialCall = source1.Where(wh => wh.Status == 1).Count<SaleActivity>();
             dashboard.PendingfromCustomer = source1.Where(wh => wh.Status == 3).Count<SaleActivity>();
             dashboard.POReceivedWIP = source1.Where(wh => wh.Status == 5).Count<SaleActivity>();
+            dashboard.TotalOrders = 0;
+            dashboard.TotalSales = source1.Count();
+            dashboard.TotalCalls = source1.Where(wh => wh.Status != 4 && wh.Status != 6).Count();
+            int icancelledRate;
+            if (source1.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 4)).Count<SaleActivity>() <= 0)
+                icancelledRate = 0;
+            else
+                icancelledRate = source1.Where<SaleActivity>((Expression<Func<SaleActivity, bool>>)(wh => wh.Status == 4)).Count<SaleActivity>() * 100 / source.Count<SaleActivity>();
+
+            dashboard.CancelledRate = icancelledRate;
             dashboard.MonthlySalesReport = monthlySalesReport;
             return (ActionResult)this.View(dashboard);
         }
@@ -81,7 +80,7 @@ namespace ClientManager.Controllers
             dashboard.MonthlyUnApprovedExpenses = MonthlyTotalUnApprovedExpence.Value;
             dashboard.MonthlyVerifiedExpenses = MonthlyTotalApprovedExpence.Value;
             dashboard.MonthlyUnVerifiedExpenses = MonthlyTotalUnVerifiedExpence.Value;
-            dashboard.MonthlyPendingPettyCash = (MonthlyTotalUnApprovedExpence.Value + MonthlyTotalApprovedExpence.Value);
+            dashboard.MonthlyPendingPettyCash = (MonthlyTotalUnApprovedExpence.Value + MonthlyTotalUnVerifiedExpence.Value);
             dashboard.MonthlyAvailablePettyCash = (MonthlyTotalPettyCash.Value - (MonthlyTotalUnApprovedExpence.Value + MonthlyTotalUnVerifiedExpence.Value));
             dashboard.CurrentMonthAndYear = Utility.ConstantData.ToShortMonthName(DateTime.Now) + "/" + DateTime.Now.Year;
             
@@ -100,8 +99,8 @@ namespace ClientManager.Controllers
             dashboard.UnApprovedExpenses = TotalUnApprovedExpence.Value;
             dashboard.VerifiedExpenses = TotalApprovedExpence.Value;
             dashboard.UnVerifiedExpenses = TotalUnVerifiedExpence.Value;
-            dashboard.PendingPettyCash = (TotalPettyCash.Value - TotalApprovedExpence.Value);
-            dashboard.AvailablePettyCash = (TotalPettyCash.Value - (TotalUnApprovedExpence.Value + TotalUnVerifiedExpence.Value));
+            dashboard.PendingPettyCash = (TotalUnApprovedExpence.Value + TotalUnVerifiedExpence.Value);
+            dashboard.AvailablePettyCash = TotalUnApprovedExpence.Value + TotalApprovedExpence.Value + TotalUnVerifiedExpence.Value;
             dashboard.CurrentMonthAndYear = Utility.ConstantData.ToShortMonthName(DateTime.Now) + "/" + DateTime.Now.Year;
 
             return (ActionResult)this.View(dashboard);

@@ -265,8 +265,8 @@
          var sortAttachCol = ('@currentUser.UserRoles.Any(wh => wh.RoleName == "Super User")' == 'False' && '@currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager")' == 'False') ? 0 : 1;
         $("#example1").DataTable({
             "responsive": true, "lengthChange": false, "autoWidth": false, "lengthChange": true,
-            "order": [[sortCol, 'desc'], [0, 'asc']]
-            //"buttons": ["excel", "pdf", "print", "colvis"]
+            "order": [[sortCol, 'desc'], [0, 'asc']],
+            "buttons": ["excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         //$('#example2').DataTable({
         //    "paging": true,

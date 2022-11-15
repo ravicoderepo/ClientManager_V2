@@ -76,7 +76,7 @@ namespace ClientManager.Controllers
                 saleActivities = saleActivities.Where(wh => wh.SaleDate.Year == year);
             else
             {
-                if (string.IsNullOrEmpty(searchFrom) || searchFrom == "Dashboard")
+                if (string.IsNullOrEmpty(searchFrom) || searchFrom == "Dashboard" || searchFrom == "DashboardTeam")
                 {
                     saleActivities = saleActivities.Where(wh => wh.SaleDate.Year == DateTime.Now.Year);
                 }
@@ -87,7 +87,7 @@ namespace ClientManager.Controllers
                 saleActivities = saleActivities.Where(wh => wh.SaleDate.Month == month);
             else
             {
-                if (string.IsNullOrEmpty(searchFrom) || searchFrom == "Dashboard")
+                if (string.IsNullOrEmpty(searchFrom) || searchFrom == "Dashboard" || searchFrom == "DashboardTeam")
                 {
                     saleActivities = saleActivities.Where(wh => wh.SaleDate.Month == DateTime.Now.Month);
                 }
@@ -96,12 +96,11 @@ namespace ClientManager.Controllers
 
             if (salesPerson > 0)
             {
-                saleActivities = saleActivities.Where(wh => wh.CreatedBy == salesPerson);
-            }
-            else
-            {
-                //var output = saleActivities.Where(wh => wh.Status == 6 && wh.InvoiceAmount != null).Select(sel => (sel.InvoiceAmount.HasValue) ? sel.InvoiceAmount.Value : 0).ToList();
-                //ViewBag.TotalSalesBySalesPerson = " Rs." + output.Sum(s => s).ToString("#,##0.00");
+                if(searchFrom != "DashboardTeam" )
+                    //&& !currentUser.UserRoles.Any(a=> a.RoleName == "Sales Manager" || a.RoleName =="Super User" || a.RoleName =="Super Admin"))
+                {
+                    saleActivities = saleActivities.Where(wh => wh.CreatedBy == salesPerson);
+                }
             }
 
             //1   Initial Call
