@@ -38,8 +38,9 @@
     .cashTableAmounCol {
         width: 80px;
     }
-    td > i{
-        padding-left:10px;
+
+    td > i {
+        padding-left: 10px;
     }
 </style>
 <div class="row" id="pettyCashSummary">
@@ -108,8 +109,8 @@
             </tr>
             <tr>
                 <td style="text-align: center; font-size: 25px; color: blue; font-weight: bold"> &#8377;@ViewBag.TotalFilteredExpense
-                    <td><i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Total Expense"></i></td>
-                    </tr>
+                <td><i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Total Expense"></i></td>
+            </tr>
         </table>
     </div>
 </div>
@@ -155,82 +156,82 @@
         <tbody>
             @foreach (var item in Model)
             {
-            <tr>
-                <td>
-                    @*@if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
-            {*@
-                    <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/ExpenseTrackers/Edit/@item.Id'"><i class="far fa-edit"></i></button>
-
-                    @if (db.Documents.Any(wh => wh.ReferenceRecId == item.Id))
-                    {
-                        <button type="button" class="btn btn-info btn-xs" title="View Documents" onclick="fnViewDocuments(@item.Id)"><i class="far fa-eye"></i></button>
-                    }
-                    @*}*@
-                    @*else
-            {
-                <button type="button" class="btn btn-primary btn-xs" title="View" onclick="javascript:location.href='/ExpenseTrackers/Edit/@item.Id'"><i class="fas fa-eye"></i></button>
-            }*@
-
-                    @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Approver") && item.Status == "Pending")
-                    {
-                        <button type="button" class="btn btn-success btn-xs" title="Approve" onclick="fnApprove(@item.Id,'Approved')"><i class="far fa-arrow-alt-circle-right"></i></button>
-                        @*<button type="button" class="btn btn-outline-secondary btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-up"></i></button>*@
-                        @*<button type="button" class="btn btn-outline-secondary btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-up"></i></button>*@
-                    }
-
-                    @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Verifier") && item.Status == "Approved")
-                    {
-                        <button type="button" class="btn btn-success btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-right"></i></button>
-                    }
-
-                    @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin") && item.Status == "Pending")
-                    {
-
-                        <button type="button" class="btn btn-danger btn-xs" title="Delete" onclick="fnDelete(@item.Id)"><i class="far fa-trash-alt"></i></button>
-
-                    }
-
-                </td>
-                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Super User"))
-                {
+                <tr>
                     <td>
+                        @*@if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                            {*@
+                        <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/ExpenseTrackers/Edit/@item.Id'"><i class="far fa-edit"></i></button>
 
-                        @if (!db.Documents.Any(wh => wh.ReferenceRecId == item.Id) && item.Status != "Approved")
+                        @if (db.Documents.Any(wh => wh.ReferenceRecId == item.Id))
                         {
-                            <input type="checkbox" id="@item.Id" />
+                            <button type="button" class="btn btn-info btn-xs" title="View Documents" onclick="fnViewDocuments(@item.Id)"><i class="far fa-eye"></i></button>
+                        }
+                        @*}*@
+                        @*else
+                            {
+                                <button type="button" class="btn btn-primary btn-xs" title="View" onclick="javascript:location.href='/ExpenseTrackers/Edit/@item.Id'"><i class="fas fa-eye"></i></button>
+                            }*@
+
+                        @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Approver") && item.Status == "Pending")
+                        {
+                            <button type="button" class="btn btn-success btn-xs" title="Approve" onclick="fnApprove(@item.Id,'Approved')"><i class="far fa-arrow-alt-circle-right"></i></button>
+                            @*<button type="button" class="btn btn-outline-secondary btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-up"></i></button>*@
+                            @*<button type="button" class="btn btn-outline-secondary btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-up"></i></button>*@
+                        }
+
+                        @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Verifier") && item.Status == "Approved")
+                        {
+                            <button type="button" class="btn btn-success btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-right"></i></button>
+                        }
+
+                        @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin") && item.Status == "Pending")
+                        {
+
+                            <button type="button" class="btn btn-danger btn-xs" title="Delete" onclick="fnDelete(@item.Id)"><i class="far fa-trash-alt"></i></button>
+
                         }
 
                     </td>
-                }
-                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager"))
-                {
-                    <td>
+                    @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Super User"))
+                    {
+                        <td>
 
-                        @if (!db.Documents.Any(wh => wh.ReferenceRecId == item.Id) && item.Status == "Approved")
-                        {
-                            <input type="checkbox" id="@item.Id" />
-                        }
+                            @if (!db.Documents.Any(wh => wh.ReferenceRecId == item.Id) && item.Status != "Approved")
+                            {
+                                <input type="checkbox" id="@item.Id" />
+                            }
 
+                        </td>
+                    }
+                    @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager"))
+                    {
+                        <td>
+
+                            @if (!db.Documents.Any(wh => wh.ReferenceRecId == item.Id) && item.Status == "Approved")
+                            {
+                                <input type="checkbox" id="@item.Id" />
+                            }
+
+                        </td>
+                    }
+                    <td style="text-align:right">
+                        @*@Html.DisplayFor(modelItem => item.ExpenseAmount.ToString("#,##0.00"))*@
+                        @item.ExpenseAmount.ToString("#,##0.00")
                     </td>
-                }
-                <td style="text-align:right">
-                    @*@Html.DisplayFor(modelItem => item.ExpenseAmount.ToString("#,##0.00"))*@
-                    @item.ExpenseAmount.ToString("#,##0.00")
-                </td>
-                <td>
-                    @*@Html.DisplayFor(modelItem => item.ExpenseDate)*@
-                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ExpenseDate))
-                    @*@item.ExpenseDate*@
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ExpenceCategory.CategoryName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
+                    <td>
+                        @*@Html.DisplayFor(modelItem => item.ExpenseDate)*@
+                        @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ExpenseDate))
+                        @*@item.ExpenseDate*@
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ExpenceCategory.CategoryName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
 
 
 
@@ -238,28 +239,28 @@
 
 
 
-                <!--<td>-->
-                @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
-                <!--@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.User.FullName)
-    </td>
-    <td>-->
-                @*@Html.DisplayFor(modelItem => item.ModifiedOn)*@
-                <!--@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.User1.FullName)
-    </td>-->
-            </tr>
+                    <!--<td>-->
+                    @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
+                    <!--@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User.FullName)
+                    </td>
+                    <td>-->
+                    @*@Html.DisplayFor(modelItem => item.ModifiedOn)*@
+                    <!--@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User1.FullName)
+                    </td>-->
+                </tr>
             }
         </tbody>
     </table>
 </div>
 <script>
     $(function () {
-        
+
         var sortCol = ('@currentUser.UserRoles.Any(wh => wh.RoleName == "Super User")' == 'False' && '@currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager")' == 'False') ? 4 : 5;
         //var sortDateCol = ('@currentUser.UserRoles.Any(wh => wh.RoleName == "Super User")' == 'False') ? 2 : 3;
          var sortAttachCol = ('@currentUser.UserRoles.Any(wh => wh.RoleName == "Super User")' == 'False' && '@currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager")' == 'False') ? 0 : 1;
@@ -280,7 +281,7 @@
     });
 
     function fnDelete(id) {
-        
+
         if (confirm("do you want to delete?")) {
             $.ajax({
                 type: "GET",
@@ -306,7 +307,7 @@
     }
 
     function fnApprove(id, status) {
-        
+
         if (confirm("do you want to approve this record ?")) {
             $.ajax({
                 type: "GET",
@@ -335,7 +336,7 @@
         }
     }
     function fnApprove(id, status) {
-        
+
         if (confirm("do you want to approve this record ?")) {
             $.ajax({
                 type: "GET",
@@ -374,7 +375,7 @@
 
             var inputData = { 'id': id, 'status': 'Approved' };
             if (confirm("do you want to bulk approve selected records?")) {
-                
+
                 $.ajax({
                     type: "POST",
                     url: "/ExpenseTrackers/ExpenceEntryApproval",
@@ -412,9 +413,9 @@
             });
 
             var inputData = { 'id': id, 'status': 'Verified' };
-            
+
             if (confirm("do you want to bulk verify selected records?")) {
-                
+
                 $.ajax({
                     type: "POST",
                     url: "/ExpenseTrackers/ExpenceEntryVerify",
@@ -443,7 +444,7 @@
         }
     }
     function fnVerify(id, status) {
-        
+
         if (confirm("do you want to verify this record ?")) {
             $.ajax({
                 type: "GET",
@@ -470,10 +471,10 @@
     }
     $("#mnuExpenceTracker").addClass("active");
     var parentMenu = $("#mnuExpenceTracker").parent().parent().parent();
-    
+
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        
+
         $(this).attr("style", "display:block");
     });
     $(function () {

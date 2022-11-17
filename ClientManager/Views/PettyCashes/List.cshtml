@@ -163,8 +163,8 @@
             type: 'GET',
             dataType: 'html',
             success: function (result) {
-                if (data.status == "Failed") {
-                    alert(data.message);
+                if (result.status == "Failed") {
+                    alert(result.message);
                 }
                 else {
                     $('#gridView').html(result);

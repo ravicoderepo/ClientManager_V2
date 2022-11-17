@@ -180,7 +180,7 @@
         var status = searchInput[0];
 
         if (searchInput.length == 1) {
-            actionUrl = "/ExpenseTrackers/ListView?" + "expenseDateFrom=&expenseDateTo=&status=" + status + "&year=&month=&expenseCat=";
+            actionUrl = "/ExpenseTrackers/ListView?" + "expenseDateFrom=&expenseDateTo=&status=" + status + "&year=&month=&expenseCat=&searchFrom=";
         }
 
         if (searchInput.length > 1 && searchInput[1] == 'CurrMonth')
@@ -291,7 +291,7 @@
         fnDasboardFilter($('#filterCon').val());
     }
 
-    if ($('#filterCon').val() = "NoFilter") {
+    if ($('#filterCon').val() == "NoFilter") {
         
         fnDasboardFilter();
     }
