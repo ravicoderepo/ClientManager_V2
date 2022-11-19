@@ -97,7 +97,7 @@
                             <div id="pnlAdvSearch">
                                 <div class="card-body" style="background-color:whitesmoke">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-4" style="display:none">
                                             <div class="form-group">
                                                 <label for="expenseDateFrom">Expense Date From</label>
                                                 <div class="input-group date" data-target-input="nearest">
@@ -108,7 +108,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-4" style="display:none">
                                             <div class="form-group">
                                                 <label for="expenseDateTo">Expense Date To</label>
                                                 <div class="input-group date" data-target-input="nearest">
@@ -119,28 +119,28 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="Status">Status</label>
                                                 <input type="hidden" id="filterCon" value="@ViewBag.DashboardFilter" />
                                                 @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus" })
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4">
+                                    @*</div>
+                                    <div class="row">*@
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="Status">Expense Category</label>
                                                 @Html.DropDownList("ExpenseCategory", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlExpenseCategory" })
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="Status">Month</label>
                                                 @Html.DropDownList("Months", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlMonths" })
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="Status">Year</label>
                                                 @Html.DropDownList("Years", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlYears" })

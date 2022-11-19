@@ -12,6 +12,7 @@ using System.Web.Script.Serialization;
 using ClientManager.Infrastructure;
 using ClientManager.Models;
 using DBOperation;
+using Microsoft.Ajax.Utilities;
 
 namespace ClientManager.Controllers
 {
@@ -27,7 +28,14 @@ namespace ClientManager.Controllers
             string[] superroles = { "Super Admin", "Super User" };
             UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
             var source = (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName))) ? db.SaleActivities.Include(s => s.SalesStatu) : (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "sales manager")) ? db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id || currentUser.ReportingToMe.Contains(wh.CreatedBy)) : db.SaleActivities.Include(s => s.SalesStatu).Where(wh => wh.CreatedBy == currentUser.Id);
-            
+            List<SelectListItem> selesPersonList = new List<SelectListItem>();
+            if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "super admin" || wh.RoleName.ToLower() == "super user"))
+            {
+                //string[] roleNames = { "Sales Manager", "Sales Engineer" };
+                selesPersonList = new SelectList(db.UserRoles.Where(rl => superroles.Contains(rl.Role.RoleName)).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName").ToList();
+            }
+            ViewBag.SalesPerson = selesPersonList;
+
             List<GetMonthlySalesReport_Result> list = this.db.GetMonthlySalesReport("Super Admin", new int?(1), new int?(1)).ToList<GetMonthlySalesReport_Result>();
             MonthlySalesReport monthlySalesReport = new MonthlySalesReport();
             monthlySalesReport.Mname = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.mname.Value)).ToArray<int>();
@@ -35,9 +43,9 @@ namespace ClientManager.Controllers
             monthlySalesReport.Orders = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.orders.Value)).ToArray<int>();
             monthlySalesReport.Cancels = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.cancels.Value)).ToArray<int>();
             Dashboard dashboard = new Dashboard();
-            
+
             //Dashboard dashboard1 = model;
-           
+
             var source1 = source.Where(wh => wh.SaleDate.Month == DateTime.Now.Month && wh.SaleDate.Year == DateTime.Now.Year);
             dashboard.Closed = source1.Where(wh => wh.Status == 6).Count<SaleActivity>();
             dashboard.InDiscussion = source1.Where(wh => wh.Status == 2).Count<SaleActivity>();
@@ -73,7 +81,7 @@ namespace ClientManager.Controllers
             decimal? MonthlyTotalApprovedExpence = (MonthlyTotalApprovedExpenceAmount != null && MonthlyTotalApprovedExpenceAmount.Count > 0) ? MonthlyTotalApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
             decimal? MonthlyTotalUnApprovedExpence = (MonthlyTotalUnApprovedExpenceAmount != null && MonthlyTotalUnApprovedExpenceAmount.Count > 0) ? MonthlyTotalUnApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
             decimal? MonthlyTotalUnVerifiedExpence = (MonthlyTotalUnVerifiedExpenceAmount != null && MonthlyTotalUnVerifiedExpenceAmount.Count > 0) ? MonthlyTotalUnVerifiedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
-                       
+
             Dashboard dashboard = new Dashboard();
             dashboard.MonthlyTotalExpenses = (MonthlyTotalApprovedExpence.Value + MonthlyTotalUnApprovedExpence.Value + MonthlyTotalUnVerifiedExpence.Value);
             dashboard.MonthlyTotalPettyCash = MonthlyTotalPettyCash.Value;
@@ -83,7 +91,7 @@ namespace ClientManager.Controllers
             dashboard.MonthlyPendingPettyCash = (MonthlyTotalUnApprovedExpence.Value + MonthlyTotalUnVerifiedExpence.Value);
             dashboard.MonthlyAvailablePettyCash = (MonthlyTotalPettyCash.Value - (MonthlyTotalUnApprovedExpence.Value + MonthlyTotalUnVerifiedExpence.Value));
             dashboard.CurrentMonthAndYear = Utility.ConstantData.ToShortMonthName(DateTime.Now) + "/" + DateTime.Now.Year;
-            
+
             //Total
             //Current Month and Year
             var TotalPettyCashAmount = db.PettyCashes.ToList();
@@ -118,11 +126,11 @@ namespace ClientManager.Controllers
             monthlySalesReport.Orders = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.orders.Value)).ToArray<int>();
             monthlySalesReport.Cancels = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.cancels.Value)).ToArray<int>();
             Dashboard model = new Dashboard();
-         
+
             model.TotalOrders = 0;
             //Dashboard dashboard1 = model;
-         
-            
+
+
             var source1 = source.Where(wh => wh.SaleDate.Month == DateTime.Now.Month && wh.SaleDate.Year == DateTime.Now.Year);
             model.Closed = source1.Where(wh => wh.Status == 6).Count<SaleActivity>();
             model.InDiscussion = source1.Where(wh => wh.Status == 2).Count<SaleActivity>();
@@ -142,7 +150,7 @@ namespace ClientManager.Controllers
             return (ActionResult)this.View((object)model);
         }
 
-        [CustomAuthorize(new string[] { "Super Admin", "Sales Manager"})]
+        [CustomAuthorize(new string[] { "Super Admin", "Sales Manager" })]
         public ActionResult ManagerDashboard()
         {
             UserDetails currentUser = (UserDetails)this.Session["UserDetails"];
@@ -216,13 +224,13 @@ namespace ClientManager.Controllers
             return View();
         }
 
-        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer","Store Admin")]
+        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer", "Store Admin")]
         public ActionResult PageNotFound()
         {
             return View();
         }
 
-        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer","Store Admin")]
+        [CustomAuthorize("Super Admin", "Sales Manager", "Sales Engineer", "Store Admin")]
         public ActionResult InternalServerError()
         {
             return View();
@@ -230,6 +238,23 @@ namespace ClientManager.Controllers
         public ActionResult NotAuthorized()
         {
             return View();
+        }
+
+        public ActionResult GetUserPerformanceReport(int userId)
+        {
+            var result = from sale in this.db.SaleActivities
+                         join usr in this.db.Users on sale.CreatedBy equals usr.Id
+                         group sale by new { sale.InvoiceAmount, sale.CreatedBy, usr.FullName, usr.SaleTarget } into g
+                         where g.Key.CreatedBy == userId
+                         select new {                            
+                             Name = g.Key.FullName,
+                             SaleTarget = g.Key.SaleTarget,
+                             Amount = g.Sum(s => s.InvoiceAmount)
+                         };
+
+            var finalResult = new { target = result.Select(sel=> sel.SaleTarget).ToList(), achived = result.Select(sel => sel.Amount).ToList() };
+            
+            return (ActionResult)this.Json((object)finalResult, JsonRequestBehavior.AllowGet);
         }
     }
 }

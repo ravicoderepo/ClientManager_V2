@@ -6,12 +6,20 @@
 
 namespace ClientManager.Models
 {
-  public class Login
-  {
-    public string Password { get; set; }
+    public class Login
+    {
+        public string Password { get; set; }
 
-    public string Email { get; set; }
+        public string Email { get; set; }
 
-    public bool IsRememberMe { get; set; }
-  }
+        public bool IsRememberMe { get; set; }
+    }
+    public class ChangePassword
+    {
+        public string Email { get; set; }
+
+        public string OldPassword { get; set; }
+
+        public string NewPassword { get; set; }
+    }
 }

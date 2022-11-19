@@ -1,6 +1,8 @@
 ﻿using ClientManager.Models;
 using DBOperation;
 using System;
+using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Mvc;
@@ -23,6 +25,79 @@ namespace ClientManager.Controllers
         }
 
         public ActionResult ForgotPassword() => (ActionResult)this.View();
+
+        [HttpGet]
+        public ActionResult ChangePassword() => (ActionResult)this.View(new ChangePassword());
+
+        [HttpPost]
+        public ActionResult ChangePassword(ChangePassword changePassword)
+        {
+            JsonReponse data = new JsonReponse();
+            try
+            {
+                if (string.IsNullOrEmpty(changePassword.Email) || string.IsNullOrEmpty(changePassword.OldPassword) || string.IsNullOrEmpty(changePassword.NewPassword))
+                {
+                    data = new JsonReponse()
+                    {
+                        message = "All fields are required.",
+                        status = "Failed",
+                        redirectURL = ""
+                    };
+                }
+                else
+                {
+                    User userData = this.db.Users.FirstOrDefault(wh => wh.Email == changePassword.Email & wh.Password == changePassword.OldPassword & wh.IsActive == true);
+                    if (userData == null)
+                    {
+                        data = new JsonReponse()
+                        {
+                            message = "Email and Old Password is not mached.",
+                            status = "Failed",
+                            redirectURL = ""
+                        };
+                    }
+                    else
+                    {
+
+                        this.db.Entry<DBOperation.User>(userData).State = EntityState.Modified;
+                        string str = String.Empty;
+
+                        userData.Password = changePassword.NewPassword;
+                        userData.ModifiedBy = 1;
+                        userData.ModifiedOn = new DateTime?(DateTime.Now);
+
+                        if (this.db.SaveChanges() > 0)
+                        {
+                            data = new JsonReponse()
+                            {
+                                message = "Password changed successfully.",
+                                status = "Success",
+                                redirectURL = "/Account/Login"
+                            };
+                        }
+                        else
+                        {
+                            data = new JsonReponse()
+                            {
+                                message = "Unable to process data, please try again later.",
+                                status = "Error",
+                                redirectURL = ""
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new JsonReponse()
+                {
+                    message = ex.Message,
+                    status = "Error",
+                    redirectURL = ""
+                };
+            }
+            return (ActionResult)this.Json((object)data, JsonRequestBehavior.AllowGet);
+        }
 
         [HttpPost]
         public ActionResult SignIn(ClientManager.Models.Login userLogin)
@@ -76,7 +151,7 @@ namespace ClientManager.Controllers
                             {
                                 message = "Valid Credentials",
                                 status = "Success",
-                                redirectURL = (userDetails2.UserRoles.Any(a=>a.RoleName =="Store Admin") || userDetails2.UserRoles.Any(a => a.RoleName == "Accounts Manager")) ? "/Home/FinanceDashboard" : "/Home/MyDashboard"
+                                redirectURL = (userDetails2.UserRoles.Any(a => a.RoleName == "Store Admin") || userDetails2.UserRoles.Any(a => a.RoleName == "Accounts Manager")) ? "/Home/FinanceDashboard" : "/Home/MyDashboard"
                             };
                         }
                     }
