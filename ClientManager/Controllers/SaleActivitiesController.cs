@@ -76,10 +76,10 @@ namespace ClientManager.Controllers
                 saleActivities = saleActivities.Where(wh => wh.SaleDate.Year == year);
             else
             {
-                if (string.IsNullOrEmpty(searchFrom) || searchFrom == "Dashboard" || searchFrom == "DashboardTeam")
-                {
-                    saleActivities = saleActivities.Where(wh => wh.SaleDate.Year == DateTime.Now.Year);
-                }
+                //if (string.IsNullOrEmpty(searchFrom) || searchFrom == "Dashboard" || searchFrom == "DashboardTeam")
+                //{
+                //    saleActivities = saleActivities.Where(wh => wh.SaleDate.Year == DateTime.Now.Year);
+                //}
 
             }
 
@@ -87,10 +87,10 @@ namespace ClientManager.Controllers
                 saleActivities = saleActivities.Where(wh => wh.SaleDate.Month == month);
             else
             {
-                if (string.IsNullOrEmpty(searchFrom) || searchFrom == "Dashboard" || searchFrom == "DashboardTeam")
-                {
-                    saleActivities = saleActivities.Where(wh => wh.SaleDate.Month == DateTime.Now.Month);
-                }
+                //if (string.IsNullOrEmpty(searchFrom) || searchFrom != "Dashboard" || searchFrom == "DashboardTeam")
+                //{
+                //    saleActivities = saleActivities.Where(wh => wh.SaleDate.Month == DateTime.Now.Month);
+                //}
             }
 
 

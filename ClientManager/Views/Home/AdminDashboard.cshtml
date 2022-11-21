@@ -34,7 +34,7 @@
                     <!-- small box -->
                     <div class="small-box bg-blue">
                         <div class="inner">
-                            <h3>@Model.TotalSales</h3>
+                            <h3>@Model.TotalCallsMade</h3>
 
                             <p>Total Calls Made</p>
                         </div>
@@ -64,7 +64,7 @@
                     <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>@Model.TotalCalls</h3>
+                            <h3>@Model.TotalActiveCalls</h3>
 
                             <p>Active Calls</p>
                         </div>
@@ -144,14 +144,14 @@
                     <!-- small box -->
                     <div class="small-box bg-danger">
                         <div class="inner">
-                            <h3>@Model.CancelledRate<sup style="font-size: 20px">%</sup></h3>
+                            <h3>@Model.CancelledRate</h3>
 
-                            <p>Cancelled Rate</p>
+                            <p>Cancelled </p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
-                        <a href="#" onclick="javascript:location.href='@Url.Action("List", "SaleActivities")'+'?status=4'" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="#" onclick="javascript:location.href='@Url.Action("List", "SaleActivities")'+'?status=4&searchFrom=DashboardTeam'" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
@@ -475,8 +475,23 @@
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 debugger;
-                targetValues = data.target.toArray();
-                achivedValues = data.achived.toArray();
+
+                for (var i = 0; i < 12; i++) {
+                    targetValues.push(data[0].SaleTarget);  
+                }
+
+                achivedValues.push((data[0].Jan==null)?0:data[0].Jan);
+                achivedValues.push((data[0].Feb==null)?0:data[0].Feb);
+                achivedValues.push((data[0].Mar==null)?0:data[0].Mar);
+                achivedValues.push((data[0].Apr==null)?0:data[0].Apr);
+                achivedValues.push((data[0].May==null)?0:data[0].May);
+                achivedValues.push((data[0].Jun==null)?0:data[0].Jun);
+                achivedValues.push((data[0].Jul==null)?0:data[0].Jul);
+                achivedValues.push((data[0].Aug==null)?0:data[0].Aug);
+                achivedValues.push((data[0].Sep==null)?0:data[0].Sep);
+                achivedValues.push((data[0].Oct==null)?0:data[0].Oct);
+                achivedValues.push((data[0].Nov==null)?0:data[0].Nov);
+                achivedValues.push((data[0].Dec==null)?0:data[0].Dec);
                 return false;
             },
             error: function () {
@@ -651,7 +666,7 @@
                         },
                         ticks: $.extend({
                             beginAtZero: true,
-                            suggestedMax: 5000
+                            suggestedMax: 5000000
                         }, ticksStyle)
                     }],
                     xAxes: [{
@@ -664,6 +679,7 @@
                 }
             }
         })
+        debugger;
     })
 
     @*var prodNames = [@Html.Raw(string.Join(",", Model.Select(sel => "'" + sel.ItemName + "'").ToArray()))];

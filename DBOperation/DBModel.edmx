@@ -1216,6 +1216,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="GetEmployeePerformanceReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userId" Type="int" Mode="In" />
+        </Function>
         <Function Name="GetMonthlySalesReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserType" Type="nvarchar" Mode="In" />
           <Parameter Name="CurrentUserId" Type="int" Mode="In" />
@@ -1759,6 +1762,9 @@
             <End Role="User" EntitySet="Users" />
             <End Role="User1" EntitySet="Users" />
           </AssociationSet>
+          <FunctionImport Name="GetEmployeePerformanceReport" ReturnType="Collection(ClientManagerModel.GetEmployeePerformanceReport_Result)">
+            <Parameter Name="userId" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="GetMonthlySalesReport_Result" >
           <Property Type="Int32" Name="mname" Nullable="true" />
@@ -3091,6 +3097,22 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="GetEmployeePerformanceReport_Result">
+          <Property Type="String" Name="fullname" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="SaleTarget" Nullable="true" />
+          <Property Type="Decimal" Name="Jan" Nullable="true" Precision="38" Scale="0" />
+          <Property Type="Decimal" Name="Feb" Nullable="true" Precision="38" Scale="0" />
+          <Property Type="Decimal" Name="Mar" Nullable="true" Precision="38" Scale="0" />
+          <Property Type="Decimal" Name="Apr" Nullable="true" Precision="38" Scale="0" />
+          <Property Type="Decimal" Name="May" Nullable="true" Precision="38" Scale="0" />
+          <Property Type="Decimal" Name="Jun" Nullable="true" Precision="38" Scale="0" />
+          <Property Type="Decimal" Name="Jul" Nullable="true" Precision="38" Scale="0" />
+          <Property Type="Decimal" Name="Aug" Nullable="true" Precision="38" Scale="0" />
+          <Property Type="Decimal" Name="Sep" Nullable="true" Precision="38" Scale="0" />
+          <Property Type="Decimal" Name="Oct" Nullable="true" Precision="38" Scale="0" />
+          <Property Type="Decimal" Name="Nov" Nullable="true" Precision="38" Scale="0" />
+          <Property Type="Decimal" Name="Dec" Nullable="true" Precision="38" Scale="0" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3669,6 +3691,26 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetEmployeePerformanceReport" FunctionName="ClientManagerModel.Store.GetEmployeePerformanceReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ClientManagerModel.GetEmployeePerformanceReport_Result">
+                <ScalarProperty Name="fullname" ColumnName="fullname" />
+                <ScalarProperty Name="SaleTarget" ColumnName="SaleTarget" />
+                <ScalarProperty Name="Jan" ColumnName="Jan" />
+                <ScalarProperty Name="Feb" ColumnName="Feb" />
+                <ScalarProperty Name="Mar" ColumnName="Mar" />
+                <ScalarProperty Name="Apr" ColumnName="Apr" />
+                <ScalarProperty Name="May" ColumnName="May" />
+                <ScalarProperty Name="Jun" ColumnName="Jun" />
+                <ScalarProperty Name="Jul" ColumnName="Jul" />
+                <ScalarProperty Name="Aug" ColumnName="Aug" />
+                <ScalarProperty Name="Sep" ColumnName="Sep" />
+                <ScalarProperty Name="Oct" ColumnName="Oct" />
+                <ScalarProperty Name="Nov" ColumnName="Nov" />
+                <ScalarProperty Name="Dec" ColumnName="Dec" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

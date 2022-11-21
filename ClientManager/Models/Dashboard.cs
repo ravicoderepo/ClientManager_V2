@@ -4,6 +4,7 @@
 // MVID: 9A31CD02-2A37-4A80-A7EA-942AEB12790F
 // Assembly location: C:\Users\kanim\Downloads\Websiteapp\httpdocs\bin\ClientManager.dll
 
+using DBOperation;
 using System.Collections.Generic;
 
 namespace ClientManager.Models
@@ -28,11 +29,11 @@ namespace ClientManager.Models
 
         public string CurrentMonthAndYear { get; set; }
         //Others
-        public int? TotalCalls { get; set; }
+        public int? TotalActiveCalls { get; set; }
 
         public int CancelledRate { get; set; }
 
-        public int TotalSales { get; set; }
+        public int TotalCallsMade { get; set; }
 
         public int TotalOrders { get; set; }
 
@@ -47,7 +48,7 @@ namespace ClientManager.Models
         public int POReceivedWIP { get; set; }
 
         public MonthlySalesReport MonthlySalesReport { get; set; }
-
+        public List<GetEmployeePerformanceReport_Result> EmployeePerformanceReport   { get; set; }
         public List<MonthlySummaryReport> MonthlySummaryReportData { get; set; }
     }
 }

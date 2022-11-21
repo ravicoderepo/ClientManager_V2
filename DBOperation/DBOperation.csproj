@@ -95,6 +95,9 @@
     <Compile Include="ExpenseTracker.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="GetEmployeePerformanceReport_Result.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="GetMonthlySalesReport_Result.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>

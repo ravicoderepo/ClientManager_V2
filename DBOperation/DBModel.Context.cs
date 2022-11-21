@@ -79,5 +79,14 @@ namespace DBOperation
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetMonthlySalesReport_Result>("GetMonthlySalesReport", userTypeParameter, currentUserIdParameter, userManagerIdParameter);
         }
+    
+        public virtual ObjectResult<GetEmployeePerformanceReport_Result> GetEmployeePerformanceReport(Nullable<int> userId)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("userId", userId) :
+                new ObjectParameter("userId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetEmployeePerformanceReport_Result>("GetEmployeePerformanceReport", userIdParameter);
+        }
     }
 }
