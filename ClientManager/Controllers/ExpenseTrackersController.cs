@@ -124,6 +124,19 @@ namespace ClientManager.Controllers
                     }
                 }
             }
+
+            if(!string.IsNullOrEmpty(searchFrom))
+            {
+                if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "approver"))
+                {
+                    expenceTracker = expenceTracker.Where(wh => wh.Status == "Pending");
+                }
+                else if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "verifier"))
+                {
+                    expenceTracker = expenceTracker.Where(wh => wh.Status == "Approved");
+                }
+            }
+
             if (year > 0)
             {
                 expenceTracker = expenceTracker.Where(wh => wh.ExpenseDate.Year == year);
@@ -161,7 +174,7 @@ namespace ClientManager.Controllers
 
 
             ViewBag.TotalPettyCash = TotalPettyCash.Value.ToString("###0.00");
-            ViewBag.TotalFilteredExpense = expenceTracker.Sum(s=> s.ExpenseAmount).ToString("###0.00"); //TotalExpenceCash.Value.ToString("###0.00");
+            ViewBag.TotalFilteredExpense = (expenceTracker !=  null && expenceTracker.Count() > 0) ? expenceTracker.Sum(s=> s.ExpenseAmount).ToString("###0.00"):0.ToString("###0.00"); //TotalExpenceCash.Value.ToString("###0.00");
             ViewBag.TotalApprovedExpence = TotalApprovedExpence.Value.ToString("###0.00");
             ViewBag.TotalUnApprovedExpence = TotalUnApprovedExpence.Value.ToString("###0.00");
             ViewBag.TotalUnVerifiedExpence = TotalUnVerifiedExpence.Value.ToString("###0.00");

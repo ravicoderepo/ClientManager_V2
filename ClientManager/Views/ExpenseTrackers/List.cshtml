@@ -180,7 +180,12 @@
         var status = searchInput[0];
 
         if (searchInput.length == 1) {
-            actionUrl = "/ExpenseTrackers/ListView?" + "expenseDateFrom=&expenseDateTo=&status=" + status + "&year=&month=&expenseCat=&searchFrom=";
+            var searchfrom = '';
+            if (input == "Link") {
+                searchfrom = input;
+                status = '';
+            }
+            actionUrl = "/ExpenseTrackers/ListView?" + "expenseDateFrom=&expenseDateTo=&status=" + status + "&year=&month=&expenseCat=&searchFrom=" + searchfrom;
         }
 
         if (searchInput.length > 1 && searchInput[1] == 'CurrMonth')

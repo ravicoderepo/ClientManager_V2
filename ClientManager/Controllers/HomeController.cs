@@ -42,7 +42,7 @@ namespace ClientManager.Controllers
             }
 
             ViewBag.SalesPerson = selesPersonList;
-            selesPersonList.Insert(0, (new SelectListItem { Text = "All", Value = "0" }));
+            selesPersonList.Insert(0, (new SelectListItem { Text = userDetails.FullName, Value = userDetails.Id.ToString() }));
 
             List<GetMonthlySalesReport_Result> list = this.db.GetMonthlySalesReport("Super Admin", new int?(1), new int?(1)).ToList<GetMonthlySalesReport_Result>();
             MonthlySalesReport monthlySalesReport = new MonthlySalesReport();
@@ -239,6 +239,11 @@ namespace ClientManager.Controllers
 
         public ActionResult GetUserPerformanceReport(int userId)
         {
+            if(userId == 0)
+            {
+                UserDetails userDetails = (UserDetails)this.Session["UserDetails"];
+                userId = userDetails.Id;
+            }
             //var result = from sale in this.db.SaleActivities
             //             join usr in this.db.Users on sale.CreatedBy equals usr.Id
             //             group sale by new { sale.InvoiceAmount, sale.CreatedBy, usr.FullName, usr.SaleTarget } into g
