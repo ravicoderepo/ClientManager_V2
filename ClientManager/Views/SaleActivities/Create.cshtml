@@ -73,12 +73,14 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="ClientEmail">Customer Email</label>
+                                            <input id="hdnClientEmail" type="hidden" />
                                             @Html.EditorFor(model => model.ClientEmail, new { htmlAttributes = new { @class = "form-control", @id = "txtClientEmail", @name = "clientEmail", @type = "email" } })
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="ClientPhoneNo">Customer Phone No.</label>
+                                            <input id="hdnClientPhoneNo" type="hidden" />
                                             @Html.EditorFor(model => model.ClientPhoneNo, new { htmlAttributes = new { @class = "form-control", @id = "txtClientPhoneNo", @name = "clientPhoneNo" } })
                                         </div>
                                     </div>
@@ -154,7 +156,7 @@
                                         <div class="form-group">
                                             <label for="DateOfClosing">Closing Date</label>
                                             <div class="input-group date" id="txtClosingDate" data-target-input="nearest">
-                                                @Html.EditorFor(model => model.DateOfClosing, new { htmlAttributes = new { @class = "form-control datetimepicker-input"  } })
+                                                @Html.EditorFor(model => model.DateOfClosing, new { htmlAttributes = new { @class = "form-control datetimepicker-input" } })
                                                 <div class="input-group-append" data-target="#txtClosingDate" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                 </div>
@@ -238,7 +240,7 @@
         //
         $.validator.setDefaults({
             submitHandler: function () {
-                
+
                 // alert("Form successful submitted!");
                 fnSubmitSaleDetails();
             }
@@ -283,7 +285,7 @@
     });
 
     function fnToggleInvoiceFields() {
-        
+
         //6-Closed
         if ($('#ddlStatus').val() == "6") {
             $('#pnlInvoice').show();
@@ -299,13 +301,16 @@
 
     function fnSubmitSaleDetails() {
 
+        var email = ($('#hdnClientEmail').val() != '' && $('#hdnClientEmail').val() != undefined) ? $('#hdnClientEmail').val() : $("#txtClientEmail").val(); 
+        var phone = ($('#hdnClientPhoneNo').val() != '' && $('#hdnClientPhoneNo').val() != undefined) ? $('#hdnClientPhoneNo').val() : $("#txtClientPhoneNo").val();
+
         var SaleData = {
             SaleDate: $('#txtSaleDate').val(),
             SalesRepresentativeId: $('#ddlRepresentative').val(),
             Status: $('#ddlStatus').val(),
             ClientName: $('#txtClientName').val(),
-            ClientEmail: $('#txtClientEmail').val(),
-            ClientPhoneNo: $('#txtClientPhoneNo').val(),
+            ClientEmail: email, // $('#hdnClientEmail').val(),
+            ClientPhoneNo: phone, //$('#hdnClientPhoneNo').val(),
             ProductName: $('#txtProductName').val(),
             Capacity: $('#txtCapacity').val(),
             Unit: $('#ddlUnit').val(),
@@ -333,7 +338,7 @@
                     window.location.href = data.redirectURL;
                 }
                 else {
-                    
+
                     alert(data.message);
                     return false;
                 }
@@ -364,50 +369,122 @@
     });
 
     $(function () {
+        
+        $("#txtClientPhoneNo").val('');
+        $("#hdnClientPhoneNo").val('');
+        $("#hdnClientEmail").val('');
+        $("#txtClientEmail").val('');
+
         $("#txtClientName").autocomplete({
-        source: function (request, response) {
-            var itemnamecodes = new Array();
-            $.ajax({
-                async: false, cache: false,
-                //type: "POST",
-                url: "@(Url.Action("GetItemCode", "SaleActivities"))",
-                data: { "term": request.term },
-                success: function (data) {
-                    for (var i = 0; i < data.length ; i++) {
-                        itemnamecodes[i] = { label: data[i].Value, Id: data[i].Key };
+            minLength: 4,
+            autoFocus: true,
+            source: function (request, response) {
+                var itemnamecodes = new Array();
+                $.ajax({
+                    async: false, cache: false,
+                    //type: "POST",
+                    url: "@(Url.Action("GetItemCode", "SaleActivities"))",
+                    data: { "term": request.term },
+                    success: function (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            itemnamecodes[i] = { label: data[i].Value, Id: data[i].Key };
+                        }
                     }
-                 }
-            });
-            response(itemnamecodes);
-        },
-         select: function (event, ui) {
-             $.ajax({
-                 cache: false, async: false, type: "POST",
-                 url: "@(Url.Action("GetItemDetails", "SaleActivities"))",
-                 data: { "id": ui.item.Id },
-                success: function (data) {
-                    var item = data[0];
-                    $("#txtClientEmail").val(item.Email);
-                    $("#txtClientPhoneNo").val(item.PhoneNo);
-                    $("#txtClientName").val(item.Name);
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert('Failed to retrieve Item.');
-                }
-            });
-        }
+                });
+
+                    $("#txtClientPhoneNo").attr('readonly', false);
+                    $("#txtClientPhoneNo").val('');
+                $("#hdnClientPhoneNo").val('');
+                $("#txtClientEmail").attr('readonly', false);
+                $("#txtClientEmail").val('');
+                $("#hdnClientEmail").val('');
+
+                response(itemnamecodes);
+            },
+            select: function (event, ui) {
+                $.ajax({
+                    cache: false, async: false, type: "POST",
+                    url: "@(Url.Action("GetItemDetails", "SaleActivities"))",
+                    data: { "id": ui.item.Id },
+                    success: function (data) {
+                        var item = data[0];
+                        // $("#txtClientEmail").val(item.Email.replace(/[a-z]/g, "X"));
+                        var custPhoneNumber = item.PhoneNo;
+                        var custEmail = item.Email;
+                        $("#hdnClientEmail").val(item.Email);
+                        $("#hdnClientPhoneNo").val(item.PhoneNo);
+                        $("#txtClientPhoneNo").val("**********");
+                        $("#txtClientEmail").val(hideEmail(custEmail));
+
+                        if ($("#txtClientPhoneNo").val() != '') {
+                            
+                            $("#txtClientPhoneNo").attr('readonly', true);
+                        }
+                        else {
+
+                            $("#txtClientPhoneNo").attr('readonly', false);
+                            $("#hdnClientPhoneNo").val('');
+                        }
+
+                        if ($("#txtClientEmail").val() != '') {
+                            $("#txtClientEmail").attr('readonly', true);
+                        }
+                        else {
+
+                            $("#txtClientEmail").attr('readonly', false);
+                            $("#hdnClientEmail").val('');
+                        }
+
+                        $("#txtClientName").val(item.Name);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        $("#txtClientPhoneNo").attr('readonly', false);
+                        alert('Failed to retrieve Item.');
+                    }
+                });
+            }
 });
 });
 
+    //$("#txtClientPhoneNo").blur(function () {
 
+    //    $("#hdnClientPhoneNo").val($("#txtClientPhoneNo").val());
+    //});
+    //$("#txtClientEmail").blur(function () {
+
+    //    $("#hdnClientEmail").val($("#txtClientEmail").val());
+    //});
+    //$("#txtClientName").blur(function () {
+    //    
+    //    $("#txtClientName").val();
+    //    ($("#txtClientName").val() == '')
+    //    {
+    //        $("#txtClientPhoneNo").attr('readonly', false);
+    //        $("#txtClientPhoneNo").val('');
+    //        $("#hdnClientPhoneNo").val('');
+    //        $("#txtClientEmail").val('');
+    //        $("#hdnClientEmail").val('');
+    //    }
+    //});
     //$('#txtSaleDate').val(new date());
     $("#mnuSalesList").addClass("active");
     var parentMenu = $("#mnuSalesList").parent().parent().parent();
-    
+
     parentMenu.attr("class", "nav-item menu-is-opening menu-open");
     parentMenu.find("ul").each(function () {
-        
+
         $(this).attr("style", "display:block");
     });
+
+    let hideEmail = function (email) {
+        if (email != undefined && email != '') {
+            return email.replace(/(.{2})(.*)(?=@@)/,
+                function (gp1, gp2, gp3) {
+                    for (let i = 0; i < gp3.length; i++) {
+                        gp2 += "*";
+                    } return gp2;
+                });
+        }
+    };
 </script>
 

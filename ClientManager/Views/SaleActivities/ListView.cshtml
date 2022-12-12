@@ -181,7 +181,7 @@
             <td>@item.InvoiceNo</td>
             
             <td style="text-align:right">             
-                @item.InvoiceAmount.Value.ToString("#,##0.00")
+                @item.InvoiceAmount.Value.ToString("#,##,##0.00")
             </td>
             <td> @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.DateOfClosing))</td>
             <td>

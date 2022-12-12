@@ -173,13 +173,13 @@ namespace ClientManager.Controllers
             decimal? TotalUnVerifiedExpence = (TotalUnVerifiedExpenceAmount != null && TotalUnVerifiedExpenceAmount.Count > 0) ? TotalUnVerifiedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
 
 
-            ViewBag.TotalPettyCash = TotalPettyCash.Value.ToString("###0.00");
-            ViewBag.TotalFilteredExpense = (expenceTracker !=  null && expenceTracker.Count() > 0) ? expenceTracker.Sum(s=> s.ExpenseAmount).ToString("###0.00"):0.ToString("###0.00"); //TotalExpenceCash.Value.ToString("###0.00");
-            ViewBag.TotalApprovedExpence = TotalApprovedExpence.Value.ToString("###0.00");
-            ViewBag.TotalUnApprovedExpence = TotalUnApprovedExpence.Value.ToString("###0.00");
-            ViewBag.TotalUnVerifiedExpence = TotalUnVerifiedExpence.Value.ToString("###0.00");
-            ViewBag.PendingPettyCash = (TotalUnApprovedExpence.Value + TotalUnVerifiedExpence.Value).ToString("###0.00");
-            ViewBag.AvailablePettyCash = (TotalPettyCash.Value - TotalExpenceCash.Value).ToString("###0.00");
+            ViewBag.TotalPettyCash = TotalPettyCash.Value.ToString("#,##,##0.00");
+            ViewBag.TotalFilteredExpense = (expenceTracker !=  null && expenceTracker.Count() > 0) ? expenceTracker.Sum(s=> s.ExpenseAmount).ToString("#,##,##0.00"):0.ToString("#,##,##0.00"); //TotalExpenceCash.Value.ToString("#,##,##0.00");
+            ViewBag.TotalApprovedExpence = TotalApprovedExpence.Value.ToString("#,##,##0.00");
+            ViewBag.TotalUnApprovedExpence = TotalUnApprovedExpence.Value.ToString("#,##,##0.00");
+            ViewBag.TotalUnVerifiedExpence = TotalUnVerifiedExpence.Value.ToString("#,##,##0.00");
+            ViewBag.PendingPettyCash = (TotalUnApprovedExpence.Value + TotalUnVerifiedExpence.Value).ToString("#,##,##0.00");
+            ViewBag.AvailablePettyCash = (TotalPettyCash.Value - TotalExpenceCash.Value).ToString("#,##,##0.00");
             ViewBag.CurrentMonthAndYear = month + "/" + year;
 
             //List<SelectListItem> statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", "").ToList();

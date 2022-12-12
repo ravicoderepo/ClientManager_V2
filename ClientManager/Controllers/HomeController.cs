@@ -22,7 +22,7 @@ namespace ClientManager.Controllers
     {
         private ClientManagerEntities db = new ClientManagerEntities();
 
-        [CustomAuthorize("Super Admin", "Super User")]
+        [CustomAuthorize("Super Admin", "Super User", "Sales Manager")]
         public ActionResult AdminDashboard()
         {
             var currentUser = (UserDetails)Session["UserDetails"];
@@ -33,12 +33,12 @@ namespace ClientManager.Controllers
             if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "super admin" || wh.RoleName.ToLower() == "super user"))
             {
                 string[] roleNames = { "Sales Manager", "Sales Engineer" };
-                selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName)).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName").ToList();
+                selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName) && rl.User1.IsActive == true).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName").ToList();
             }
             else if (currentUser.UserRoles.Any(wh => wh.RoleName.ToLower() == "sales manager"))
             {
                 string[] roleNames = { "Sales Manager", "Sales Engineer" };
-                selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName) && currentUser.ReportingToMe.Contains(rl.UserId) || rl.UserId == currentUser.Id).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName").ToList();
+                selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName) && rl.User1.IsActive == true && currentUser.ReportingToMe.Contains(rl.UserId) || rl.UserId == currentUser.Id).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName").ToList();
             }
 
             ViewBag.SalesPerson = selesPersonList;

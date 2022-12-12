@@ -118,7 +118,7 @@ namespace ClientManager.Controllers
                 saleActivities = saleActivities.Where(wh => wh.Status != 4 && wh.Status != 6);
             }
             var output = saleActivities.Where(wh => wh.Status == 6 && wh.InvoiceAmount != null).Select(sel => (sel.InvoiceAmount.HasValue) ? sel.InvoiceAmount.Value : 0).ToList();
-            ViewBag.TotalSalesBySalesPerson = " Rs." + output.Sum(s => s).ToString("#,##0.00");
+            ViewBag.TotalSalesBySalesPerson = " Rs." + output.Sum(s => s).ToString("#,##,##0.00");
 
             if (searchFrom == "Link")
             {
@@ -171,7 +171,7 @@ namespace ClientManager.Controllers
 
 
             var output = saleActivities.Where(wh => wh.Status == 6 && wh.InvoiceAmount != null).Select(sel => (sel.InvoiceAmount.HasValue) ? sel.InvoiceAmount.Value : 0).ToList();
-            ViewBag.TotalSalesBySalesPerson = "Rs." + output.Sum(s => s).ToString("#,##0.00");
+            ViewBag.TotalSalesBySalesPerson = "Rs." + output.Sum(s => s).ToString("#,##,##0.00");
 
 
             statusList.Insert(0, (new SelectListItem { Text = "All", Value = "0" }));
@@ -514,7 +514,7 @@ namespace ClientManager.Controllers
             // var codes = db.w_Items.Where(i => i.ItemCode.StartsWith(term)).ToList();
             var result = new List<KeyValuePair<string, string>>();
             var namecodes = new List<SelectListItem>();
-            namecodes = (from u in db.SaleActivities select new SelectListItem { Text = u.ClientName, Value = u.Id.ToString() }).ToList();
+            namecodes = (from u in db.SaleActivities select new SelectListItem { Text = u.ClientName, Value = u.Id.ToString() }).Distinct().ToList();
 
             foreach (var item in namecodes)
             {
@@ -536,7 +536,7 @@ namespace ClientManager.Controllers
                 Name = x.ClientName,
                 Email = x.ClientEmail,
                 PhoneNo = x.ClientPhoneNo
-            });
+            }).Distinct();
 
             return Json(viewmodel);
         }

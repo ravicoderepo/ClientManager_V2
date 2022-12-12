@@ -97,7 +97,7 @@
                             <div id="pnlAdvSearch">
                                 <div class="card-body" style="background-color:whitesmoke">
                                     <div class="row">
-                                        <div class="col-md-4" style="display:none">
+                                        <div class="col-md-3" >
                                             <div class="form-group">
                                                 <label for="expenseDateFrom">Expense Date From</label>
                                                 <div class="input-group date" data-target-input="nearest">
@@ -108,7 +108,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4" style="display:none">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="expenseDateTo">Expense Date To</label>
                                                 <div class="input-group date" data-target-input="nearest">
@@ -126,8 +126,8 @@
                                                 @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus" })
                                             </div>
                                         </div>
-                                    @*</div>
-                                    <div class="row">*@
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="Status">Expense Category</label>
@@ -174,7 +174,7 @@
     $('#pnlAdvSearch').hide();
 
     function fnDasboardFilter(input) {
-        debugger;
+        
         var actionUrl = "";
         var searchInput = input.split(":");
         var status = searchInput[0];
@@ -292,7 +292,7 @@
     }
 
     if ($('#filterCon').val() != "") {
-        debugger;
+        
         fnDasboardFilter($('#filterCon').val());
     }
 

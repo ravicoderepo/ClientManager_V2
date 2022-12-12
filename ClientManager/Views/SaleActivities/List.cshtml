@@ -186,7 +186,7 @@
     }
 
     function fnSalesPersonChange() {
-        debugger;
+        
         $("input[name=hdnSalesPerson]").val($('#ddlSalesPerson').val());
     }
 
@@ -226,7 +226,7 @@
 
     $(window).on('load', function () {
         const params = new URLSearchParams(window.location.search)
-        debugger;
+        
         var searchQuery = "status="
 
         if (params.has('status')) {
@@ -236,7 +236,7 @@
             searchQuery += "&searchFrom=" + params.get('searchFrom');
         }
         var actionUrl = "/SaleActivities/ListView?" + searchQuery;
-        debugger;
+        
         $('#gridView').html('');
 
         $.ajax({

@@ -314,7 +314,7 @@ namespace ClientManager.Controllers
             var data = db.Items.Where(wh => wh.TypeId == prodMasterId);
             if(isInward)
             {
-                data = data.Where(wh => wh.ParentId == 0);
+                data = data.Where(wh => wh.ParentId == 0 || wh.ParentId == null);
             }
 
             var list = new SelectList(data, "ItemId", "ItemName", 0).ToList<SelectListItem>();
