@@ -237,7 +237,6 @@
     //    }
     //}
     function fnSearch() {
-
         var actionUrl = "/ExpenseTrackers/ListView?" + "expenseDateFrom=" + $('#txtexpenseDateFrom').val().replace(/\//g, '-') + "&expenseDateTo=" + $('#txtexpenseDateTo').val().replace(/\//g, '-') + "&status=" + $('#ddlStatus').val() + "&year=" + $('#ddlYears').val() + "&month=" + $('#ddlMonths').val() + "&expenseCat=" + $('#ddlExpenseCategory').val();
         $('#gridView').html('');
         $.ajax({

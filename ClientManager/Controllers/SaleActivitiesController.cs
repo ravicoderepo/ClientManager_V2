@@ -512,18 +512,21 @@ namespace ClientManager.Controllers
         public JsonResult GetItemCode(string term)
         {
             // var codes = db.w_Items.Where(i => i.ItemCode.StartsWith(term)).ToList();
-            var result = new List<KeyValuePair<string, string>>();
+            var result = new Dictionary<string, string>();
             var namecodes = new List<SelectListItem>();
-            namecodes = (from u in db.SaleActivities select new SelectListItem { Text = u.ClientName, Value = u.Id.ToString() }).Distinct().ToList();
+            namecodes = (from u in db.SaleActivities.Where(wh=> wh.ClientName.Contains(term)) select new SelectListItem { Text = u.ClientName, Value = u.Id.ToString() }).Distinct().ToList();
 
             foreach (var item in namecodes)
             {
-                result.Add(new KeyValuePair<string, string>(item.Value.ToString(), item.Text));
+                if (!result.ContainsKey(item.Text.ToString()))
+                {
+                    result.Add(item.Text, item.Value.ToString());
+                }
             }
 
-            var namecodes1 = result.Where(s => s.Value.ToLower().Contains
+            var namecodes1 = result.Where(s => s.Key.ToLower().Contains
                         (term.ToLower())).Select(w => w).ToList();
-            return Json(namecodes1, JsonRequestBehavior.AllowGet);
+           return Json(namecodes1, JsonRequestBehavior.AllowGet);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]

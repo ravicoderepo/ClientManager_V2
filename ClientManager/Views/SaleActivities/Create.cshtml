@@ -386,8 +386,9 @@
                     url: "@(Url.Action("GetItemCode", "SaleActivities"))",
                     data: { "term": request.term },
                     success: function (data) {
+                        debugger;
                         for (var i = 0; i < data.length; i++) {
-                            itemnamecodes[i] = { label: data[i].Value, Id: data[i].Key };
+                            itemnamecodes[i] = { label: data[i].Key, Id: data[i].Value };
                         }
                     }
                 });

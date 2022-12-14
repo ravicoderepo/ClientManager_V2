@@ -39,7 +39,13 @@ namespace ClientManager.Controllers
             //ViewBag.AvailablePettyCash = (TotalPettyCash - TotalApprovedExpence);
             //ViewBag.CurrentMonthAndYear = Utility.ConstantData.ToMonthName(DateTime.Now) + "/" + DateTime.Now.Year;
             List<SelectListItem> statusList = new List<SelectListItem>();
-            statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", "").ToList();
+            string selectedStatus = "";
+            if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "approver"))
+                selectedStatus = "Pending";
+            if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "verifier"))
+                selectedStatus = "Approved";
+
+            statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", selectedStatus).ToList();
 
             //if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "store admin"))
             //{

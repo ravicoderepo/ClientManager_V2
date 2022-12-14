@@ -196,7 +196,7 @@
                     {
                         <td>
 
-                            @if (!db.Documents.Any(wh => wh.ReferenceRecId == item.Id) && item.Status != "Approved")
+                            @if (!db.Documents.Any(wh => wh.ReferenceRecId == item.Id) && item.Status == "Pending")
                             {
                                 <input type="checkbox" id="@item.Id" />
                             }

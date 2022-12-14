@@ -31,179 +31,182 @@
         font-weight: bold;
     }
 </style>
-
+<script src="~/Content/plugins/jspdf.min.js_1.5.3/cdnjs/jspdf.min.js"></script>
 <!-- Main content -->
-<section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <!-- left column -->
-            <div class="col-md-12">
-                <!-- jquery validation -->
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">Despatch</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <!-- form start -->
+<div id="divPrintable">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- jquery validation -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Despatch</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
 
-                    <form id="quickFormPopup">
-                        <div class="card-body">
-                            <div id="pnlInvoice" style="display:none">
-                                <fieldset>
-                                    <legend>Invoice Details</legend>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label for="InvoiceNumber">Invoice Number</label>
-                                                <div class="input-group date" data-target-input="nearest">
-                                                    <input type="hidden" id="hdnId" value="@Model.Id" />
-                                                    @*@Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "hdnId", @name= "hdnId" } })*@
-                                                    @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control", @id = "txtInvoiceNumber", @name = "InvoiceNumber", @readonly = "readonly" } })
+                        <form id="quickFormPopup">
+                            <div class="card-body">
+                                <div id="pnlInvoice" style="display:none">
+                                    <fieldset>
+                                        <legend>Invoice Details</legend>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="InvoiceNumber">Invoice Number</label>
+                                                    <div class="input-group date" data-target-input="nearest">
+                                                        <input type="hidden" id="hdnId" value="@Model.Id" />
+                                                        @*@Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "hdnId", @name= "hdnId" } })*@
+                                                        @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control", @id = "txtInvoiceNumber", @name = "InvoiceNumber", @readonly = "readonly" } })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="CustomerName">Customer Name</label>
+                                                    @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { @class = "form-control", @id = "txtCustomerName", @name = "CustomerName", @readonly = "readonly" } })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="InvoiceDate">Invoice Date</label>
+                                                    <div class="input-group date" data-target-input="nearest">
+                                                        @Html.EditorFor(model => model.InvoiceDate, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtInvoiceDate", @name = "InvoiceDate", @readonly = "readonly" } })
+                                                        <div class="input-group-append" data-target="#txtInvoiceDate" data-toggle="datetimepicker">
+                                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="status">Status</label>
+                                                    @Html.HiddenFor(model => model.Status, new { htmlAttributes = new { @id = "hdnStatus" } })
+                                                    @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()", @readonly = "readonly" })
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="Comments">Comments</label>
+                                                    @Html.EditorFor(model => model.Comments, new { htmlAttributes = new { @class = "form-control", @id = "txtComments", @name = "Comments", @readonly = "readonly" } })
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                    </fieldset>
+                                    <br />
+                                </div>
+                                <div class="well clearfix">
+                                    <a style="float:right; width:150px" class="btn btn-block btn-primary btn-xs" data-added="0" id="btnSavePDF" onclick="javascript:saveDiv('divPrintable','Invoice Details')">Show Invoice</a>
+                                    <a style="float:right; width:150px" class="btn btn-block btn-primary btn-xs" data-added="0" id="btnPrint" onclick="javascript:printDiv('divPrintable','Invoice Details')">Show Invoice</a>
+                                    <a style="float:right; width:150px" class="btn btn-block btn-primary btn-xs" data-added="0" id="btnToggle" onclick="javascript:fnHideShow(this)">Show Invoice</a>
+                                </div>
+                                <fieldset>
+                                    <legend>Despatch Details</legend>
+                                    <div class="row">
+                                        <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="CustomerName">Customer Name</label>
-                                                @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { @class = "form-control", @id = "txtCustomerName", @name = "CustomerName", @readonly = "readonly" } })
+                                                <label for="DespatchNo">Despatch No</label>
+                                                <input type="hidden" id="hdnDespatchId" value="@Model.DespatchData.FirstOrDefault().Id" />
+                                                @*@Html.HiddenFor(model => model.DespatchData.FirstOrDefault().Id, new { htmlAttributes = new { @id = "hdnDespatchId", @name = "hdnDespatchId" } })*@
+                                                @Html.EditorFor(model => model.DespatchData.FirstOrDefault().DespatchNo, new { htmlAttributes = new { @class = "form-control", @id = "txtDespatchNo", @name = "DespatchNo", @readonly = "readonly" } })
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="InvoiceDate">Invoice Date</label>
+                                                <label for="DespatchDate">Despatch Date</label>
                                                 <div class="input-group date" data-target-input="nearest">
-                                                    @Html.EditorFor(model => model.InvoiceDate, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtInvoiceDate", @name = "InvoiceDate", @readonly = "readonly" } })
-                                                    <div class="input-group-append" data-target="#txtInvoiceDate" data-toggle="datetimepicker">
+                                                    @Html.EditorFor(model => model.DespatchData.FirstOrDefault().DespatchDate, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtDespatchDate", @name = "DespatchDate" } })
+                                                    <div class="input-group-append" data-target="#txtDespatchDate" data-toggle="datetimepicker">
                                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="status">Status</label>
-                                                @Html.HiddenFor(model => model.Status, new { htmlAttributes = new { @id = "hdnStatus" } })
-                                                @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()", @readonly = "readonly" })
+                                                <label for="LRNumber">LR Number</label>
+                                                @Html.EditorFor(model => model.DespatchData.FirstOrDefault().LRNumber, new { htmlAttributes = new { @class = "form-control", @id = "txtLRNumber", @name = "LRNumber" } })
                                             </div>
                                         </div>
-
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Comments">Transport By</label>
+                                                @Html.EditorFor(model => model.DespatchData.FirstOrDefault().TransportBy, new { htmlAttributes = new { @class = "form-control", @id = "txtTransportBy", @name = "TransportBy" } })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Comments">Ship To</label>
+                                                @Html.EditorFor(model => model.DespatchData.FirstOrDefault().ShipToCity, new { htmlAttributes = new { @class = "form-control", @id = "txtShipToCity", @name = "ShipToCity" } })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="PaymentStatus">Payment Status</label>
+                                                @Html.HiddenFor(model => model.DespatchData.FirstOrDefault().PaymentStatus, new { htmlAttributes = new { @id = "hdnPaymentStatus" } })
+                                                @Html.DropDownList("PaymentStatus", ViewBag.PaymentStatus as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlPaymentStatus", @onChange = "fnStatusChange()" })
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="Comments">Comments</label>
-                                                @Html.EditorFor(model => model.Comments, new { htmlAttributes = new { @class = "form-control", @id = "txtComments", @name = "Comments", @readonly = "readonly" } })
-                                            </div>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                                <br />
-                            </div>
-                            <div class="well clearfix">
-                                <a style="float:right; width:150px" class="btn btn-block btn-primary btn-xs" data-added="0" id="btnToggle" onclick="javascript:fnHideShow(this)">Show Invoice Details</a>
-                            </div>
-                            <fieldset>
-                                <legend>Despatch Details</legend>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="DespatchNo">Despatch No</label>
-                                            <input type="hidden" id="hdnDespatchId" value="@Model.DespatchData.FirstOrDefault().Id" />
-                                            @*@Html.HiddenFor(model => model.DespatchData.FirstOrDefault().Id, new { htmlAttributes = new { @id = "hdnDespatchId", @name = "hdnDespatchId" } })*@
-                                            @Html.EditorFor(model => model.DespatchData.FirstOrDefault().DespatchNo, new { htmlAttributes = new { @class = "form-control", @id = "txtDespatchNo", @name = "DespatchNo", @readonly = "readonly" } })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="DespatchDate">Despatch Date</label>
-                                            <div class="input-group date" data-target-input="nearest">
-                                                @Html.EditorFor(model => model.DespatchData.FirstOrDefault().DespatchDate, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtDespatchDate", @name = "DespatchDate" } })
-                                                <div class="input-group-append" data-target="#txtDespatchDate" data-toggle="datetimepicker">
-                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="LRNumber">LR Number</label>
-                                            @Html.EditorFor(model => model.DespatchData.FirstOrDefault().LRNumber, new { htmlAttributes = new { @class = "form-control", @id = "txtLRNumber", @name = "LRNumber" } })
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="Comments">Transport By</label>
-                                            @Html.EditorFor(model => model.DespatchData.FirstOrDefault().TransportBy, new { htmlAttributes = new { @class = "form-control", @id = "txtTransportBy", @name = "TransportBy" } })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="Comments">Ship To</label>
-                                            @Html.EditorFor(model => model.DespatchData.FirstOrDefault().ShipToCity, new { htmlAttributes = new { @class = "form-control", @id = "txtShipToCity", @name = "ShipToCity" } })
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="PaymentStatus">Payment Status</label>
-                                            @Html.HiddenFor(model => model.DespatchData.FirstOrDefault().PaymentStatus, new { htmlAttributes = new { @id = "hdnPaymentStatus" } })
-                                            @Html.DropDownList("PaymentStatus", ViewBag.PaymentStatus as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlPaymentStatus", @onChange = "fnStatusChange()" })
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <fieldset>
-                                            <legend>Products</legend>
-                                            @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
-                                            {
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label for="status">Material</label>
-                                                            <input type="hidden" name="MaterialId" id="hdnMaterialId" />
-                                                            @Html.DropDownList("MaterialId", ViewBag.MaterialId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlMaterialId", @onChange = "fnValueChange('material')" })
+                                            <fieldset>
+                                                <legend>Products</legend>
+                                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="status">Material</label>
+                                                                <input type="hidden" name="MaterialId" id="hdnMaterialId" />
+                                                                @Html.DropDownList("MaterialId", ViewBag.MaterialId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlMaterialId", @onChange = "fnValueChange('material')" })
 
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label for="status">Product Master</label>
-                                                            <input type="hidden" name="TypeId" id="hdnTypeId" />
-                                                            @Html.DropDownList("TypeId", ViewBag.TypeId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlTypeId", @onChange = "fnValueChange('type')" })
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="status">Product Master</label>
+                                                                <input type="hidden" name="TypeId" id="hdnTypeId" />
+                                                                @Html.DropDownList("TypeId", ViewBag.TypeId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlTypeId", @onChange = "fnValueChange('type')" })
+                                                            </div>
                                                         </div>
-                                                    </div>
 
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label for="status">Product</label>
-                                                            <input type="hidden" name="ItemId" id="hdnItemId" />
-                                                            @Html.DropDownList("ItemId", ViewBag.TypeId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlItemId", @onChange = "fnValueChange('item')" })
-                                                        </div>
                                                     </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label for="AvailableQuantity">Available Quantity</label>
-                                                            @Html.Editor("AvailableQuantity", new { htmlAttributes = new { @class = "form-control", @id = "txtAvailableQuantity", @name = "txtAvailableQuantity", @readonly = "readonly" } })
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="status">Product</label>
+                                                                <input type="hidden" name="ItemId" id="hdnItemId" />
+                                                                @Html.DropDownList("ItemId", ViewBag.TypeId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlItemId", @onChange = "fnValueChange('item')" })
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label for="Quantity">Quantity</label>
-                                                            @Html.Editor("Quantity", new { htmlAttributes = new { @class = "form-control", @id = "txtQuantity", @name = "Quantity" } })
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <label for="AvailableQuantity">Available Quantity</label>
+                                                                @Html.Editor("AvailableQuantity", new { htmlAttributes = new { @class = "form-control", @id = "txtAvailableQuantity", @name = "txtAvailableQuantity", @readonly = "readonly" } })
+                                                            </div>
                                                         </div>
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <label for="Quantity">Quantity</label>
+                                                                @Html.Editor("Quantity", new { htmlAttributes = new { @class = "form-control", @id = "txtQuantity", @name = "Quantity" } })
+                                                            </div>
+                                                        </div>
+                                                        @*<div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label for="Remarks">Remarks</label>
+                                                                    <input type="text" class="form-control" id="txtRemarks" name="Remarks" />
+                                                                </div>
+                                                            </div>*@
                                                     </div>
-                                                    @*<div class="col-md-12">
-                    <div class="form-group">
-                        <label for="Remarks">Remarks</label>
-                        <input type="text" class="form-control" id="txtRemarks" name="Remarks" />
-                    </div>
-                </div>*@
-                                                </div>
-                                            }
+                                                }
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
@@ -287,36 +290,36 @@
                                                     </div>
                                                 </div>
                                             </fieldset>
+                                        </div>
                                     </div>
-                                </div>
-                            </fieldset>
-                        </div>
-                        <div class="card-footer">
-                            @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
-                            {
-                                <button type="submit" class="btn btn-primary">Update Despatch</button>
-                            }
-                            @*<button type="button" class="btn btn-danger">Cancel</button>*@
-                        </div>
-                        <!-- /.card-body -->
-                    </form>
+                                </fieldset>
+                            </div>
+                            <div class="card-footer">
+                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                {
+                                    <button type="submit" class="btn btn-primary">Update Despatch</button>
+                                }
+                                @*<button type="button" class="btn btn-danger">Cancel</button>*@
+                            </div>
+                            <!-- /.card-body -->
+                        </form>
+                    </div>
+
                 </div>
+                <!-- /.card -->
+            </div>
+
+            <!--/.col (left) -->
+            <!-- right column -->
+            <div class="col-md-6">
 
             </div>
-            <!-- /.card -->
-        </div>
-
-        <!--/.col (left) -->
-        <!-- right column -->
-        <div class="col-md-6">
-
-        </div>
-        <!--/.col (right) -->
-        <!-- /.row -->
-    </div><!-- /.container-fluid -->
-</section>
-<!-- /.content -->
-
+            <!--/.col (right) -->
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
 <script>
 
     $(window).on('load', function () {
@@ -665,6 +668,33 @@
     $('#modal-xl').on('hide.bs.modal', function () {
         location.href = location.href
     });
+
+
+    var doc = new jsPDF();
+
+    function saveDiv(divId, title) {
+        doc.fromHTML(`<html><head><title>${title}</title></head><body>` + document.getElementById(divId).innerHTML + `</body></html>`);
+        doc.save('div.pdf');
+    }
+
+    function printDiv(divId,title) {
+
+        let mywindow = window.open('', 'PRINT', 'height=650,width=900,top=100,left=150');
+
+        mywindow.document.write(`<html><head><title>${title}</title>`);
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(document.getElementById(divId).innerHTML);
+        mywindow.document.write('</body></html>');
+
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.focus(); // necessary for IE >= 10*/
+
+        mywindow.print();
+        mywindow.close();
+
+        return true;
+    }
+
 </script>
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

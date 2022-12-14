@@ -152,6 +152,7 @@
     <Compile Include="Controllers\InwardController.cs" />
     <Compile Include="Controllers\ItemsController.cs" />
     <Compile Include="Controllers\CompaniesController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\StocksController.cs" />
     <Compile Include="Controllers\TypesController.cs" />
     <Compile Include="Controllers\MeterialsController.cs" />
@@ -162,7 +163,6 @@
     <Compile Include="Controllers\PettyCashesController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\QuoteController.cs" />
-    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\SaleActivitiesController.cs" />
     <Compile Include="Controllers\UserRolesController.cs" />
@@ -179,6 +179,8 @@
     <Compile Include="Models\InwardData.cs" />
     <Compile Include="Models\ItemData.cs" />
     <Compile Include="Models\CompanyData.cs" />
+    <Compile Include="Models\ExpenseTrackerReportData.cs" />
+    <Compile Include="Models\PettyCashReportData.cs" />
     <Compile Include="Models\TypesData.cs" />
     <Compile Include="Models\MaterialData.cs" />
     <Compile Include="Models\Dashboard.cs" />
@@ -1703,6 +1705,8 @@
     <Content Include="Content\plugins\jsgrid\jsgrid.js" />
     <Content Include="Content\plugins\jsgrid\jsgrid.min.css" />
     <Content Include="Content\plugins\jsgrid\jsgrid.min.js" />
+    <Content Include="Content\plugins\jspdf.min.js_1.5.3\cdnjs\jspdf.min.js" />
+    <Content Include="Content\plugins\jspdf.min.js_1.5.3\unpkg\jspdf.min.js" />
     <Content Include="Content\plugins\jszip\jszip.js" />
     <Content Include="Content\plugins\jszip\jszip.min.js" />
     <Content Include="Content\plugins\moment\locales.js" />
@@ -2857,6 +2861,7 @@
     <Content Include="Views\Inward\GetStocks.cshtml" />
     <Content Include="Views\Inward\GetStockDetails.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
+    <Content Include="Views\Reports\ExpenseTrackerReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2864,7 +2869,6 @@
     <Folder Include="Views\Order\" />
     <Folder Include="Views\Project\" />
     <Folder Include="Views\Quote\" />
-    <Folder Include="Views\Reports\" />
     <Folder Include="Views\Stocks\" />
   </ItemGroup>
   <ItemGroup>
