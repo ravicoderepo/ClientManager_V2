@@ -131,7 +131,7 @@ namespace ClientManager.Controllers
                 }
             }
 
-            if(!string.IsNullOrEmpty(searchFrom))
+            if(string.IsNullOrEmpty(searchFrom))
             {
                 if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "approver"))
                 {
@@ -295,6 +295,7 @@ namespace ClientManager.Controllers
         public ActionResult Edit(int? id)
         {
             UserDetails currentUser = (UserDetails)this.Session["UserDetails"];
+            Session["LastURL_" + currentUser.Id] = Request.UrlReferrer;
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -377,12 +378,20 @@ namespace ClientManager.Controllers
                     entity.ModifiedOn = new DateTime?(DateTime.Now);
 
                     if (this.db.SaveChanges() > 0)
+                    {
+                        string redirectUrl = "/ExpenseTrackers/List";
+                        if (Session["LastURL_" + userDetails.Id] != null)
+                        {
+                            redirectUrl = Session["LastURL_" + userDetails.Id].ToString();
+                        }
+
                         data = new JsonReponse()
                         {
                             message = "Expense updated successfully!",
                             status = "Success",
-                            redirectURL = "/ExpenseTrackers/List"
+                            redirectURL = redirectUrl.ToString() //"/ExpenseTrackers/List" 
                         };
+                    }
                     else
                         data = new JsonReponse()
                         {

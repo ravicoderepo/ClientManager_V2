@@ -85,78 +85,89 @@ namespace ClientManager.Controllers
                         string fileName = Path.GetFileName(DocumentData.PostedFile.FileName);
                         //Use Namespace called :  System.IO  
                         string FileName = Path.GetFileNameWithoutExtension(DocumentData.PostedFile.FileName);
+                        if (!string.IsNullOrEmpty(fileName))
+                        {
+                            //To Get File Extension  
+                            string FileExtension = Path.GetExtension(DocumentData.PostedFile.FileName);
+                            string[] ImgExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".tiff" };
+                            string[] DocExtensions = { ".txt", ".doc", ".docx", ".xls", ".xlsx" };
+                            string[] PdfExtension = { ".pdf" };
+                            string[] ZipExtensions = { ".zip" };
 
-                        //To Get File Extension  
-                        string FileExtension = Path.GetExtension(DocumentData.PostedFile.FileName);
-                        string[] ImgExtensions = { ".jpg",".jpeg", ".png", ".gif", ".tiff" };
-                        string[] DocExtensions = { ".txt", ".doc", ".docx", ".xls", ".xlsx" };
-                        string[] PdfExtension = { ".pdf" };
-                        string[] ZipExtensions = { ".zip" };
+                            if (ImgExtensions.Contains(FileExtension.ToLower()))
+                            {
+                                DocumentData.DocumentType = "Image";
+                            }
+                            else if (DocExtensions.Contains(FileExtension.ToLower()))
+                            {
+                                DocumentData.DocumentType = "Document";
+                            }
+                            else if (PdfExtension.Contains(FileExtension.ToLower()))
+                            {
+                                DocumentData.DocumentType = "PDF";
+                            }
+                            else if (ZipExtensions.Contains(FileExtension.ToLower()))
+                            {
+                                DocumentData.DocumentType = "Zip";
+                            }
+                            else
+                            {
+                                DocumentData.DocumentType = "Others";
+                            }
+                            //Add Current Date To Attached File Name  
+                            FileName = DateTime.Now.ToString("yyyyMMdd") + "-" + FileName.Trim() + FileExtension;
 
-                        if (ImgExtensions.Contains(FileExtension.ToLower()))
-                        {
-                            DocumentData.DocumentType = "Image";
-                        }
-                        else if (DocExtensions.Contains(FileExtension.ToLower()))
-                        {
-                            DocumentData.DocumentType = "Document";
-                        }
-                        else if (PdfExtension.Contains(FileExtension.ToLower()))
-                        {
-                            DocumentData.DocumentType = "PDF";
-                        }
-                        else if (ZipExtensions.Contains(FileExtension.ToLower()))
-                        {
-                            DocumentData.DocumentType = "Zip";
+                            //Get Upload path from Web.Config file AppSettings.  
+                            //string UploadPath = ConfigurationManager.AppSettings["UserImagePath"].ToString();
+
+                            //Its Create complete path to store in server.  
+                            //ImagePath = UploadPath + FileName;
+
+                            //To copy and save file into server.  
+                            //membervalues.ImageFile.SaveAs(membervalues.ImagePath);
+                            string fileData = string.Empty;
+                            //if (DocumentData.DocumentType == "Image")
+                            //{
+                            System.IO.Stream fs = DocumentData.PostedFile.InputStream;
+                            System.IO.BinaryReader br = new System.IO.BinaryReader(fs);
+                            Byte[] bytes = br.ReadBytes((Int32)fs.Length);
+                            fileData = Convert.ToBase64String(bytes, 0, bytes.Length);
+
+                            //fileData = Utility.FileProcess.ImageToBase64(DocumentData.PostedFile.FileName);
+                            //fileData = Utility.FileProcess.ImageToBase64(DocumentData.PostedFile.FileName);
+                            //}
+
+                            //FileInfo file = new FileInfo(DocumentData.PostedFile.FileName);
+
+                            this.db.Documents.Add(new DBOperation.Document()
+                            {
+                                FileName = FileName,
+                                DocumentType = DocumentData.DocumentType,
+                                DocumentSource = DocumentData.DocumentSource,
+                                ReferenceRecId = DocumentData.ReferenceRecId,
+                                Status = DocumentData.Status,
+                                Description = DocumentData.Description,
+                                FileData = fileData,
+                                FileExtension = FileExtension,
+                                CreatedBy = userData.Id,
+                                CreatedOn = DateTime.Now
+                            });
+
+                            //var expenseData = db.Documents.Where(wh=> wh.ReferenceRecId == DocumentData.ReferenceRecId).FirstOrDefault();
+
+                            //expenseData.
+
+                            num = this.db.SaveChanges();
                         }
                         else
                         {
-                            DocumentData.DocumentType = "Others";
+                            data = new JsonReponse()
+                            {
+                                message = "File name is empty!",
+                                status = "Failed",
+                                redirectURL = ""
+                            };
                         }
-                        //Add Current Date To Attached File Name  
-                        FileName = DateTime.Now.ToString("yyyyMMdd") + "-" + FileName.Trim() + FileExtension;
-
-                        //Get Upload path from Web.Config file AppSettings.  
-                        //string UploadPath = ConfigurationManager.AppSettings["UserImagePath"].ToString();
-
-                        //Its Create complete path to store in server.  
-                        //ImagePath = UploadPath + FileName;
-
-                        //To copy and save file into server.  
-                        //membervalues.ImageFile.SaveAs(membervalues.ImagePath);
-                        string fileData = string.Empty;
-                        //if (DocumentData.DocumentType == "Image")
-                        //{
-                        System.IO.Stream fs = DocumentData.PostedFile.InputStream;
-                        System.IO.BinaryReader br = new System.IO.BinaryReader(fs);
-                        Byte[] bytes = br.ReadBytes((Int32)fs.Length);
-                        fileData = Convert.ToBase64String(bytes, 0, bytes.Length);
-
-                        //fileData = Utility.FileProcess.ImageToBase64(DocumentData.PostedFile.FileName);
-                        //fileData = Utility.FileProcess.ImageToBase64(DocumentData.PostedFile.FileName);
-                        //}
-
-                        //FileInfo file = new FileInfo(DocumentData.PostedFile.FileName);
-
-                        this.db.Documents.Add(new DBOperation.Document()
-                        {
-                            FileName = FileName,
-                            DocumentType = DocumentData.DocumentType,
-                            DocumentSource = DocumentData.DocumentSource,
-                            ReferenceRecId = DocumentData.ReferenceRecId,
-                            Status = DocumentData.Status,
-                            Description = DocumentData.Description,
-                            FileData = fileData,
-                            FileExtension = FileExtension,
-                            CreatedBy = userData.Id,
-                            CreatedOn = DateTime.Now
-                        });
-
-                        //var expenseData = db.Documents.Where(wh=> wh.ReferenceRecId == DocumentData.ReferenceRecId).FirstOrDefault();
-
-                        //expenseData.
-
-                        num = this.db.SaveChanges();
                     }
                 }
 

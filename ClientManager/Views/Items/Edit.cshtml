@@ -80,6 +80,15 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
+                                            <label for="status">Parent Product Name</label>
+                                            @Html.HiddenFor(model => model.ParentId, new { htmlAttributes = new { @id = "hdnItemId" } })
+                                            @Html.DropDownList("ParentId", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlItemId", @onChange = "fnValueChange('item')" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
                                             <label for="ItemName">Product Name</label>
                                             @Html.EditorFor(model => model.ItemName, new { htmlAttributes = new { @class = "form-control", @id = "txtItemName", @name = "ItemName" } })
                                         </div>
@@ -148,7 +157,9 @@
                 // alert("Form successful submitted!");
                 $("input[name=IsActive]").val(($('#ddlStatus').val() == '1' ? true : false));
                 $("input[name=TypeId]").val($('#ddlTypeId').val());
+                $("input[name=ParentId]").val($('#ddlTypeId').val());
                 $("input[name=MaterialId]").val($('#ddlMaterialId').val());
+                $("input[name=ParentId]").val($('#ddlItemId').val());
                 fnSubmitItemDetails();
             }
         });
@@ -185,15 +196,21 @@
     });
 
     function fnStatusChange() {
-        $("input[name=IsActive]").val(($('#ddlStatus').val()=='1' ? true: false));
+        $("input[name=IsActive]").val(($('#ddlStatus').val() == '1' ? true : false));
+
     }
     function fnValueChange(evntFrom) {
 
         $("input[name=TypeId]").val($('#ddlTypeId').val());
         $("input[name=MaterialId]").val($('#ddlMaterialId').val())
-
+        $("input[name=ParentId]").val($('#ddlItemId').val());
         if (evntFrom == "material") {
             fnBindDropdown($("input[name=MaterialId]").val());
+        }
+        else if (evntFrom == "type") {
+
+            fnBindItemsDropDown($("input[name=TypeId]").val());
+            $("input[name=ParentId]").val($('#ddlItemId').val());
         }
     }
     function fnSubmitItemDetails() {
@@ -201,6 +218,7 @@
         var ItemsData = {
             ItemId: $('#ItemId').val(),
             TypeId: $("input[name=TypeId]").val(),
+            ParentId: ($("input[name=ParentId]").val() != undefined && $("input[name=ParentId]").val() == '') ? 0 : $("input[name=ParentId]").val(),
             MaterialId: $("input[name=MaterialId]").val(),
             IsActive: $("input[name=IsActive]").val(),
             ItemName: $('#txtItemName').val(),

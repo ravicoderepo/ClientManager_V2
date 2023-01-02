@@ -60,14 +60,18 @@
                 Capacity
             </th>
 
+
+            <th>
+                Invoice No.
+            </th>
+            <th>
+                Invoice Amount
+            </th>
             <th>
                 @*@Html.DisplayNameFor(model => model.NoOfFollowUps)*@
                 No. Of Follow-Up
             </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.NoOfFollowUps)*@
-                Closing Date
-            </th>
+          
             <th>
                 @Html.DisplayNameFor(model => model.ClientEmail)
                 Customer Email
@@ -81,16 +85,11 @@
             Unit
         </th>*@
 
-            <th>
-                @*@Html.DisplayNameFor(model => model.AnticipatedClosingDate)*@
-                Anticipated Closing Date
-            </th>
-            <th>
-                Invoice No.
-            </th>
-            <th>
-                Invoice Amount
-            </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.AnticipatedClosingDate)*@
+            Follow-up Call Date
+        </th>
+
             <th>
                 Closing Date
             </th>
@@ -103,15 +102,15 @@
                 Created On
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
+                @*@Html.DisplayNameFor(model => model.CreatedBy)*@
                 Created By
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ModifiedOn)
+                @*@Html.DisplayNameFor(model => model.ModifiedOn)*@
                 Modified On
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ModifiedBy)
+                @*@Html.DisplayNameFor(model => model.ModifiedBy)*@
                 Modified By
             </th>
 
@@ -157,7 +156,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Capacity) @Html.DisplayFor(modelItem => item.Unit)
             </td>
+            <td>@item.InvoiceNo</td>
 
+            <td style="text-align:right">
+                @item.InvoiceAmount.Value.ToString("#,##,##0.00")
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NoOfFollowUps)
             </td>
@@ -178,12 +181,7 @@
                 @*@Html.DisplayFor(modelItem => item.AnticipatedClosingDate.Value.ToShortDateString())*@
                 @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.AnticipatedClosingDate))
             </td>
-            <td>@item.InvoiceNo</td>
-            
-            <td style="text-align:right">             
-                @item.InvoiceAmount.Value.ToString("#,##,##0.00")
-            </td>
-            <td> @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.DateOfClosing))</td>
+           
             <td>
                 @Html.Raw(item.Remarks)
             </td>

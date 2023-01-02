@@ -268,7 +268,7 @@ namespace ClientManager.Controllers
                     }
                     else
                     {
-                        saleDetails.DateOfClosing = DateTime.Now;
+                        //saleDetails.DateOfClosing = DateTime.Now;
                         db.SaleActivities.Add(saleDetails);
                         lastSavedId = db.SaveChanges();
 
@@ -319,6 +319,8 @@ namespace ClientManager.Controllers
         public ActionResult Edit(int? id)
         {
             var currentUser = (UserDetails)Session["UserDetails"];
+
+            Session["LastURL_" + currentUser.Id] = Request.UrlReferrer;
 
             if (id == null)
             {
@@ -388,7 +390,13 @@ namespace ClientManager.Controllers
                     {
                         if (lastSavedId > 0)
                         {
-                            jsonRes = new JsonReponse { message = "Sale Activity updated successfully!", status = "Success", redirectURL = "/SaleActivities/List" };
+                            string redirectUrl = "/SaleActivities/List";
+                            if (Session["LastURL_" + currentUser.Id] != null)
+                            {
+                                redirectUrl = Session["LastURL_" + currentUser.Id].ToString();
+                            }
+
+                            jsonRes = new JsonReponse { message = "Sale Activity updated successfully!", status = "Success", redirectURL = redirectUrl };
                         }
                         else
                         {
@@ -444,7 +452,10 @@ namespace ClientManager.Controllers
             saleActivity1.NoOfFollowUps = nullable;
             saleActivity.InvoiceAmount = new Decimal?(saleData.InvoiceAmount);
             saleActivity.InvoiceNo = saleData.InvoiceNo;
-            saleActivity.DateOfClosing = DateTime.ParseExact(saleData.RecentCallDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            if (!string.IsNullOrEmpty(saleData.DateOfClosing))
+            {
+                saleActivity.DateOfClosing = DateTime.ParseExact(saleData.DateOfClosing, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            }
             saleActivity.ModifiedOn = new DateTime?(DateTime.Now);
             saleActivity.ModifiedBy = new int?(currentUser.Id);
             return this.db.SaveChanges();

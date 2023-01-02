@@ -31,6 +31,11 @@ namespace ClientManager.Controllers
             ViewBag.MaterialId = new SelectList(db.Materials, "MaterialId", "MaterialName", 1).ToList<SelectListItem>();
             ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.MaterialId == 1), "TypeId", "TypeName", 1).ToList<SelectListItem>();
             ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", 1).ToList<SelectListItem>();
+
+            var list = new SelectList(db.Items.Where(wh => wh.TypeId == 0), "ItemId", "ItemName", 1).ToList<SelectListItem>();
+            list.Insert(0, new SelectListItem { Text = "Select", Value = "0", Selected = true });
+
+            ViewBag.ParentId = list;
             return View();
         }
 
@@ -67,7 +72,8 @@ namespace ClientManager.Controllers
                         Description = itemData.Description,
                         IsActive = itemData.IsActive,
                         CreatedBy = userData.Id,
-                        CreatedOn = DateTime.Now
+                        CreatedOn = DateTime.Now,
+                        ParentId = itemData.ParentId
                     });
                     num = this.db.SaveChanges();
                     if (num > 0)
@@ -116,6 +122,12 @@ namespace ClientManager.Controllers
             ViewBag.MaterialId = new SelectList(db.Materials, "MaterialId", "MaterialName", item.MaterialId).ToList<SelectListItem>();
             ViewBag.TypeId = new SelectList(db.Types.Where(wh => wh.MaterialId == item.MaterialId), "TypeId", "TypeName", item.TypeId).ToList<SelectListItem>();
             ViewBag.Status = new SelectList(Utility.DefaultList.GetStatusList(), "Value", "Text", item.IsActive ? 1 : 0).ToList<SelectListItem>();
+        
+            var list = new SelectList(db.Items.Where(wh => wh.TypeId == item.TypeId), "ItemId", "ItemName", item.ParentId).ToList<SelectListItem>();
+            list.Insert(0, new SelectListItem { Text = "Select", Value = "0", Selected = false });
+
+            ViewBag.ParentId = list;
+           // ViewBag.ParentId = new SelectList(db.Items.Where(wh => wh.TypeId == item.TypeId), "ItemId", "ItemName", item.ParentId).ToList<SelectListItem>();
             return View(item);
         }
 
@@ -156,6 +168,7 @@ namespace ClientManager.Controllers
                     entity.MaterialId = itemData.MaterialId;
                     entity.Description = itemData.Description;
                     entity.IsActive = itemData.IsActive;
+                    entity.ParentId = itemData.ParentId;
                     entity.MinimumAvailableQuantity = itemData.MinimumAvailableQuantity;
                     //str = "Item details Updated";
                     //}

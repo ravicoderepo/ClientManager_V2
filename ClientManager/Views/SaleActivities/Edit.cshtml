@@ -81,7 +81,6 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <input id="hdnClientPhoneNo" type="hidden" />
                                             <label for="status">Customer Name</label>
                                             @Html.EditorFor(model => model.ClientName, new { htmlAttributes = new { @class = "form-control", @id = "txtClientName", @name = "clientName" } })
                                         </div>
@@ -143,7 +142,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="anticipatgedClosingDate">Anticipated Closing Date</label>
+                                            <label for="anticipatgedClosingDate">Follow-up Call Date</label>
                                             <div class="input-group date" id="anticipatgedClosingDate" data-target-input="nearest">
                                                 @Html.EditorFor(model => model.AnticipatedClosingDate, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtAnticipatedClosingDate" } })
                                                 <div class="input-group-append" data-target="#txtAnticipatedClosingDate" data-toggle="datetimepicker">
@@ -211,7 +210,7 @@
                                             <button type="submit" class="btn btn-primary">Submit</button> <button type="reset" onclick="javascript:location.reload()" class="btn btn-danger">Cancel</button>
                                         }
                                     }
-                                    <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='../List'" id="btnBack">Back to List</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="javascript:history.go(-1)" id="btnBack">Back to List</button>
                                 </div>
                             </div>
                         </form>
@@ -512,7 +511,7 @@
         });
     });
     if ($("#txtClientPhoneNo").val() != undefined && $("#txtClientPhoneNo").val() != '') {
-        
+        $("#hdnClientPhoneNo").val($("#txtClientPhoneNo").val());
         $("#txtClientPhoneNo").val("**********");
         $("#txtClientPhoneNo").attr('readonly', true);
     }
