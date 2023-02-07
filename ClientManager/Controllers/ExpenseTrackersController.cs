@@ -131,7 +131,7 @@ namespace ClientManager.Controllers
                 }
             }
 
-            if(string.IsNullOrEmpty(searchFrom))
+            if(string.IsNullOrEmpty(searchFrom) && string.IsNullOrEmpty(status))
             {
                 if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "approver"))
                 {

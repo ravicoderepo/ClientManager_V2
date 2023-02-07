@@ -43,8 +43,8 @@ namespace ClientManager.Controllers
 
             ViewBag.SalesPerson = selesPersonList;
             selesPersonList.Insert(0, (new SelectListItem { Text = userDetails.FullName, Value = userDetails.Id.ToString() }));
-
-            List<GetMonthlySalesReport_Result> list = this.db.GetMonthlySalesReport("Super Admin", new int?(1), new int?(1)).ToList<GetMonthlySalesReport_Result>();
+            //TODO
+            List<GetMonthlySalesReport_Result> list = new List<GetMonthlySalesReport_Result>(); // this.db.GetMonthlySalesReport("Super Admin", new int?(1), new int?(1)).ToList<GetMonthlySalesReport_Result>();
             MonthlySalesReport monthlySalesReport = new MonthlySalesReport();
             monthlySalesReport.Mname = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.mname.Value)).ToArray<int>();
             monthlySalesReport.Calls = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.calls.Value)).ToArray<int>();
@@ -130,7 +130,8 @@ namespace ClientManager.Controllers
         {
             UserDetails currentUser = (UserDetails)this.Session["UserDetails"];
             var source = this.db.SaleActivities.Where(wh => wh.CreatedBy == currentUser.Id);
-            List<GetMonthlySalesReport_Result> list = this.db.GetMonthlySalesReport("Super Admin", new int?(1), new int?(1)).ToList<GetMonthlySalesReport_Result>();
+            //TODO
+            List<GetMonthlySalesReport_Result> list = new List<GetMonthlySalesReport_Result>(); // this.db.GetMonthlySalesReport("Super Admin", new int?(1), new int?(1)).ToList<GetMonthlySalesReport_Result>();
             MonthlySalesReport monthlySalesReport = new MonthlySalesReport();
             monthlySalesReport.Mname = list.Select(sel => sel.mname.Value).ToArray();
             monthlySalesReport.Calls = list.Select(sel => sel.calls.Value).ToArray();
@@ -195,7 +196,8 @@ namespace ClientManager.Controllers
             model.TotalActiveCalls = source.Where(wh => wh.Status != 4 && wh.Status != 6).Count();
 
             //Report
-            List<GetMonthlySalesReport_Result> list = this.db.GetMonthlySalesReport("Super Admin", new int?(1), new int?(1)).ToList<GetMonthlySalesReport_Result>();
+            //TODO
+            List<GetMonthlySalesReport_Result> list = new List<GetMonthlySalesReport_Result>(); // this.db.GetMonthlySalesReport("Super Admin", new int?(1), new int?(1)).ToList<GetMonthlySalesReport_Result>();
             MonthlySalesReport monthlySalesReport = new MonthlySalesReport();
             monthlySalesReport.Mname = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.mname.Value)).ToArray<int>();
             monthlySalesReport.Calls = list.Select<GetMonthlySalesReport_Result, int>((Func<GetMonthlySalesReport_Result, int>)(sel => sel.calls.Value)).ToArray<int>();
@@ -255,8 +257,8 @@ namespace ClientManager.Controllers
             //             };
 
             //var finalResult = new { target = result.Select(sel=> sel.SaleTarget).ToList(), achived = result.Select(sel => sel.Amount).ToList() };
-
-            List<GetEmployeePerformanceReport_Result> EmpPerformanceReport = this.db.GetEmployeePerformanceReport(userId).ToList<GetEmployeePerformanceReport_Result>();
+            //TODO
+            List<GetEmployeePerformanceReport_Result> EmpPerformanceReport = new List<GetEmployeePerformanceReport_Result>(); // this.db.GetEmployeePerformanceReport(userId).ToList<GetEmployeePerformanceReport_Result>();
 
             return (ActionResult)this.Json((object)EmpPerformanceReport, JsonRequestBehavior.AllowGet);
         }
