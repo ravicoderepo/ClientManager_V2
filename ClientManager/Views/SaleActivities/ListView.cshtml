@@ -26,6 +26,7 @@
     body {
         font-size: 13px !important;
     }
+
     .dataTables_filter {
         display: none !important;
     }
@@ -71,24 +72,24 @@
                 @*@Html.DisplayNameFor(model => model.NoOfFollowUps)*@
                 No. Of Follow-Up
             </th>
-          
+
             <th>
                 @Html.DisplayNameFor(model => model.ClientEmail)
                 Customer Email
             </th>
             @*<th>
-            @Html.DisplayNameFor(model => model.ClientPhoneNo)
-            Customer Phone No.
-        </th>*@
+                    @Html.DisplayNameFor(model => model.ClientPhoneNo)
+                    Customer Phone No.
+                </th>*@
             @*<th>
-            @Html.DisplayNameFor(model => model.Unit)
-            Unit
-        </th>*@
+                    @Html.DisplayNameFor(model => model.Unit)
+                    Unit
+                </th>*@
 
-        <th>
-            @*@Html.DisplayNameFor(model => model.AnticipatedClosingDate)*@
-            Follow-up Call Date
-        </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.AnticipatedClosingDate)*@
+                Follow-up Call Date
+            </th>
 
             <th>
                 Closing Date
@@ -120,86 +121,88 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @if (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName)) && item.Status != 6)
-                {
-                    <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/SaleActivities/Edit/@item.Id'"><i class="far fa-edit"></i></button>
-                }
-                else
-                {
-                    <button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/SaleActivities/Edit/@item.Id'"><i class="fas fa-eye"></i></button>
-                }
+            <tr>
+                <td>
+                    @if (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName)) && item.Status != 6)
+                    {
+                        <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/SaleActivities/Edit/@item.Id'"><i class="far fa-edit"></i></button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/SaleActivities/Edit/@item.Id'"><i class="fas fa-eye"></i></button>
+                    }
 
-                @if (item.CreatedBy == currentUser.Id && item.Status != 6)
-                {
-                    <button type="button" class="btn btn-danger btn-xs" title="Delete" onclick="fnSubmitSaleDetails(@item.Id)"><i class="far fa-trash-alt"></i></button>
-                }
-            </td>
-            <td>
-                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.SaleDate))
-            </td>
-            <td>
-                @*@Html.DisplayFor(modelItem => item.RecentCallDate.ToShortDateString())*@
-                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.RecentCallDate))
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SalesStatu.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ClientName)
-            </td>
+                    @if (item.CreatedBy == currentUser.Id && item.Status != 6)
+                    {
+                        <button type="button" class="btn btn-danger btn-xs" title="Delete" onclick="fnSubmitSaleDetails(@item.Id)"><i class="far fa-trash-alt"></i></button>
+                    }
+                </td>
+                <td>
+                    @*@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.SaleDate))*@
+                    @item.SaleDate
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.RecentCallDate.ToShortDateString())*@
+                    @*@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.RecentCallDate))*@
+                    @item.RecentCallDate
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SalesStatu.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClientName)
+                </td>
 
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Capacity) @Html.DisplayFor(modelItem => item.Unit)
-            </td>
-            <td>@item.InvoiceNo</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Capacity) @Html.DisplayFor(modelItem => item.Unit)
+                </td>
+                <td>@item.InvoiceNo</td>
 
-            <td style="text-align:right">
-                @item.InvoiceAmount.Value.ToString("#,##,##0.00")
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NoOfFollowUps)
-            </td>
-            <td>
-                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.DateOfClosing))
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ClientEmail)
-            </td>
-            @*<td>
+                <td style="text-align:right">
+                    @item.InvoiceAmount.Value.ToString("#,##,##0.00")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoOfFollowUps)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClientEmail)
+                </td>
+                @*<td>
             @Html.DisplayFor(modelItem => item.ClientPhoneNo)
         </td>*@
-            @*<td>
+                @*<td>
             @Html.DisplayFor(modelItem => item.Unit)
         </td>*@
 
-            <td>
-                @*@Html.DisplayFor(modelItem => item.AnticipatedClosingDate.Value.ToShortDateString())*@
-                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.AnticipatedClosingDate))
-            </td>
-           
-            <td>
-                @Html.Raw(item.Remarks)
-            </td>
-            <td>
-                @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
-                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User2.FullName)
-            </td>
-            <td>
-                @*@Html.DisplayFor(modelItem => item.ModifiedOn.Value.ToShortDateString())*@
-                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User2.FullName)
-            </td>
-        </tr>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.AnticipatedClosingDate.Value.ToShortDateString())*@
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.AnticipatedClosingDate))
+                </td>
+                <td>
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.DateOfClosing))
+                </td>
+                <td>
+                    @Html.Raw(item.Remarks)
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User2.FullName)
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.ModifiedOn.Value.ToShortDateString())*@
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User2.FullName)
+                </td>
+            </tr>
         }
     </tbody>
     @*<tfoot>
@@ -212,29 +215,48 @@
             </tr>
         </tfoot>*@
 </table>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+<script src="http://cdn.datatables.net/plug-ins/1.10.25/sorting/datetime-moment.js"></script>
 <script>
     $(function () {
         $("#example1").DataTable({
             "responsive": true, "lengthChange": false, "autoWidth": false, "lengthChange": true,
             "order": [[2, 'desc']],
+            "columnDefs": [{ "type": "date", "targets": [1,2] }],
             "buttons": ["excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
     });
-    jQuery.extend(jQuery.fn.dataTableExt.oSort, {
-        "date-uk-pre": function (a) {
-            var ukDatea = a.split('/');
-            return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
-        },
+    $(document).ready(function () {
+        $.fn.dataTable.moment('DD/MM/YYYY');
 
-        "date-uk-asc": function (a, b) {
-            return ((a < b) ? -1 : ((a > b) ? 1 : 0));
-        },
-
-        "date-uk-desc": function (a, b) {
-            return ((a < b) ? 1 : ((a > b) ? -1 : 0));
-        }
+        $('#example1').DataTable();
     });
+    //$(document).ready(function () {
+    //    $.fn.dataTable.moment('HH:mm MMM D, YY');
+    //    $.fn.dataTable.moment('dd,MMM,YYYY');
+
+    //    $('#example1').DataTable();
+    //});
+    //$.fn.dataTable.ext.type.detect.unshift(function (d) {
+    //    return moment(d, format, locale, true).isValid() ?
+    //        'moment-' + format :
+    //        null;
+    //});
+    //jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+    //    "date-uk-pre": function (a) {
+    //        var ukDatea = a.split('/');
+    //        return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+    //    },
+
+    //    "date-uk-asc": function (a, b) {
+    //        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+    //    },
+
+    //    "date-uk-desc": function (a, b) {
+    //        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+    //    }
+    //});
 
 
     function fnSubmitSaleDetails(id) {

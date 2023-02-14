@@ -358,18 +358,13 @@ namespace Utility
             });
             items.Insert(1, new SelectListItem()
             {
-                Text = "2022",
-                Value = "2022"
+                Text = "2023",
+                Value = "2023"
             });
             items.Insert(2, new SelectListItem()
             {
-                Text = "2021",
-                Value = "2021"
-            });
-            items.Insert(3, new SelectListItem()
-            {
-                Text = "2020",
-                Value = "2020"
+                Text = "2022",
+                Value = "2022"
             });
 
             return items;

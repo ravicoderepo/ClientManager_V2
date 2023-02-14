@@ -202,7 +202,7 @@
                                 </div>
                                 <!-- /.card-body -->
                                 <div class="card-footer">
-
+                                    <button type="button" class="btn btn-primary" onclick="javascript:location.href='@Url.Action("Create", "SaleActivities")'"><i class="fa fa-plus"></i>New</button>
                                     @if (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName)))
                                     {
                                         if (Model.Status != 6)
@@ -210,7 +210,8 @@
                                             <button type="submit" class="btn btn-primary">Submit</button> <button type="reset" onclick="javascript:location.reload()" class="btn btn-danger">Cancel</button>
                                         }
                                     }
-                                    <button type="button" class="btn btn-outline-secondary" onclick="javascript:history.go(-1)" id="btnBack">Back to List</button>
+
+                                    <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='@Url.Action("List", "SaleActivities")'" id="btnBack">Back to List</button>
                                 </div>
                             </div>
                         </form>

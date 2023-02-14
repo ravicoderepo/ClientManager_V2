@@ -156,7 +156,7 @@
                                         <div class="form-group">
                                             <label for="DateOfClosing">Closing Date</label>
                                             <div class="input-group date" id="txtClosingDate" data-target-input="nearest">
-                                                @Html.EditorFor(model => model.DateOfClosing, new { htmlAttributes = new { @class = "form-control datetimepicker-input" } })
+                                                @Html.EditorFor(model => model.DateOfClosing, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @onChange = "fnClosingDateChange()", @onBlur = "fnClosingDateChange()" } })
                                                 <div class="input-group-append" data-target="#txtClosingDate" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                 </div>
@@ -178,6 +178,7 @@
                             </div>
                             <!-- /.card-body -->
                             <div class="card-footer">
+                                <button type="button" class="btn btn-primary" onclick="javascript:location.href='@Url.Action("Create", "SaleActivities")'"><i class="fa fa-plus"></i>New</button>
                                 <button type="submit" class="btn btn-primary">Submit</button> <button type="button" onclick="" class="btn btn-danger">Cancel</button>
                                 <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='List'">Back to List</button>
                             </div>
@@ -229,7 +230,7 @@
         $('#txtAnticipatedClosingDate').datetimepicker({
             format: 'DD/MM/YYYY'
         });
-    $('#txtClosingDate').datetimepicker({
+    $('#DateOfClosing').datetimepicker({
         format: 'DD/MM/YYYY'
     });
 
@@ -296,12 +297,16 @@
         else {
             $('#pnlInvoice').hide();
         }
+
+        
     }
 
     function fnSaleDateChange() {
         $('#txtRecentCallDate').val($('#txtSaleDate').val());
     }
-
+    function fnClosingDateChange() {
+       // $('#DateOfClosing').val($('#DateOfClosing').val());
+    }
     function fnSubmitSaleDetails() {
 
         var email = ($('#hdnClientEmail').val() != '' && $('#hdnClientEmail').val() != undefined) ? $('#hdnClientEmail').val() : $("#txtClientEmail").val();
@@ -322,7 +327,7 @@
             NoOfFollowUps: $('#txtNoOfFollowUps').val(),
             InvoiceNo: $('#txtInvoiceNo').val(),
             InvoiceAmount: $('#txtInvoiceAmount').val(),
-            DateOfClosing: $('#txtClosingDate').val(),
+            DateOfClosing: $('#DateOfClosing').val(),
             Remarks: $('#txtRemarks').val()
         };
 

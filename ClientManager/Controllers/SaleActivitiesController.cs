@@ -257,12 +257,13 @@ namespace ClientManager.Controllers
                     SalesRepresentativeId = saleData.SalesRepresentativeId,
                     NoOfFollowUps = saleData.NoOfFollowUps,
                     InvoiceAmount = saleData.InvoiceAmount,
-                    InvoiceNo = saleData.InvoiceNo
+                    InvoiceNo = saleData.InvoiceNo,
+                    DateOfClosing = (!string.IsNullOrEmpty(saleData.DateOfClosing)) ? DateTime.ParseExact(saleData.DateOfClosing, "dd/MM/yyyy", CultureInfo.InvariantCulture) : new Nullable<DateTime>(),
                 };
 
                 if (saleData.Status == 6)
                 {
-                    if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName) || saleData.RecentCallDate == null || string.IsNullOrEmpty(saleData.Remarks) || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit) || string.IsNullOrEmpty(saleData.InvoiceNo) || saleData.InvoiceAmount < 0)
+                    if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName) || saleData.RecentCallDate == null || string.IsNullOrEmpty(saleData.Remarks) || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit) || string.IsNullOrEmpty(saleData.InvoiceNo) || saleData.InvoiceAmount < 0 || string.IsNullOrEmpty(saleData.DateOfClosing) || string.IsNullOrEmpty(saleData.AnticipatedClosingDate))
                     {
                         jsonRes = new JsonReponse { message = "Enter all required fields.", status = "Failed", redirectURL = "" };
                     }
@@ -282,7 +283,7 @@ namespace ClientManager.Controllers
                         }
                     }
                 }
-                else if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName) || saleData.RecentCallDate == null || string.IsNullOrEmpty(saleData.Remarks) || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit))
+                else if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName) || saleData.RecentCallDate == null || string.IsNullOrEmpty(saleData.Remarks) || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit)|| string.IsNullOrEmpty(saleData.AnticipatedClosingDate))
                 {
                     jsonRes = new JsonReponse { message = "Enter all required fields.", status = "Failed", redirectURL = "" };
                 }
@@ -365,7 +366,7 @@ namespace ClientManager.Controllers
                 {
                     if (saleData.Status == 6)
                     {
-                        if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName) || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit) || string.IsNullOrEmpty(saleData.InvoiceNo) || saleData.InvoiceAmount < 0 || string.IsNullOrEmpty(saleData.Remarks) || string.IsNullOrEmpty(saleData.DateOfClosing))
+                        if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName) || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit) || string.IsNullOrEmpty(saleData.InvoiceNo) || saleData.InvoiceAmount < 0 || string.IsNullOrEmpty(saleData.Remarks) || string.IsNullOrEmpty(saleData.DateOfClosing)||string.IsNullOrEmpty(saleData.AnticipatedClosingDate))
                         {
                             //saleData.DateOfClosing = DateTime.Now.ToString("dd/MM/yyyy"); //DateTime.ParseExact(DateTime.Now.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString();
                             jsonRes = new JsonReponse { message = "Enter all required fields.", status = "Failed", redirectURL = "" };
@@ -376,7 +377,7 @@ namespace ClientManager.Controllers
                             lastSavedId = UpdateData(saleData, saleActivity, currentUser);
                         }
                     }
-                    else if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName) || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit) || string.IsNullOrEmpty(saleData.Remarks))
+                    else if (saleData.SaleDate == null || saleData.SalesRepresentativeId <= 0 || saleData.Status <= 0 || string.IsNullOrEmpty(saleData.ClientPhoneNo) || string.IsNullOrEmpty(saleData.ClientName) || string.IsNullOrEmpty(saleData.ProductName) || string.IsNullOrEmpty(saleData.Capacity) || string.IsNullOrEmpty(saleData.Unit) || string.IsNullOrEmpty(saleData.Remarks) || string.IsNullOrEmpty(saleData.AnticipatedClosingDate))
                     {
                         jsonRes = new JsonReponse { message = "Enter all required fields.", status = "Failed", redirectURL = "" };
                         isMandatoryError = true;
