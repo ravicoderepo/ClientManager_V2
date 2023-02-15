@@ -11,6 +11,7 @@ using System.Web.Services.Description;
 using ClientManager.Infrastructure;
 using ClientManager.Models;
 using DBOperation;
+using Microsoft.Ajax.Utilities;
 
 namespace ClientManager.Controllers
 {
@@ -541,9 +542,26 @@ namespace ClientManager.Controllers
            return Json(namecodes1, JsonRequestBehavior.AllowGet);
         }
 
+        [CustomAuthorize("Super User", "Super Admin", "Sales Manager", "Sales Engineer")]
+        public ActionResult GetNotifications(int userId)
+        {
+            var currentUser = (UserDetails)Session["UserDetails"];
+            var saleNotifications = db.SaleActivities.AsNoTracking().AsEnumerable().Where(wh => Convert.ToDateTime(wh.AnticipatedClosingDate).Date.ToShortDateString() == DateTime.Now.Date.ToShortDateString() && wh.CreatedBy == currentUser.Id).Select(sel => new SaleNotification
+            {
+                Id = sel.Id,
+                //Status = sel.SalesStatu.Description,
+                ClientName = sel.ClientName,
+                ProductName = sel.ProductName
+            }).ToList();
+
+            return PartialView(saleNotifications);
+
+        }
+
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult GetItemDetails(int id)
         {
+
             var codeList = db.SaleActivities.Where(i => i.Id == id).ToList();
 
             var viewmodel = codeList.Select(x => new
@@ -563,4 +581,6 @@ namespace ClientManager.Controllers
             base.Dispose(disposing);
         }
     }
+
+
 }

@@ -117,11 +117,11 @@
                             window.location.href = data.redirectURL;
                         }
                         else {
-                            alert("Error occured!!  " + data.message)
+                            alert(data.message)
                         }
                     },
                     error: function () {
-                        alert("Error occured!!  " + data.message)
+                        alert(data.message)
                     }
                 });
             });

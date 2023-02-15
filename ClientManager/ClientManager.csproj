@@ -199,6 +199,7 @@
     <Compile Include="Controllers\ItemsController.cs" />
     <Compile Include="Controllers\CompaniesController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\SharedController.cs" />
     <Compile Include="Controllers\StocksController.cs" />
     <Compile Include="Controllers\TypesController.cs" />
     <Compile Include="Controllers\MeterialsController.cs" />
@@ -227,6 +228,7 @@
     <Compile Include="Models\CompanyData.cs" />
     <Compile Include="Models\ExpenseTrackerReportData.cs" />
     <Compile Include="Models\PettyCashReportData.cs" />
+    <Compile Include="Models\SaleNotification.cs" />
     <Compile Include="Models\TypesData.cs" />
     <Compile Include="Models\MaterialData.cs" />
     <Compile Include="Models\Dashboard.cs" />
@@ -2908,6 +2910,8 @@
     <Content Include="Views\Inward\GetStockDetails.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Reports\ExpenseTrackerReport.cshtml" />
+    <Content Include="Views\SaleActivities\GetNotifications.cshtml" />
+    <Content Include="Views\Shared\GetNotifications.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

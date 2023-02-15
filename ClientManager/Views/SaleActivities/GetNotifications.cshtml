@@ -1,0 +1,23 @@
+﻿@model IEnumerable<ClientManager.Models.SaleNotification>
+   
+   
+<li class="nav-item dropdown">
+    <a class="nav-link" data-toggle="dropdown" href="#">
+        <i class="far fa-bell"></i>
+        <span class="badge badge-warning navbar-badge">@Model.Count()</span>
+    </a>
+    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+        <span class="dropdown-item dropdown-header">@Model.Count() Notifications</span>
+        <div class="dropdown-divider"></div>
+
+        @foreach (var item in Model)
+        {
+            <a href="~/SaleActivities/Edit/@item.Id" class="dropdown-item">
+                <i class="fas fa-tasks mr-2"></i> @item.ClientName | Today
+                @*<span class="float-right text-muted text-sm">Now</span>*@
+            </a>
+            <div class="dropdown-divider"></div>
+        }
+        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+    </div>
+</li>

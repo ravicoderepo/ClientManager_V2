@@ -121,7 +121,7 @@ namespace ClientManager.Controllers
                         {
                             data = new JsonReponse()
                             {
-                                message = "Invalid Credential",
+                                message = "Invalid username/password.",
                                 status = "Failed",
                                 redirectURL = ""
                             };

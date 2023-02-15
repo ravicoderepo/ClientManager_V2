@@ -139,12 +139,12 @@
                 </td>
                 <td>
                     @*@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.SaleDate))*@
-                    @item.SaleDate
+                    @Convert.ToDateTime(item.SaleDate)
                 </td>
                 <td>
                     @*@Html.DisplayFor(modelItem => item.RecentCallDate.ToShortDateString())*@
                     @*@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.RecentCallDate))*@
-                    @item.RecentCallDate
+                    @Convert.ToDateTime(item.RecentCallDate)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.SalesStatu.Status)
