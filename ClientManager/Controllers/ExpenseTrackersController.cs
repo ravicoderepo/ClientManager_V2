@@ -22,22 +22,8 @@ namespace ClientManager.Controllers
         public ActionResult List(string dashboardFilter = "")
         {
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
-            var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
-            //var TotalPettyCashAmount = db.PettyCashes.Where(wh => wh.AmountRecivedDate.Month == DateTime.Now.Month && wh.AmountRecivedDate.Year == DateTime.Now.Year).ToList();
-            //var TotalApprovedExpenceAmount = db.ExpenseTrackers.Where(wh => wh.ExpenseDate.Month == DateTime.Now.Month && wh.ExpenseDate.Year == DateTime.Now.Year && wh.Status == "Verified").ToList();
-            //var TotalUnApprovedExpenceAmount = db.ExpenseTrackers.Where(wh => wh.ExpenseDate.Month == DateTime.Now.Month && wh.ExpenseDate.Year == DateTime.Now.Year && wh.Status == "Pending").ToList();
-            //var TotalUnVerifiedExpenceAmount = db.ExpenseTrackers.Where(wh => wh.ExpenseDate.Month == DateTime.Now.Month && wh.ExpenseDate.Year == DateTime.Now.Year && wh.Status == "Approved").ToList();
-            //decimal? TotalPettyCash = (TotalPettyCashAmount != null && TotalPettyCashAmount.Count > 0) ? TotalPettyCashAmount.Sum(S=> S.AmountReceived) : 0;
-            //decimal? TotalApprovedExpence = (TotalApprovedExpenceAmount != null && TotalApprovedExpenceAmount.Count > 0) ? TotalApprovedExpenceAmount.Sum(s=> s.ExpenseAmount) : 0;
-            //decimal? TotalUnApprovedExpence = (TotalUnApprovedExpenceAmount!=null && TotalUnApprovedExpenceAmount.Count > 0) ? TotalUnApprovedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
-            //decimal? TotalUnVerifiedExpence = (TotalUnVerifiedExpenceAmount != null && TotalUnVerifiedExpenceAmount.Count > 0) ? TotalUnVerifiedExpenceAmount.Sum(s => s.ExpenseAmount) : 0;
-
-            //ViewBag.TotalPettyCash = TotalPettyCash;
-            //ViewBag.TotalApprovedExpence = TotalApprovedExpence;
-            //ViewBag.TotalUnApprovedExpence = TotalUnApprovedExpence;
-            //ViewBag.TotalUnVerifiedExpence = TotalUnVerifiedExpence;
-            //ViewBag.AvailablePettyCash = (TotalPettyCash - TotalApprovedExpence);
-            //ViewBag.CurrentMonthAndYear = Utility.ConstantData.ToMonthName(DateTime.Now) + "/" + DateTime.Now.Year;
+            //var expenceTracker = db.ExpenseTrackers.Include(p => p.User).Include(p => p.User1);
+            
             List<SelectListItem> statusList = new List<SelectListItem>();
             string selectedStatus = "";
             if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "approver"))
@@ -47,11 +33,6 @@ namespace ClientManager.Controllers
 
             statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", selectedStatus).ToList();
 
-            //if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "store admin"))
-            //{
-            //    statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList().Where(w=> w.Text=="Pending").ToList(), "Value", "Text", "").ToList();
-            //}
-            //statusList.Insert(0, (new SelectListItem { Text = "", Value = "" }));
             ViewBag.Status = statusList;
             ViewBag.Years = new SelectList(Utility.DefaultList.GetYearList(), "Value", "Text", "").ToList();
             ViewBag.Months = new SelectList(Utility.DefaultList.GetMonthList(), "Value", "Text", "").ToList();
@@ -60,16 +41,17 @@ namespace ClientManager.Controllers
             ViewBag.ExpenseCategory = expenseCategory;
             ViewBag.DashboardFilter = string.IsNullOrEmpty(dashboardFilter) ? "NoFilter" : dashboardFilter;
 
-            if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "approver"))
-            {
-                expenceTracker = expenceTracker.Where(wh => wh.Status == "Pending");
-            }
-            else if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "verifier"))
-            {
-                expenceTracker = expenceTracker.Where(wh => wh.Status == "Approved");
-            }
+            //if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "approver"))
+            //{
+            //    expenceTracker = expenceTracker.Where(wh => wh.Status == "Pending");
+            //}
+            //else if (userData.UserRoles.Any(a => a.RoleName.ToLower() == "verifier"))
+            //{
+            //    expenceTracker = expenceTracker.Where(wh => wh.Status == "Approved");
+            //}
 
-            return View(expenceTracker.ToList().OrderByDescending(ord => ord.CreatedOn));
+            //return View(expenceTracker.ToList().OrderByDescending(ord => ord.CreatedOn));
+            return View(new List<ExpenseTracker>());
         }
         // [CustomAuthorize(new string[] { "Super Admin", "Super User", "Store Admin", "Accounts Manager" })]
         public ActionResult ListView(string expenseDateFrom = "", string expenseDateTo = "", string status = "", int month = 0, int year = 0, int expenseCat = 0, string searchFrom="")
@@ -188,14 +170,6 @@ namespace ClientManager.Controllers
             ViewBag.AvailablePettyCash = (TotalPettyCash.Value - TotalExpenceCash.Value).ToString("#,##,##0.00");
             ViewBag.CurrentMonthAndYear = month + "/" + year;
 
-            //List<SelectListItem> statusList = new SelectList(Utility.DefaultList.GetPaymentStatusList(), "Value", "Text", "").ToList();
-            //statusList.Insert(0, (new SelectListItem { Text = "", Value = "" }));
-            //ViewBag.Status = statusList;
-            //ViewBag.Years = new SelectList(Utility.DefaultList.GetYearList(), "Value", "Text", "").ToList();
-            //ViewBag.Months = new SelectList(Utility.DefaultList.GetMonthList(), "Value", "Text", "").ToList();
-            //List<SelectListItem> expenseCategory = new SelectList(db.ExpenceCategories, "Id", "CategoryName", "").ToList();
-            //expenseCategory.Insert(0, (new SelectListItem { Text = "", Value = "0" }));
-            //ViewBag.ExpenseCategory = expenseCategory;
             var data = expenceTracker.ToList().OrderByDescending(ord => ord.ExpenseDate).ToList();
             return PartialView(data);
         }

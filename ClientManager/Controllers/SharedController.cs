@@ -12,11 +12,11 @@ namespace ClientManager.Controllers
     {
         private ClientManagerEntities db = new ClientManagerEntities();
         // GET: Shared
-        [CustomAuthorize("Super User", "Super Admin", "Sales Manager", "Sales Engineer")]
+        [CustomAuthorize("Super User", "Super Admin", "Sales Manager", "Sales Engineer", "Store Admin","Accounts Manager")]
         public ActionResult GetNotifications(int userId)
         {
             var currentUser = (UserDetails)Session["UserDetails"];
-            var saleNotifications = db.SaleActivities.AsNoTracking().AsEnumerable().Where(wh => Convert.ToDateTime(wh.AnticipatedClosingDate).Date.ToShortDateString() == DateTime.Now.Date.ToShortDateString() && wh.CreatedBy == currentUser.Id).Select(sel => new SaleNotification
+            var saleNotifications = db.SaleActivities.AsNoTracking().AsEnumerable().Where(wh => Convert.ToDateTime(wh.AnticipatedClosingDate).ToUniversalTime().Date.ToShortDateString() == DateTime.UtcNow.Date.ToShortDateString() && wh.CreatedBy == currentUser.Id).Select(sel => new SaleNotification
             {
                 Id = sel.Id,
                 //Status = sel.SalesStatu.Description,

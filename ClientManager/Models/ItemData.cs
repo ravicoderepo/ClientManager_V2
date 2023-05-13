@@ -20,6 +20,7 @@ namespace ClientManager.Models
 
     public class ItemSummaryData
     {
+        public int StockId { get; set; }
         public int ItemId { get; set; }
         public string ItemName { get; set; }
         public string MaterialName { get; set; }

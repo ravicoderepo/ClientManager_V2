@@ -302,6 +302,7 @@ namespace ClientManager.Controllers
                           group stock by stock.ItemId into itemGroup
                           select new ItemSummaryData
                           {
+                              StockId = itemGroup.FirstOrDefault().StockId,
                               ItemId = itemGroup.FirstOrDefault().ItemId,
                               ItemName = itemGroup.FirstOrDefault().Item.ItemName,
                               MaterialName = itemGroup.FirstOrDefault().Material.MaterialName,
@@ -320,7 +321,7 @@ namespace ClientManager.Controllers
         {
             var inwardList = (from iTrans in db.VRM_InwardStockTransaction
                               join iStock in db.VRM_InwardStock on iTrans.StockId equals iStock.StockId
-                              where iStock.ItemId == Id
+                              where iStock.StockId == Id
                               orderby iTrans.ReceivedDate descending
                               select new InwardData
                               {
