@@ -84,7 +84,7 @@ namespace ClientManager.Controllers
                 if (!string.IsNullOrEmpty(callDateTo))
                 {
                     dtCallDateTo = DateTime.Parse(callDateTo);
-                    saleActivities = saleActivities.Where(wh => wh.SaleDate <= dtCallDateFrom);
+                    saleActivities = saleActivities.Where(wh => wh.SaleDate <= dtCallDateTo);
                 }
             }
 
