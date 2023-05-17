@@ -22,8 +22,11 @@ namespace ClientManager.Controllers
 
         [CustomAuthorize(new string[] { "Super User", "Super Admin", "Sales Manager", "Sales Engineer" })]
         // GET: SaleActivities
-        public ActionResult ListView(int status = 0, int month = 0, int year = 0, string productName = "", string customerName = "", int salesPerson = 0, string searchFrom="")
+        public ActionResult ListView(int status = 0, int month = 0, int year = 0, string productName = "", string customerName = "", string callDateFrom="", string callDateTo = "", int salesPerson = 0, string searchFrom="")
         {
+            DateTime dtCallDateFrom = new DateTime();
+            DateTime dtCallDateTo = new DateTime();
+
             month = (month > 0) ? month : 0;
             year = (year > 0) ? year : 0;
 
@@ -63,6 +66,28 @@ namespace ClientManager.Controllers
                 string[] roleNames = { "Sales Engineer" };
                 selesPersonList = new SelectList(db.UserRoles.Where(rl => roleNames.Contains(rl.Role.RoleName) && rl.UserId == currentUser.Id).Select(sel => new { Id = sel.UserId, FullName = sel.User1.FullName }), "Id", "FullName").ToList();
             }
+
+            if (!string.IsNullOrEmpty(callDateTo) && !string.IsNullOrEmpty(callDateFrom))
+            {
+                dtCallDateFrom = DateTime.Parse(callDateFrom);
+                dtCallDateTo = DateTime.Parse(callDateTo);
+                saleActivities = saleActivities.Where(wh => wh.SaleDate >= dtCallDateFrom && wh.SaleDate <= dtCallDateTo);
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(callDateFrom))
+                {
+                    dtCallDateFrom = DateTime.Parse(callDateFrom);
+                    saleActivities = saleActivities.Where(wh => wh.SaleDate >= dtCallDateFrom);
+                }
+
+                if (!string.IsNullOrEmpty(callDateTo))
+                {
+                    dtCallDateTo = DateTime.Parse(callDateTo);
+                    saleActivities = saleActivities.Where(wh => wh.SaleDate <= dtCallDateFrom);
+                }
+            }
+
 
             if (!string.IsNullOrEmpty(productName))
             {

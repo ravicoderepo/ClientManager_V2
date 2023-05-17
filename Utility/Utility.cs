@@ -450,7 +450,6 @@ namespace Utility
             }
             catch (Exception ex)
             {
-
                 return false;
             }
         }

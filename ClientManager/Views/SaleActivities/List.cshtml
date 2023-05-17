@@ -63,62 +63,63 @@
                             <div id="pnlAdvSearch">
                                 <div class="card-body" style="background-color:whitesmoke">
                                     <div class="row">
-                                        @*<div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="callDateFrom">Call Date From</label>
-                                                    <div class="input-group date" data-target-input="nearest">
-                                                        <input type="text" class="form-control datetimepicker-input" data-target="#txtCallDateFrom" name="callDateFrom" id="txtCallDateFrom">
-                                                        <div class="input-group-append" data-target="#txtCallDateFrom" data-toggle="datetimepicker">
-                                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="callDateFrom">Call Date From</label>
+                                                <div class="input-group date" data-target-input="nearest">
+                                                    <input type="text" class="form-control datetimepicker-input" data-target="#txtCallDateFrom" name="callDateFrom" id="txtCallDateFrom">
+                                                    <div class="input-group-append" data-target="#txtCallDateFrom" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="callDateTo">Call Date To</label>
-                                                    <div class="input-group date" data-target-input="nearest">
-                                                        <input type="text" class="form-control datetimepicker-input" data-target="#txtCallDateTo" name="callDateTo" id="txtCallDateTo">
-                                                        <div class="input-group-append" data-target="#txtCallDateTo" data-toggle="datetimepicker">
-                                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                        </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="callDateTo">Call Date To</label>
+                                                <div class="input-group date" data-target-input="nearest">
+                                                    <input type="text" class="form-control datetimepicker-input" data-target="#txtCallDateTo" name="callDateTo" id="txtCallDateTo">
+                                                    <div class="input-group-append" data-target="#txtCallDateTo" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                     </div>
                                                 </div>
-                                            </div>*@
-                                        <div class="col-md-4">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="Month">Month</label>
                                                 @Html.DropDownList("Months", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlMonths" })
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="Year">Year</label>
                                                 @Html.DropDownList("Years", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlYears" })
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="Status">Status</label>
                                                 <input type="hidden" name="hdnStatus" />
                                                 @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlStatus", @onChange = "fnStatusChange()" })
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="CustomerName">Customer Name</label>
                                                 <input type="text" class="form-control" id="txtCustomerName" name="CustomerName">
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="ProductName">Product Name</label>
                                                 <input type="text" class="form-control" id="txtProductName" name="ProductName">
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="SalesPerson">Sales Person</label>
                                                 <input type="hidden" name="hdnSalesPerson" />
@@ -161,7 +162,7 @@
             selPerson = $("input[name=hdnSalesPerson]").val();
         var actionUrl = "";
         if (searchFrom == "" && searchFrom != undefined) {
-            actionUrl = "/SaleActivities/ListView?&status=" + $("input[name=hdnStatus]").val() + "&year=" + $('#ddlYears').val() + "&month=" + $('#ddlMonths').val() + "&productName=" + $('#txtProductName').val() + "&customerName=" + $('#txtCustomerName').val() + "&salesPerson=" + selPerson + "&searchFrom=advSearch";
+            actionUrl = "/SaleActivities/ListView?&status=" + $("input[name=hdnStatus]").val() + "&year=" + $('#ddlYears').val() + "&month=" + $('#ddlMonths').val() + "&productName=" + $('#txtProductName').val() + "&customerName=" + $('#txtCustomerName').val() + "&callDateFrom=" + $('#txtCallDateFrom').val() + "&callDateTo=" + $('#txtCallDateTo').val() + "&salesPerson=" + selPerson + "&searchFrom=advSearch";
         }
         else {
             actionUrl = "/SaleActivities/ListView?&status=6&searchFrom=" + searchFrom;
@@ -186,7 +187,7 @@
     }
 
     function fnSalesPersonChange() {
-        
+
         $("input[name=hdnSalesPerson]").val($('#ddlSalesPerson').val());
     }
 
@@ -209,7 +210,7 @@
         format: 'DD/MM/YYYY'
     });
     $('#txtCallDateFrom').datetimepicker({
-        format: 'MM'
+        format: 'DD/MM/YYYY'
     });
 
     function fnClearSearch() {
@@ -220,13 +221,14 @@
         $('#txtCustomerName').val('');
         $('#ddlSalesPerson').val(0);
         $('#ddlStatus').val(0);
-
+        $('#txtCallDateFrom').val('');
+        $('#txtCallDateTo').val('');
 
     }
 
     $(window).on('load', function () {
         const params = new URLSearchParams(window.location.search)
-        
+
         var searchQuery = "status="
 
         if (params.has('status')) {
@@ -236,7 +238,7 @@
             searchQuery += "&searchFrom=" + params.get('searchFrom');
         }
         var actionUrl = "/SaleActivities/ListView?" + searchQuery;
-        
+
         $('#gridView').html('');
 
         $.ajax({
