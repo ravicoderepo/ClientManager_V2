@@ -330,7 +330,7 @@
 
     function fnBindTypesDropdown(id) {
         $.ajax({
-            url: "/items/GetProducts?prodMasterId=" + id + "&isInward=true",
+            url: "/types/GetProductMaster?materialId=" + id,
             //url: "/types/GetProductMaster?materialId=" + id,
             type: "Get",
             success: function (data) {
@@ -349,7 +349,7 @@
     function fnBindItemsDropDown(id) {
 
         $.ajax({
-            url: "/items/GetProducts?prodMasterId=" + id,
+            url: "/items/GetProducts?prodMasterId=" + id + "&isInward=true",
             type: "Get",
             success: function (data) {
 

@@ -58,7 +58,7 @@ namespace ClientManager.Controllers
             UserDetails userData = (UserDetails)this.Session["UserDetails"];
             ViewBag.MaterialId = Utility.DefaultList.BindList(new SelectList(db.Materials.Where(wh => wh.IsActive == true), "MaterialId", "MaterialName", 0).ToList<SelectListItem>(), true);
             ViewBag.TypeId = Utility.DefaultList.BindList(new SelectList(db.Types.Where(wh => wh.IsActive == true && wh.MaterialId == 0), "TypeId", "TypeName", 0).ToList<SelectListItem>(), true);
-            ViewBag.ItemId = Utility.DefaultList.BindList(new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == 0 && wh.ParentId == 0), "ItemId", "ItemName", 0).ToList<SelectListItem>(), true);
+            ViewBag.ItemId = Utility.DefaultList.BindList(new SelectList(db.Items.Where(wh => wh.IsActive == true && wh.TypeId == 0), "ItemId", "ItemName", 0).ToList<SelectListItem>(), true);
             ViewBag.CompanyId = Utility.DefaultList.BindList(new SelectList(db.Companies.Where(wh => wh.IsActive == true && wh.IsActive == true), "CompanyId", "Name", 0).ToList<SelectListItem>(),true);
             return View();
         }
@@ -321,7 +321,7 @@ namespace ClientManager.Controllers
         {
             var inwardList = (from iTrans in db.VRM_InwardStockTransaction
                               join iStock in db.VRM_InwardStock on iTrans.StockId equals iStock.StockId
-                              where iStock.StockId == Id
+                              where iStock.ItemId == Id
                               orderby iTrans.ReceivedDate descending
                               select new InwardData
                               {

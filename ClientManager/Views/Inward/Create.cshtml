@@ -324,7 +324,7 @@
     function fnBindTypesDropdown(id) {
         
         $.ajax({
-            url: "/types/GetProductMaster?materialId=" + id,
+            url: "/types/GetProductMaster?materialId=" + id + "&isInward=true",
             type: "Get",
             success: function (data) {
 

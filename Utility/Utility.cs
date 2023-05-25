@@ -588,16 +588,22 @@ namespace Utility
     public static class CommonFunctions
     {
         private static readonly ClientManagerEntities db = new ClientManagerEntities();
-        public static int GetAvailableQuantity(int itemId = 0)
+        public static int GetAvailableQuantity(int itemId)
         {
-            var prodId = db.Items.Where(wh => wh.ItemId == itemId).FirstOrDefault().ParentId.Value;
+            int returnaVal = 0;
+            if (itemId != 0)
+            {
+                var prodId = db.Items.Where(wh => wh.ItemId == itemId).FirstOrDefault().ParentId.Value;
 
-            if (prodId > 0)
-                itemId = prodId;
+                if (prodId > 0)
+                    itemId = prodId;
 
-            var iSum = Convert.ToInt16(db.VRM_InwardStock.Where(wh => wh.ItemId == itemId).Sum(s => (int?)s.Quantity));
-            var oSum = Convert.ToInt16(db.DespatchItems.Where(wh => wh.ItemId == itemId).Sum(s => (int?)s.Quantity));
-            return (iSum-oSum);
+                var iSum = Convert.ToInt16(db.VRM_InwardStock.Where(wh => wh.ItemId == itemId).Sum(s => (int?)s.Quantity));
+                var oSum = Convert.ToInt16(db.DespatchItems.Where(wh => wh.ItemId == itemId).Sum(s => (int?)s.Quantity));
+
+                returnaVal = (iSum - oSum);
+            }
+            return (returnaVal);
         }
 
         public static string GenerateUniqueNumber(string entityCode)
