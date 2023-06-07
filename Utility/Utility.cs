@@ -595,11 +595,20 @@ namespace Utility
             {
                 var prodId = db.Items.Where(wh => wh.ItemId == itemId).FirstOrDefault().ParentId.Value;
 
-                if (prodId > 0)
-                    itemId = prodId;
+                List<int> childIds = db.Items.Where(wh => wh.ParentId.Value == itemId).Select(sel => sel.ItemId).ToList();
 
-                var iSum = Convert.ToInt16(db.VRM_InwardStock.Where(wh => wh.ItemId == itemId).Sum(s => (int?)s.Quantity));
-                var oSum = Convert.ToInt16(db.DespatchItems.Where(wh => wh.ItemId == itemId).Sum(s => (int?)s.Quantity));
+                if (childIds.Count == 0)
+                    childIds.Add(prodId);
+
+                int parentId = 0;
+
+                if (prodId > 0)
+                    parentId = prodId;
+                else
+                    parentId = itemId;
+
+                var iSum = Convert.ToInt16(db.VRM_InwardStock.Where(wh => wh.ItemId == parentId).Sum(s => (int?)s.Quantity));
+                var oSum = Convert.ToInt16(db.DespatchItems.Where(wh => wh.ItemId == itemId || childIds.Contains(wh.ItemId)).Sum(s => (int?)s.Quantity));
 
                 returnaVal = (iSum - oSum);
             }
