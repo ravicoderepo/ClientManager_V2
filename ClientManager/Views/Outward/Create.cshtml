@@ -117,12 +117,12 @@
                                 </fieldset>
                                 <br />
                                 <fieldset>
-                                    <legend>Despatch Details</legend>                                  
+                                    <legend>Despatch Details</legend>
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="DespatchNo">Despatch No</label>
-                                                @Html.EditorFor(model => model.DespatchData.FirstOrDefault().DespatchNo, new { htmlAttributes = new { @class = "form-control", @id = "txtDespatchNo", @name = "DespatchNo", @readonly="readonly" } })
+                                                @Html.EditorFor(model => model.DespatchData.FirstOrDefault().DespatchNo, new { htmlAttributes = new { @class = "form-control", @id = "txtDespatchNo", @name = "DespatchNo", @readonly = "readonly" } })
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -134,7 +134,7 @@
                                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                     </div>
                                                 </div>
-                                            </div>                                            
+                                            </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
@@ -165,7 +165,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-12">                                         
+                                        <div class="col-md-12">
                                             <fieldset>
                                                 <legend>Products</legend>
 
@@ -181,7 +181,7 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="status">Product Master</label>
-                                                            <input type="hidden" name="TypeId"  id="hdnTypeId" />
+                                                            <input type="hidden" name="TypeId" id="hdnTypeId" />
                                                             @Html.DropDownList("TypeId", ViewBag.TypeId as SelectList, htmlAttributes: new { @class = "form-control select2", @id = "ddlTypeId", @onChange = "fnValueChange('type')" })
                                                         </div>
                                                     </div>
@@ -197,7 +197,7 @@
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
-                                                            <label for="AvailableQuantity">Available Quantity</label>                                                           
+                                                            <label for="AvailableQuantity">Available Quantity</label>
                                                             @Html.Editor("AvailableQuantity", new { htmlAttributes = new { @class = "form-control", @id = "txtAvailableQuantity", @name = "txtAvailableQuantity", @readonly = "readonly" } })
                                                         </div>
                                                     </div>
@@ -209,11 +209,11 @@
                                                     </div>
 
                                                     @*<div class="col-md-4">
-            <div class="form-group">
-                <label for="Remarks">Remarks</label>
-                <input type="text" class="form-control" id="txtRemarks" name="Remarks" />
-            </div>
-        </div>*@
+                                                            <div class="form-group">
+                                                                <label for="Remarks">Remarks</label>
+                                                                <input type="text" class="form-control" id="txtRemarks" name="Remarks" />
+                                                            </div>
+                                                        </div>*@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-12">
@@ -423,7 +423,7 @@
             url: "/Outward/GetAvailableQuantity?itemId=" + id,
             type: "Get",
             success: function (data) {
-                $('#txtAvailableQuantity').val(data);
+                $('#txtAvailableQuantity').val(data);               
             }
         });
     }
@@ -431,6 +431,9 @@
     //Add
     $(document).delegate('a.add-record', 'click', function (e) {
         e.preventDefault();
+
+        fnCheckItemQuantity($('#ddlItemId option:selected').val(),parseInt($('#txtAvailableQuantity').val()));
+
         if ($('#itemRowId').val() != '' && $('#itemRowId').val() != null) {
 
             var currRowId = $('#itemRowId').val();
@@ -607,5 +610,27 @@
 
     });
 
+    function fnCheckItemQuantity(id, currQty) {
+        debugger;
+        var totalQty = 0
+        $('#tbl_posts_body tr').each(function () {
+            debugger;
+            //$(this).find('td').each(function () {
+            //    debugger;
+                if ($(this).find('td.Item').attr('data-added') == id)
+                {
+                    debugger;
+                    totalQty += parseInt($(this).find('td.Quantity').text());
+                }
+            /*});*/
+        });
+
+        if (totalQty < currQty)
+            return true;
+        else {
+            alert('Invalid Quantity')
+            return false;
+        }
+    }
 
 </script>

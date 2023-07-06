@@ -13,6 +13,11 @@ namespace ClientManager.Controllers
     {
         private ClientManagerEntities db = new ClientManagerEntities();
 
+        public ActionResult SiteUnderConstruction()
+        {
+            return View();
+        }
+
         public ActionResult Index() => (ActionResult)this.RedirectToAction("Login");
 
         public ActionResult Login() => (ActionResult)this.View();
